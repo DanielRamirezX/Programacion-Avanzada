@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión VII — Todo dato tiene tipo — Programación Avanzada</title>
+<title>Sesión VII — Práctica 1: La fábrica de software — Programación Avanzada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -34,13 +34,13 @@ section{position:relative;padding:5rem 2rem;}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
 .hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
 .hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
-.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.6rem,7vw,6rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
 .hero h1 em{font-style:italic;color:var(--blood);}
-.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:650px;}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
 
 .lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
 .lead em{font-style:italic;color:var(--blood);}
-.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:660px;}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
 .inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
 
 .widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
@@ -49,86 +49,101 @@ section{position:relative;padding:5rem 2rem;}
 .btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
 .btn:hover{border-color:var(--blood);color:var(--blood);}
 .btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
-.btn-olive.on{background:var(--olive);border-color:var(--olive);}
 
-.dark-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.9;color:var(--paper);}
-.dark-code .ln{white-space:pre;display:block;}
-.dark-code .kw{color:#D4956A;font-style:italic;}
-.dark-code .self{color:#8EAF8B;font-weight:700;}
-.dark-code .str{color:#C9A961;}
-.dark-code .num{color:#A6C2D6;}
-.dark-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.dark-code .err{color:#E08A82;font-weight:700;}
-.dark-code .ty{color:#A6C2D6;}
+/* caso */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
 
-/* ─── W1: dinámico vs estático ────────────────── */
-.dyn-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:stretch;}
-.dyn-code{min-height:240px;}
-.dyn-note{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:var(--ink-soft);}
-.dyn-note strong{color:var(--ink);font-style:normal;font-weight:600;}
-.dyn-note .big{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--blood);display:block;margin-top:1rem;}
+/* W1: análisis sustantivos/verbos */
+.an-stage{display:grid;grid-template-columns:1.2fr 1fr;gap:1.5rem;align-items:start;}
+.an-text{background:var(--paper);border:1px solid var(--line);padding:1.8rem;font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;line-height:1.9;color:var(--ink-soft);}
+.an-tok{cursor:pointer;border-bottom:2px dashed rgba(42,29,20,.25);padding:.05rem .15rem;border-radius:2px;transition:all .25s;font-style:italic;}
+.an-tok:hover{background:rgba(160,36,24,.07);}
+.an-tok.rev-clase{background:rgba(93,102,56,.18);color:var(--olive);border-bottom:2px solid var(--olive);font-style:normal;font-weight:600;}
+.an-tok.rev-metodo{background:rgba(160,36,24,.12);color:var(--blood);border-bottom:2px solid var(--blood);font-style:normal;font-weight:600;}
+.an-tok.rev-attr{background:rgba(181,133,42,.16);color:#8a6420;border-bottom:2px solid var(--ochre);font-style:normal;font-weight:600;}
+.an-panel{background:var(--ink);padding:1.5rem;min-height:200px;display:flex;flex-direction:column;gap:.8rem;}
+.an-leg{display:flex;flex-direction:column;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;}
+.an-leg div{display:flex;align-items:center;gap:.6rem;color:rgba(239,230,210,.8);}
+.an-leg .dot{width:.8rem;height:.8rem;border-radius:50%;}
+.an-leg .dot.c{background:#8EAF8B;}
+.an-leg .dot.m{background:#E08A82;}
+.an-leg .dot.a{background:#E8B04A;}
+.an-found{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:rgba(239,230,210,.85);margin-top:auto;}
+.an-found strong{color:#E8B04A;font-style:normal;}
 
-/* ─── W2: inspector de tipos ──────────────────── */
-.ti-stage{display:grid;grid-template-columns:1fr 1.1fr;gap:1.5rem;align-items:start;}
-.ti-chips{display:flex;flex-wrap:wrap;gap:.5rem;align-content:flex-start;}
-.ti-chip{font-family:'JetBrains Mono',monospace;font-size:.82rem;padding:.55rem .85rem;background:var(--paper);border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:all .2s;}
-.ti-chip:hover{border-color:var(--blood);color:var(--blood);}
-.ti-chip.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
-.ti-panel{background:var(--ink);padding:1.5rem;min-height:200px;display:flex;flex-direction:column;gap:.9rem;}
-.ti-cmd{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--paper);}
-.ti-cmd::before{content:'>>> ';color:#8EAF8B;}
-.ti-res{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:#C9A961;padding:.5rem .8rem;background:rgba(239,230,210,.06);border-left:2px solid var(--ochre);}
-.ti-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);margin-top:auto;}
-.ti-note strong{color:#C9A961;font-style:normal;font-weight:600;}
+/* preguntas guía */
+.guia{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.guia-card{background:var(--paper);border:1px solid var(--line);padding:1.3rem 1.5rem;}
+.guia-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;color:var(--ink);line-height:1.4;}
+.guia-q::before{content:'¿';color:var(--blood);}
+.guia-hint{font-size:.88rem;color:rgba(42,29,20,.55);margin-top:.5rem;font-style:italic;}
 
-/* ─── W3: operadores ──────────────────────────── */
-.op-stage{display:grid;grid-template-columns:1fr 1.1fr;gap:1.5rem;align-items:start;}
-.op-chips{display:flex;flex-direction:column;gap:.5rem;}
-.op-chip{font-family:'JetBrains Mono',monospace;font-size:.82rem;padding:.6rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:all .2s;text-align:left;}
-.op-chip:hover{border-color:var(--blood);}
-.op-chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
-.op-panel{background:var(--paper);border:1px solid var(--line);padding:1.5rem;min-height:200px;display:flex;flex-direction:column;justify-content:center;}
-.op-expr{font-family:'JetBrains Mono',monospace;font-size:1.3rem;color:var(--ink);}
-.op-arrow{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--blood);font-size:1.1rem;margin:.6rem 0;}
-.op-res{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;}
-.op-res.ok{color:var(--olive);}
-.op-res.err{color:var(--blood);}
-.op-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.45;color:var(--ink-soft);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line);}
-.op-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+/* W2: equivalencias */
+.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
+.pj-head .badge{font-size:.6rem;color:var(--ochre);}
+.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:260px;}
+.pj-line{white-space:pre;display:block;padding:0 .3rem;border-radius:2px;}
+.pj-line .kw{color:var(--blood);font-style:italic;}
+.pj-line .cls{color:var(--ink);font-weight:700;}
+.pj-line .str{color:var(--ochre);}
+.pj-line .self{color:var(--olive);font-weight:700;}
+.pj-line .ty{color:#3E6E86;}
+.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
 
-/* ─── W4: quadrant ────────────────────────────── */
-.quad-cap{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;color:var(--ink-soft);margin-bottom:1rem;text-transform:uppercase;}
-.quad-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
-.quad-cell{background:var(--paper);border:1px solid var(--line);padding:1.3rem;min-height:130px;display:flex;flex-direction:column;gap:.7rem;}
-.quad-cell.empty{opacity:.5;justify-content:center;}
-.quad-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ochre);}
-.quad-lang{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;text-align:left;padding:.1rem 0;width:fit-content;}
-.quad-lang:hover{color:var(--blood);}
-.quad-lang.on{color:var(--blood);border-bottom-color:var(--blood);font-style:italic;}
-.quad-none{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:rgba(42,29,20,.45);}
-.quad-detail{margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
-.quad-dcode{min-height:160px;}
-.quad-dnote{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--blood);padding:1.4rem;display:flex;flex-direction:column;justify-content:center;}
-.quad-dtag{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
-.quad-dtext{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:var(--ink-soft);}
-.quad-dtext strong{color:var(--ink);font-style:normal;font-weight:600;}
+/* W3: investiga */
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-top:1.5rem;}
+.inv-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--olive);padding:1.5rem;}
+.inv-tema{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.6rem;}
+.inv-busca{font-family:'JetBrains Mono',monospace;font-size:.74rem;background:var(--paper-deep);border:1px solid var(--line);padding:.55rem .8rem;color:var(--olive);margin:.5rem 0;}
+.inv-busca::before{content:'🔍 busca: ';color:var(--ink-soft);}
+.inv-why{font-size:.92rem;color:var(--ink-soft);line-height:1.45;font-style:italic;}
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
 
-/* Taller / Cierre */
-.taller{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--olive);padding:2rem;margin-top:2rem;}
-.taller-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--olive);margin-bottom:1rem;}
-.taller-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.3rem;}
-.taller-step{background:var(--paper-deep);border:1px solid var(--line);padding:1.2rem;}
-.taller-step-n{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.8rem;color:var(--blood);line-height:1;margin-bottom:.5rem;}
-.taller-step-t{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--ink);margin-bottom:.3rem;}
-.taller-step-d{font-size:.92rem;color:var(--ink-soft);}
-.taller-step-d em{color:var(--ink);font-style:italic;}
+/* W4: checklist entregable */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-group{margin-top:1.4rem;}
+.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+
+/* criterios */
+.crit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.crit-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.4rem;}
+.crit-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.6rem;}
+.crit-card ul{margin-left:1.1rem;color:var(--ink-soft);font-size:.92rem;line-height:1.5;}
+.crit-card li{padding:.15rem 0;}
+
+/* Cierre / tarea */
 .cierre{background:var(--paper-deep);}
 .tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
 .tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
 .tarea ol{margin-left:1.3rem;color:var(--ink-soft);}
 .tarea li{padding:.4rem 0;font-size:1.05rem;}
 .tarea li strong{color:var(--ink);}
-.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
 
 footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
@@ -138,8 +153,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 
 @media(max-width:860px){
   section{padding:3.5rem 1.2rem;}
-  .dyn-stage,.ti-stage,.op-stage,.quad-grid,.quad-detail{grid-template-columns:1fr;}
-  .taller-steps{grid-template-columns:1fr;}
+  .an-stage,.pj-stage,.guia,.req-grid,.crit-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -147,152 +161,232 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 <div class="progress" id="prog"></div>
 <nav class="course-nav">
   <a href="sesion-06.html" class="back">Sesión 06</a>
-  <span class="session-label">Sesión 07 · 10.06.2026</span>
+  <span class="session-label">Sesión 07 · Práctica 1 · 10.06.2026</span>
   <a href="../index.html" class="next">Curso</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">x = 5</div>
-  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">type(x)</div>
-  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">7 // 2 == 3</div>
-  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">"5" + 3  # TypeError</div>
-  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">int x = 5;</div>
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">// análisis → diseño → código</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">private double precio;</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">ArrayList&lt;Producto&gt;</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">UML class diagram</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">public static void main</div>
   <div class="hero-inner">
-    <div class="hero-label">Sesión VII · Tipos y operadores · Ref. Temario 2.1 – 2.5</div>
-    <h1>Todo dato<br>tiene un <em>tipo.</em></h1>
-    <p class="hero-sub">Aunque Python no te obligue a declararlo, el tipo siempre está ahí — y decide qué puedes hacer con cada dato. Cada lenguaje lo maneja con una <em>filosofía distinta</em>.</p>
+    <div class="hero-label">Sesión VII · Práctica institucional 1 de 6 · Ref. Temario 1.1 – 1.2 · Java</div>
+    <h1>La fábrica<br>de <em>software.</em></h1>
+    <p class="hero-sub">Tu primer encargo real: una empresa ecológica necesita un sistema de inventario y ventas. Hoy no eres alumno — eres <em>la fábrica de software</em> que lo va a construir.</p>
   </div>
 </section>
 
-<!-- INTRO -->
-<section>
-  <div class="wrap-n">
-    <p class="marker">I · El tipo manda</p>
-    <p class="lead">No declaras tipos en Python.<br>Pero eso <em>no significa</em> que no existan.</p>
-    <p class="subtle">El tipo de un dato decide qué operaciones son válidas: puedes sumar dos <span class="inlinecode">int</span>, pero no un <span class="inlinecode">str</span> y un <span class="inlinecode">int</span>. Hoy vemos los tipos básicos, cómo Python los maneja de forma <em>dinámica</em>, los operadores que sorprenden, y cómo cuatro lenguajes piensan los tipos de maneras opuestas.</p>
-  </div>
-</section>
-
-<!-- W1: dinámico vs estático -->
+<!-- I: El caso -->
 <section>
   <div class="wrap">
-    <p class="marker">II · ¿Dónde vive el tipo?</p>
-    <p class="lead">En Python, el tipo vive en el <em>valor.</em><br>En Java, vive en la <em>variable.</em></p>
-    <p class="subtle">Esa diferencia lo cambia todo. En Python una variable puede apuntar a un <span class="inlinecode">int</span> y luego a un <span class="inlinecode">str</span>. En Java, jamás. Compara:</p>
-    <div class="widget" data-tag="Dinámico vs estático">
-      <div class="dyn-stage">
-        <div class="dyn-code dark-code" id="dyn-code"></div>
-        <div class="dyn-note" id="dyn-note"></div>
+    <p class="marker">I · El encargo</p>
+    <p class="lead">Una empresa <em>real</em> (bueno, casi)<br>te contrata para resolver un problema real.</p>
+    <div class="caso" style="font-style:normal;font-size:1.12rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;">Practicario MCT158 · Práctica 1 de 6 · texto íntegro del caso</div>
+      <p style="margin-bottom:1rem;">Eres parte de una <strong>fábrica de software</strong> que se le encarga desarrollar un sistema para gestionar los <strong>productos y ventas de una empresa ecológica</strong>. La empresa busca diferenciarse en el mercado al ofrecer un <strong>inventario eficiente para sus sucursales</strong> y quiere optimizar la experiencia del usuario mediante el <strong>registro digital de ventas</strong>.</p>
+      <p style="margin-bottom:1rem;">La fábrica de software construirá al sistema digital con una <strong>orientación a objetos</strong>. Entre sus aspectos conceptuales realizará el <strong>análisis, diseño y abstracción</strong>. Con lo anterior, se podrán establecer las <strong>clases con atributos y métodos</strong>, así como los <strong>objetos y mensajes</strong> entre ellos.</p>
+      <p>Se realiza una entrevista entre el gerente de la empresa, los usuarios del sistema, el ingeniero en requerimientos y el desarrollador. En esta junta se establecen como válidos los requerimientos que debe cumplir el sistema: <strong>permitir agregar nuevos productos al inventario</strong>, <strong>registrar ventas incluyendo el cálculo del total</strong>, y <strong>generar reportes con la lista de productos y las ventas realizadas</strong>. El desarrollo del programa será en <strong>Java</strong>.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Requerimiento 01</div>
+        <div class="req-t">Agregar productos</div>
+        <div class="req-d">Permitir registrar nuevos productos al inventario de la empresa.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 02</div>
+        <div class="req-t">Registrar ventas</div>
+        <div class="req-d">Capturar ventas <em>incluyendo el cálculo del total</em> de cada una.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 03</div>
+        <div class="req-t">Generar reportes</div>
+        <div class="req-d">Mostrar la lista de productos y las ventas realizadas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- II: análisis -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · Análisis — la técnica del subrayado</p>
+    <p class="lead">Las clases se esconden en los <em>sustantivos.</em><br>Los métodos, en los <em>verbos.</em></p>
+    <p class="subtle">Antes de escribir código, un desarrollador <strong>lee el caso como detective</strong>: los sustantivos que se repiten son candidatos a clases o atributos; los verbos de acción son candidatos a métodos. Practica la técnica con este caso de <em>otro</em> dominio — toca cada palabra subrayada:</p>
+    <div class="widget" data-tag="Practica con otro caso">
+      <div class="an-stage">
+        <div class="an-text" id="an-text">
+          Un <span class="an-tok" data-k="clase" data-n="refugio">refugio</span> de animales <span class="an-tok" data-k="metodo" data-n="registrar">registra</span> <span class="an-tok" data-k="clase" data-n="adopcion">adopciones</span> de sus <span class="an-tok" data-k="clase" data-n="mascota">mascotas</span>. Cada mascota tiene <span class="an-tok" data-k="attr" data-n="nombre">nombre</span>, <span class="an-tok" data-k="attr" data-n="especie">especie</span> y <span class="an-tok" data-k="attr" data-n="cuota">cuota de adopción</span>. El refugio <span class="an-tok" data-k="metodo" data-n="calcular">calcula</span> el donativo total recaudado y <span class="an-tok" data-k="metodo" data-n="listar">muestra</span> la lista de mascotas disponibles.
+        </div>
+        <div class="an-panel">
+          <div class="an-leg">
+            <div><span class="dot c"></span> Sustantivo principal → <strong>clase</strong></div>
+            <div><span class="dot a"></span> Sustantivo descriptivo → <strong>atributo</strong></div>
+            <div><span class="dot m"></span> Verbo de acción → <strong>método</strong></div>
+          </div>
+          <div class="an-found" id="an-found">Toca las palabras subrayadas para clasificarlas. Llevas <strong>0 de 8</strong>.</div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">Ahora aplica <strong>la misma técnica al caso de la empresa ecológica</strong>. Lee el encargo de arriba con lápiz en mano. Estas preguntas te guían — <em>las respuestas las encuentras tú:</em></p>
+    <div class="guia">
+      <div class="guia-card">
+        <div class="guia-q">Qué "cosas" maneja el sistema? Esos son tus candidatos a clase.</div>
+        <div class="guia-hint">Pista: en el texto del encargo hay al menos 3.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Qué datos describe cada cosa? (un producto tiene…, una venta tiene…)</div>
+        <div class="guia-hint">Esos son los atributos — y decide cuáles deben ser privados.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Qué acciones pide cada requerimiento? Agregar, registrar, calcular, mostrar…</div>
+        <div class="guia-hint">Cada verbo es un método. ¿En qué clase vive cada uno?</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Cómo se relacionan? ¿Una venta contiene productos? ¿El inventario contiene…?</div>
+        <div class="guia-hint">Las relaciones definen las flechas de tu diagrama de clases.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: equivalencias -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Los mecanismos — Python ↔ Java</p>
+    <p class="lead">Todo lo que hicimos en Python<br>tiene su <em>gemelo</em> en Java.</p>
+    <p class="subtle">La práctica es en Java, pero tú ya sabes POO — solo cambia el idioma. Aquí los 6 mecanismos que vas a necesitar, en <strong>un dominio distinto al de la práctica</strong> (una cafetería). Tu trabajo es <em>traducirlos</em> a tu caso, no copiarlos:</p>
+    <div class="widget" data-tag="Mismo concepto · dos lenguajes">
+      <div class="pj-stage">
+        <div class="pj-col">
+          <div class="pj-head">Python <span class="badge">lo que ya sabes</span></div>
+          <div class="pj-body" id="py-body"></div>
+        </div>
+        <div class="pj-col">
+          <div class="pj-head">Java <span class="badge">lo que usarás hoy</span></div>
+          <div class="pj-body" id="java-body"></div>
+        </div>
       </div>
       <div class="w-controls">
-        <button class="btn on" id="dyn-py">Python · dinámico</button>
-        <button class="btn" id="dyn-java">Java · estático</button>
+        <button class="btn on" data-eq="clase">Clase + atributos</button>
+        <button class="btn" data-eq="ctor">Constructor</button>
+        <button class="btn" data-eq="encap">Getters</button>
+        <button class="btn" data-eq="lista">Lista de objetos</button>
+        <button class="btn" data-eq="suma">Recorrer y sumar</button>
+        <button class="btn" data-eq="main">Main</button>
       </div>
+      <div class="pj-note" id="pj-note"></div>
     </div>
   </div>
 </section>
 
-<!-- W2: inspector de tipos -->
+<!-- IV: investiga -->
 <section>
   <div class="wrap">
-    <p class="marker">III · Los tipos básicos de Python</p>
-    <p class="lead">Ocho tipos que verás <em>todos los días.</em></p>
-    <p class="subtle">La función <span class="inlinecode">type()</span> revela el tipo de cualquier valor. Toca cada uno y descúbrelo:</p>
-    <div class="widget" data-tag="Toca un valor">
-      <div class="ti-stage">
-        <div class="ti-chips" id="ti-chips"></div>
-        <div class="ti-panel">
-          <div class="ti-cmd" id="ti-cmd"></div>
-          <div class="ti-res" id="ti-res"></div>
-          <div class="ti-note" id="ti-note"></div>
-        </div>
+    <p class="marker">IV · Investiga como profesional</p>
+    <p class="lead">No te voy a dar todo.<br>Saber <em>buscar</em> es parte de la práctica.</p>
+    <p class="subtle">Estos son los temas que necesitarás y que <strong>no hemos visto en clase</strong>. Cada tarjeta te dice qué buscar y para qué — el resto es tuyo:</p>
+    <div class="inv-grid">
+      <div class="inv-card">
+        <div class="inv-tema">Diagrama de clases UML</div>
+        <div class="inv-busca">UML diagrama de clases atributos métodos</div>
+        <div class="inv-why">Necesitas la notación: el rectángulo de 3 secciones, los símbolos + y −, y las flechas de relación. Herramientas: papel, draw.io o Mermaid.</div>
       </div>
+      <div class="inv-card">
+        <div class="inv-tema">Diagrama de secuencia UML</div>
+        <div class="inv-busca">UML diagrama de secuencia ejemplo sencillo</div>
+        <div class="inv-why">La práctica pide explicar cómo los objetos se llaman entre sí. Fíjate en: líneas de vida, flechas de mensaje y el orden temporal.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-tema">ArrayList en Java</div>
+        <div class="inv-busca">java ArrayList add get size for each</div>
+        <div class="inv-why">La lista dinámica de Java — tu <span style="font-family:'JetBrains Mono',monospace;font-size:.82rem">list</span> de Python. La necesitas para guardar productos y ventas.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-tema">Proyecto en Eclipse</div>
+        <div class="inv-busca">eclipse crear java project class run</div>
+        <div class="inv-why">La práctica se entrega como proyecto de Eclipse. Aprende a: crear proyecto, crear clase, y correr con el botón verde.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-tema">String.format en Java</div>
+        <div class="inv-busca">java String.format dos decimales moneda</div>
+        <div class="inv-why">Para que tus totales se impriman como $129.50 y no como 129.5000000001. El f-string de Java.</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-tema">Caso real de digitalización</div>
+        <div class="inv-busca">caso éxito PYME digitalización inventario</div>
+        <div class="inv-why">Las conclusiones piden investigar una PYME real que se haya beneficiado de un sistema similar. Busca casos en México o LATAM.</div>
+      </div>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">Reglas de la IA para esta práctica</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "explícame la diferencia entre ArrayList y array en Java"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise lo tuyo</em>: "este es mi diagrama de clases, ¿qué relación me falta?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te ayude a <em>leer un error</em> que no entiendes</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "hazme el sistema de inventario y ventas en Java" — <em>te darás cuenta en la defensa: si no puedes explicar tu código línea por línea, no es tu código.</em></span></div>
     </div>
   </div>
 </section>
 
-<!-- W3: operadores -->
+<!-- V: entregable -->
 <section>
   <div class="wrap">
-    <p class="marker">IV · Operadores que <em style="font-style:italic">sorprenden</em></p>
-    <p class="lead">Algunos operadores hacen<br>cosas que <em>no esperas.</em></p>
-    <p class="subtle">Antes de tocar cada uno, intenta adivinar el resultado. Luego compruébalo:</p>
-    <div class="widget" data-tag="Adivina, luego comprueba">
-      <div class="op-stage">
-        <div class="op-chips" id="op-chips"></div>
-        <div class="op-panel">
-          <div class="op-expr" id="op-expr"></div>
-          <div class="op-arrow">↓ devuelve</div>
-          <div class="op-res ok" id="op-res"></div>
-          <div class="op-note" id="op-note"></div>
-        </div>
+    <p class="marker">V · El entregable</p>
+    <p class="lead">Un documento profesional.<br>No un archivo suelto.</p>
+    <p class="subtle">Se entrega <strong>un documento Word o PDF</strong> con estructura formal. El código va <strong>copiado y pegado dentro del documento</strong>, junto con las evidencias. Marca tu progreso:</p>
+    <div class="widget" data-tag="Checklist de entrega">
+      <div class="chk-progress">Progreso: <span id="chk-count">0</span> de 12 elementos
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Estructura del documento</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Portada</strong> — nombre, matrícula, materia (MCT158), práctica 1, fecha</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Introducción</strong> — el caso con tus palabras: qué problema resuelve el sistema y por qué la POO es el enfoque</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Desarrollo</strong> — todo lo de la sección siguiente, en orden</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Conclusiones</strong> — responde las 3 preguntas del practicario</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Bibliografía</strong> — formato APA; las del practicario son tu punto de partida, agrega lo que investigaste</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Dentro del desarrollo · las evidencias</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Diagrama de clases</strong> con atributos, métodos y relaciones (foto o imagen exportada)</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Código fuente Java</strong> de todas las clases, copiado y pegado, legible</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Captura de la ejecución</strong> en Eclipse: agregar productos funcionando</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Captura</strong> del registro de venta con su total calculado</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Captura</strong> del reporte: productos y ventas listadas</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Diagrama de secuencia</strong> explicando cómo interactúan los objetos</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Las conclusiones · responde con investigación</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Caso real de una <strong>PYME beneficiada por digitalización</strong> · cómo <strong>escalarías el sistema a línea</strong> · qué aprendiste de <strong>modularidad</strong> aplicable a otro contexto</div></div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- W4: quadrant -->
-<section>
-  <div class="wrap">
-    <p class="marker">V · Cuatro lenguajes, cuatro filosofías</p>
-    <p class="lead">Cada lenguaje decide dos cosas:<br>¿declaras el tipo? ¿hace <em>coerción?</em></p>
-    <p class="subtle">Esas dos preguntas forman cuatro cuadrantes. Toca un lenguaje y mira dónde cae y por qué:</p>
-    <div class="widget" data-tag="El mapa de los tipos">
-      <div class="quad-cap">Horizontal: ¿declaras el tipo? &nbsp;·&nbsp; Vertical: ¿hace coerción automática?</div>
-      <div class="quad-grid">
-        <div class="quad-cell">
-          <div class="quad-label">dinámico + fuerte</div>
-          <button class="quad-lang on" data-lang="python">Python</button>
-        </div>
-        <div class="quad-cell">
-          <div class="quad-label">estático + fuerte</div>
-          <button class="quad-lang" data-lang="java">Java</button>
-          <button class="quad-lang" data-lang="go">Go</button>
-        </div>
-        <div class="quad-cell">
-          <div class="quad-label">dinámico + débil</div>
-          <button class="quad-lang" data-lang="js">JavaScript</button>
-        </div>
-        <div class="quad-cell empty">
-          <div class="quad-label">estático + débil</div>
-          <span class="quad-none">(C clásico — fuera de este curso)</span>
-        </div>
+    <div class="crit-grid">
+      <div class="crit-card">
+        <div class="crit-t">Se evalúa: análisis</div>
+        <ul>
+          <li>Identificación de los elementos clave</li>
+          <li>Planteamiento claro del problema</li>
+          <li>Abstracción bien aplicada</li>
+        </ul>
       </div>
-      <div class="quad-detail">
-        <div class="quad-dcode dark-code" id="quad-code"></div>
-        <div class="quad-dnote">
-          <div class="quad-dtag" id="quad-tag"></div>
-          <div class="quad-dtext" id="quad-text"></div>
-        </div>
+      <div class="crit-card">
+        <div class="crit-t">Se evalúa: diseño</div>
+        <ul>
+          <li>Diagrama de clases funcional y claro</li>
+          <li>Clases, atributos y métodos alineados al caso</li>
+          <li>Justificación de las relaciones</li>
+        </ul>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- TALLER -->
-<section>
-  <div class="wrap">
-    <p class="marker">VI · Taller · en clase</p>
-    <p class="lead">Predice. Comprueba.<br>Y dale <em>tipos</em> a tu proyecto.</p>
-    <div class="taller">
-      <div class="taller-tag">Manos al teclado · 30 min</div>
-      <div class="taller-steps">
-        <div class="taller-step">
-          <div class="taller-step-n">1</div>
-          <div class="taller-step-t">Predice</div>
-          <div class="taller-step-d">Antes de correr nada, escribe en papel el resultado de 6 expresiones: <code style="font-family:'JetBrains Mono',monospace;color:var(--blood)">7//2</code>, <code style="font-family:'JetBrains Mono',monospace;color:var(--blood)">True+True</code>, <code style="font-family:'JetBrains Mono',monospace;color:var(--blood)">"ab"*3</code>...</div>
-        </div>
-        <div class="taller-step">
-          <div class="taller-step-n">2</div>
-          <div class="taller-step-t">Comprueba</div>
-          <div class="taller-step-d">Córrelas en Python. ¿Acertaste? Las que fallaste son <em>las que más enseñan</em>. Anota por qué.</div>
-        </div>
-        <div class="taller-step">
-          <div class="taller-step-n">3</div>
-          <div class="taller-step-t">Type hints</div>
-          <div class="taller-step-d">Agrega <em>type hints</em> a los métodos de tu clase del proyecto: <code style="font-family:'JetBrains Mono',monospace;color:var(--blood)">def agregar(self, item: str) -> None</code>.</div>
-        </div>
+      <div class="crit-card">
+        <div class="crit-t">Se evalúa: implementación</div>
+        <ul>
+          <li>Código correcto y funcional</li>
+          <li>Modificadores de acceso bien usados</li>
+          <li>Cumple los 3 requerimientos</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -301,23 +395,25 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 <!-- CIERRE -->
 <section class="cierre">
   <div class="wrap-n">
-    <p class="marker">VII · Para la próxima clase</p>
-    <p class="lead">Python no te obliga a pensar en tipos.<br>Los buenos programadores <em>lo hacen igual.</em></p>
+    <p class="marker">VI · El plan de ataque</p>
+    <p class="lead">No empieces por el código.<br><em>Nunca</em> empieces por el código.</p>
     <div class="tarea">
-      <div class="tarea-tag">Tarea · sube a tu repo</div>
+      <div class="tarea-tag">Orden recomendado de trabajo</div>
       <ol>
-        <li>Crea un archivo <code>tipos.py</code> donde uses los <strong>8 tipos básicos</strong> (int, float, str, bool, list, dict, tuple, None) en variables con nombres claros.</li>
-        <li>Escribe <strong>5 expresiones con operadores</strong> que te hayan sorprendido, cada una con un comentario explicando el resultado.</li>
-        <li>Agrega <strong>type hints</strong> a todos los métodos de tu clase principal del proyecto.</li>
-        <li>En un comentario: <strong>¿por qué crees que Python no obliga a declarar tipos, pero sí permite los hints?</strong></li>
-        <li>Commit y push. La próxima clase: control de flujo — <code>if</code>, <code>for</code>, <code>while</code>.</li>
+        <li><strong>Análisis</strong> (papel y lápiz): subraya el caso, identifica clases, atributos, métodos y relaciones.</li>
+        <li><strong>Diagrama de clases</strong>: dibújalo ANTES de programar. Si el diagrama está mal, el código nacerá mal.</li>
+        <li><strong>Código en Java</strong>: una clase a la vez. Compila seguido — no escribas 100 líneas sin probar.</li>
+        <li><strong>Los 3 requerimientos</strong>: agregar productos → venta con total → reporte. En ese orden, probando cada uno.</li>
+        <li><strong>Diagrama de secuencia</strong>: ahora que el código funciona, dibuja cómo se hablan los objetos.</li>
+        <li><strong>El documento</strong>: arma portada, introducción, pega código y evidencias, responde conclusiones, cita bibliografía.</li>
+        <li><strong>Sube también el proyecto a tu repo de GitHub</strong> — la práctica es institucional, pero tu portafolio es tuyo.</li>
       </ol>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Práctica 1 de 6 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
 </footer>
 
 <script>
@@ -325,148 +421,144 @@ window.addEventListener('scroll',()=>{const h=document.documentElement;document.
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
 const $=id=>document.getElementById(id);
-const L=html=>'<span class="ln">'+html+'</span>';
+const L=html=>'<span class="pj-line">'+html+'</span>';
 
-// ─── W1: dinámico vs estático ───────────────────────────────
-const dynStates={
-  py:{
-    code:[
-      'x = <span class="num">5</span>            <span class="cm"># x apunta a un int</span>',
-      'x = <span class="str">"hola"</span>       <span class="cm"># ahora a un str — OK</span>',
-      'x = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]    <span class="cm"># ahora a una lista — OK</span>',
+// ─── W1: análisis sustantivos/verbos ────────────────────────
+const anNames={clase:'clase',metodo:'método',attr:'atributo'};
+let anFound=new Set();
+document.querySelectorAll('.an-tok').forEach(tok=>{
+  tok.addEventListener('click',()=>{
+    const k=tok.dataset.k;
+    tok.classList.add('rev-'+(k==='clase'?'clase':k==='metodo'?'metodo':'attr'));
+    anFound.add(tok.dataset.n);
+    const total=document.querySelectorAll('.an-tok').length;
+    if(anFound.size===total){
+      $('an-found').innerHTML='<strong>8 de 8.</strong> Refugio, Mascota y Adopción son clases; nombre, especie y cuota son atributos; registrar, calcular y mostrar son métodos. Ahora haz lo mismo con el caso de la empresa ecológica.';
+    }else{
+      $('an-found').innerHTML='Encontraste un <strong>'+anNames[k]+'</strong>. Llevas <strong>'+anFound.size+' de '+total+'</strong>.';
+    }
+  });
+});
+
+// ─── W2: equivalencias Python ↔ Java (dominio cafetería) ────
+const eqData={
+  clase:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Bebida</span>:',
+      '    <span class="cm"># los atributos nacen</span>',
+      '    <span class="cm"># en el constructor ↓</span>',
+    ],
+    java:[
+      '<span class="kw">public class</span> <span class="cls">Bebida</span> {',
+      '    <span class="kw">private</span> <span class="ty">String</span> nombre;',
+      '    <span class="kw">private</span> <span class="ty">double</span> precio;',
+      '}',
+    ],
+    note:'En Java los atributos se <strong>declaran arriba, con su tipo</strong> y casi siempre <strong>private</strong> (encapsulamiento del temario 1.3). En Python aparecen dentro de __init__.'
+  },
+  ctor:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Bebida</span>:',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, nombre, precio):',
+      '        <span class="self">self</span>.nombre = nombre',
+      '        <span class="self">self</span>.precio = precio',
+    ],
+    java:[
+      '<span class="kw">public</span> Bebida(<span class="ty">String</span> nombre, <span class="ty">double</span> precio) {',
+      '    <span class="self">this</span>.nombre = nombre;',
+      '    <span class="self">this</span>.precio = precio;',
+      '}',
+    ],
+    note:'El constructor en Java <strong>lleva el nombre de la clase</strong> (no __init__) y usa <strong>this</strong> donde Python usa self. Misma idea: desambiguar atributo vs parámetro.'
+  },
+  encap:{
+    py:[
+      '    <span class="kw">@property</span>',
+      '    <span class="kw">def</span> precio(<span class="self">self</span>):',
+      '        <span class="kw">return</span> <span class="self">self</span>._precio',
+    ],
+    java:[
+      '<span class="kw">public</span> <span class="ty">double</span> getPrecio() {',
+      '    <span class="kw">return</span> <span class="self">this</span>.precio;',
+      '}',
+      '<span class="cm">// y setPrecio(double p) si</span>',
+      '<span class="cm">// necesitas modificarlo</span>',
+    ],
+    note:'Java no tiene @property: usa los <strong>getters y setters clásicos</strong> que viste en la Sesión 3. Convención: get + NombreAtributo en camelCase.'
+  },
+  lista:{
+    py:[
+      '<span class="self">self</span>.items = []',
       '',
-      '<span class="kw">print</span>(type(x))   <span class="cm"># &lt;class \'list\'&gt;</span>',
+      '<span class="self">self</span>.items.append(bebida)',
+      '<span class="kw">len</span>(<span class="self">self</span>.items)',
     ],
-    note:'El tipo vive en el <strong>valor</strong>, no en la variable. La variable es solo una <strong>etiqueta</strong> que puedes mover a cualquier cosa.<span class="big">Tipado dinámico</span>'
+    java:[
+      '<span class="ty">ArrayList</span>&lt;<span class="cls">Bebida</span>&gt; items = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();',
+      '',
+      'items.add(bebida);',
+      'items.size();',
+      '<span class="cm">// requiere: import java.util.ArrayList;</span>',
+    ],
+    note:'<strong>ArrayList es la lista de Java</strong>: declara el tipo que contiene entre &lt; &gt;. append→add, len()→size(). No olvides el import. <em>Investiga sus demás métodos.</em>'
   },
-  java:{
-    code:[
-      '<span class="ty">int</span> x = <span class="num">5</span>;       <span class="cm"># x es int, declarado</span>',
-      'x = <span class="str">"hola"</span>;      <span class="err"># ✗ error de compilación</span>',
-      '                 <span class="cm"># incompatible types</span>',
-      '                 <span class="cm"># el compilador lo rechaza</span>',
-      '                 <span class="cm"># antes de correr</span>',
+  suma:{
+    py:[
+      'total = 0',
+      '<span class="kw">for</span> b <span class="kw">in</span> <span class="self">self</span>.items:',
+      '    total += b.precio',
+      '<span class="kw">return</span> total',
     ],
-    note:'El tipo vive en la <strong>variable</strong>. La declaras <code style="font-family:JetBrains Mono;font-style:normal">int</code> y será int para siempre. El compilador lo verifica antes de ejecutar.<span class="big">Tipado estático</span>'
+    java:[
+      '<span class="ty">double</span> total = 0;',
+      '<span class="kw">for</span> (<span class="cls">Bebida</span> b : items) {',
+      '    total += b.getPrecio();',
+      '}',
+      '<span class="kw">return</span> total;',
+    ],
+    note:'El <strong>for-each</strong> de Java: <em>for (Tipo elemento : colección)</em>. Este patrón de <strong>recorrer y acumular</strong> es exactamente lo que necesita tu cálculo del total de venta — tradúcelo a tu caso.'
+  },
+  main:{
+    py:[
+      '<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:',
+      '    <span class="cm"># crear objetos,</span>',
+      '    <span class="cm"># probar los 3 requerimientos</span>',
+    ],
+    java:[
+      '<span class="kw">public static void</span> main(<span class="ty">String</span>[] args) {',
+      '    <span class="cm">// crear objetos,</span>',
+      '    <span class="cm">// probar los 3 requerimientos</span>',
+      '}',
+    ],
+    note:'El <strong>main</strong> (temario 1.6) es donde pruebas todo: crea productos, registra una venta, imprime el reporte. Eclipse busca este método para ejecutar.'
   }
 };
-function dynRender(s){
-  $('dyn-code').innerHTML=dynStates[s].code.map(L).join('');
-  $('dyn-note').innerHTML=dynStates[s].note;
+function eqRender(key){
+  const d=eqData[key];
+  $('py-body').innerHTML=d.py.map(L).join('');
+  $('java-body').innerHTML=d.java.map(L).join('');
+  $('pj-note').innerHTML=d.note;
 }
-$('dyn-py').addEventListener('click',()=>{$('dyn-py').classList.add('on');$('dyn-java').classList.remove('on');dynRender('py');});
-$('dyn-java').addEventListener('click',()=>{$('dyn-java').classList.add('on');$('dyn-py').classList.remove('on');dynRender('java');});
-dynRender('py');
-
-// ─── W2: inspector de tipos ─────────────────────────────────
-const tipos=[
-  ['42',"&lt;class 'int'&gt;",'<strong>Entero.</strong> En Python no tiene límite de tamaño — puedes calcular números gigantes sin desbordar, a diferencia de Java.'],
-  ['3.14',"&lt;class 'float'&gt;",'<strong>Punto flotante</strong> de doble precisión. Cuidado: <code>0.1 + 0.2</code> no da exactamente 0.3 (es la naturaleza del flotante).'],
-  ['"hola"',"&lt;class 'str'&gt;",'<strong>Texto.</strong> En Python no existe el tipo <em>char</em>: un solo carácter es un <code>str</code> de longitud 1.'],
-  ['True',"&lt;class 'bool'&gt;",'<strong>Booleano.</strong> Curiosamente, <code>bool</code> es subclase de <code>int</code>: <code>True</code> vale 1 y <code>False</code> vale 0.'],
-  ['[1, 2, 3]',"&lt;class 'list'&gt;",'<strong>Lista:</strong> mutable y ordenada. Es el "array" de Python — lo verás a fondo en la unidad de arrays.'],
-  ['{"a": 1}',"&lt;class 'dict'&gt;",'<strong>Diccionario:</strong> pares clave-valor. La estructura más usada en Python para datos.'],
-  ['(1, 2)',"&lt;class 'tuple'&gt;",'<strong>Tupla:</strong> como una lista, pero <em>inmutable</em>. No se puede modificar después de crearla.'],
-  ['None',"&lt;class 'NoneType'&gt;",'<strong>La ausencia de valor.</strong> El <code>null</code> de Python. Lo devuelve una función que no retorna nada.'],
-];
-$('ti-chips').innerHTML=tipos.map((t,i)=>'<button class="ti-chip'+(i===0?' on':'')+'" data-i="'+i+'">'+t[0]+'</button>').join('');
-function tiRender(i){
-  const t=tipos[i];
-  $('ti-cmd').textContent='type('+t[0]+')';
-  $('ti-res').innerHTML=t[1];
-  $('ti-note').innerHTML=t[2];
-}
-document.querySelectorAll('.ti-chip').forEach(c=>{
-  c.addEventListener('click',()=>{
-    document.querySelectorAll('.ti-chip').forEach(x=>x.classList.remove('on'));
-    c.classList.add('on');
-    tiRender(+c.dataset.i);
-  });
-});
-tiRender(0);
-
-// ─── W3: operadores ─────────────────────────────────────────
-const ops=[
-  ['7 / 2','3.5','ok','La división <code>/</code> <strong>siempre da float</strong> en Python 3, aunque divida exacto. <code>4 / 2</code> da <code>2.0</code>, no <code>2</code>.'],
-  ['7 // 2','3','ok','División <strong>entera</strong> (floor): trunca hacia abajo. Útil cuando quieres un entero sin decimales.'],
-  ['7 % 2','1','ok','<strong>Módulo:</strong> el residuo de la división. <code>n % 2 == 0</code> es la forma clásica de saber si <code>n</code> es par.'],
-  ['2 ** 10','1024','ok','<strong>Potencia.</strong> En muchos lenguajes necesitas una función; en Python es un operador: 2 elevado a 10.'],
-  ['"ab" * 3','"ababab"','ok','El <code>*</code> con un string lo <strong>repite</strong>. Truco útil: <code>"-" * 20</code> hace una línea separadora.'],
-  ['True + True','2','ok','Como <code>bool</code> es <code>int</code> por debajo, <code>True + True</code> es <code>1 + 1 = 2</code>. Sirve para contar condiciones verdaderas.'],
-  ['"5" + 3','TypeError','err','Python <strong>NO mezcla</strong> str e int. Esto que en JavaScript daría <code>"53"</code>, aquí es un error — y eso es bueno: te obliga a ser explícito.'],
-  ['10 == 10.0','True','ok','El <code>==</code> compara el <strong>valor</strong>, no el tipo. Un <code>int</code> y un <code>float</code> con el mismo valor son iguales.'],
-];
-$('op-chips').innerHTML=ops.map((o,i)=>'<button class="op-chip'+(i===0?' on':'')+'" data-i="'+i+'">'+o[0]+'</button>').join('');
-function opRender(i){
-  const o=ops[i];
-  $('op-expr').textContent=o[0];
-  $('op-res').textContent=o[1];
-  $('op-res').className='op-res '+o[2];
-  $('op-note').innerHTML=o[3];
-}
-document.querySelectorAll('.op-chip').forEach(c=>{
-  c.addEventListener('click',()=>{
-    document.querySelectorAll('.op-chip').forEach(x=>x.classList.remove('on'));
-    c.classList.add('on');
-    opRender(+c.dataset.i);
-  });
-});
-opRender(0);
-
-// ─── W4: quadrant ───────────────────────────────────────────
-const langs={
-  python:{
-    tag:'Python · dinámico + fuerte',
-    code:[
-      'x = <span class="num">5</span>',
-      'x = <span class="str">"hola"</span>   <span class="cm"># permitido</span>',
-      '<span class="str">"5"</span> + <span class="num">3</span>      <span class="err"># TypeError</span>',
-    ],
-    text:'No declaras tipos (se infieren), pero Python <strong>no hace coerción loca</strong>: mezclar str e int es error. Flexible para escribir, estricto para evitar bugs.'
-  },
-  java:{
-    tag:'Java · estático + fuerte',
-    code:[
-      '<span class="ty">int</span> x = <span class="num">5</span>;',
-      '<span class="cm">// x = "hola"; ✗</span>',
-      '<span class="ty">String</span> s = <span class="str">"hola"</span>;',
-    ],
-    text:'Declaras <strong>cada tipo</strong> y no cambia. El compilador te protege antes de ejecutar. Más verboso de escribir, pero atrapa errores temprano.'
-  },
-  js:{
-    tag:'JavaScript · dinámico + débil',
-    code:[
-      '<span class="kw">let</span> x = <span class="num">5</span>;',
-      'x = <span class="str">"hola"</span>;   <span class="cm">// permitido</span>',
-      '<span class="str">"5"</span> + <span class="num">3</span>       <span class="cm">// "53" (!)</span>',
-      '<span class="str">"5"</span> - <span class="num">3</span>       <span class="cm">// 2 (!!)</span>',
-    ],
-    text:'No declaras <em>y</em> hace <strong>coerción agresiva</strong>: convierte tipos como puede para que "funcione". Flexible hasta el caos — fuente de bugs sutiles y difíciles.'
-  },
-  go:{
-    tag:'Go · estático + fuerte (con inferencia)',
-    code:[
-      'x := <span class="num">5</span>        <span class="cm">// infiere int</span>',
-      '<span class="cm">// x = "hola" ✗</span>',
-      's := <span class="str">"hola"</span>   <span class="cm">// infiere string</span>',
-    ],
-    text:'No escribes el tipo (lo <strong>infiere</strong> con <code>:=</code>) pero una vez fijado no cambia. Lo mejor de ambos mundos: conciso como Python, seguro como Java.'
-  }
-};
-function quadRender(key){
-  const l=langs[key];
-  $('quad-code').innerHTML=l.code.map(L).join('');
-  $('quad-tag').textContent=l.tag;
-  $('quad-text').innerHTML=l.text;
-}
-document.querySelectorAll('.quad-lang').forEach(b=>{
+document.querySelectorAll('[data-eq]').forEach(b=>{
   b.addEventListener('click',()=>{
-    document.querySelectorAll('.quad-lang').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('[data-eq]').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');
-    quadRender(b.dataset.lang);
+    eqRender(b.dataset.eq);
   });
 });
-quadRender('python');
+eqRender('clase');
+
+// ─── W4: checklist ──────────────────────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
 </script>
 </body>
 </html>

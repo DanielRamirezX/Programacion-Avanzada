@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión VIII — El plano del software — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:660px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+
+/* W1: anatomía caja UML */
+.ub-stage{display:grid;grid-template-columns:1fr 1.1fr;gap:1.5rem;align-items:start;}
+.ub-box{background:var(--paper);border:2px solid var(--ink);max-width:340px;margin:0 auto;font-family:'JetBrains Mono',monospace;font-size:.82rem;}
+.ub-sec{padding:.8rem 1.1rem;border-bottom:2px solid var(--ink);cursor:pointer;transition:background .2s;}
+.ub-sec:last-child{border-bottom:none;}
+.ub-sec:hover{background:rgba(160,36,24,.05);}
+.ub-sec.active{background:rgba(160,36,24,.1);}
+.ub-name{text-align:center;font-weight:700;font-size:1rem;color:var(--ink);}
+.ub-line{padding:.1rem 0;color:var(--ink-soft);}
+.ub-line .vis{cursor:pointer;font-weight:700;padding:.05rem .3rem;border-radius:2px;transition:all .2s;}
+.ub-line .vis.priv{color:var(--blood);}
+.ub-line .vis.pub{color:var(--olive);}
+.ub-line .vis:hover{background:rgba(160,36,24,.1);}
+.ub-line .vis.active{background:var(--blood);color:var(--paper);}
+.ub-line .typ{color:#3E6E86;cursor:pointer;padding:.05rem .2rem;border-radius:2px;}
+.ub-line .typ:hover{background:rgba(62,110,134,.12);}
+.ub-line .typ.active{background:#3E6E86;color:var(--paper);}
+.ub-panel{background:var(--ink);padding:1.5rem;min-height:220px;display:flex;flex-direction:column;gap:.7rem;}
+.ub-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.ub-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--paper);line-height:1.1;}
+.ub-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.ub-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
+.ub-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.82rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* W2: relaciones */
+.rel-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
+.rel-draw{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;min-height:240px;}
+.rel-svg{width:100%;max-width:420px;}
+.rel-svg .box{fill:var(--paper-deep);stroke:var(--ink);stroke-width:1.5;}
+.rel-svg .boxname{font-family:'JetBrains Mono',monospace;font-size:13px;fill:var(--ink);font-weight:700;text-anchor:middle;}
+.rel-svg .rline{stroke:var(--blood);stroke-width:2;fill:none;}
+.rel-svg .rshape-filled{fill:var(--blood);stroke:var(--blood);}
+.rel-svg .rshape-empty{fill:var(--paper);stroke:var(--blood);stroke-width:2;}
+.rel-svg .mult{font-family:'JetBrains Mono',monospace;font-size:11px;fill:var(--ink-soft);}
+.rel-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--ink);text-align:center;}
+.rel-phrase strong{color:var(--blood);font-style:normal;}
+.rel-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.rel-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.rel-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
+.rel-desc em{color:#E8B04A;}
+.rel-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:var(--paper);padding:.8rem 1rem;background:rgba(239,230,210,.06);border-left:2px solid var(--ochre);}
+.rel-code .kw{color:#D4956A;font-style:italic;}
+.rel-code .ty{color:#A6C2D6;}
+.rel-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+
+/* W3: diagrama biblioteca */
+.lib-scroll{overflow-x:auto;}
+.lib-canvas{position:relative;width:740px;height:480px;margin:0 auto;}
+.uml-class{position:absolute;width:215px;background:var(--paper);border:2px solid var(--ink);font-family:'JetBrains Mono',monospace;font-size:.68rem;cursor:pointer;transition:all .25s;}
+.uml-class:hover{border-color:var(--blood);}
+.uml-class.lit{border-color:var(--blood);box-shadow:0 0 0 3px rgba(160,36,24,.15);}
+.uml-h{text-align:center;font-weight:700;font-size:.82rem;padding:.45rem;border-bottom:1.5px solid var(--ink);color:var(--ink);}
+.uml-s{padding:.45rem .7rem;border-bottom:1.5px solid var(--ink);color:var(--ink-soft);line-height:1.65;}
+.uml-s:last-child{border-bottom:none;}
+.uml-s .pv{color:var(--blood);font-weight:700;}
+.uml-s .pb{color:var(--olive);font-weight:700;}
+.lib-svg{position:absolute;inset:0;pointer-events:none;}
+.lib-svg .rel line, .lib-svg .rel path, .lib-svg .rel polygon{stroke:rgba(42,29,20,.55);stroke-width:1.5;fill:none;transition:all .25s;}
+.lib-svg .rel polygon.fill{fill:rgba(42,29,20,.55);}
+.lib-svg .rel polygon.open{fill:var(--paper);}
+.lib-svg .rel text{font-family:'JetBrains Mono',monospace;font-size:11px;fill:var(--ink-soft);stroke:none;}
+.lib-svg .rel.lit line, .lib-svg .rel.lit path, .lib-svg .rel.lit polygon{stroke:var(--blood);stroke-width:2.5;}
+.lib-svg .rel.lit polygon.fill{fill:var(--blood);}
+.lib-svg .rel.lit text{fill:var(--blood);font-weight:700;}
+.lib-panel{margin-top:1.4rem;padding:1.2rem 1.5rem;background:var(--paper);border-left:3px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);min-height:4.2rem;}
+.lib-panel strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W4: secuencia */
+.sq-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem;}
+.sq-chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.5rem .85rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.sq-chip:hover{border-color:var(--blood);color:var(--blood);}
+.sq-chip.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.sq-explain{padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.45;color:var(--ink-soft);margin-bottom:1.8rem;}
+.sq-explain strong{color:var(--ink);font-style:normal;font-weight:600;}
+.seq-scroll{overflow-x:auto;}
+.seq-canvas{position:relative;width:700px;height:430px;margin:0 auto;}
+.seq-actor{position:absolute;top:0;width:130px;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.72rem;text-align:center;padding:.55rem .4rem;font-weight:700;}
+.seq-life{position:absolute;top:38px;bottom:0;width:0;border-left:2px dashed rgba(42,29,20,.35);transform:translateX(-1px);}
+.seq-act{position:absolute;width:10px;background:var(--paper);border:1.5px solid var(--ink);transform:translateX(-50%);opacity:0;transition:opacity .4s;}
+.seq-act.show{opacity:1;}
+.seq-msg{position:absolute;height:2px;background:var(--ink);opacity:0;transition:opacity .4s;}
+.seq-msg.ret{background:none;border-top:2px dashed var(--ink-soft);height:0;}
+.seq-msg.show{opacity:1;}
+.seq-msg .arr{position:absolute;right:-2px;top:-5px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:9px solid var(--ink);}
+.seq-msg.ret .arr{right:auto;left:-2px;top:-7px;border-left:none;border-right:9px solid var(--ink-soft);}
+.seq-msg .lbl{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--ink);background:rgba(239,230,210,.85);padding:0 .4rem;}
+.seq-msg.ret .lbl{color:var(--ink-soft);font-style:italic;}
+.seq-msg.cur{background:var(--blood);}
+.seq-msg.cur .arr{border-left-color:var(--blood);}
+.seq-msg.cur.ret{border-top-color:var(--blood);background:none;}
+.seq-msg.cur.ret .arr{border-right-color:var(--blood);border-left:none;}
+.seq-msg.cur .lbl{color:var(--blood);font-weight:700;}
+.seq-msg .dot{position:absolute;top:-5px;left:0;width:11px;height:11px;border-radius:50%;background:var(--blood);opacity:0;}
+.seq-msg.cur .dot{opacity:1;animation:travel 1.1s ease-in-out;}
+.seq-msg.cur.ret .dot{animation:travelBack 1.1s ease-in-out;}
+@keyframes travel{from{left:0;}to{left:calc(100% - 11px);}}
+@keyframes travelBack{from{left:calc(100% - 11px);}to{left:0;}}
+.seq-desc{margin-top:1.3rem;padding:1.2rem 1.5rem;background:var(--ink);min-height:5rem;display:flex;gap:1rem;align-items:flex-start;}
+.seq-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.2rem;color:var(--ochre);line-height:1;flex-shrink:0;}
+.seq-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.45;color:rgba(239,230,210,.88);}
+.seq-txt strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* W5: flecha→código */
+.fc-stage{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2rem;align-items:center;}
+.fc-box{background:var(--paper);border:1px solid var(--line);padding:1.4rem;text-align:center;}
+.fc-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.8rem;}
+.fc-content{font-family:'JetBrains Mono',monospace;font-size:.92rem;color:var(--ink);}
+.fc-content .hl{color:var(--blood);font-weight:700;}
+.fc-eq{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.6rem;color:var(--blood);}
+.fc-note{margin-top:1.4rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);}
+.fc-note strong{color:var(--olive);font-style:normal;font-weight:600;}
+
+/* herramientas / guía */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:1.5rem;}
+.tool-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--olive);padding:1.4rem;}
+.tool-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.4rem;}
+.tool-d{font-size:.95rem;color:var(--ink-soft);line-height:1.45;}
+.tool-d em{color:var(--ink);}
+.guia{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.guia-card{background:var(--paper);border:1px solid var(--line);padding:1.3rem 1.5rem;}
+.guia-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--ink);line-height:1.4;}
+.guia-q::before{content:'¿';color:var(--blood);}
+.guia-hint{font-size:.88rem;color:rgba(42,29,20,.55);margin-top:.5rem;font-style:italic;}
+
+/* W3b: herencia adelanto */
+.her-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.her-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:240px;}
+.her-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;}
+.her-code .ln.hl{background:rgba(232,176,74,.25);}
+.her-code .kw{color:#D4956A;font-style:italic;}
+.her-code .ty{color:#A6C2D6;}
+.her-code .self{color:#8EAF8B;font-weight:700;}
+.her-code .str{color:#C9A961;}
+.her-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.her-note{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:var(--ink-soft);}
+.her-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.her-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.her-py{margin-top:1.4rem;padding:1rem 1.3rem;background:rgba(93,102,56,.08);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.5;color:var(--ink-soft);}
+.her-py strong{color:var(--olive);font-style:normal;font-weight:600;}
+.her-py code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper);padding:.1rem .35rem;border:1px solid var(--line);color:var(--olive);}
+.her-disclaimer{margin-top:1.4rem;padding:1rem 1.3rem;background:rgba(160,36,24,.05);border:1px dashed var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.45;color:var(--ink-soft);}
+.her-disclaimer strong{color:var(--blood);font-style:normal;font-weight:600;}
+
+/* W3c: código java biblioteca */
+.jv-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.jv-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.jv-tab:hover{border-color:var(--blood);color:var(--blood);}
+.jv-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.jv-tab.console{border-style:dashed;}
+.jv-tab.console.on{background:var(--olive);border-color:var(--olive);}
+.jv-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--paper);min-height:300px;overflow-x:auto;}
+.jv-code .ln{white-space:pre;display:block;}
+.jv-code .kw{color:#D4956A;font-style:italic;}
+.jv-code .ty{color:#A6C2D6;}
+.jv-code .self{color:#8EAF8B;font-weight:700;}
+.jv-code .str{color:#C9A961;}
+.jv-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.jv-code .out{color:#9FBF9C;}
+.jv-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.jv-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.jv-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .ub-stage,.rel-stage,.guia,.fc-stage,.her-stage{grid-template-columns:1fr;}
+  .fc-eq{text-align:center;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-07.html" class="back">Sesión 07</a>
+  <span class="session-label">Sesión 08 · Práctica 1 · 12.06.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">┌──────────┐</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">− titulo: String</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">1..*  ──────▷</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">taquilla → funcion : hayAsientos()</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">+ prestar(): void</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión VIII · Práctica 1 · continuación · Ref. Temario 1.1 – 1.2.5 · UML</div>
+    <h1>El plano<br>del <em>software.</em></h1>
+    <p class="hero-sub">Ningún arquitecto construye sin planos. Hoy aprendes a dibujar los dos que pide tu práctica: el <em>diagrama de clases</em> (la estructura) y el <em>diagrama de secuencia</em> (la conversación entre objetos).</p>
+  </div>
+</section>
+
+<!-- I -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · Dos planos, dos preguntas</p>
+    <p class="lead">El diagrama de clases responde:<br><em>¿qué existe?</em><br>El de secuencia responde: <em>¿qué pasa?</em></p>
+    <p class="subtle">El de clases es la foto — estructura, atributos, relaciones. El de secuencia es la película — quién le habla a quién, en qué orden, para lograr una acción. Tu práctica pide los dos. Los ejemplos de hoy usan <strong>otros dominios</strong> (una biblioteca, un cine): tu trabajo es aprender la notación aquí y aplicarla a <em>tu</em> caso.</p>
+  </div>
+</section>
+
+<!-- II: caja UML -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La caja UML — anatomía</p>
+    <p class="lead">Una clase en UML es un rectángulo<br>de <em>tres pisos.</em></p>
+    <p class="subtle">Nombre arriba, atributos en medio, métodos abajo. Y dos símbolos que ya conoces de otra forma: <strong style="color:var(--blood)">−</strong> es privado, <strong style="color:var(--olive)">+</strong> es público — el encapsulamiento del temario 1.3, dibujado. Toca cada parte:</p>
+    <div class="widget" data-tag="Toca la caja">
+      <div class="ub-stage">
+        <div class="ub-box">
+          <div class="ub-sec active" data-u="nombre">
+            <div class="ub-name">Libro</div>
+          </div>
+          <div class="ub-sec" data-u="attrs">
+            <div class="ub-line"><span class="vis priv" data-u="priv">−</span> titulo: <span class="typ" data-u="tipo">String</span></div>
+            <div class="ub-line"><span class="vis priv" data-u="priv">−</span> autor: <span class="typ" data-u="tipo">String</span></div>
+            <div class="ub-line"><span class="vis priv" data-u="priv">−</span> disponible: <span class="typ" data-u="tipo">boolean</span></div>
+          </div>
+          <div class="ub-sec" data-u="methods">
+            <div class="ub-line"><span class="vis pub" data-u="pub">+</span> prestar(): <span class="typ" data-u="tipo">void</span></div>
+            <div class="ub-line"><span class="vis pub" data-u="pub">+</span> devolver(): <span class="typ" data-u="tipo">void</span></div>
+            <div class="ub-line"><span class="vis pub" data-u="pub">+</span> getTitulo(): <span class="typ" data-u="tipo">String</span></div>
+          </div>
+        </div>
+        <div class="ub-panel">
+          <div class="ub-tag" id="ub-tag">Piso 1</div>
+          <div class="ub-title" id="ub-title">El nombre</div>
+          <div class="ub-desc" id="ub-desc">El nombre de la clase, <strong>centrado y con mayúscula inicial</strong>. Es el mismo nombre que escribirás en <code>public class Libro</code>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: relaciones -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Las relaciones — las flechas que importan</p>
+    <p class="lead">Las cajas son fáciles.<br>El diseño vive en las <em>flechas.</em></p>
+    <p class="subtle">Cuatro tipos de relación + la multiplicidad. Cada flecha tiene su forma y su frase clave. Recorre los cinco:</p>
+    <div class="widget" data-tag="Cinco conceptos · cinco flechas">
+      <div class="rel-stage">
+        <div class="rel-draw">
+          <svg class="rel-svg" viewBox="0 0 420 130" id="rel-svg"></svg>
+          <div class="rel-phrase" id="rel-phrase"></div>
+        </div>
+        <div class="rel-side">
+          <div class="rel-desc" id="rel-desc"></div>
+          <div class="rel-code" id="rel-code"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-rel="asoc">Asociación</button>
+        <button class="btn" data-rel="her">Herencia</button>
+        <button class="btn" data-rel="comp">Composición</button>
+        <button class="btn" data-rel="agre">Agregación</button>
+        <button class="btn" data-rel="mult">Multiplicidad</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III.b: herencia adelanto -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Herencia — el adelanto en Java</p>
+    <p class="lead">Acabas de ver el triángulo vacío.<br>Mira el código que <em>representa.</em></p>
+    <p class="subtle">Para que esa flecha no te quede en el aire: así se escribe herencia en Java. Recórrelo en 3 pasos — lo nuevo de cada paso se resalta:</p>
+    <div class="widget" data-tag="Tres pasos · extends">
+      <div class="her-stage">
+        <div class="her-code" id="her-code"></div>
+        <div class="her-note" id="her-note"></div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-her="padre">1 · La clase padre</button>
+        <button class="btn" data-her="hija">2 · La hija extends</button>
+        <button class="btn" data-her="uso">3 · Usar lo heredado</button>
+      </div>
+      <div class="her-py"><strong>¿Y en Python?</strong> Misma idea, sintaxis más corta: <code>class Moto(Vehiculo):</code> para heredar, y <code>super().__init__(marca)</code> para llamar al constructor del padre. La veremos a fondo — en ambos lenguajes — en la unidad 5.</div>
+      <div class="her-disclaimer"><strong>Importante:</strong> tu Práctica 1 <strong>no requiere herencia</strong>. Sus clases se relacionan por asociación y agregación — las flechas de la sección anterior. Este adelanto es para que entiendas la notación completa cuando la veas en otros diagramas, no para que la fuerces en tu diseño.</div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: diagrama completo -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Un diagrama completo — la biblioteca</p>
+    <p class="lead">Cuatro clases, cuatro relaciones.<br><em>Toca cada clase</em> y sigue sus conexiones.</p>
+    <p class="subtle">Así se ve un diagrama de clases terminado. Nota la estructura: una clase <em>gestora</em> (Biblioteca), entidades (Libro, Socio) y una clase que las <em>conecta</em> (Prestamo). Tu caso tiene una estructura análoga — descúbrela tú:</p>
+    <div class="widget" data-tag="Click en cada clase">
+      <div class="lib-scroll">
+        <div class="lib-canvas">
+          <svg class="lib-svg" width="740" height="480" viewBox="0 0 740 480">
+            <g class="rel" id="lr1">
+              <line x1="235" y1="70" x2="505" y2="70"/>
+              <polygon class="open" points="235,70 251,63 267,70 251,77"/>
+              <text x="470" y="60">1..*</text>
+            </g>
+            <g class="rel" id="lr2">
+              <line x1="120" y1="150" x2="120" y2="286"/>
+              <polygon class="open" points="120,290 112,274 128,274"/>
+              <text x="132" y="240">1..*</text>
+            </g>
+            <g class="rel" id="lr3">
+              <line x1="235" y1="330" x2="556" y2="172"/>
+              <polygon class="open" points="560,170 544,172 552,185"/>
+              <text x="516" y="205">1</text>
+            </g>
+            <g class="rel" id="lr4">
+              <line x1="235" y1="375" x2="505" y2="375"/>
+              <polygon class="open" points="505,375 489,368 489,382"/>
+              <text x="470" y="365">1</text>
+            </g>
+          </svg>
+          <div class="uml-class" style="left:18px;top:18px" data-c="biblioteca">
+            <div class="uml-h">Biblioteca</div>
+            <div class="uml-s"><span class="pv">−</span> nombre: String</div>
+            <div class="uml-s"><span class="pb">+</span> agregarLibro(l: Libro)<br><span class="pb">+</span> registrarPrestamo(...)<br><span class="pb">+</span> reporteLibros()</div>
+          </div>
+          <div class="uml-class" style="left:505px;top:18px" data-c="libro">
+            <div class="uml-h">Libro</div>
+            <div class="uml-s"><span class="pv">−</span> titulo: String<br><span class="pv">−</span> disponible: boolean</div>
+            <div class="uml-s"><span class="pb">+</span> prestar(): void<br><span class="pb">+</span> devolver(): void</div>
+          </div>
+          <div class="uml-class" style="left:18px;top:290px" data-c="prestamo">
+            <div class="uml-h">Prestamo</div>
+            <div class="uml-s"><span class="pv">−</span> fecha: String<br><span class="pv">−</span> libro: Libro<br><span class="pv">−</span> socio: Socio</div>
+            <div class="uml-s"><span class="pb">+</span> resumen(): String</div>
+          </div>
+          <div class="uml-class" style="left:505px;top:290px" data-c="socio">
+            <div class="uml-h">Socio</div>
+            <div class="uml-s"><span class="pv">−</span> nombre: String<br><span class="pv">−</span> numSocio: int</div>
+            <div class="uml-s"><span class="pb">+</span> getNombre(): String</div>
+          </div>
+        </div>
+      </div>
+      <div class="lib-panel" id="lib-panel"><strong>Toca una clase</strong> para ver su papel en el diseño y con quién se relaciona.</div>
+    </div>
+
+    <p class="lead" style="margin-top:3.5rem;font-size:clamp(1.4rem,2.8vw,2rem)">Y este diagrama, <em>convertido en código.</em><br>Recorre los archivos y termina en la consola.</p>
+    <p class="subtle">Cinco archivos — uno por clase, más el Main que arma todo. Compara cada archivo con su caja del diagrama: los tres pisos están ahí. Al final, pulsa <strong style="color:var(--olive)">▶ Consola</strong> para ver qué imprime:</p>
+    <div class="widget" data-tag="Del diagrama al proyecto">
+      <div class="jv-tabs">
+        <button class="jv-tab on" data-jf="libro">Libro.java</button>
+        <button class="jv-tab" data-jf="socio">Socio.java</button>
+        <button class="jv-tab" data-jf="prestamo">Prestamo.java</button>
+        <button class="jv-tab" data-jf="biblioteca">Biblioteca.java</button>
+        <button class="jv-tab" data-jf="main">Main.java</button>
+        <button class="jv-tab console" data-jf="consola">▶ Consola</button>
+      </div>
+      <div class="jv-code" id="jv-code"></div>
+      <div class="jv-note" id="jv-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- V: secuencia -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · El diagrama de secuencia — la película</p>
+    <p class="lead">Los objetos no trabajan solos:<br><em>conversan.</em> Esto es esa conversación, dibujada.</p>
+    <p class="subtle">Primero los 5 componentes de la notación. Luego, míralos en acción con un caso de <em>cine</em>: un cliente compra un boleto. Toca cada componente:</p>
+    <div class="widget" data-tag="Componentes · luego acción">
+      <div class="sq-chips">
+        <button class="sq-chip on" data-s="actor">Objeto / actor</button>
+        <button class="sq-chip" data-s="life">Línea de vida</button>
+        <button class="sq-chip" data-s="act">Activación</button>
+        <button class="sq-chip" data-s="msg">Mensaje →</button>
+        <button class="sq-chip" data-s="ret">Retorno ⇢</button>
+      </div>
+      <div class="sq-explain" id="sq-explain"></div>
+      <div class="seq-scroll">
+        <div class="seq-canvas" id="seq-canvas">
+          <div class="seq-actor" style="left:12%">cliente</div>
+          <div class="seq-actor" style="left:38%">taquilla</div>
+          <div class="seq-actor" style="left:64%">funcion</div>
+          <div class="seq-actor" style="left:88%">boleto</div>
+          <div class="seq-life" style="left:12%"></div>
+          <div class="seq-life" style="left:38%"></div>
+          <div class="seq-life" style="left:64%"></div>
+          <div class="seq-life" style="left:88%"></div>
+          <div class="seq-act" id="act-taq" style="left:38%;top:88px;height:280px"></div>
+          <div class="seq-act" id="act-fun" style="left:64%;top:140px;height:60px"></div>
+          <div class="seq-act" id="act-bol" style="left:88%;top:250px;height:60px"></div>
+          <div class="seq-msg" id="m0" style="left:12%;width:26%;top:90px"><span class="lbl">comprarBoleto("Dune", 2)</span><span class="arr"></span><span class="dot"></span></div>
+          <div class="seq-msg" id="m1" style="left:38%;width:26%;top:145px"><span class="lbl">hayAsientos(2)</span><span class="arr"></span><span class="dot"></span></div>
+          <div class="seq-msg ret" id="m2" style="left:38%;width:26%;top:200px"><span class="lbl">true</span><span class="arr"></span><span class="dot"></span></div>
+          <div class="seq-msg" id="m3" style="left:38%;width:50%;top:255px"><span class="lbl">«crear» Boleto("Dune", 2)</span><span class="arr"></span><span class="dot"></span></div>
+          <div class="seq-msg ret" id="m4" style="left:38%;width:50%;top:310px"><span class="lbl">boleto</span><span class="arr"></span><span class="dot"></span></div>
+          <div class="seq-msg ret" id="m5" style="left:12%;width:26%;top:365px"><span class="lbl">boleto</span><span class="arr"></span><span class="dot"></span></div>
+        </div>
+      </div>
+      <div class="seq-desc">
+        <div class="seq-num" id="seq-num">·</div>
+        <div class="seq-txt" id="seq-txt">Pulsa <strong>Play</strong> o avanza paso a paso para ver la conversación entre los cuatro objetos.</div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="seq-reset">⟲ Reset</button>
+        <button class="btn" id="seq-prev">◀ Atrás</button>
+        <button class="btn on" id="seq-next">Siguiente ▶</button>
+        <button class="btn" id="seq-play">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: flecha a código -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Del dibujo al código</p>
+    <p class="lead">Cada flecha del diagrama<br>es una <em>línea de código.</em></p>
+    <div class="widget" data-tag="La traducción">
+      <div class="fc-stage">
+        <div class="fc-box">
+          <div class="fc-tag">En el diagrama de secuencia</div>
+          <div class="fc-content">taquilla → funcion : <span class="hl">hayAsientos(2)</span></div>
+        </div>
+        <div class="fc-eq">≡</div>
+        <div class="fc-box">
+          <div class="fc-tag">En el código Java</div>
+          <div class="fc-content">funcion.<span class="hl">hayAsientos(2)</span>;</div>
+        </div>
+      </div>
+      <div class="fc-note"><strong>La regla de oro:</strong> la flecha sale de quien <em>llama</em> y llega a quien <em>tiene el método</em>. Si tu diagrama de secuencia tiene una flecha que llega a un objeto, esa clase DEBE tener ese método en tu diagrama de clases. Los dos planos deben coincidir — eso es lo primero que revisaré en tu práctica.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: tu práctica -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · Ahora, tu caso</p>
+    <p class="lead">Ya tienes la notación.<br>Aplícala a la <em>empresa ecológica.</em></p>
+    <p class="subtle">Las herramientas para dibujar — elige una:</p>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-t">Papel y pluma</div>
+        <div class="tool-d">La más rápida para pensar. Dibuja, tacha, rehaz. Al final toma una <em>foto legible</em> para el documento. Totalmente válido.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-t">draw.io (diagrams.net)</div>
+        <div class="tool-d">Gratis, en el navegador, con plantillas UML. Arrastra cajas y flechas. Exporta como imagen PNG para pegar en tu Word.</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-t">Mermaid</div>
+        <div class="tool-d">Diagramas escritos como <em>texto</em> — se renderizan solos en GitHub. Investiga: <span style="font-family:'JetBrains Mono',monospace;font-size:.8rem">mermaid classDiagram syntax</span>. Puntos extra de estilo si tu README los incluye.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2.5rem">Y las preguntas que tu diagrama debe poder responder — <em>revísalas antes de entregar:</em></p>
+    <div class="guia">
+      <div class="guia-card">
+        <div class="guia-q">Cada clase tiene sus tres pisos completos — nombre, atributos con tipo, métodos?</div>
+        <div class="guia-hint">Y cada atributo con su − o + según lo que decidiste encapsular.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Qué relación une tus clases, y qué multiplicidad tiene cada extremo?</div>
+        <div class="guia-hint">¿Una venta tiene cuántos productos? ¿El inventario cuántos…? Tú decides y lo justificas.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Tu diagrama de secuencia cuenta una historia completa — de la petición al resultado?</div>
+        <div class="guia-hint">Sugerencia: dibuja la secuencia de "registrar una venta". Es la más interesante de tu caso.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Cada flecha de tu secuencia corresponde a un método que SÍ existe en tu diagrama de clases?</div>
+        <div class="guia-hint">La regla de oro de la sección VI. Coherencia entre planos = puntos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">IX · Para la próxima clase</p>
+    <p class="lead">Un buen diagrama vale más<br>que cien líneas de código <em>improvisado.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance de la Práctica 1</div>
+      <ol>
+        <li>Termina el <strong>diagrama de clases</strong> de tu caso: tres pisos por clase, visibilidad (− / +), relaciones con multiplicidad.</li>
+        <li>Dibuja el <strong>diagrama de secuencia</strong> del requerimiento "registrar una venta con cálculo del total".</li>
+        <li><strong>Verifica la coherencia:</strong> cada flecha de la secuencia debe ser un método que existe en tu diagrama de clases.</li>
+        <li>Con los planos listos, <strong>empieza el código Java en Eclipse</strong> — una clase a la vez, compilando seguido.</li>
+        <li>Sube tus diagramas (foto o export) a tu repo. La próxima clase: avance de implementación en vivo.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Práctica 1 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: caja UML ───────────────────────────────────────────
+const ubData={
+  nombre:{tag:'Piso 1',title:'El nombre',desc:'El nombre de la clase, <strong>centrado y con mayúscula inicial</strong>. Es el mismo nombre que escribirás en <code>public class Libro</code>.'},
+  attrs:{tag:'Piso 2',title:'Los atributos',desc:'Los <strong>datos</strong> que cada objeto guarda. Formato: <code>visibilidad nombre: Tipo</code>. Casi siempre privados (−) — el encapsulamiento que ya conoces.'},
+  methods:{tag:'Piso 3',title:'Los métodos',desc:'Lo que la clase <strong>sabe hacer</strong>. Formato: <code>+ nombre(params): TipoRetorno</code>. Públicos (+) porque son la puerta de entrada al objeto.'},
+  priv:{tag:'Visibilidad',title:'− privado',desc:'El signo <strong>menos</strong> = <code>private</code> en Java. Solo la propia clase puede tocarlo. Tus atributos deberían llevarlo casi siempre.'},
+  pub:{tag:'Visibilidad',title:'+ público',desc:'El signo <strong>más</strong> = <code>public</code> en Java. Cualquier otra clase puede llamarlo. Los métodos suelen ser públicos: son la interfaz del objeto.'},
+  tipo:{tag:'Tipado',title:'El tipo',desc:'UML declara tipos como Java: <code>titulo: String</code>, <code>prestar(): void</code>. El tipo va tras los dos puntos. <strong>void</strong> = el método no devuelve nada.'},
+};
+function ubRender(k){
+  const d=ubData[k];
+  $('ub-tag').textContent=d.tag;
+  $('ub-title').textContent=d.title;
+  $('ub-desc').innerHTML=d.desc;
+}
+document.querySelectorAll('[data-u]').forEach(el=>{
+  el.addEventListener('click',ev=>{
+    ev.stopPropagation();
+    document.querySelectorAll('[data-u]').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    ubRender(el.dataset.u);
+  });
+});
+
+// ─── W2: relaciones ─────────────────────────────────────────
+function relSvg(a,b,shape){
+  let mid='';
+  if(shape==='asoc') mid='<line class="rline" x1="120" y1="65" x2="300" y2="65"/><path class="rline" d="M288,57 L300,65 L288,73"/>';
+  if(shape==='her') mid='<line class="rline" x1="120" y1="65" x2="282" y2="65"/><polygon class="rshape-empty" points="300,65 282,55 282,75"/>';
+  if(shape==='comp') mid='<line class="rline" x1="148" y1="65" x2="300" y2="65"/><polygon class="rshape-filled" points="120,65 134,57 148,65 134,73"/><path class="rline" d="M288,57 L300,65 L288,73"/>';
+  if(shape==='agre') mid='<line class="rline" x1="148" y1="65" x2="300" y2="65"/><polygon class="rshape-empty" points="120,65 134,57 148,65 134,73"/><path class="rline" d="M288,57 L300,65 L288,73"/>';
+  if(shape==='mult') mid='<line class="rline" x1="120" y1="65" x2="300" y2="65"/><text class="mult" x="126" y="55">1</text><text class="mult" x="272" y="55">1..*</text>';
+  return '<rect class="box" x="10" y="40" width="110" height="50"/><text class="boxname" x="65" y="70">'+a+'</text>'+
+         '<rect class="box" x="300" y="40" width="110" height="50"/><text class="boxname" x="355" y="70">'+b+'</text>'+mid;
+}
+const relData={
+  asoc:{a:'Doctor',b:'Paciente',shape:'asoc',
+    phrase:'El doctor <strong>conoce a</strong> su paciente.',
+    desc:'<strong>Asociación:</strong> una clase usa o conoce a otra. La más común de todas. La flecha indica quién conoce a quién.',
+    code:'<span class="kw">class</span> Doctor {\n    <span class="kw">private</span> <span class="ty">Paciente</span> paciente;\n}'},
+  her:{a:'Moto',b:'Vehiculo',shape:'her',
+    phrase:'Una moto <strong>es un</strong> vehículo.',
+    desc:'<strong>Herencia:</strong> el triángulo vacío apunta al padre. La frase clave: <em>"es un"</em>. La verás a fondo en la unidad 5.',
+    code:'<span class="kw">class</span> Moto <span class="kw">extends</span> <span class="ty">Vehiculo</span> {\n    <span class="cm">// hereda todo de Vehiculo</span>\n}'},
+  comp:{a:'Casa',b:'Habitacion',shape:'comp',
+    phrase:'La habitación <strong>no existe sin</strong> la casa.',
+    desc:'<strong>Composición:</strong> diamante <em>relleno</em> en el lado del todo. Si destruyes la casa, las habitaciones mueren con ella. Vida ligada.',
+    code:'<span class="kw">class</span> Casa {\n    <span class="kw">private</span> <span class="ty">ArrayList</span>&lt;Habitacion&gt; cuartos\n        = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();\n}'},
+  agre:{a:'Equipo',b:'Jugador',shape:'agre',
+    phrase:'El jugador <strong>existe sin</strong> el equipo.',
+    desc:'<strong>Agregación:</strong> diamante <em>vacío</em>. El equipo tiene jugadores, pero si el equipo desaparece, los jugadores siguen existiendo. Vidas independientes.',
+    code:'<span class="kw">class</span> Equipo {\n    <span class="kw">private</span> <span class="ty">ArrayList</span>&lt;Jugador&gt; plantilla;\n    <span class="cm">// los jugadores llegan de fuera</span>\n}'},
+  mult:{a:'Escuela',b:'Alumno',shape:'mult',
+    phrase:'<strong>1</strong> escuela tiene <strong>1..*</strong> alumnos.',
+    desc:'<strong>Multiplicidad:</strong> cuántos participan en cada extremo. <strong>1</strong> = exactamente uno · <strong>0..1</strong> = opcional · <strong>1..*</strong> = uno o más · <strong>*</strong> = cualquier cantidad.',
+    code:'<span class="cm">// 1..* se traduce en una colección:</span>\n<span class="kw">private</span> <span class="ty">ArrayList</span>&lt;Alumno&gt; alumnos;'},
+};
+function relRender(k){
+  const d=relData[k];
+  $('rel-svg').innerHTML=relSvg(d.a,d.b,d.shape);
+  $('rel-phrase').innerHTML=d.phrase;
+  $('rel-desc').innerHTML=d.desc;
+  $('rel-code').innerHTML=d.code.replace(/\n/g,'<br>');
+}
+document.querySelectorAll('[data-rel]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-rel]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    relRender(b.dataset.rel);
+  });
+});
+relRender('asoc');
+
+// ─── W3: diagrama biblioteca ────────────────────────────────
+const libData={
+  biblioteca:{rels:['lr1','lr2'],txt:'<strong>Biblioteca — la gestora.</strong> Tiene los libros (agregación 1..*) y registra los préstamos (1..*). Sus métodos son los 3 requerimientos del sistema. ¿Qué clase juega este papel en tu caso?'},
+  libro:{rels:['lr1','lr3'],txt:'<strong>Libro — la entidad.</strong> Datos privados, métodos públicos que cambian su estado (prestar/devolver). La biblioteca lo contiene; el préstamo lo referencia.'},
+  prestamo:{rels:['lr2','lr3','lr4'],txt:'<strong>Prestamo — la clase que conecta.</strong> Une UN libro con UN socio en una fecha. Las clases-evento como esta son las que calculan cosas. En tu caso, ¿qué clase une productos con un total?'},
+  socio:{rels:['lr4'],txt:'<strong>Socio — la otra entidad.</strong> Simple: datos + getters. No sabe nada de préstamos — el préstamo lo conoce a él. Esa dirección de la flecha importa.'},
+};
+document.querySelectorAll('.uml-class').forEach(cl=>{
+  cl.addEventListener('click',()=>{
+    document.querySelectorAll('.uml-class').forEach(x=>x.classList.remove('lit'));
+    document.querySelectorAll('.lib-svg .rel').forEach(x=>x.classList.remove('lit'));
+    cl.classList.add('lit');
+    const d=libData[cl.dataset.c];
+    d.rels.forEach(r=>$(r).classList.add('lit'));
+    $('lib-panel').innerHTML=d.txt;
+  });
+});
+
+// ─── W4: secuencia ──────────────────────────────────────────
+const sqComp={
+  actor:'<strong>Objeto o actor:</strong> las cajas de arriba. Cada participante de la conversación. Por convención, en minúscula porque son <em>objetos</em>, no clases.',
+  life:'<strong>Línea de vida:</strong> la línea punteada vertical. Representa al objeto existiendo a lo largo del tiempo — el tiempo corre hacia abajo.',
+  act:'<strong>Activación:</strong> los rectángulos delgados sobre la línea de vida. Marcan cuándo el objeto está <em>trabajando</em> (ejecutando un método).',
+  msg:'<strong>Mensaje síncrono (flecha sólida):</strong> una llamada a método. Quien llama espera la respuesta. La etiqueta es el nombre del método con sus argumentos.',
+  ret:'<strong>Retorno (flecha punteada):</strong> la respuesta que regresa. Lleva el valor devuelto. Va en dirección contraria al mensaje original.',
+};
+document.querySelectorAll('.sq-chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.sq-chip').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    $('sq-explain').innerHTML=sqComp[c.dataset.s];
+  });
+});
+$('sq-explain').innerHTML=sqComp.actor;
+
+const seqSteps=[
+  {msg:'m0',acts:['act-taq'],txt:'El <strong>cliente</strong> le pide a la <strong>taquilla</strong>: comprarBoleto("Dune", 2). Mensaje síncrono — el cliente espera su boleto.'},
+  {msg:'m1',acts:['act-taq','act-fun'],txt:'La taquilla <strong>no sabe</strong> cuántos asientos quedan. Le pregunta al objeto que SÍ lo sabe: la <strong>función</strong>. Cada objeto, su responsabilidad.'},
+  {msg:'m2',acts:['act-taq','act-fun'],txt:'La función responde <strong>true</strong> — hay lugar. La flecha punteada es el <strong>retorno</strong>: la respuesta viajando de vuelta.'},
+  {msg:'m3',acts:['act-taq','act-bol'],txt:'Con asientos confirmados, la taquilla <strong>crea</strong> el boleto. El mensaje «crear» es el constructor: new Boleto("Dune", 2).'},
+  {msg:'m4',acts:['act-taq','act-bol'],txt:'El boleto recién nacido <strong>regresa</strong> a la taquilla. Otro retorno punteado.'},
+  {msg:'m5',acts:['act-taq'],txt:'La taquilla le <strong>entrega el boleto</strong> al cliente. Cuatro objetos colaboraron — y cada uno hizo <strong>solo su trabajo</strong>. Eso es diseño orientado a objetos.'},
+];
+let seqIdx=-1,seqTimer=null;
+function seqRender(){
+  seqSteps.forEach((s,i)=>{
+    const el=$(s.msg);
+    el.classList.toggle('show',i<=seqIdx);
+    el.classList.toggle('cur',i===seqIdx);
+  });
+  const acts=new Set();
+  for(let i=0;i<=seqIdx;i++) seqSteps[i].acts.forEach(a=>acts.add(a));
+  ['act-taq','act-fun','act-bol'].forEach(a=>$(a).classList.toggle('show',acts.has(a)));
+  if(seqIdx>=0){
+    $('seq-num').textContent=(seqIdx+1);
+    $('seq-txt').innerHTML=seqSteps[seqIdx].txt;
+  }else{
+    $('seq-num').textContent='·';
+    $('seq-txt').innerHTML='Pulsa <strong>Play</strong> o avanza paso a paso para ver la conversación entre los cuatro objetos.';
+  }
+}
+function seqStop(){if(seqTimer){clearInterval(seqTimer);seqTimer=null;$('seq-play').textContent='▶ Play';}}
+$('seq-next').addEventListener('click',()=>{seqStop();if(seqIdx<seqSteps.length-1){seqIdx++;seqRender();}});
+$('seq-prev').addEventListener('click',()=>{seqStop();if(seqIdx>-1){seqIdx--;seqRender();}});
+$('seq-reset').addEventListener('click',()=>{seqStop();seqIdx=-1;seqRender();});
+$('seq-play').addEventListener('click',()=>{
+  if(seqTimer){seqStop();return;}
+  if(seqIdx>=seqSteps.length-1){seqIdx=-1;seqRender();}
+  $('seq-play').textContent='❚❚ Pausa';
+  seqTimer=setInterval(()=>{
+    if(seqIdx<seqSteps.length-1){seqIdx++;seqRender();}
+    else seqStop();
+  },1700);
+});
+seqRender();
+
+// ─── W3b: herencia adelanto ─────────────────────────────────
+const herData={
+  padre:{
+    code:[
+      ['<span class="kw">class</span> Vehiculo {',0],
+      ['    <span class="kw">protected</span> <span class="ty">String</span> marca;',1],
+      ['',0],
+      ['    <span class="kw">public</span> Vehiculo(<span class="ty">String</span> marca) {',0],
+      ['        <span class="self">this</span>.marca = marca;',0],
+      ['    }',0],
+      ['',0],
+      ['    <span class="kw">public void</span> arrancar() {',1],
+      ['        System.out.println(<span class="str">"Brrr..."</span>);',0],
+      ['    }',0],
+      ['}',0],
+    ],
+    note:'Una clase normal — nada nuevo. Solo un detalle: <code>protected</code> es un nivel intermedio de visibilidad: <strong>privado para el mundo, visible para las hijas</strong>. El anillo intermedio del castillo del encapsulamiento.'
+  },
+  hija:{
+    code:[
+      ['<span class="kw">class</span> Moto <span class="kw">extends</span> Vehiculo {',1],
+      ['    <span class="kw">private</span> <span class="ty">int</span> cilindrada;',0],
+      ['',0],
+      ['    <span class="kw">public</span> Moto(<span class="ty">String</span> marca, <span class="ty">int</span> cc) {',0],
+      ['        <span class="kw">super</span>(marca);  <span class="cm">// constructor del padre</span>',1],
+      ['        <span class="self">this</span>.cilindrada = cc;',0],
+      ['    }',0],
+      ['}',0],
+    ],
+    note:'<strong>extends</strong> = la flecha del triángulo: "Moto <strong>es un</strong> Vehiculo". Y <code>super(marca)</code> llama <strong>primero</strong> al constructor del padre — la moto se construye sobre los cimientos del vehículo.'
+  },
+  uso:{
+    code:[
+      ['Moto m = <span class="kw">new</span> Moto(<span class="str">"Italika"</span>, 250);',0],
+      ['',0],
+      ['m.arrancar();  <span class="cm">// "Brrr..." ✓</span>',1],
+      ['',0],
+      ['<span class="cm">// Moto NUNCA definió arrancar().</span>',0],
+      ['<span class="cm">// Lo heredó completo de Vehiculo.</span>',0],
+    ],
+    note:'La magia: <strong>la moto sabe arrancar sin haberlo aprendido</strong> — lo heredó. Todo lo público y protected del padre es de la hija, gratis. Por eso la herencia se dibuja apuntando al padre: la hija <em>depende</em> de él.'
+  }
+};
+function herRender(k){
+  const d=herData[k];
+  $('her-code').innerHTML=d.code.map(([html,hl])=>'<span class="ln'+(hl?' hl':'')+'">'+html+'</span>').join('');
+  $('her-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-her]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-her]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    herRender(b.dataset.her);
+  });
+});
+herRender('padre');
+
+// ─── W3c: código java biblioteca ────────────────────────────
+const jfData={
+  libro:{
+    code:[
+      '<span class="kw">public class</span> Libro {',
+      '    <span class="kw">private</span> <span class="ty">String</span> titulo;',
+      '    <span class="kw">private</span> <span class="ty">boolean</span> disponible;',
+      '',
+      '    <span class="kw">public</span> Libro(<span class="ty">String</span> titulo) {',
+      '        <span class="self">this</span>.titulo = titulo;',
+      '        <span class="self">this</span>.disponible = <span class="kw">true</span>;  <span class="cm">// nace disponible</span>',
+      '    }',
+      '',
+      '    <span class="kw">public</span> <span class="ty">String</span> getTitulo() { <span class="kw">return</span> titulo; }',
+      '    <span class="kw">public</span> <span class="ty">boolean</span> isDisponible() { <span class="kw">return</span> disponible; }',
+      '',
+      '    <span class="kw">public void</span> prestar()  { <span class="self">this</span>.disponible = <span class="kw">false</span>; }',
+      '    <span class="kw">public void</span> devolver() { <span class="self">this</span>.disponible = <span class="kw">true</span>;  }',
+      '}',
+    ],
+    note:'Compara con su caja del diagrama: <strong>los tres pisos están aquí</strong>. Atributos privados (−), métodos públicos (+). Nota que <code>disponible</code> no llega por el constructor — el libro <em>siempre nace disponible</em>. Decisiones así también van en tu diseño.'
+  },
+  socio:{
+    code:[
+      '<span class="kw">public class</span> Socio {',
+      '    <span class="kw">private</span> <span class="ty">String</span> nombre;',
+      '    <span class="kw">private</span> <span class="ty">int</span> numSocio;',
+      '',
+      '    <span class="kw">public</span> Socio(<span class="ty">String</span> nombre, <span class="ty">int</span> numSocio) {',
+      '        <span class="self">this</span>.nombre = nombre;',
+      '        <span class="self">this</span>.numSocio = numSocio;',
+      '    }',
+      '',
+      '    <span class="kw">public</span> <span class="ty">String</span> getNombre() { <span class="kw">return</span> nombre; }',
+      '}',
+    ],
+    note:'La clase más simple del sistema: <strong>datos + getter</strong>. No todas las clases son complejas — y eso está bien. Fíjate que Socio <em>no sabe nada</em> de préstamos ni libros: la dirección de las flechas del diagrama, respetada en código.'
+  },
+  prestamo:{
+    code:[
+      '<span class="kw">public class</span> Prestamo {',
+      '    <span class="kw">private</span> <span class="ty">String</span> fecha;',
+      '    <span class="kw">private</span> <span class="ty">Libro</span> libro;',
+      '    <span class="kw">private</span> <span class="ty">Socio</span> socio;',
+      '',
+      '    <span class="kw">public</span> Prestamo(<span class="ty">String</span> fecha, <span class="ty">Libro</span> libro, <span class="ty">Socio</span> socio) {',
+      '        <span class="self">this</span>.fecha = fecha;',
+      '        <span class="self">this</span>.libro = libro;',
+      '        <span class="self">this</span>.socio = socio;',
+      '        libro.prestar();  <span class="cm">// un objeto le manda un mensaje a otro</span>',
+      '    }',
+      '',
+      '    <span class="kw">public</span> <span class="ty">String</span> resumen() {',
+      '        <span class="kw">return</span> socio.getNombre() + <span class="str">" tiene \""</span> + libro.getTitulo()',
+      '               + <span class="str">"\" desde "</span> + fecha;',
+      '    }',
+      '}',
+    ],
+    note:'<strong>La clase que conecta.</strong> Sus atributos son <em>objetos de otras clases</em> — eso son las flechas de asociación. Y mira <code>libro.prestar()</code> dentro del constructor: un mensaje entre objetos, en vivo. En tu caso, ¿qué clase guarda objetos de otras y qué les pide hacer?'
+  },
+  biblioteca:{
+    code:[
+      '<span class="kw">import</span> java.util.ArrayList;',
+      '',
+      '<span class="kw">public class</span> Biblioteca {',
+      '    <span class="kw">private</span> <span class="ty">String</span> nombre;',
+      '    <span class="kw">private</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Libro</span>&gt; libros = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();',
+      '    <span class="kw">private</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Prestamo</span>&gt; prestamos = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();',
+      '',
+      '    <span class="kw">public</span> Biblioteca(<span class="ty">String</span> nombre) { <span class="self">this</span>.nombre = nombre; }',
+      '',
+      '    <span class="kw">public void</span> agregarLibro(<span class="ty">Libro</span> l) {',
+      '        libros.add(l);',
+      '    }',
+      '',
+      '    <span class="kw">public void</span> registrarPrestamo(<span class="ty">Libro</span> l, <span class="ty">Socio</span> s, <span class="ty">String</span> fecha) {',
+      '        Prestamo p = <span class="kw">new</span> Prestamo(fecha, l, s);',
+      '        prestamos.add(p);',
+      '    }',
+      '',
+      '    <span class="kw">public void</span> reporteLibros() {',
+      '        System.out.println(<span class="str">"— Libros de "</span> + nombre + <span class="str">" —"</span>);',
+      '        <span class="kw">for</span> (<span class="ty">Libro</span> l : libros) {',
+      '            <span class="ty">String</span> estado = l.isDisponible() ? <span class="str">"disponible"</span> : <span class="str">"prestado"</span>;',
+      '            System.out.println(<span class="str">"  "</span> + l.getTitulo() + <span class="str">" ("</span> + estado + <span class="str">")"</span>);',
+      '        }',
+      '    }',
+      '',
+      '    <span class="kw">public void</span> reportePrestamos() {',
+      '        System.out.println(<span class="str">"— Préstamos —"</span>);',
+      '        <span class="kw">for</span> (<span class="ty">Prestamo</span> p : prestamos) {',
+      '            System.out.println(<span class="str">"  "</span> + p.resumen());',
+      '        }',
+      '    }',
+      '}',
+    ],
+    note:'<strong>La gestora</strong> — sus métodos son los requerimientos del sistema. Las multiplicidades <code>1..*</code> del diagrama se volvieron <code>ArrayList</code>. Y el <strong>for-each</strong> que recorre y construye el reporte es el patrón que tu caso necesita — con un detalle extra que aquí no existe: <em>acumular un total</em>. Esa parte es tuya.'
+  },
+  main:{
+    code:[
+      '<span class="kw">public class</span> Main {',
+      '    <span class="kw">public static void</span> main(<span class="ty">String</span>[] args) {',
+      '        Biblioteca bib = <span class="kw">new</span> Biblioteca(<span class="str">"Central"</span>);',
+      '',
+      '        <span class="cm">// Requerimiento 1: agregar al inventario</span>',
+      '        Libro l1 = <span class="kw">new</span> Libro(<span class="str">"Rayuela"</span>);',
+      '        Libro l2 = <span class="kw">new</span> Libro(<span class="str">"Pedro Páramo"</span>);',
+      '        bib.agregarLibro(l1);',
+      '        bib.agregarLibro(l2);',
+      '',
+      '        <span class="cm">// Requerimiento 2: registrar la operación</span>',
+      '        Socio ana = <span class="kw">new</span> Socio(<span class="str">"Ana"</span>, 1042);',
+      '        bib.registrarPrestamo(l2, ana, <span class="str">"12/06/2026"</span>);',
+      '',
+      '        <span class="cm">// Requerimiento 3: reportes</span>',
+      '        bib.reporteLibros();',
+      '        bib.reportePrestamos();',
+      '    }',
+      '}',
+    ],
+    note:'<strong>Aquí nace todo.</strong> El main crea los objetos, los conecta y dispara los reportes. Compáralo con el diagrama de secuencia: cada línea es una flecha. Tu main debe contar la misma historia con tu caso — crear, registrar, reportar.'
+  },
+  consola:{
+    code:[
+      '<span class="cm">$ java Main</span>',
+      '',
+      '<span class="out">— Libros de Central —</span>',
+      '<span class="out">  Rayuela (disponible)</span>',
+      '<span class="out">  Pedro Páramo (prestado)</span>',
+      '<span class="out">— Préstamos —</span>',
+      '<span class="out">  Ana tiene "Pedro Páramo" desde 12/06/2026</span>',
+    ],
+    note:'<strong>El sistema funcionando.</strong> Fíjate: "Pedro Páramo" aparece como <em>prestado</em> — porque el constructor de Prestamo llamó a <code>libro.prestar()</code>. Un mensaje entre objetos cambió el estado, y el reporte lo refleja. Cuando tu captura de Eclipse muestre algo así con TU caso, la práctica está viva.'
+  }
+};
+function jfRender(k){
+  const d=jfData[k];
+  $('jv-code').innerHTML=d.code.map(h=>'<span class="ln">'+h+'</span>').join('');
+  $('jv-note').innerHTML=d.note;
+}
+document.querySelectorAll('.jv-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.jv-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    jfRender(t.dataset.jf);
+  });
+});
+jfRender('libro');
+</script>
+</body>
+</html>

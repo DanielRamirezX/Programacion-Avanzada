@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XIX — Cuando todo sale mal — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS DE LA SESIÓN 19 (Excepciones) ↓↓↓
+   prefijos: .exc- (flujo try/except/finally), .stk- (stack),
+   .lng- (tabs 4 lenguajes), .ns- (no/sí), .fr- (lectura archivo)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W1: animador del flujo try → except → finally */
+.exc-stage{display:grid;grid-template-columns:1.05fr .95fr;gap:1.5rem;align-items:stretch;}
+.exc-flow{display:flex;flex-direction:column;gap:.9rem;}
+.exc-block{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:1.1rem 1.3rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--ink-soft);opacity:.4;transition:all .45s cubic-bezier(.16,1,.3,1);position:relative;}
+.exc-block .exc-kw{color:var(--blood);font-style:italic;font-weight:700;}
+.exc-block .exc-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);display:block;margin-bottom:.45rem;}
+.exc-block.run{opacity:1;border-left-color:var(--olive);background:rgba(93,102,56,.08);}
+.exc-block.run.fail{border-left-color:var(--blood);background:rgba(160,36,24,.08);}
+.exc-block.cur{box-shadow:0 0 0 2px rgba(160,36,24,.18);}
+.exc-block.skip{opacity:.3;}
+.exc-block.skip::after{content:'no se ejecuta';position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--blood);font-style:italic;}
+.exc-block.finally{border-left-color:var(--ochre);}
+.exc-block.finally.run{background:rgba(181,133,42,.1);}
+.exc-panel{background:var(--ink);padding:1.6rem;display:flex;flex-direction:column;gap:.8rem;}
+.exc-mode{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.exc-headline{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--paper);line-height:1.1;}
+.exc-explain{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.exc-explain strong{color:#C9A961;font-style:normal;font-weight:600;}
+.exc-console{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.7;color:#9FBF9C;background:rgba(239,230,210,.06);border-left:2px solid var(--olive);padding:.7rem .9rem;margin-top:auto;min-height:3.2rem;white-space:pre-wrap;}
+.exc-console .err{color:#E08A82;}
+.exc-toggle{display:flex;gap:.5rem;margin-bottom:1.4rem;flex-wrap:wrap;}
+
+/* W2: el error que sube por el stack */
+.stk-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.stk-tower{display:flex;flex-direction:column;gap:.55rem;}
+.stk-frame{background:var(--paper);border:1px solid var(--line);padding:.95rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--ink-soft);transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;}
+.stk-frame .stk-role{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);display:block;margin-bottom:.3rem;}
+.stk-frame.active{border-color:var(--blood);box-shadow:0 0 0 2px rgba(160,36,24,.16);color:var(--ink);}
+.stk-frame.crashed{border-left:3px solid var(--blood);background:rgba(160,36,24,.06);}
+.stk-frame.caught{border-left:3px solid var(--olive);background:rgba(93,102,56,.1);color:var(--ink);}
+.stk-frame .stk-mark{position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;opacity:0;transition:opacity .3s;}
+.stk-frame.active .stk-mark{opacity:1;color:var(--blood);}
+.stk-frame.caught .stk-mark{opacity:1;color:var(--olive);}
+.stk-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;gap:.9rem;min-height:240px;}
+.stk-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.2rem;color:var(--ochre);line-height:1;}
+.stk-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:rgba(239,230,210,.88);}
+.stk-txt strong{color:#C9A961;font-style:normal;font-weight:600;}
+.stk-txt em{color:#E8B04A;}
+
+/* W3: tabs 4 lenguajes */
+.lng-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.lng-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.lng-tab:hover{border-color:var(--blood);color:var(--blood);}
+.lng-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.lng-tab.go.on{background:var(--olive);border-color:var(--olive);}
+.lng-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:300px;overflow-x:auto;}
+.lng-code .ln{white-space:pre;display:block;}
+.lng-code .kw{color:#D4956A;font-style:italic;}
+.lng-code .ty{color:#A6C2D6;}
+.lng-code .self{color:#8EAF8B;font-weight:700;}
+.lng-code .str{color:#C9A961;}
+.lng-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.lng-code .out{color:#9FBF9C;}
+.lng-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.lng-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.lng-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: NO / SÍ — except desnudo vs específico */
+.ns-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.ns-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.ns-head{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;color:var(--paper);}
+.ns-col.bad .ns-head{background:var(--blood);}
+.ns-col.good .ns-head{background:var(--olive);}
+.ns-head .ns-mark{font-size:.85rem;font-weight:700;}
+.ns-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:170px;}
+.ns-body .ln{white-space:pre;display:block;}
+.ns-body .kw{color:var(--blood);font-style:italic;}
+.ns-body .str{color:#8a6420;}
+.ns-body .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.ns-body .ty{color:#3E6E86;}
+.ns-why{padding:1rem 1.3rem;border-top:1px solid var(--line);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.45;color:var(--ink-soft);}
+.ns-col.bad .ns-why strong{color:var(--blood);font-style:normal;font-weight:600;}
+.ns-col.good .ns-why strong{color:var(--olive);font-style:normal;font-weight:600;}
+
+/* W5: lectura de archivo · consola */
+.fr-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.fr-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.85;color:var(--paper);min-height:280px;}
+.fr-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;transition:background .3s;}
+.fr-code .ln.hl{background:rgba(232,176,74,.22);}
+.fr-code .kw{color:#D4956A;font-style:italic;}
+.fr-code .ty{color:#A6C2D6;}
+.fr-code .self{color:#8EAF8B;font-weight:700;}
+.fr-code .str{color:#C9A961;}
+.fr-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.fr-side{display:flex;flex-direction:column;gap:1rem;}
+.fr-term{background:var(--ink);border:1px solid rgba(239,230,210,.12);min-height:160px;padding:1.1rem 1.3rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;}
+.fr-term .prompt{color:var(--blood);}
+.fr-term .ok{color:#9FBF9C;}
+.fr-term .err{color:#E08A82;}
+.fr-term .dim{color:rgba(239,230,210,.5);}
+.fr-msg{padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.45;color:var(--ink-soft);min-height:3.5rem;}
+.fr-msg strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* caso / práctica institucional */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.caso-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.caso p{margin-bottom:1rem;font-size:1.05rem;color:var(--ink-soft);}
+.caso p:last-child{margin-bottom:0;}
+.caso strong{color:var(--ink);font-weight:600;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+
+/* preguntas guía (discusión grupal) */
+.guia{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.guia-card{background:var(--paper);border:1px solid var(--line);padding:1.3rem 1.5rem;}
+.guia-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--ink);line-height:1.4;}
+.guia-q::before{content:'¿';color:var(--blood);}
+.guia-hint{font-size:.88rem;color:rgba(42,29,20,.55);margin-top:.5rem;font-style:italic;}
+
+@media(max-width:860px){
+  .exc-stage,.stk-stage,.ns-grid,.fr-stage,.guia,.req-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-18.html" class="back">Sesión 18</a>
+  <span class="session-label">Sesión 19 · 22.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">try: leer(archivo)</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">except FileNotFoundError:</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">finally: cerrar()</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">if err != nil { return err }</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">catch (Exception e)</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XIX · Bloque III · Excepciones · Ref. Temario 6.1 · 6.1.1 · 6.1.2 · 6.1.3 · Python · Java · JS · Go</div>
+    <h1>Cuando todo<br>sale <em>mal.</em></h1>
+    <p class="hero-sub">Un archivo que no existe, una división entre cero, una red que se cae. El código <em>siempre</em> puede fallar. Hoy aprendes a atrapar la caída — y a dejar todo limpio aunque el mundo se rompa.</p>
+  </div>
+</section>
+
+<!-- I: el contrato del fallo -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · El programa optimista vive poco</p>
+    <p class="lead">Asumir que todo saldrá bien<br>es la forma más rápida de <em>crashear.</em></p>
+    <p class="subtle">Tu código vive en un mundo hostil: el usuario teclea letras donde pedías números, el archivo se borró, el servidor no responde. A esos eventos que <strong>rompen el flujo normal</strong> los llamamos <strong>excepciones</strong>. Manejarlas no es opcional: es la diferencia entre un programa que <em>avisa</em> "no encontré el archivo" y uno que se cae con un muro de texto rojo. Hoy vemos las tres palabras que lo controlan — <span class="inlinecode">try</span>, <span class="inlinecode">except</span> y <span class="inlinecode">finally</span> — y cómo cada lenguaje resuelve el mismo problema.</p>
+  </div>
+</section>
+
+<!-- II: el flujo try/except/finally -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El flujo — try, except, finally</p>
+    <p class="lead">Intenta. Si algo truena, atrápalo.<br>Y pase lo que pase, <em>finally siempre corre.</em></p>
+    <p class="subtle">Las tres palabras forman un guion con dos finales posibles. En el bloque <span class="inlinecode">try</span> pones lo que <strong>podría fallar</strong>; en <span class="inlinecode">except</span>, el plan B si falla; en <span class="inlinecode">finally</span>, lo que se ejecuta <strong>sí o sí</strong> — falle o no falle. Pulsa el toggle y observa qué bloques corren en cada caso:</p>
+    <div class="widget" data-tag="¿Ocurre el error?">
+      <div class="exc-toggle">
+        <button class="btn on" id="exc-ok" data-exc="ok">✓ No ocurre error</button>
+        <button class="btn" id="exc-fail" data-exc="fail">✗ Ocurre error</button>
+      </div>
+      <div class="exc-stage">
+        <div class="exc-flow">
+          <div class="exc-block" id="exc-try"><span class="exc-tag">bloque protegido</span><span class="exc-kw">try</span>:  numero = int(dato)</div>
+          <div class="exc-block" id="exc-exc"><span class="exc-tag">plan B · solo si falla</span><span class="exc-kw">except</span> ValueError:  avisar()</div>
+          <div class="exc-block" id="exc-else"><span class="exc-tag">solo si NO falla</span><span class="exc-kw">else</span>:  usar(numero)</div>
+          <div class="exc-block finally" id="exc-fin"><span class="exc-tag">pase lo que pase</span><span class="exc-kw">finally</span>:  cerrar_recurso()</div>
+        </div>
+        <div class="exc-panel">
+          <div class="exc-mode" id="exc-mode">Escenario: todo sale bien</div>
+          <div class="exc-headline" id="exc-headline">El camino feliz</div>
+          <div class="exc-explain" id="exc-explain">Pulsa <strong>Ejecutar paso a paso</strong> para ver qué bloques corren cuando el dato es válido.</div>
+          <div class="exc-console" id="exc-console">&gt; esperando...</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="exc-reset">⟲ Reset</button>
+        <button class="btn" id="exc-prev">◀ Atrás</button>
+        <button class="btn on" id="exc-next">Ejecutar paso a paso ▶</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: el error sube por el stack -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · El error que sube por el stack</p>
+    <p class="lead">Un error no atrapado<br>no se queda quieto: <em>sube.</em></p>
+    <p class="subtle">Cuando una función lanza una excepción y no la atrapa, el error <strong>brinca a quien la llamó</strong>. Y si esa tampoco lo atrapa, sigue subiendo… hasta que alguien lo captura con un <span class="inlinecode">try</span> — o hasta que llega arriba del todo y el programa <strong>crashea</strong>. Avanza paso a paso y mira el viaje del error por la pila de llamadas:</p>
+    <div class="widget" data-tag="El viaje del error">
+      <div class="stk-stage">
+        <div class="stk-tower">
+          <div class="stk-frame" id="stk-main"><span class="stk-role">arriba · el que arranca todo</span>main()<span class="stk-mark"></span></div>
+          <div class="stk-frame" id="stk-proc"><span class="stk-role">procesa la reservación</span>procesar_reserva()<span class="stk-mark"></span></div>
+          <div class="stk-frame" id="stk-leer"><span class="stk-role">lee el archivo de funciones</span>leer_funciones()<span class="stk-mark"></span></div>
+          <div class="stk-frame" id="stk-open"><span class="stk-role">abajo · donde nace el fallo</span>open("funciones.txt")<span class="stk-mark"></span></div>
+        </div>
+        <div class="stk-side">
+          <div class="stk-num" id="stk-num">·</div>
+          <div class="stk-txt" id="stk-txt">Pulsa <strong>Siguiente</strong>. El error nace en <em>open()</em> y empieza a subir. ¿Alguien lo atrapará a tiempo?</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="stk-reset">⟲ Reset</button>
+        <button class="btn" id="stk-prev">◀ Atrás</button>
+        <button class="btn on" id="stk-next">Siguiente ▶</button>
+        <button class="btn" id="stk-mode">Cambiar: <span id="stk-modeword">nadie atrapa</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: cuatro lenguajes -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · El mismo problema · cuatro lenguajes</p>
+    <p class="lead">Python lo atrapa con <em>except.</em><br>Go ni siquiera lo lanza: lo <em>devuelve.</em></p>
+    <p class="subtle">Dividir entre cero, o convertir texto a número. Cuatro lenguajes, dos filosofías. <strong>Python, Java y JavaScript</strong> usan excepciones — código que "salta" cuando algo truena. <strong>Go</strong> rompe con la tradición: el error es <strong>un valor más que la función devuelve</strong>, y tú lo revisas con un humilde <span class="inlinecode">if err != nil</span>. Recorre las pestañas:</p>
+    <div class="widget" data-tag="Misma idea · cuatro sintaxis">
+      <div class="lng-tabs">
+        <button class="lng-tab on" data-lng="py">Python · try/except</button>
+        <button class="lng-tab" data-lng="java">Java · try/catch</button>
+        <button class="lng-tab" data-lng="js">JavaScript · try/catch</button>
+        <button class="lng-tab go" data-lng="go">Go · if err != nil</button>
+      </div>
+      <div class="lng-code" id="lng-code"></div>
+      <div class="lng-note" id="lng-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- V: NO / SÍ -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Atrapar bien vs atrapar todo</p>
+    <p class="lead">El <span style="color:var(--blood)">except</span> desnudo<br>es esconder el problema, no <em>resolverlo.</em></p>
+    <p class="subtle">El error más común al empezar: poner un <span class="inlinecode">except:</span> sin nombre que se traga <strong>cualquier</strong> excepción. Parece que "maneja errores", pero en realidad oculta bugs reales — incluso los que escribiste tú. La regla de oro: <strong>atrapa solo la excepción que sabes manejar</strong>, y deja subir las demás. Compara:</p>
+    <div class="ns-grid">
+      <div class="ns-col bad">
+        <div class="ns-head">así NO <span class="ns-mark">✗</span></div>
+        <div class="ns-body">
+          <span class="ln"><span class="kw">try</span>:</span>
+          <span class="ln">    n = <span class="ty">int</span>(dato)</span>
+          <span class="ln">    total = saldo / n</span>
+          <span class="ln"><span class="kw">except</span>:  <span class="cm"># desnudo</span></span>
+          <span class="ln">    <span class="kw">print</span>(<span class="str">"hubo un error"</span>)</span>
+        </div>
+        <div class="ns-why"><strong>Se traga todo:</strong> el <span class="inlinecode" style="font-size:.78rem">ValueError</span> del texto, el <span class="inlinecode" style="font-size:.78rem">ZeroDivisionError</span> y hasta un error de dedo tuyo. Mismo mensaje vago para todo. Imposible saber qué pasó realmente.</div>
+      </div>
+      <div class="ns-col good">
+        <div class="ns-head">así SÍ <span class="ns-mark">✓</span></div>
+        <div class="ns-body">
+          <span class="ln"><span class="kw">try</span>:</span>
+          <span class="ln">    n = <span class="ty">int</span>(dato)</span>
+          <span class="ln">    total = saldo / n</span>
+          <span class="ln"><span class="kw">except</span> <span class="ty">ValueError</span>:</span>
+          <span class="ln">    <span class="kw">print</span>(<span class="str">"escribe un número"</span>)</span>
+          <span class="ln"><span class="kw">except</span> <span class="ty">ZeroDivisionError</span>:</span>
+          <span class="ln">    <span class="kw">print</span>(<span class="str">"no puede ser cero"</span>)</span>
+        </div>
+        <div class="ns-why"><strong>Cada error, su mensaje:</strong> sabes exactamente qué falló y le das al usuario una pista útil. Y si aparece un error que NO esperabas, sube — y te enteras de que existe en vez de ocultarlo.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">¿Y cuando de verdad quieres un plan B genérico? Atrapa <span class="inlinecode">except Exception as e</span> (no el desnudo) y <strong>al menos imprime <span class="inlinecode" style="font-size:.78rem">e</span></strong>: así el plan B existe, pero el error no desaparece sin dejar rastro.</p>
+  </div>
+</section>
+
+<!-- VI: taller — lectura de archivo -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · El taller — leer un archivo sin morir</p>
+    <p class="lead">Abrir un archivo es el ejemplo<br><em>perfecto</em> del fallo: puede no existir.</p>
+    <p class="subtle">El taller de hoy: un módulo que lee un archivo. Tres cosas pueden salir mal — que no exista, que no tengas permisos, o que el contenido esté corrupto. Y haya error o no, el archivo <strong>debe cerrarse</strong>: ese es el trabajo de <span class="inlinecode">finally</span>. Elige un escenario y mira la consola:</p>
+    <div class="widget" data-tag="Corre el módulo · 3 escenarios">
+      <div class="fr-stage">
+        <div class="fr-code" id="fr-code"></div>
+        <div class="fr-side">
+          <div class="fr-term" id="fr-term"></div>
+          <div class="fr-msg" id="fr-msg"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-fr="ok">✓ El archivo existe</button>
+        <button class="btn" data-fr="nofile">✗ No existe</button>
+        <button class="btn" data-fr="perm">✗ Sin permisos</button>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem"><strong>Lo de oro:</strong> fíjate en la última línea de la terminal. En los tres escenarios — éxito o desastre — aparece <span class="inlinecode">finally: recurso cerrado</span>. Eso es lo que hace a <span class="inlinecode">finally</span> tan valioso: cerrar archivos, conexiones a base de datos o sockets <em>nunca</em> debe depender de que todo salió bien.</p>
+  </div>
+</section>
+
+<!-- VII: puente a la práctica institucional 5 -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Puente a la práctica · Cine éxito</p>
+    <p class="lead">Un sistema de reservaciones<br>está lleno de cosas que <em>pueden fallar.</em></p>
+    <p class="subtle">La <strong>Práctica institucional 5</strong> aterriza todo esto en un caso real. No la entregas hoy, pero hoy aprendes la herramienta exacta que necesita. Lee el encargo:</p>
+    <div class="caso">
+      <div class="caso-tag">Practicario MCT158 · Práctica 5 de 6 · Excepciones</div>
+      <p>La cadena de cines <strong>"Cine éxito"</strong> quiere un <strong>sistema de reservaciones automatizado</strong>. El cliente debe poder <strong>seleccionar una función</strong>, <strong>elegir el número de boletos</strong> y que el sistema le <strong>asigne asientos</strong>. El programa se desarrolla con <strong>orientación a objetos</strong> y debe ser robusto: ninguna entrada del usuario ni ningún imprevisto puede tumbar el sistema.</p>
+      <p>Por eso, todas las operaciones riesgosas deben envolverse con <strong>manejo de excepciones</strong> (<span class="inlinecode" style="font-size:.8rem">try/catch/finally</span>): que el usuario teclee una función inexistente, que pida más boletos que asientos disponibles, o que el número de boletos no sea un entero válido. En cada caso el sistema <strong>avisa con claridad y sigue funcionando</strong>.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Riesgo 01</div>
+        <div class="req-t">Función inválida</div>
+        <div class="req-d">El usuario elige una función que no existe. Atrápalo y vuelve a pedir — no crashees.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Riesgo 02</div>
+        <div class="req-t">Boletos no numéricos</div>
+        <div class="req-d">Teclea "tres" en vez de 3. Un <span class="inlinecode" style="font-size:.78rem">ValueError</span> / <span class="inlinecode" style="font-size:.78rem">NumberFormatException</span> que debes manejar.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Riesgo 03</div>
+        <div class="req-t">Sin asientos</div>
+        <div class="req-d">Pide más boletos que asientos libres. Lanza tu propia excepción y avisa cuántos quedan.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">El <span class="inlinecode">finally</span> de tu sistema cierra la sesión de reserva: libere o no asientos, <strong>siempre</strong> deja la taquilla lista para el siguiente cliente.</p>
+  </div>
+</section>
+
+<!-- VIII: la discusión -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · La discusión · ¿qué paradigma prefieres?</p>
+    <p class="lead">No hay un ganador absoluto.<br>Hay <em>trade-offs</em> — y tú eliges con argumentos.</p>
+    <p class="subtle">Excepciones (Python/Java/JS) vs errores como valor (Go): cada uno tiene defensores apasionados. La <strong>actividad evaluable</strong> de hoy es una discusión grupal donde defenderás tu postura. Llega con opinión formada. Estas preguntas te preparan — <em>las respuestas las construyes tú:</em></p>
+    <div class="guia">
+      <div class="guia-card">
+        <div class="guia-q">Qué es más legible: un bloque try grande, o un if err != nil tras cada llamada?</div>
+        <div class="guia-hint">Go te obliga a ver cada error; Python te deja "olvidarlos". ¿Disciplina o ruido?</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Dónde es más fácil ignorar un error por accidente?</div>
+        <div class="guia-hint">En Python un except: desnudo lo entierra. En Go ignorar err es visible (un _ explícito).</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Qué pasa con la limpieza de recursos? finally vs defer de Go.</div>
+        <div class="guia-hint">Go no tiene finally: usa defer. Investiga cómo logra el mismo "pase lo que pase".</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Para tu proyecto integrador, qué estilo cabe mejor — y por qué?</div>
+        <div class="guia-hint">Python es tu base, así que excepciones. Pero entender Go te hace mejor con las dos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">IX · Para la próxima clase</p>
+    <p class="lead">Un programa que no maneja errores<br>no está terminado: está <em>a medias.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance del proyecto · mapa de excepciones</div>
+      <ol>
+        <li><strong>Identifica las operaciones riesgosas</strong> de tu proyecto: lectura de archivos, conversiones de tipo, divisiones, peticiones de red, acceso a índices de listas.</li>
+        <li><strong>Envuélvelas con <code>try/except/finally</code></strong>: cada operación riesgosa, en su bloque <code>try</code>; cada error esperado, su <code>except</code> específico (nada de <code>except</code> desnudo).</li>
+        <li>Donde abras un recurso (archivo, conexión), usa <code>finally</code> para <strong>cerrarlo siempre</strong> — falle o no.</li>
+        <li>Arma tu <strong>mapa de excepciones</strong>: una tabla con <em>operación → qué puede fallar → cómo lo manejas → mensaje al usuario</em>. Lo revisamos en clase.</li>
+        <li><strong>Prepara tu postura</strong> para la discusión grupal: ¿excepciones o errores como valor? Trae un argumento a favor y uno en contra de cada paradigma.</li>
+        <li>Sube el avance a tu repo. Esto es la base directa de la <strong>Práctica 5 (Cine éxito)</strong> que viene.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="ln">'+html+'</span>';
+
+// ─── W1: flujo try/except/finally ───────────────────────────
+// secuencia de pasos por escenario; cada paso enciende bloques y escribe consola
+const excScenarios={
+  ok:{
+    mode:'Escenario: todo sale bien',
+    steps:[
+      {run:['exc-try'],cur:'exc-try',skip:[],head:'1 · Entra al try',exp:'El bloque <strong>try</strong> ejecuta la operación riesgosa. El dato es válido, así que <strong>int(dato)</strong> funciona sin problema.',con:'> probando int("42")...'},
+      {run:['exc-try'],cur:'exc-exc',skip:['exc-exc'],head:'2 · except se salta',exp:'Como <strong>no hubo error</strong>, el bloque except <em>ni se mira</em>. Su código nunca corre en el camino feliz.',con:'> sin errores'},
+      {run:['exc-try','exc-else'],cur:'exc-else',skip:['exc-exc'],head:'3 · corre el else',exp:'El <strong>else</strong> es el premio del camino feliz: corre <em>solo si el try no falló</em>. Ideal para "usa el resultado que acabas de obtener".',con:'> numero = 42 ✓'},
+      {run:['exc-try','exc-else','exc-fin'],cur:'exc-fin',skip:['exc-exc'],head:'4 · finally SIEMPRE',exp:'Y al final, <strong>finally</strong>. Aquí cierres el recurso. Salió bien, pero igual se ejecuta — esa es su promesa.',con:'> numero = 42 ✓\n> finally: recurso cerrado'},
+    ]
+  },
+  fail:{
+    mode:'Escenario: ocurre un error',
+    steps:[
+      {run:['exc-try'],cur:'exc-try',fail:'exc-try',skip:[],head:'1 · El try truena',exp:'Entra al <strong>try</strong>, pero el dato es <em>"hola"</em>. <strong>int("hola")</strong> lanza un <strong>ValueError</strong>. El resto del try se abandona al instante.',con:'> probando int("hola")...\n<span class="err">! ValueError lanzado</span>'},
+      {run:['exc-try','exc-exc'],cur:'exc-exc',fail:'exc-try',skip:[],head:'2 · except lo atrapa',exp:'El error coincide con <strong>except ValueError</strong>: se atrapa. El programa <em>no crashea</em> — toma el plan B con calma.',con:'<span class="err">! ValueError atrapado</span>\n> avisar(): "escribe un número"'},
+      {run:['exc-try','exc-exc'],cur:'exc-else',fail:'exc-try',skip:['exc-else'],head:'3 · else se salta',exp:'Como SÍ hubo error, el <strong>else se salta</strong> por completo. Else y except son excluyentes: corre uno u otro, nunca ambos.',con:'> (else omitido)'},
+      {run:['exc-try','exc-exc','exc-fin'],cur:'exc-fin',fail:'exc-try',skip:['exc-else'],head:'4 · finally SIEMPRE',exp:'Y otra vez, <strong>finally</strong>. Hubo error, se atrapó… y aun así el recurso se cierra. <em>Finally no negocia.</em>',con:'<span class="err">! ValueError atrapado</span>\n> avisar(): "escribe un número"\n> finally: recurso cerrado'},
+    ]
+  }
+};
+let excMode='ok', excIdx=-1;
+function excReset(){
+  ['exc-try','exc-exc','exc-else','exc-fin'].forEach(id=>{
+    $(id).classList.remove('run','cur','skip','fail');
+  });
+}
+function excRender(){
+  excReset();
+  const sc=excScenarios[excMode];
+  $('exc-mode').textContent=sc.mode;
+  if(excIdx<0){
+    $('exc-headline').textContent=(excMode==='ok'?'El camino feliz':'El camino del fallo');
+    $('exc-explain').innerHTML='Pulsa <strong>Ejecutar paso a paso</strong> para ver qué bloques corren.';
+    $('exc-console').textContent='> esperando...';
+    return;
+  }
+  const st=sc.steps[excIdx];
+  st.run.forEach(id=>$(id).classList.add('run'));
+  if(st.fail) $(st.fail).classList.add('fail');
+  st.skip.forEach(id=>$(id).classList.add('skip'));
+  $(st.cur).classList.add('cur');
+  $('exc-headline').textContent=st.head;
+  $('exc-explain').innerHTML=st.exp;
+  $('exc-console').innerHTML=st.con;
+}
+function excSetMode(m){
+  excMode=m; excIdx=-1;
+  $('exc-ok').classList.toggle('on',m==='ok');
+  $('exc-fail').classList.toggle('on',m==='fail');
+  excRender();
+}
+$('exc-ok').addEventListener('click',()=>excSetMode('ok'));
+$('exc-fail').addEventListener('click',()=>excSetMode('fail'));
+$('exc-next').addEventListener('click',()=>{const n=excScenarios[excMode].steps.length;if(excIdx<n-1){excIdx++;excRender();}});
+$('exc-prev').addEventListener('click',()=>{if(excIdx>-1){excIdx--;excRender();}});
+$('exc-reset').addEventListener('click',()=>{excIdx=-1;excRender();});
+excRender();
+
+// ─── W2: el error sube por el stack ─────────────────────────
+const stkFrames=['stk-main','stk-proc','stk-leer','stk-open'];
+// modo "nadie atrapa" -> crashea ; modo "procesar atrapa" -> caught en stk-proc
+let stkCatcher=false; // false = nadie atrapa, true = procesar_reserva atrapa
+let stkIdx=-1;
+function stkBuildSteps(){
+  if(!stkCatcher){
+    return [
+      {active:'stk-open',txt:'<strong>open("funciones.txt")</strong> falla: el archivo no existe. Nace un <strong>FileNotFoundError</strong> aquí, en lo más profundo de la pila.'},
+      {active:'stk-leer',txt:'Nadie lo atrapó en open. El error <em>sube</em> a <strong>leer_funciones()</strong>, que lo llamó. Tampoco tiene try… sigue subiendo.'},
+      {active:'stk-proc',txt:'Llega a <strong>procesar_reserva()</strong>. En este modo, esta función <em>tampoco</em> tiene un try/except. El error no se detiene.'},
+      {active:'stk-main',crash:'stk-main',txt:'Sube hasta <strong>main()</strong> sin que nadie lo atrape. Aquí se acaba la pila: el programa <em>crashea</em> y Python imprime el traceback completo.'},
+    ];
+  }
+  return [
+    {active:'stk-open',txt:'<strong>open("funciones.txt")</strong> falla otra vez: <strong>FileNotFoundError</strong> nace en el mismo lugar.'},
+    {active:'stk-leer',txt:'Sube a <strong>leer_funciones()</strong>. No lo atrapa — pero esta vez hay alguien preparado más arriba.'},
+    {active:'stk-proc',caught:'stk-proc',txt:'<strong>procesar_reserva()</strong> SÍ envolvió la llamada en un <strong>try/except FileNotFoundError</strong>. ¡Atrapado! El error <em>deja de subir</em> aquí.'},
+    {active:'stk-main',caught:'stk-proc',txt:'<strong>main()</strong> nunca se entera del problema: procesar_reserva lo resolvió y devolvió control con un mensaje claro. <em>El programa sigue vivo.</em>'},
+  ];
+}
+function stkRender(){
+  stkFrames.forEach(id=>$(id).classList.remove('active','crashed','caught'));
+  stkFrames.forEach(id=>$(id).querySelector('.stk-mark').textContent='');
+  if(stkIdx<0){
+    $('stk-num').textContent='·';
+    $('stk-txt').innerHTML='Pulsa <strong>Siguiente</strong>. El error nace en <em>open()</em> y empieza a subir. ¿Alguien lo atrapará a tiempo?';
+    return;
+  }
+  const steps=stkBuildSteps();
+  const st=steps[stkIdx];
+  // marcar los frames ya recorridos como "tocados por el error"
+  $(st.active).classList.add('active');
+  $(st.active).querySelector('.stk-mark').textContent='● error aquí';
+  if(st.crash){$(st.crash).classList.add('crashed');$(st.crash).querySelector('.stk-mark').textContent='✗ crash';}
+  if(st.caught){$(st.caught).classList.add('caught');$(st.caught).querySelector('.stk-mark').textContent='✓ atrapado';}
+  $('stk-num').textContent=(stkIdx+1);
+  $('stk-txt').innerHTML=st.txt;
+}
+$('stk-next').addEventListener('click',()=>{const n=stkBuildSteps().length;if(stkIdx<n-1){stkIdx++;stkRender();}});
+$('stk-prev').addEventListener('click',()=>{if(stkIdx>-1){stkIdx--;stkRender();}});
+$('stk-reset').addEventListener('click',()=>{stkIdx=-1;stkRender();});
+$('stk-mode').addEventListener('click',()=>{
+  stkCatcher=!stkCatcher;
+  $('stk-modeword').textContent=stkCatcher?'procesar atrapa':'nadie atrapa';
+  stkIdx=-1; stkRender();
+});
+stkRender();
+
+// ─── W3: cuatro lenguajes ───────────────────────────────────
+const lngData={
+  py:{
+    code:[
+      '<span class="cm"># Python — el lenguaje base del curso</span>',
+      '<span class="kw">def</span> dividir(a, b):',
+      '    <span class="kw">try</span>:',
+      '        <span class="kw">return</span> a / b',
+      '    <span class="kw">except</span> <span class="ty">ZeroDivisionError</span>:',
+      '        <span class="kw">print</span>(<span class="str">"No se puede dividir entre cero"</span>)',
+      '        <span class="kw">return</span> <span class="kw">None</span>',
+      '    <span class="kw">finally</span>:',
+      '        <span class="kw">print</span>(<span class="str">"Cálculo terminado"</span>)',
+      '',
+      'dividir(10, 0)   <span class="cm"># atrapa y avisa</span>',
+    ],
+    note:'En Python el bloque <strong>try/except/finally</strong> es la base. Atrapas por <strong>tipo de excepción</strong> (<code>ZeroDivisionError</code>) y <code>finally</code> corre siempre. Es lo que usarás en tu proyecto y en la Práctica 5.'
+  },
+  java:{
+    code:[
+      '<span class="cm">// Java — try/catch/finally (Práctica institucional)</span>',
+      '<span class="kw">public</span> <span class="ty">Integer</span> dividir(<span class="ty">int</span> a, <span class="ty">int</span> b) {',
+      '    <span class="kw">try</span> {',
+      '        <span class="kw">return</span> a / b;',
+      '    } <span class="kw">catch</span> (<span class="ty">ArithmeticException</span> e) {',
+      '        System.out.println(<span class="str">"No se puede dividir entre cero"</span>);',
+      '        <span class="kw">return</span> <span class="kw">null</span>;',
+      '    } <span class="kw">finally</span> {',
+      '        System.out.println(<span class="str">"Cálculo terminado"</span>);',
+      '    }',
+      '}',
+    ],
+    note:'Java cambia <code>except</code> por <strong>catch</strong> y exige <strong>llaves</strong>. La excepción de dividir entre cero se llama <code>ArithmeticException</code>. Misma estructura, mismo <code>finally</code>: si ya sabes Python, solo cambias el idioma.'
+  },
+  js:{
+    code:[
+      '<span class="cm">// JavaScript — try/catch/finally</span>',
+      '<span class="kw">function</span> dividir(a, b) {',
+      '  <span class="kw">try</span> {',
+      '    <span class="kw">if</span> (b === 0) <span class="kw">throw</span> <span class="kw">new</span> <span class="ty">Error</span>(<span class="str">"div/0"</span>);',
+      '    <span class="kw">return</span> a / b;',
+      '  } <span class="kw">catch</span> (e) {',
+      '    console.log(<span class="str">"No se puede dividir entre cero"</span>);',
+      '    <span class="kw">return</span> <span class="kw">null</span>;',
+      '  } <span class="kw">finally</span> {',
+      '    console.log(<span class="str">"Cálculo terminado"</span>);',
+      '  }',
+      '}',
+    ],
+    note:'JS también usa <strong>try/catch/finally</strong>, pero ojo: <code>10/0</code> en JS no lanza error, da <code>Infinity</code>. Por eso aquí lo <strong>lanzamos a mano</strong> con <code>throw</code>. El <code>catch (e)</code> recibe <em>cualquier</em> error: el tipo lo revisas tú dentro.'
+  },
+  go:{
+    code:[
+      '<span class="cm">// Go — el error es un valor que se DEVUELVE</span>',
+      '<span class="kw">func</span> dividir(a, b <span class="ty">int</span>) (<span class="ty">int</span>, <span class="ty">error</span>) {',
+      '    <span class="kw">if</span> b == 0 {',
+      '        <span class="kw">return</span> 0, errors.New(<span class="str">"div entre cero"</span>)',
+      '    }',
+      '    <span class="kw">return</span> a / b, <span class="kw">nil</span>',
+      '}',
+      '',
+      'resultado, err := dividir(10, 0)',
+      '<span class="kw">if</span> err != <span class="kw">nil</span> {   <span class="cm">// revisas el error tú</span>',
+      '    fmt.Println(<span class="str">"No se puede dividir entre cero"</span>)',
+      '}',
+    ],
+    note:'Go <strong>no tiene try/except</strong>. Una función devuelve <em>dos cosas</em>: el resultado y un <code>error</code>. Tú lo revisas con <strong>if err != nil</strong> tras cada llamada. Más verboso, pero <em>imposible de ignorar por accidente</em>. (Para "pase lo que pase", Go usa <code>defer</code> en lugar de finally.)'
+  }
+};
+function lngRender(k){
+  const d=lngData[k];
+  $('lng-code').innerHTML=d.code.map(L).join('');
+  $('lng-note').innerHTML=d.note;
+}
+document.querySelectorAll('.lng-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.lng-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    lngRender(t.dataset.lng);
+  });
+});
+lngRender('py');
+
+// ─── W5: lectura de archivo · consola ───────────────────────
+const frCode=[
+  ['<span class="kw">def</span> leer_funciones(ruta):',0],
+  ['    f = <span class="kw">None</span>',0],
+  ['    <span class="kw">try</span>:',1],
+  ['        f = <span class="kw">open</span>(ruta)',2],
+  ['        <span class="kw">return</span> f.read()',2],
+  ['    <span class="kw">except</span> <span class="ty">FileNotFoundError</span>:',3],
+  ['        <span class="kw">print</span>(<span class="str">"No encontré el archivo"</span>)',3],
+  ['    <span class="kw">except</span> <span class="ty">PermissionError</span>:',4],
+  ['        <span class="kw">print</span>(<span class="str">"Sin permisos de lectura"</span>)',4],
+  ['    <span class="kw">finally</span>:',5],
+  ['        <span class="kw">if</span> f: f.close()',5],
+  ['        <span class="kw">print</span>(<span class="str">"recurso cerrado"</span>)',5],
+];
+const frData={
+  ok:{
+    hl:[0,1,2,3,4,9,10,11],
+    term:[
+      '<span class="prompt">$</span> python reservas.py',
+      '<span class="dim">leyendo funciones.txt...</span>',
+      '<span class="ok">Dune 20:00 | Sala 3 | 48 asientos</span>',
+      '<span class="dim">finally:</span> recurso cerrado',
+    ],
+    msg:'<strong>Camino feliz.</strong> El try corre completo, el archivo se lee y se devuelve. Ningún except se activa — pero el <strong>finally</strong> igual cierra el archivo.'
+  },
+  nofile:{
+    hl:[0,1,2,3,5,6,9,10,11],
+    term:[
+      '<span class="prompt">$</span> python reservas.py',
+      '<span class="dim">leyendo funciones.txt...</span>',
+      '<span class="err">! FileNotFoundError</span>',
+      'No encontré el archivo',
+      '<span class="dim">finally:</span> recurso cerrado',
+    ],
+    msg:'<strong>El archivo no existe.</strong> open() lanza <span class="inlinecode" style="font-size:.78rem">FileNotFoundError</span>; el except específico lo atrapa y avisa con claridad. El programa <em>no crashea</em>. Y el finally cierra igual.'
+  },
+  perm:{
+    hl:[0,1,2,3,7,8,9,10,11],
+    term:[
+      '<span class="prompt">$</span> python reservas.py',
+      '<span class="dim">leyendo funciones.txt...</span>',
+      '<span class="err">! PermissionError</span>',
+      'Sin permisos de lectura',
+      '<span class="dim">finally:</span> recurso cerrado',
+    ],
+    msg:'<strong>Existe pero no puedes leerlo.</strong> Otro error, otro except: <span class="inlinecode" style="font-size:.78rem">PermissionError</span> con su propio mensaje. Cada fallo, su respuesta. Y de nuevo: <strong>finally siempre cierra</strong>.'
+  }
+};
+function frRender(k){
+  const d=frData[k];
+  $('fr-code').innerHTML=frCode.map(([html],i)=>'<span class="ln'+(d.hl.includes(i)?' hl':'')+'">'+html+'</span>').join('');
+  $('fr-term').innerHTML=d.term.join('<br>');
+  $('fr-msg').innerHTML=d.msg;
+}
+document.querySelectorAll('[data-fr]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-fr]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    frRender(b.dataset.fr);
+  });
+});
+frRender('ok');
+</script>
+</body>
+</html>

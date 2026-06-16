@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XVIII — Un mensaje, muchas respuestas — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ═══════════════════════════════════════════════════════════════
+   CSS DE WIDGETS — Sesión XVIII · Polimorfismo
+   prefijos: .poc- (colección polimórfica) · .duck- (duck typing)
+             .ov- (override tabs) · .iso- (isinstance explorer)
+             .pj- (comparativa py/java) · .chk- (sprint checklist)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W1: colección polimórfica animada */
+.poc-stage{display:grid;grid-template-columns:1fr;gap:1.5rem;}
+.poc-list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.poc-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--olive);padding:1.2rem 1rem;text-align:center;transition:all .35s cubic-bezier(.16,1,.3,1);}
+.poc-card.firing{border-top-color:var(--blood);box-shadow:0 0 0 3px rgba(160,36,24,.14);transform:translateY(-6px);}
+.poc-icon{font-size:2.2rem;line-height:1;}
+.poc-name{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink);margin-top:.5rem;font-weight:700;}
+.poc-kind{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:.2rem;}
+.poc-out{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--olive);margin-top:.7rem;min-height:1.3rem;opacity:0;transform:translateY(6px);transition:all .35s;}
+.poc-card.firing .poc-out{opacity:1;transform:translateY(0);color:var(--blood);font-weight:700;}
+.poc-console{background:var(--ink);padding:1.3rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.85;color:rgba(239,230,210,.85);min-height:200px;}
+.poc-console .prompt{color:var(--blood);}
+.poc-console .out{color:#9FBF9C;}
+.poc-console .cm{color:rgba(239,230,210,.42);font-style:italic;}
+.poc-console .ln{display:block;white-space:pre-wrap;}
+.poc-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.poc-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W2: duck typing */
+.duck-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.duck-shelf{display:flex;flex-direction:column;gap:.7rem;}
+.duck-obj{background:var(--paper);border:1px solid var(--line);padding:.9rem 1.1rem;cursor:pointer;display:flex;align-items:center;gap:.9rem;transition:all .2s;}
+.duck-obj:hover{border-color:var(--blood);}
+.duck-obj.sel{border-color:var(--blood);background:rgba(160,36,24,.06);}
+.duck-emo{font-size:1.6rem;line-height:1;}
+.duck-meta{flex:1;}
+.duck-cls{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink);font-weight:700;}
+.duck-has{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--ink-soft);margin-top:.15rem;}
+.duck-test{background:var(--ink);padding:1.5rem;min-height:240px;display:flex;flex-direction:column;gap:.8rem;}
+.duck-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--paper);line-height:1.2;}
+.duck-q em{color:#E8B04A;font-style:italic;}
+.duck-verdict{font-family:'JetBrains Mono',monospace;font-size:.95rem;padding:.7rem 1rem;border-left:3px solid;transition:all .25s;}
+.duck-verdict.ok{color:#9FBF9C;border-color:#9FBF9C;background:rgba(159,191,156,.08);}
+.duck-verdict.no{color:#E08A82;border-color:#E08A82;background:rgba(224,138,130,.08);}
+.duck-expl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;color:rgba(239,230,210,.82);margin-top:auto;}
+.duck-expl strong{color:#C9A961;font-style:normal;font-weight:600;}
+.duck-expl code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* W3: override tabs Python / Java */
+.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
+.pj-head .badge{font-size:.6rem;color:var(--ochre);}
+.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:300px;}
+.pj-line{white-space:pre;display:block;padding:0 .3rem;border-radius:2px;}
+.pj-line.hl{background:rgba(232,176,74,.18);}
+.pj-line .kw{color:var(--blood);font-style:italic;}
+.pj-line .cls{color:var(--ink);font-weight:700;}
+.pj-line .str{color:var(--ochre);}
+.pj-line .self{color:var(--olive);font-weight:700;}
+.pj-line .ty{color:#3E6E86;}
+.pj-line .dec{color:#8a6420;font-weight:700;}
+.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.pj-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: explorador isinstance / instanceof */
+.iso-stage{display:grid;grid-template-columns:1fr 1.05fr;gap:1.5rem;align-items:stretch;}
+.iso-cases{display:flex;flex-direction:column;gap:.7rem;}
+.iso-case{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:1rem 1.2rem;cursor:pointer;transition:all .2s;}
+.iso-case:hover{border-left-color:var(--blood);}
+.iso-case.sel{border-left-color:var(--blood);background:rgba(160,36,24,.05);}
+.iso-snip{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--ink);line-height:1.6;}
+.iso-snip .kw{color:var(--blood);font-style:italic;}
+.iso-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;margin-top:.5rem;}
+.iso-tag.good{color:var(--olive);}
+.iso-tag.bad{color:var(--blood);}
+.iso-panel{background:var(--ink);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;}
+.iso-verdict{font-family:'Cormorant Garamond',serif;font-size:1.7rem;line-height:1.05;}
+.iso-verdict.good{color:#9FBF9C;}
+.iso-verdict.bad{color:#E08A82;}
+.iso-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.iso-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
+.iso-fix{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:rgba(239,230,210,.9);padding:.8rem 1rem;background:rgba(239,230,210,.06);border-left:2px solid var(--ochre);margin-top:auto;}
+.iso-fix .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.iso-fix .kw{color:#D4956A;font-style:italic;}
+
+/* W5: checklist sprint + tarea 3 */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-group{margin-top:1.4rem;}
+.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+
+/* tarjetas conceptuales reutilizables */
+.con-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.con-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.4rem;}
+.con-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.5rem;}
+.con-d{font-size:.94rem;color:var(--ink-soft);line-height:1.5;}
+.con-d code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .poc-list{grid-template-columns:repeat(2,1fr);}
+  .duck-stage,.iso-stage,.pj-stage,.con-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-17.html" class="back">Sesión 17</a>
+  <span class="session-label">Sesión 18 · Sprint 2 · 17.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">for figura in figuras: figura.area()</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">def hablar(self): ...</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">@Override</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">if hasattr(x, "volar"):</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">isinstance(o, Figura)</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XVIII · Bloque II · Polimorfismo · Sprint 2 Review · Ref. Temario 5.6 · 5.6.1 · 5.6.2 · 5.6.3 · Python · Java</div>
+    <h1>Un mensaje,<br>muchas <em>respuestas.</em></h1>
+    <p class="hero-sub">Le mandas <em>el mismo</em> mensaje a una lista de objetos distintos — y cada uno responde a su manera. Eso es <em>polimorfismo</em>: muchas formas de cumplir un mismo contrato. Hoy lo implementas, y presentas tu Sprint 2.</p>
+  </div>
+</section>
+
+<!-- I: la idea -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · La palabra, partida en dos</p>
+    <p class="lead">Poli = muchas.<br>Morfo = <em>formas.</em></p>
+    <p class="subtle">Ya dominas <strong>herencia</strong> (sesiones 15-16) y <strong>interfaces</strong> (sesión 17). El polimorfismo es lo que les da sentido: cuando varias clases comparten un método con el <strong>mismo nombre</strong> pero <strong>cuerpo distinto</strong>, puedes tratarlas a todas igual y dejar que cada una responda según lo que <em>es</em>. Escribes el código una vez; funciona para clases que aún <em>ni existen</em>.</p>
+    <div class="con-grid">
+      <div class="con-card">
+        <div class="con-t">El contrato</div>
+        <div class="con-d">Todas prometen un método: <code>area()</code>, <code>sonido()</code>, <code>dibujar()</code>. Viene de una <strong>clase base</strong> o de una <strong>interfaz</strong>.</div>
+      </div>
+      <div class="con-card">
+        <div class="con-t">La sobrescritura</div>
+        <div class="con-d">Cada subclase reimplementa el método a su manera. En Python es directo; en Java lo marcas con <code>@Override</code>.</div>
+      </div>
+      <div class="con-card">
+        <div class="con-t">El despacho</div>
+        <div class="con-d">En tiempo de ejecución, el objeto <em>real</em> decide qué versión corre. No el tipo de la variable: el <strong>objeto</strong>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- II: colección polimórfica animada -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La colección heterogénea</p>
+    <p class="lead">Una lista con figuras <em>distintas.</em><br>Un solo <code style="font-size:.6em">for</code>. Cada una responde lo suyo.</p>
+    <p class="subtle">Aquí está el corazón del tema. Tienes una lista con un círculo, un cuadrado, un triángulo y un rectángulo — <strong>tipos diferentes en la misma colección</strong>. Pulsa <em>ejecutar</em> y observa: el mismo <span class="inlinecode">figura.area()</span> recorre la lista, pero cada objeto calcula su área <em>a su manera</em>. Eso es un argumento polimórfico en acción.</p>
+    <div class="widget" data-tag="Pulsa ejecutar · mira cada respuesta">
+      <div class="poc-stage">
+        <div class="poc-list" id="poc-list">
+          <div class="poc-card" data-poc="circulo">
+            <div class="poc-icon">●</div>
+            <div class="poc-name">Circulo(r=3)</div>
+            <div class="poc-kind">subclase de Figura</div>
+            <div class="poc-out" id="out-circulo"></div>
+          </div>
+          <div class="poc-card" data-poc="cuadrado">
+            <div class="poc-icon">■</div>
+            <div class="poc-name">Cuadrado(l=4)</div>
+            <div class="poc-kind">subclase de Figura</div>
+            <div class="poc-out" id="out-cuadrado"></div>
+          </div>
+          <div class="poc-card" data-poc="triangulo">
+            <div class="poc-icon">▲</div>
+            <div class="poc-name">Triangulo(6,2)</div>
+            <div class="poc-kind">subclase de Figura</div>
+            <div class="poc-out" id="out-triangulo"></div>
+          </div>
+          <div class="poc-card" data-poc="rectangulo">
+            <div class="poc-icon">▬</div>
+            <div class="poc-name">Rectangulo(5,2)</div>
+            <div class="poc-kind">subclase de Figura</div>
+            <div class="poc-out" id="out-rectangulo"></div>
+          </div>
+        </div>
+        <div class="poc-console" id="poc-console"></div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" id="poc-run">▶ ejecutar el for</button>
+        <button class="btn" id="poc-step">paso a paso</button>
+        <button class="btn" id="poc-reset">⟲ reset</button>
+      </div>
+      <div class="poc-note" id="poc-note">El <strong>for</strong> no pregunta de qué tipo es cada figura. Solo le manda el mensaje <em>area()</em> y confía en que cada objeto sabe responder. Ese es el regalo del polimorfismo: <strong>código que no cambia cuando agregas figuras nuevas</strong>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- III: sobrescritura Python / Java -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · La sobrescritura — Python ↔ Java</p>
+    <p class="lead">Mismo nombre de método.<br>Cuerpo <em>reescrito</em> en cada hija.</p>
+    <p class="subtle">Para que el <span class="inlinecode">for</span> de arriba funcione, cada subclase <strong>sobrescribe</strong> (override) el método de la base. En Python solo redefines el método; en Java agregas la anotación <span class="inlinecode">@Override</span> — que no es obligatoria, pero el compilador la usa para protegerte. Recorre los seis pasos en ambos lenguajes:</p>
+    <div class="widget" data-tag="Mismo concepto · dos lenguajes">
+      <div class="pj-stage">
+        <div class="pj-col">
+          <div class="pj-head">Python <span class="badge">tu lenguaje base</span></div>
+          <div class="pj-body" id="py-body"></div>
+        </div>
+        <div class="pj-col">
+          <div class="pj-head">Java <span class="badge">polimorfismo formal</span></div>
+          <div class="pj-body" id="java-body"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-ov="base">1 · La base</button>
+        <button class="btn" data-ov="hija">2 · Override</button>
+        <button class="btn" data-ov="super">3 · Llamar al padre</button>
+        <button class="btn" data-ov="lista">4 · Colección</button>
+        <button class="btn" data-ov="recorre">5 · Mismo mensaje</button>
+        <button class="btn" data-ov="salida">6 · Despacho</button>
+      </div>
+      <div class="pj-note" id="pj-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: duck typing -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Duck typing — el sello de Python</p>
+    <p class="lead">«Si camina como pato<br>y suena como pato…<br><em>es un pato.</em>»</p>
+    <p class="subtle">Java exige que el contrato sea <strong>formal</strong>: para meter algo en una lista de <span class="inlinecode">Volador</span>, la clase debe <em>declarar</em> que implementa esa interfaz. Python no pregunta el linaje: si el objeto <strong>tiene el método</strong> que necesitas, lo usa y punto. No importa de qué clase venga. Toca cada objeto y comprueba si "vuela":</p>
+    <div class="widget" data-tag="¿Tiene .volar()? Entonces vuela">
+      <div class="duck-stage">
+        <div class="duck-shelf" id="duck-shelf">
+          <div class="duck-obj sel" data-duck="pajaro">
+            <div class="duck-emo">🐦</div>
+            <div class="duck-meta"><div class="duck-cls">Pajaro</div><div class="duck-has">def volar(self): ...</div></div>
+          </div>
+          <div class="duck-obj" data-duck="avion">
+            <div class="duck-emo">✈️</div>
+            <div class="duck-meta"><div class="duck-cls">Avion</div><div class="duck-has">def volar(self): ...</div></div>
+          </div>
+          <div class="duck-obj" data-duck="superman">
+            <div class="duck-emo">🦸</div>
+            <div class="duck-meta"><div class="duck-cls">Superheroe</div><div class="duck-has">def volar(self): ...</div></div>
+          </div>
+          <div class="duck-obj" data-duck="pinguino">
+            <div class="duck-emo">🐧</div>
+            <div class="duck-meta"><div class="duck-cls">Pinguino</div><div class="duck-has">def nadar(self): ...</div></div>
+          </div>
+          <div class="duck-obj" data-duck="piedra">
+            <div class="duck-emo">🪨</div>
+            <div class="duck-meta"><div class="duck-cls">Piedra</div><div class="duck-has"># sin métodos útiles</div></div>
+          </div>
+        </div>
+        <div class="duck-test">
+          <div class="duck-q">El código solo pregunta:<br><em>¿tienes <code style="font-family:'JetBrains Mono',monospace;font-size:.7em;color:#D4956A">.volar()</code>?</em></div>
+          <div class="duck-verdict" id="duck-verdict"></div>
+          <div class="duck-expl" id="duck-expl"></div>
+        </div>
+      </div>
+      <div class="poc-note" style="margin-top:1.4rem">El <strong>Pajaro</strong>, el <strong>Avion</strong> y el <strong>Superheroe</strong> no comparten <em>ninguna</em> clase base — y aun así los tres vuelan en el mismo <span class="inlinecode">for</span>. En Java tendrías que obligarlos a implementar <span class="inlinecode">Volador</span>; en Python basta con que <em>hagan</em> lo que se espera. Poder y peligro a la vez: <strong>flexibilidad sin red</strong>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- V: isinstance / instanceof -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · isinstance / instanceof — el bisturí</p>
+    <p class="lead">A veces preguntar el tipo es <em>necesario.</em><br>Casi siempre es señal de <em>mal diseño.</em></p>
+    <p class="subtle">Python tiene <span class="inlinecode">isinstance(obj, Clase)</span> y Java tiene <span class="inlinecode">obj instanceof Clase</span>: ambos preguntan "¿este objeto es de este tipo?". Son útiles — pero si tu código se llena de <span class="inlinecode">if isinstance(...)</span> para decidir qué hacer, casi siempre estás <strong>reinventando el polimorfismo a mano</strong>. Revisa cada caso y descubre cuándo está bien y cuándo huele mal:</p>
+    <div class="widget" data-tag="Bisturí o muleta · tú decides">
+      <div class="iso-stage">
+        <div class="iso-cases" id="iso-cases">
+          <div class="iso-case sel" data-iso="validar">
+            <div class="iso-snip"><span class="kw">if not</span> isinstance(monto, (int, float)):</div>
+            <div class="iso-tag good">✓ caso legítimo · validar entrada</div>
+          </div>
+          <div class="iso-case" data-iso="frontera">
+            <div class="iso-snip"><span class="kw">if</span> isinstance(dato, dict): ... <span class="kw">else</span>: ...</div>
+            <div class="iso-tag good">✓ caso legítimo · frontera de datos</div>
+          </div>
+          <div class="iso-case" data-iso="despacho">
+            <div class="iso-snip"><span class="kw">if</span> isinstance(fig, Circulo): area = ...</div>
+            <div class="iso-tag bad">✗ olor · despacho manual</div>
+          </div>
+          <div class="iso-case" data-iso="cadena">
+            <div class="iso-snip"><span class="kw">if</span> isinstance(a, Perro): ... <span class="kw">elif</span> isinstance(a, Gato): ...</div>
+            <div class="iso-tag bad">✗ olor · cadena de tipos</div>
+          </div>
+        </div>
+        <div class="iso-panel">
+          <div class="iso-verdict" id="iso-verdict"></div>
+          <div class="iso-desc" id="iso-desc"></div>
+          <div class="iso-fix" id="iso-fix"></div>
+        </div>
+      </div>
+      <div class="ia-rules">
+        <div class="ia-rules-tag">Regla práctica de diseño</div>
+        <div class="ia-rule"><span class="ok">✓</span><span>Usa <em>isinstance</em> en la <strong>frontera</strong> del programa: validar lo que entra, lo que llega de un archivo o de la red.</span></div>
+        <div class="ia-rule"><span class="ok">✓</span><span>Úsalo cuando un objeto puede tener <strong>tipos verdaderamente distintos</strong> que no comparten contrato (ej. <em>str</em> vs <em>list</em>).</span></div>
+        <div class="ia-rule"><span class="no">✗</span><span>Si lo usas para elegir <em>qué método llamar</em> según la clase — borra el <em>if</em> y deja que <strong>cada objeto responda</strong>. Eso es el polimorfismo trabajando por ti.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: experiencia de aprendizaje -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · El ejercicio de hoy — el zoológico</p>
+    <p class="lead">Una lista de animales.<br>Un <code style="font-size:.55em">.sonido()</code>. Cada quien, su voz.</p>
+    <p class="subtle">Antes del Sprint Review, construyes juntos el caso clásico — pero <strong>en tu propio dominio</strong>. La idea es idéntica a las figuras: una colección heterogénea, un mismo mensaje, respuestas distintas. Tú eliges el dominio (animales, instrumentos, medios de transporte, notificaciones). Esta es la pauta:</p>
+    <div class="con-grid">
+      <div class="con-card">
+        <div class="con-t">1 · El contrato</div>
+        <div class="con-d">Una base <code>Animal</code> (clase abstracta o <code>Protocol</code>) que promete <code>sonido()</code>. Repasa lo de la sesión 17.</div>
+      </div>
+      <div class="con-card">
+        <div class="con-t">2 · Las formas</div>
+        <div class="con-d">Tres o cuatro subclases — <code>Perro</code>, <code>Gato</code>, <code>Vaca</code> — que <strong>sobrescriben</strong> <code>sonido()</code> cada una.</div>
+      </div>
+      <div class="con-card">
+        <div class="con-t">3 · El polimorfismo</div>
+        <div class="con-d">Una lista <code>[Perro(), Gato(), Vaca()]</code> y un <code>for a in animales: a.sonido()</code>. Cero <code>if</code> de tipo.</div>
+      </div>
+    </div>
+    <div class="poc-note" style="margin-top:2rem">Reto extra para quien quiera empujar: agrega un <strong>Pato</strong> que además <em>nade</em>, y muestra cómo el <span class="inlinecode">for</span> de sonidos lo trata igual que a los demás <em>sin tocar una sola línea existente</em>. Eso es lo que demuestra que tu diseño es polimórfico de verdad: <strong>extensible sin modificar</strong>.</div>
+  </div>
+</section>
+
+<!-- VII: Sprint 2 Review + Tarea 3 -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Sprint 2 Review — qué demuestras hoy</p>
+    <p class="lead">Hoy no entregas una promesa.<br><em>Demuestras</em> que tu proyecto camina.</p>
+    <p class="subtle">El Sprint 2 cierra el Bloque II de POO: tu proyecto integrador ya debe tener <strong>herencia</strong>, <strong>interfaces</strong> y, desde hoy, <strong>polimorfismo</strong>. En la review presentas el avance <em>en vivo</em> — código corriendo, no diapositivas. Marca lo que ya tienes listo para defender:</p>
+    <div class="widget" data-tag="Checklist · marca lo que ya demuestras">
+      <div class="chk-progress">Listo para la review: <span id="chk-count">0</span> de 11 elementos
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">La jerarquía (herencia + interfaces)</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Clase base</strong> o interfaz que define el contrato común del dominio</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Al menos <strong>tres subclases</strong> que heredan y especializan</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>super()</strong> usado correctamente en al menos un constructor de subclase</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Una <strong>interfaz / ABC / Protocol</strong> que algún tipo implementa (sesión 17)</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">El polimorfismo (lo de hoy)</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Una <strong>colección heterogénea</strong> con objetos de distintas subclases</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Un <strong>método sobrescrito</strong> y recorrido con un solo <code>for</code> — mismo mensaje, respuestas distintas</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Cero</strong> cadenas de <code>if isinstance(...)</code> para despachar comportamiento</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">La presentación de la review</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">El proyecto <strong>compila / corre</strong> sin tocar nada en vivo</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedes <strong>explicar cualquier línea</strong> que el profe señale</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Diagrama de clases <strong>actualizado</strong> con la jerarquía real (sesión 8)</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Todo <strong>subido a GitHub</strong> con commits que cuentan la historia del sprint</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para la próxima clase</p>
+    <p class="lead">Un buen diseño polimórfico se nota<br>en lo que <em>no</em> tienes que reescribir.</p>
+    <p class="subtle">La <strong>Tarea 3</strong> consolida todo el Bloque II en tu proyecto integrador: jerarquía completa con herencia, interfaces y polimorfismo, viviendo en tu repositorio. Vale <strong>1 punto</strong> y se entrega el <strong>25/07/26</strong>.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Sprint 2 Review · Tarea 3 (1 pt · entrega 25/07/26)</div>
+      <ol>
+        <li><strong>Presenta tu Sprint 2 hoy en clase:</strong> proyecto corriendo, con la colección polimórfica funcionando en vivo.</li>
+        <li><strong>Completa la jerarquía</strong> en código: base/interfaz + subclases que sobrescriben el método del contrato.</li>
+        <li><strong>Agrega la colección heterogénea</strong> y recórrela con un único <code>for</code> — sin <code>if</code> de tipo para despachar.</li>
+        <li><strong>Limpia los olores:</strong> si quedó alguna cadena de <code>isinstance</code> decidiendo comportamiento, conviértela en sobrescritura.</li>
+        <li><strong>Actualiza el diagrama de clases</strong> con la jerarquía real y súbelo junto al código.</li>
+        <li><strong>Sube todo a GitHub</strong> con un README que explique cómo el polimorfismo hace tu proyecto extensible. La IA puede <em>revisar</em> tu diseño y <em>explicarte</em> un error — pero el código que defiendes el 25/07 es tuyo.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="pj-line">'+html+'</span>';
+const LH=(html,hl)=>'<span class="pj-line'+(hl?' hl':'')+'">'+html+'</span>';
+
+// ─── W1: colección polimórfica animada ──────────────────────
+const pocOrder=['circulo','cuadrado','triangulo','rectangulo'];
+const pocData={
+  circulo:{call:'figura.area()  # Circulo',out:'28.27',expl:'π·r² = π·3²'},
+  cuadrado:{call:'figura.area()  # Cuadrado',out:'16.00',expl:'l·l = 4·4'},
+  triangulo:{call:'figura.area()  # Triangulo',out:'6.00',expl:'b·h/2 = 6·2/2'},
+  rectangulo:{call:'figura.area()  # Rectangulo',out:'10.00',expl:'b·h = 5·2'},
+};
+let pocStep=-1,pocTimer=null;
+function pocClear(){
+  pocOrder.forEach(k=>{
+    document.querySelector('[data-poc="'+k+'"]').classList.remove('firing');
+    $('out-'+k).textContent='';
+  });
+}
+function pocConsole(upTo,running){
+  let html='<span class="ln"><span class="cm"># figuras = [Circulo(3), Cuadrado(4), Triangulo(6,2), Rectangulo(5,2)]</span></span>';
+  html+='<span class="ln"><span class="prompt">&gt;&gt;&gt;</span> for figura in figuras:</span>';
+  html+='<span class="ln">...     print(figura.area())</span>';
+  for(let i=0;i<=upTo;i++){
+    const d=pocData[pocOrder[i]];
+    html+='<span class="ln"><span class="out">'+d.out+'</span>   <span class="cm"># '+d.expl+'</span></span>';
+  }
+  if(upTo>=pocOrder.length-1 && !running){
+    html+='<span class="ln"><span class="cm"># un mismo for · cuatro áreas distintas · cero ifs</span></span>';
+  }
+  $('poc-console').innerHTML=html;
+}
+function pocFire(i){
+  pocClear();
+  const k=pocOrder[i];
+  const card=document.querySelector('[data-poc="'+k+'"]');
+  card.classList.add('firing');
+  $('out-'+k).textContent='→ '+pocData[k].out;
+  pocConsole(i,true);
+}
+function pocStopTimer(){if(pocTimer){clearInterval(pocTimer);pocTimer=null;}}
+$('poc-run').addEventListener('click',()=>{
+  pocStopTimer();pocStep=-1;pocClear();$('poc-console').innerHTML='';
+  pocTimer=setInterval(()=>{
+    pocStep++;
+    if(pocStep<pocOrder.length){pocFire(pocStep);}
+    else{pocStopTimer();pocClear();pocConsole(pocOrder.length-1,false);}
+  },650);
+});
+$('poc-step').addEventListener('click',()=>{
+  pocStopTimer();
+  if(pocStep>=pocOrder.length-1){pocStep=-1;pocClear();$('poc-console').innerHTML='';return;}
+  pocStep++;pocFire(pocStep);
+  if(pocStep===pocOrder.length-1){setTimeout(()=>{if(pocStep===pocOrder.length-1){pocClear();pocConsole(pocOrder.length-1,false);}},700);}
+});
+$('poc-reset').addEventListener('click',()=>{pocStopTimer();pocStep=-1;pocClear();$('poc-console').innerHTML='';});
+pocConsole(-1,false);
+
+// ─── W2: sobrescritura Python ↔ Java ────────────────────────
+const ovData={
+  base:{
+    py:[
+      ['<span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod',0],
+      ['',0],
+      ['<span class="kw">class</span> <span class="cls">Figura</span>(ABC):',1],
+      ['    <span class="dec">@abstractmethod</span>',0],
+      ['    <span class="kw">def</span> area(<span class="self">self</span>) -> <span class="ty">float</span>:',0],
+      ['        ...  <span class="cm"># el contrato, sin cuerpo</span>',0],
+    ],
+    java:[
+      ['<span class="kw">abstract class</span> <span class="cls">Figura</span> {',1],
+      ['    <span class="cm">// el contrato que toda figura promete</span>',0],
+      ['    <span class="kw">abstract</span> <span class="ty">double</span> area();',0],
+      ['}',0],
+    ],
+    note:'La <strong>base</strong> define el método pero no lo implementa — es el contrato. <code>@abstractmethod</code> en Python y <code>abstract</code> en Java obligan a las hijas a darle cuerpo. Esto lo viste en la <strong>sesión 17</strong>.'
+  },
+  hija:{
+    py:[
+      ['<span class="kw">class</span> <span class="cls">Circulo</span>(Figura):',0],
+      ['    <span class="kw">def</span> __init__(<span class="self">self</span>, r): <span class="self">self</span>.r = r',0],
+      ['',0],
+      ['    <span class="kw">def</span> area(<span class="self">self</span>) -> <span class="ty">float</span>:',1],
+      ['        <span class="kw">return</span> 3.1416 * <span class="self">self</span>.r ** 2',1],
+    ],
+    java:[
+      ['<span class="kw">class</span> <span class="cls">Circulo</span> <span class="kw">extends</span> <span class="ty">Figura</span> {',0],
+      ['    <span class="kw">private</span> <span class="ty">double</span> r;',0],
+      ['',0],
+      ['    <span class="dec">@Override</span>',1],
+      ['    <span class="ty">double</span> area() {',1],
+      ['        <span class="kw">return</span> 3.1416 * r * r;',1],
+      ['    }',0],
+      ['}',0],
+    ],
+    note:'Cada hija <strong>sobrescribe</strong> (override) el método con su propia fórmula. En Python redefines el método y listo. En Java, <code>@Override</code> le dice al compilador "esto pisa al de la base" — si te equivocas en el nombre, <strong>te avisa</strong>. Por eso Java tiene polimorfismo <em>formal</em>.'
+  },
+  super:{
+    py:[
+      ['<span class="kw">class</span> <span class="cls">Cuadrado</span>(Figura):',0],
+      ['    <span class="kw">def</span> describir(<span class="self">self</span>):',0],
+      ['        base = <span class="kw">super</span>().describir()',1],
+      ['        <span class="kw">return</span> base + <span class="str">" (lado="</span> + ...',0],
+    ],
+    java:[
+      ['<span class="kw">class</span> <span class="cls">Cuadrado</span> <span class="kw">extends</span> <span class="ty">Figura</span> {',0],
+      ['    <span class="ty">String</span> describir() {',0],
+      ['        <span class="kw">return super</span>.describir()',1],
+      ['             + <span class="str">" (lado="</span> + lado + <span class="str">")"</span>;',0],
+      ['    }',0],
+      ['}',0],
+    ],
+    note:'Sobrescribir no siempre es <em>reemplazar</em>: a veces quieres <strong>extender</strong>. Con <code>super()</code> (Python) o <code>super.</code> (Java) llamas a la versión del padre y le agregas lo tuyo. Esto lo trabajaste en la <strong>sesión 16</strong>.'
+  },
+  lista:{
+    py:[
+      ['figuras = [',1],
+      ['    Circulo(3),',1],
+      ['    Cuadrado(4),',1],
+      ['    Triangulo(6, 2),',1],
+      [']',0],
+      ['<span class="cm"># tipos distintos · misma lista</span>',0],
+    ],
+    java:[
+      ['<span class="ty">List</span>&lt;<span class="ty">Figura</span>&gt; figuras = <span class="ty">List</span>.of(',1],
+      ['    <span class="kw">new</span> Circulo(3),',1],
+      ['    <span class="kw">new</span> Cuadrado(4),',1],
+      ['    <span class="kw">new</span> Triangulo(6, 2)',1],
+      [');',0],
+    ],
+    note:'La <strong>colección heterogénea</strong>: en Python la lista acepta cualquier cosa. En Java la declaras como <code>List&lt;Figura&gt;</code> — solo entran figuras, pero <em>de cualquier subclase</em>. Java te da seguridad de tipos; Python te da libertad.'
+  },
+  recorre:{
+    py:[
+      ['<span class="kw">for</span> figura <span class="kw">in</span> figuras:',1],
+      ['    print(figura.area())',1],
+      ['',0],
+      ['<span class="cm"># el for no sabe ni le importa</span>',0],
+      ['<span class="cm"># de qué tipo es cada figura</span>',0],
+    ],
+    java:[
+      ['<span class="kw">for</span> (<span class="ty">Figura</span> figura : figuras) {',1],
+      ['    System.out.println(figura.area());',1],
+      ['}',0],
+      ['',0],
+      ['<span class="cm">// la variable es Figura;</span>',0],
+      ['<span class="cm">// el objeto real, otra cosa</span>',0],
+    ],
+    note:'<strong>Un solo mensaje para todos:</strong> <code>figura.area()</code>. El bucle es idéntico en ambos lenguajes y no tiene <em>ni un</em> if. Agregar una figura nueva mañana <strong>no toca esta línea</strong>. Eso es lo que hace al polimorfismo tan valioso.'
+  },
+  salida:{
+    py:[
+      ['<span class="cm"># salida:</span>',0],
+      ['28.2744',1],
+      ['16.0',1],
+      ['6.0',1],
+    ],
+    java:[
+      ['<span class="cm">// salida:</span>',0],
+      ['28.2744',1],
+      ['16.0',1],
+      ['6.0',1],
+    ],
+    note:'El <strong>despacho dinámico</strong>: en tiempo de ejecución, cada objeto ejecuta <em>su</em> versión de <code>area()</code> aunque la variable se llame <code>figura</code>. La decisión la toma el <strong>objeto real</strong>, no el tipo de la variable. Ese es el mecanismo que hace todo posible.'
+  },
+};
+function ovRender(key){
+  const d=ovData[key];
+  $('py-body').innerHTML=d.py.map(([h,hl])=>LH(h,hl)).join('');
+  $('java-body').innerHTML=d.java.map(([h,hl])=>LH(h,hl)).join('');
+  $('pj-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-ov]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-ov]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    ovRender(b.dataset.ov);
+  });
+});
+ovRender('base');
+
+// ─── W3: duck typing ────────────────────────────────────────
+const duckData={
+  pajaro:{flies:true,expl:'El <strong>Pajaro</strong> tiene <code>.volar()</code>, así que vuela. Lo obvio — pero fíjate: el código nunca preguntó "¿eres un Pajaro?". Solo le importó el <strong>método</strong>.'},
+  avion:{flies:true,expl:'El <strong>Avion</strong> no es un ave ni hereda de Pajaro. Pero tiene <code>.volar()</code> — y eso es todo lo que Python exige. <strong>Mismo for, sin parentesco.</strong>'},
+  superman:{flies:true,expl:'El <strong>Superheroe</strong> tampoco comparte clase base con los otros dos. En Java necesitarías obligarlo a implementar <code>Volador</code>; en Python, <em>basta con que vuele</em>.'},
+  pinguino:{flies:false,expl:'El <strong>Pinguino</strong> tiene <code>.nadar()</code>, no <code>.volar()</code>. Si el código llama <code>.volar()</code>, Python lanza <code>AttributeError</code>. El pato debe sonar como pato: <strong>aquí no suena.</strong>'},
+  piedra:{flies:false,expl:'La <strong>Piedra</strong> no tiene los métodos esperados. Duck typing es flexible, pero <em>no es magia</em>: si el objeto no cumple, revienta en ejecución. Ese es el precio de no tener contrato formal.'},
+};
+function duckRender(k){
+  const d=duckData[k];
+  const v=$('duck-verdict');
+  if(d.flies){v.className='duck-verdict ok';v.textContent='✓ vuela →  vuela()  ejecuta';}
+  else{v.className='duck-verdict no';v.textContent='✗ no vuela →  AttributeError';}
+  $('duck-expl').innerHTML=d.expl;
+}
+document.querySelectorAll('[data-duck]').forEach(o=>{
+  o.addEventListener('click',()=>{
+    document.querySelectorAll('[data-duck]').forEach(x=>x.classList.remove('sel'));
+    o.classList.add('sel');
+    duckRender(o.dataset.duck);
+  });
+});
+duckRender('pajaro');
+
+// ─── W4: isinstance / instanceof ────────────────────────────
+const isoData={
+  validar:{
+    good:true,verdict:'Uso legítimo.',
+    desc:'Validar lo que <strong>entra</strong> a una función. Antes de operar con un número, confirmas que sea número. Esto es defensa en la frontera, no despacho de comportamiento.',
+    fix:'<span class="cm"># adelante: protege tu función</span>\n<span class="kw">if not</span> isinstance(monto, (int, float)):\n    <span class="kw">raise</span> TypeError(...)'
+  },
+  frontera:{
+    good:true,verdict:'Uso legítimo.',
+    desc:'Datos que llegan de afuera (un JSON, un archivo) pueden venir como <strong>tipos genuinamente distintos</strong> que no comparten contrato. Aquí <em>str</em> vs <em>list</em> vs <em>dict</em> son cosas diferentes, no formas de un mismo todo.',
+    fix:'<span class="cm"># normalizar datos externos: ok</span>\n<span class="kw">if</span> isinstance(dato, dict):\n    items = dato.values()\n<span class="kw">else</span>:\n    items = dato'
+  },
+  despacho:{
+    good:false,verdict:'Olor a código.',
+    desc:'Aquí preguntas el tipo solo para <strong>elegir qué cálculo hacer</strong>. Eso es <em>despacho manual</em>: estás reimplementando el polimorfismo con <code>if</code>. Cada figura nueva te obliga a tocar este código.',
+    fix:'<span class="cm"># mejor: que cada figura sepa su área</span>\n<span class="kw">class</span> Circulo(Figura):\n    <span class="kw">def</span> area(self): <span class="kw">return</span> ...\n<span class="cm"># y luego: fig.area()  ← sin ifs</span>'
+  },
+  cadena:{
+    good:false,verdict:'Olor a código.',
+    desc:'Una <strong>cadena de isinstance</strong> es la señal más clara de polimorfismo perdido. Cada vez que agregues un animal, vuelves a este <code>if/elif</code>. El compilador no te protege; el diseño se pudre.',
+    fix:'<span class="cm"># borra el if/elif entero:</span>\n<span class="kw">for</span> a <span class="kw">in</span> animales:\n    a.sonido()  <span class="cm"># cada uno responde solo</span>'
+  },
+};
+function isoRender(k){
+  const d=isoData[k];
+  const v=$('iso-verdict');
+  v.className='iso-verdict '+(d.good?'good':'bad');
+  v.textContent=d.verdict;
+  $('iso-desc').innerHTML=d.desc;
+  $('iso-fix').innerHTML=d.fix.replace(/\n/g,'<br>');
+}
+document.querySelectorAll('[data-iso]').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('[data-iso]').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');
+    isoRender(c.dataset.iso);
+  });
+});
+isoRender('validar');
+
+// ─── W5: checklist sprint 2 ─────────────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
+</script>
+</body>
+</html>

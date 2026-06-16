@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XV — El árbol del código — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS DE LA SESIÓN 15 (HERENCIA) ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─ Repaso del examen: tarjetas de error común ─ */
+.exm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.exm-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.exm-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.exm-t{font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--ink);margin-bottom:.4rem;line-height:1.15;}
+.exm-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+.exm-d em{color:var(--blood);font-style:italic;}
+.exm-fix{font-family:'JetBrains Mono',monospace;font-size:.72rem;background:rgba(93,102,56,.1);border-left:2px solid var(--olive);padding:.5rem .7rem;color:var(--olive);margin-top:.7rem;}
+.exm-fix::before{content:'✓ ';color:var(--olive);font-weight:700;}
+
+/* ─ W1: Árbol de jerarquía interactivo ─ */
+.tre-stage{display:grid;grid-template-columns:1.05fr 1fr;gap:1.5rem;align-items:start;}
+.tre-tree{display:flex;flex-direction:column;align-items:center;gap:0;padding:1rem 0;}
+.tre-node{font-family:'JetBrains Mono',monospace;background:var(--paper);border:2px solid var(--ink);padding:.7rem 1.4rem;cursor:pointer;transition:all .22s;text-align:center;font-weight:700;color:var(--ink);position:relative;z-index:2;}
+.tre-node:hover{border-color:var(--blood);}
+.tre-node.lit{border-color:var(--blood);background:rgba(160,36,24,.08);box-shadow:0 0 0 3px rgba(160,36,24,.12);}
+.tre-node.base{border-color:var(--olive);}
+.tre-node.base.lit{border-color:var(--olive);background:rgba(93,102,56,.1);box-shadow:0 0 0 3px rgba(93,102,56,.14);}
+.tre-trunk{width:2px;height:26px;background:rgba(42,29,20,.4);}
+.tre-fork{display:flex;justify-content:center;gap:1.2rem;position:relative;width:100%;}
+.tre-branch{display:flex;flex-direction:column;align-items:center;}
+.tre-bar{width:70%;max-width:340px;height:2px;background:rgba(42,29,20,.4);margin-bottom:0;}
+.tre-panel{background:var(--ink);padding:1.5rem;min-height:260px;display:flex;flex-direction:column;gap:.8rem;}
+.tre-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.tre-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--paper);line-height:1.05;}
+.tre-sub{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(239,230,210,.55);margin-top:-.4rem;}
+.tre-block-t{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.3rem;}
+.tre-block-t.her{color:#9FBF9C;}
+.tre-block-t.own{color:#E8B04A;}
+.tre-list{display:flex;flex-wrap:wrap;gap:.4rem;}
+.tre-chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.25rem .6rem;border-radius:2px;}
+.tre-chip.her{background:rgba(159,191,156,.16);color:#bcd6b9;border:1px solid rgba(159,191,156,.4);}
+.tre-chip.own{background:rgba(232,176,74,.16);color:#E8B04A;border:1px solid rgba(232,176,74,.4);}
+.tre-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.45;color:rgba(239,230,210,.85);margin-top:auto;}
+.tre-phrase strong{color:#C9A961;font-style:normal;}
+
+/* ─ W2: Animador super() cimientos ─ */
+.sup-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:stretch;}
+.sup-build{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.5rem;min-height:280px;}
+.sup-floor{border:2px solid var(--line);background:var(--paper-deep);padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink-soft);opacity:.25;transform:translateY(10px);transition:all .5s cubic-bezier(.16,1,.3,1);}
+.sup-floor.up{opacity:1;transform:translateY(0);}
+.sup-floor.padre{border-color:var(--olive);}
+.sup-floor.padre.up{background:rgba(93,102,56,.12);border-color:var(--olive);color:var(--olive);font-weight:700;}
+.sup-floor.hija{border-color:var(--blood);}
+.sup-floor.hija.up{background:rgba(160,36,24,.08);border-color:var(--blood);color:var(--blood);font-weight:700;}
+.sup-floor small{display:block;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(42,29,20,.4);margin-bottom:.2rem;}
+.sup-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;}
+.sup-code{font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.95;color:var(--paper);}
+.sup-code .ln{display:block;white-space:pre;border-radius:2px;padding:0 .3rem;transition:background .3s;}
+.sup-code .ln.cur{background:rgba(232,176,74,.22);}
+.sup-code .kw{color:#D4956A;font-style:italic;}
+.sup-code .ty{color:#A6C2D6;}
+.sup-code .self{color:#8EAF8B;font-weight:700;}
+.sup-code .str{color:#C9A961;}
+.sup-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.sup-desc{margin-top:auto;padding-top:1.2rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.45;color:rgba(239,230,210,.85);}
+.sup-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* ─ W3: Tabs Python vs Java ─ */
+.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
+.pj-head .badge{font-size:.6rem;color:var(--ochre);}
+.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:240px;}
+.pj-line{white-space:pre;display:block;padding:0 .3rem;border-radius:2px;}
+.pj-line .kw{color:var(--blood);font-style:italic;}
+.pj-line .cls{color:var(--ink);font-weight:700;}
+.pj-line .str{color:var(--ochre);}
+.pj-line .self{color:var(--olive);font-weight:700;}
+.pj-line .ty{color:#3E6E86;}
+.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* ─ W4: Explorador is-a vs has-a ─ */
+.iha-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem;}
+.iha-col{background:var(--paper);border:1px solid var(--line);padding:1.2rem;}
+.iha-col.isa{border-top:3px solid var(--blood);}
+.iha-col.hasa{border-top:3px solid var(--olive);}
+.iha-h{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.9rem;}
+.iha-col.isa .iha-h{color:var(--blood);}
+.iha-col.hasa .iha-h{color:var(--olive);}
+.iha-card{font-family:'Cormorant Garamond',serif;font-size:1.12rem;color:var(--ink);background:var(--paper-deep);border:1px solid var(--line);padding:.6rem .9rem;margin-bottom:.5rem;cursor:pointer;transition:all .2s;}
+.iha-card:hover{border-color:var(--blood);transform:translateX(3px);}
+.iha-col.hasa .iha-card:hover{border-color:var(--olive);}
+.iha-card.on{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--blood);}
+.iha-col.hasa .iha-card.on{box-shadow:inset 3px 0 0 var(--olive);}
+.iha-card em{font-style:italic;color:var(--blood);}
+.iha-col.hasa .iha-card em{color:var(--olive);}
+.iha-panel{margin-top:1.2rem;padding:1.2rem 1.5rem;background:var(--ink);min-height:5rem;display:flex;gap:1rem;align-items:flex-start;}
+.iha-rel{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .6rem;flex-shrink:0;border-radius:2px;}
+.iha-rel.isa{background:rgba(160,36,24,.25);color:#E08A82;}
+.iha-rel.hasa{background:rgba(93,102,56,.25);color:#9FBF9C;}
+.iha-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.45;color:rgba(239,230,210,.88);}
+.iha-txt strong{color:#C9A961;font-style:normal;font-weight:600;}
+.iha-txt code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* ─ W5: La hija sabe hacer cosas que nunca definió ─ */
+.her-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.her-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:240px;overflow-x:auto;}
+.her-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;}
+.her-code .ln.hl{background:rgba(232,176,74,.25);}
+.her-code .kw{color:#D4956A;font-style:italic;}
+.her-code .ty{color:#A6C2D6;}
+.her-code .self{color:#8EAF8B;font-weight:700;}
+.her-code .str{color:#C9A961;}
+.her-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.her-code .out{color:#9FBF9C;}
+.her-note{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.5;color:var(--ink-soft);}
+.her-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.her-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Caso de la práctica + req cards ─ */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+.req-d code{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--blood);}
+
+/* ─ Reglas IA ─ */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+@media(max-width:860px){
+  .exm-grid,.req-grid,.tre-stage,.sup-stage,.pj-stage,.iha-grid,.her-stage{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-14.html" class="back">Sesión 14</a>
+  <span class="session-label">Sesión 15 · 08.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Auto(Vehiculo):</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">super().__init__(marca)</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">Moto <strong style="font-weight:400">es un</strong> Vehiculo</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">class Camion extends Vehiculo</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">Vehiculo ──▷ Auto · Camion · Moto</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XV · Bloque II · Herencia · Ref. Temario 5.1 · 5.1.1 · 5.1.2 · 5.1.3 · Python · Java</div>
+    <h1>El árbol<br>del <em>código.</em></h1>
+    <p class="hero-sub">Cerramos el examen y abrimos el Bloque II. Hoy descubres el mecanismo más poderoso de la POO: una clase puede <em>nacer</em> de otra y heredar todo lo que ya sabe — como un árbol genealógico, pero de código.</p>
+  </div>
+</section>
+
+<!-- I: cierre del examen -->
+<section>
+  <div class="wrap">
+    <p class="marker">I · Antes de avanzar — el examen parcial</p>
+    <p class="lead">Un examen no es una sentencia.<br>Es un <em>diagnóstico.</em></p>
+    <p class="subtle">Cerramos el Bloque I revisando juntos el examen. No para lamentar la calificación, sino para <strong>convertir cada error en un punto de mejora</strong>. Estos son los tres tropiezos que más se repitieron — mira si reconoces alguno, porque vamos a corregirlos hoy mismo construyendo sobre lo que ya sabes:</p>
+    <div class="exm-grid">
+      <div class="exm-card">
+        <div class="exm-num">Error común 01</div>
+        <div class="exm-t">Confundir clase con objeto</div>
+        <div class="exm-d">Tratar a <code>Producto</code> (el molde) como si fuera un producto concreto. La clase se <em>define una vez</em>; los objetos se <em>instancian muchas</em>.</div>
+        <div class="exm-fix">La clase es el plano; el objeto, la casa construida.</div>
+      </div>
+      <div class="exm-card">
+        <div class="exm-num">Error común 02</div>
+        <div class="exm-t">Olvidar <code>self</code> / acceso directo</div>
+        <div class="exm-d">Leer un atributo sin <code>self.</code> dentro del método, o tocar un atributo privado <em>desde fuera</em> en vez de pasar por su getter.</div>
+        <div class="exm-fix">Dentro de la clase: self. Desde fuera: el método público.</div>
+      </div>
+      <div class="exm-card">
+        <div class="exm-num">Error común 03</div>
+        <div class="exm-t">Diagrama que no coincide</div>
+        <div class="exm-d">El diagrama de clases decía una cosa y el código hacía otra. Un método dibujado que <em>no existía</em> en el código — la regla de oro de la Sesión 8, rota.</div>
+        <div class="exm-fix">El plano y el código deben contar la misma historia.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">La buena noticia: todo lo que viste en el Bloque I — clases, atributos, encapsulamiento, relaciones — es <strong>justo lo que necesitas</strong> para entender la herencia. No empezamos de cero. <em>Construimos encima.</em> Que es, literalmente, de lo que trata el tema de hoy.</p>
+  </div>
+</section>
+
+<!-- II: qué es la herencia -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · Qué es la herencia</p>
+    <p class="lead">Si tres clases comparten lo mismo,<br>no lo escribas <em>tres veces.</em></p>
+    <p class="subtle">La <strong>herencia</strong> permite crear una clase nueva a partir de una clase ya existente. La nueva (la <strong>subclase</strong> o <em>hija</em>) recibe automáticamente los atributos y métodos de la otra (la <strong>superclase</strong>, clase base o <em>padre</em>), y encima puede añadir lo suyo. Es el principio <strong>DRY</strong>: <em>don't repeat yourself</em> — no te repitas. Toca cada clase del árbol para ver qué hereda gratis y qué añade por su cuenta:</p>
+    <div class="widget" data-tag="Click en cada clase del árbol">
+      <div class="tre-stage">
+        <div class="tre-tree">
+          <div class="tre-node base lit" data-t="vehiculo">Vehiculo</div>
+          <div class="tre-trunk"></div>
+          <div style="width:70%;max-width:340px;border-top:2px solid rgba(42,29,20,.4)"></div>
+          <div class="tre-fork" style="width:70%;max-width:340px">
+            <div class="tre-branch"><div style="width:2px;height:18px;background:rgba(42,29,20,.4)"></div><div class="tre-node" data-t="auto">Auto</div></div>
+            <div class="tre-branch"><div style="width:2px;height:18px;background:rgba(42,29,20,.4)"></div><div class="tre-node" data-t="camion">Camion</div></div>
+            <div class="tre-branch"><div style="width:2px;height:18px;background:rgba(42,29,20,.4)"></div><div class="tre-node" data-t="moto">Moto</div></div>
+          </div>
+        </div>
+        <div class="tre-panel">
+          <div class="tre-tag" id="tre-tag">Clase base</div>
+          <div class="tre-title" id="tre-title">Vehiculo</div>
+          <div class="tre-sub" id="tre-sub">la raíz del árbol</div>
+          <div>
+            <div class="tre-block-t her" id="tre-her-t">Define para todos</div>
+            <div class="tre-list" id="tre-her"></div>
+          </div>
+          <div>
+            <div class="tre-block-t own">Propio de esta clase</div>
+            <div class="tre-list" id="tre-own"></div>
+          </div>
+          <div class="tre-phrase" id="tre-phrase"></div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.5rem">Eso es una <strong>jerarquía de herencia</strong>: un árbol donde lo común vive arriba y lo específico, abajo. <strong>Herencia simple</strong> = cada hija tiene <em>un solo</em> padre (lo que ves aquí). <strong>Herencia múltiple</strong> = una hija con varios padres a la vez — Python la permite, Java no; la veremos más adelante. Hoy nos quedamos con la simple, que es la que usarás en tu proyecto.</p>
+  </div>
+</section>
+
+<!-- III: super() construye sobre los cimientos -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · super() — construir sobre los cimientos</p>
+    <p class="lead">La hija no rehace los cimientos.<br>Llama al padre con <em>super().</em></p>
+    <p class="subtle">Cuando creas un objeto de la subclase, primero hay que construir la parte que viene del padre y <em>luego</em> añadir lo propio. Para eso existe <strong>super()</strong>: dentro del constructor de la hija, le pide al padre que inicialice los atributos heredados. Pulsa <strong>Siguiente</strong> o <strong>▶ Play</strong> y observa cómo se levanta el edificio — primero el piso del padre, luego el de la hija:</p>
+    <div class="widget" data-tag="super() paso a paso">
+      <div class="sup-stage">
+        <div class="sup-build">
+          <div class="sup-floor hija" id="sup-f-hija"><small>Subclase · Moto</small>self.cilindraje = cc</div>
+          <div class="sup-floor padre" id="sup-f-padre"><small>Clase base · Vehiculo</small>self.marca, self.modelo, self.anio</div>
+          <div class="sup-floor" id="sup-f-base" style="opacity:1;transform:none;border-style:dashed;text-align:center">cimientos · suelo</div>
+        </div>
+        <div class="sup-side">
+          <div class="sup-code">
+            <span class="ln" id="sup-l0"><span class="kw">class</span> <span class="self">Moto</span>(<span class="self">Vehiculo</span>):</span>
+            <span class="ln" id="sup-l1">    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, modelo, anio, cc):</span>
+            <span class="ln" id="sup-l2">        <span class="kw">super</span>().__init__(marca, modelo, anio)</span>
+            <span class="ln" id="sup-l3">        <span class="self">self</span>.cilindraje = cc</span>
+            <span class="ln" id="sup-l4"></span>
+            <span class="ln" id="sup-l5">m = <span class="self">Moto</span>(<span class="str">"Italika"</span>, <span class="str">"FT250"</span>, <span class="ty">2024</span>, <span class="ty">250</span>)</span>
+          </div>
+          <div class="sup-desc" id="sup-desc">Pulsa <strong>Siguiente</strong> para construir la moto paso a paso, desde los cimientos del Vehiculo.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="sup-reset">⟲ Reset</button>
+        <button class="btn" id="sup-prev">◀ Atrás</button>
+        <button class="btn on" id="sup-next">Siguiente ▶</button>
+        <button class="btn" id="sup-play">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: Python vs Java -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · La sintaxis — Python ↔ Java</p>
+    <p class="lead">Misma idea, dos idiomas.<br>Python <em>hereda</em>; Java <em>extends.</em></p>
+    <p class="subtle">El concepto es idéntico en los dos lenguajes — solo cambian las palabras. Python es tu lenguaje base; Java te lo encontrarás en la práctica institucional. Recorre los cuatro momentos clave de una herencia y compáralos lado a lado:</p>
+    <div class="widget" data-tag="Mismo concepto · dos lenguajes">
+      <div class="pj-stage">
+        <div class="pj-col">
+          <div class="pj-head">Python <span class="badge">tu lenguaje base</span></div>
+          <div class="pj-body" id="py-body"></div>
+        </div>
+        <div class="pj-col">
+          <div class="pj-head">Java <span class="badge">la práctica institucional</span></div>
+          <div class="pj-body" id="java-body"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-eq="hereda">Heredar</button>
+        <button class="btn" data-eq="super">Llamar al padre</button>
+        <button class="btn" data-eq="extra">Añadir lo propio</button>
+        <button class="btn" data-eq="usar">Usar lo heredado</button>
+      </div>
+      <div class="pj-note" id="pj-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- V: is-a vs has-a -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · "es un" vs "tiene un" — cuándo heredar</p>
+    <p class="lead">No todo lo que se relaciona<br>se <em>hereda.</em></p>
+    <p class="subtle">La pregunta que decide si usar herencia es de una sola frase. Si puedes decir con sentido <strong>"X es un Y"</strong> (<em>is-a</em>), es herencia. Si lo natural es <strong>"X tiene un Y"</strong> (<em>has-a</em>), <em>no</em> es herencia — es composición o asociación, las flechas que ya viste en UML. Toca cada caso y lee la frase clave:</p>
+    <div class="widget" data-tag="Toca cada relación">
+      <div class="iha-grid">
+        <div class="iha-col isa">
+          <div class="iha-h">Relación "es un" → Herencia</div>
+          <div class="iha-card on" data-i="moto">Una <em>Moto</em> es un Vehiculo</div>
+          <div class="iha-card" data-i="perro">Un <em>Perro</em> es un Animal</div>
+          <div class="iha-card" data-i="ahorro">Una <em>CuentaAhorro</em> es una Cuenta</div>
+        </div>
+        <div class="iha-col hasa">
+          <div class="iha-h">Relación "tiene un" → NO herencia</div>
+          <div class="iha-card" data-i="motor">Una Moto <em>tiene un</em> Motor</div>
+          <div class="iha-card" data-i="dueno">Un Perro <em>tiene un</em> Dueño</div>
+          <div class="iha-card" data-i="tarjeta">Una Cuenta <em>tiene una</em> Tarjeta</div>
+        </div>
+      </div>
+      <div class="iha-panel">
+        <div class="iha-rel isa" id="iha-rel">es un</div>
+        <div class="iha-txt" id="iha-txt"></div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.5rem">Truco de bolsillo: una Moto <strong>no</strong> "es un" Motor — sería absurdo decirlo. Por eso el motor es un <em>atributo</em> de la moto, no su clase padre. Si la frase con "es un" suena rara, <strong>no heredes</strong>.</p>
+  </div>
+</section>
+
+<!-- VI: la hija sabe hacer cosas que nunca definió -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · La magia — métodos que la hija nunca escribió</p>
+    <p class="lead">La hija sabe arrancar<br>sin haberlo <em>aprendido.</em></p>
+    <p class="subtle">Esto es lo que hace a la herencia tan poderosa: la subclase puede usar métodos que <strong>jamás definió</strong>, porque los heredó del padre. Recorre los tres pasos — define el padre, hereda en la hija, y mira cómo la hija ejecuta un método que no está en su propio código:</p>
+    <div class="widget" data-tag="Tres pasos · método heredado">
+      <div class="her-stage">
+        <div class="her-code" id="her-code"></div>
+        <div class="her-note" id="her-note"></div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-her="padre">1 · La clase base</button>
+        <button class="btn" data-her="hija">2 · La hija hereda</button>
+        <button class="btn" data-her="uso">3 · Usar lo heredado</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: puente a la práctica -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Puente a la práctica — la flota de transporte</p>
+    <p class="lead">Tu primer caso real de herencia:<br>una <em>empresa de transporte.</em></p>
+    <p class="subtle">Lo que viste hoy aterriza en la <strong>Práctica institucional 4 (Herencia)</strong>. No la entregas hoy, pero entiende el caso desde ya — porque la jerarquía que diseñarás para <em>tu proyecto</em> sigue exactamente este patrón:</p>
+    <div class="caso">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;">Practicario MCT158 · Práctica 4 de 6 · Herencia</div>
+      <p style="margin-bottom:1rem;">Una <strong>empresa de transporte</strong> gestiona su <strong>flota de vehículos</strong>: automóviles, camiones y motocicletas. Todos comparten datos: <strong>marca, modelo, año y tipo de combustible</strong>. Pero cada tipo añade lo suyo — un auto tiene <strong>número de puertas</strong>, un camión una <strong>carga máxima</strong>, una motocicleta un <strong>cilindraje</strong>.</p>
+      <p>Modela una clase base <strong>Vehiculo</strong> con los atributos comunes y tres subclases que hereden de ella. Usa <strong>super()</strong> en cada constructor hija para inicializar los atributos heredados antes de añadir los propios.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Clase base</div>
+        <div class="req-t">Vehiculo</div>
+        <div class="req-d"><code>marca, modelo, anio, combustible</code> — lo que todos comparten. Vive una sola vez, arriba del árbol.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Subclase 01</div>
+        <div class="req-t">Auto</div>
+        <div class="req-d">Hereda todo de Vehiculo y añade <code>num_puertas</code>. <em>Un auto es un vehículo.</em></div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Subclase 02</div>
+        <div class="req-t">Camion</div>
+        <div class="req-d">Hereda todo y añade <code>carga_maxima</code>. Su constructor llama a <code>super()</code> primero.</div>
+      </div>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">Reglas de la IA para diseñar tu jerarquía</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué <code>combustible</code> va en la clase base y no en cada subclase?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu árbol</em>: "esta es mi jerarquía, ¿algún atributo está repetido en las hijas que debería subir al padre?"</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "diséñame la jerarquía completa de mi proyecto" — <em>si la IA decidió tu árbol, no podrás defender por qué cada clase está donde está. Y eso es justo lo que se evalúa hoy.</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para la próxima clase</p>
+    <p class="lead">El proyecto entra al Bloque II.<br>Y empieza por su <em>árbol genealógico.</em></p>
+    <p class="subtle">La participación de hoy se evalúa así: <strong>cada equipo propone, en clase, la jerarquía de clases de su proyecto integrador</strong>. Llega con un primer borrador para defenderlo — no tiene que estar perfecto, tiene que estar <em>pensado</em>.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance del proyecto · Bloque II</div>
+      <ol>
+        <li>Identifica en tu proyecto <strong>clases que comparten atributos o métodos</strong>: ahí se esconde una clase base.</li>
+        <li>Dibuja tu <strong>jerarquía de herencia simple</strong>: una clase base arriba, las subclases abajo, con el triángulo apuntando al padre.</li>
+        <li>Valida cada flecha con la frase <strong>"X es un Y"</strong>. Si suena raro, no es herencia — es un atributo (<em>"tiene un"</em>).</li>
+        <li>Marca qué atributos viven en la <strong>base</strong> (los comunes) y cuáles son <strong>propios</strong> de cada subclase.</li>
+        <li>Programa en <strong>Python</strong> tu clase base y al menos una subclase, usando <code>super().__init__()</code> en la hija.</li>
+        <li><strong>Prepárate para proponerla en clase</strong> — esa propuesta es tu participación evaluada.</li>
+        <li><em>Opcional:</em> avanza la <strong>Práctica institucional 4</strong> modelando la flota de transporte en Python o Java.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="pj-line">'+html+'</span>';
+
+// ─── W1: árbol de jerarquía ─────────────────────────────────
+const treData={
+  vehiculo:{tag:'Clase base',title:'Vehiculo',sub:'la raíz del árbol',base:true,
+    her:[],
+    own:['marca','modelo','anio','combustible','arrancar()','describir()'],
+    herT:'Define para todos',
+    phrase:'Todo lo que escribas aquí lo reciben <strong>las tres subclases, gratis</strong>. Por eso lo común vive arriba: se escribe una vez.'},
+  auto:{tag:'Subclase',title:'Auto',sub:'class Auto(Vehiculo)',base:false,
+    her:['marca','modelo','anio','combustible','arrancar()','describir()'],
+    own:['num_puertas'],
+    herT:'Hereda de Vehiculo',
+    phrase:'Un <strong>Auto es un Vehiculo</strong>: recibe los 6 miembros del padre sin reescribir nada, y solo añade <strong>num_puertas</strong>.'},
+  camion:{tag:'Subclase',title:'Camion',sub:'class Camion(Vehiculo)',base:false,
+    her:['marca','modelo','anio','combustible','arrancar()','describir()'],
+    own:['carga_maxima'],
+    herT:'Hereda de Vehiculo',
+    phrase:'El <strong>Camion</strong> también arranca y se describe — sin definir esos métodos. Lo único nuevo es <strong>carga_maxima</strong>.'},
+  moto:{tag:'Subclase',title:'Moto',sub:'class Moto(Vehiculo)',base:false,
+    her:['marca','modelo','anio','combustible','arrancar()','describir()'],
+    own:['cilindraje'],
+    herT:'Hereda de Vehiculo',
+    phrase:'Misma raíz, otra rama. La <strong>Moto</strong> hereda lo común y aporta su <strong>cilindraje</strong>. Eso es una jerarquía de herencia simple.'},
+};
+function treRender(k){
+  const d=treData[k];
+  $('tre-tag').textContent=d.tag;
+  $('tre-title').textContent=d.title;
+  $('tre-sub').textContent=d.sub;
+  $('tre-her-t').textContent=d.herT;
+  $('tre-her').innerHTML=d.her.length?d.her.map(x=>'<span class="tre-chip her">'+x+'</span>').join(''):'<span class="tre-sub">— es la raíz, no hereda de nadie —</span>';
+  $('tre-own').innerHTML=d.own.map(x=>'<span class="tre-chip own">'+x+'</span>').join('');
+  $('tre-phrase').innerHTML=d.phrase;
+}
+document.querySelectorAll('.tre-node').forEach(n=>{
+  n.addEventListener('click',()=>{
+    document.querySelectorAll('.tre-node').forEach(x=>x.classList.remove('lit'));
+    n.classList.add('lit');
+    treRender(n.dataset.t);
+  });
+});
+treRender('vehiculo');
+
+// ─── W2: animador super() ───────────────────────────────────
+const supSteps=[
+  {floors:[],lines:['sup-l5'],desc:'Pides una <strong>Moto</strong>: Python entra al constructor de la subclase con los 4 datos.'},
+  {floors:[],lines:['sup-l1'],desc:'Arranca el <code>__init__</code> de Moto. Pero antes de poner nada propio, hay una orden esperando.'},
+  {floors:['sup-f-padre'],lines:['sup-l2'],desc:'<strong>super().__init__(...)</strong> sube al padre <strong>Vehiculo</strong> y construye PRIMERO los cimientos: marca, modelo y año.'},
+  {floors:['sup-f-padre','sup-f-hija'],lines:['sup-l3'],desc:'Con los cimientos puestos, la hija añade lo SUYO: <strong>cilindraje</strong>. El orden importa — primero el padre, luego la hija.'},
+  {floors:['sup-f-padre','sup-f-hija'],lines:[],desc:'Edificio completo: la Moto tiene <strong>los 3 atributos del padre + el suyo</strong>. Eso es lo que hace super(): construir sobre los cimientos, no rehacerlos.'},
+];
+let supIdx=-1,supTimer=null;
+function supRender(){
+  ['sup-f-padre','sup-f-hija'].forEach(f=>$(f).classList.remove('up'));
+  ['sup-l0','sup-l1','sup-l2','sup-l3','sup-l5'].forEach(l=>$(l).classList.remove('cur'));
+  if(supIdx<0){
+    $('sup-desc').innerHTML='Pulsa <strong>Siguiente</strong> para construir la moto paso a paso, desde los cimientos del Vehiculo.';
+    return;
+  }
+  const s=supSteps[supIdx];
+  s.floors.forEach(f=>$(f).classList.add('up'));
+  s.lines.forEach(l=>$(l).classList.add('cur'));
+  $('sup-desc').innerHTML=s.desc;
+}
+function supStop(){if(supTimer){clearInterval(supTimer);supTimer=null;$('sup-play').textContent='▶ Play';}}
+$('sup-next').addEventListener('click',()=>{supStop();if(supIdx<supSteps.length-1){supIdx++;supRender();}});
+$('sup-prev').addEventListener('click',()=>{supStop();if(supIdx>-1){supIdx--;supRender();}});
+$('sup-reset').addEventListener('click',()=>{supStop();supIdx=-1;supRender();});
+$('sup-play').addEventListener('click',()=>{
+  if(supTimer){supStop();return;}
+  if(supIdx>=supSteps.length-1){supIdx=-1;supRender();}
+  $('sup-play').textContent='❚❚ Pausa';
+  supTimer=setInterval(()=>{
+    if(supIdx<supSteps.length-1){supIdx++;supRender();}
+    else supStop();
+  },1600);
+});
+supRender();
+
+// ─── W3: Python ↔ Java ──────────────────────────────────────
+const eqData={
+  hereda:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Vehiculo</span>:',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, marca):',
+      '        <span class="self">self</span>.marca = marca',
+      '',
+      '<span class="cm"># la hija: padre entre paréntesis</span>',
+      '<span class="kw">class</span> <span class="cls">Auto</span>(<span class="cls">Vehiculo</span>):',
+      '    <span class="kw">pass</span>  <span class="cm"># ya hereda todo</span>',
+    ],
+    java:[
+      '<span class="kw">public class</span> <span class="cls">Vehiculo</span> {',
+      '    <span class="kw">protected</span> <span class="ty">String</span> marca;',
+      '}',
+      '',
+      '<span class="cm">// la hija: la palabra extends</span>',
+      '<span class="kw">public class</span> <span class="cls">Auto</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {',
+      '    <span class="cm">// ya hereda todo</span>',
+      '}',
+    ],
+    note:'Para heredar, Python pone el <strong>padre entre paréntesis</strong>: <em>class Auto(Vehiculo)</em>. Java usa la palabra clave <strong>extends</strong>. Misma flecha del triángulo UML, dos sintaxis.'
+  },
+  super:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Auto</span>(<span class="cls">Vehiculo</span>):',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, puertas):',
+      '        <span class="kw">super</span>().__init__(marca)',
+      '        <span class="self">self</span>.puertas = puertas',
+    ],
+    java:[
+      '<span class="kw">public class</span> <span class="cls">Auto</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {',
+      '    <span class="kw">public</span> Auto(<span class="ty">String</span> marca, <span class="ty">int</span> puertas) {',
+      '        <span class="kw">super</span>(marca);',
+      '        <span class="self">this</span>.puertas = puertas;',
+      '    }',
+      '}',
+    ],
+    note:'En ambos, <strong>super(...)</strong> llama al constructor del padre — y debe ir <strong>primero</strong>. Python escribe <em>super().__init__(...)</em>; Java solo <em>super(...)</em>. Construye los cimientos antes de lo propio.'
+  },
+  extra:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Camion</span>(<span class="cls">Vehiculo</span>):',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, carga):',
+      '        <span class="kw">super</span>().__init__(marca)',
+      '        <span class="self">self</span>.carga_max = carga',
+      '',
+      '    <span class="kw">def</span> cargar(<span class="self">self</span>, kg):',
+      '        <span class="cm"># método NUEVO, solo del camión</span>',
+      '        <span class="kw">return</span> kg &lt;= <span class="self">self</span>.carga_max',
+    ],
+    java:[
+      '<span class="kw">public class</span> <span class="cls">Camion</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {',
+      '    <span class="kw">private</span> <span class="ty">double</span> cargaMax;',
+      '',
+      '    <span class="kw">public boolean</span> cargar(<span class="ty">double</span> kg) {',
+      '        <span class="cm">// método NUEVO, solo del camión</span>',
+      '        <span class="kw">return</span> kg &lt;= cargaMax;',
+      '    }',
+      '}',
+    ],
+    note:'La hija no se limita a heredar: <strong>añade atributos y métodos propios</strong>. <em>cargar()</em> existe solo en Camion — el padre y los demás hermanos no lo conocen. Heredar no es copiar: es extender.'
+  },
+  usar:{
+    py:[
+      'a = <span class="cls">Auto</span>(<span class="str">"Nissan"</span>, <span class="ty">4</span>)',
+      '',
+      'a.arrancar()   <span class="cm"># heredado de Vehiculo</span>',
+      'a.puertas      <span class="cm"># propio de Auto</span>',
+    ],
+    java:[
+      'Auto a = <span class="kw">new</span> Auto(<span class="str">"Nissan"</span>, <span class="ty">4</span>);',
+      '',
+      'a.arrancar();  <span class="cm">// heredado de Vehiculo</span>',
+      'a.getPuertas(); <span class="cm">// propio de Auto</span>',
+    ],
+    note:'Desde fuera <strong>no notas la diferencia</strong>: el objeto Auto responde tanto a lo heredado (<em>arrancar</em>) como a lo propio (<em>puertas</em>) con la misma naturalidad. Para quien lo usa, es un solo objeto coherente.'
+  }
+};
+function eqRender(key){
+  const d=eqData[key];
+  $('py-body').innerHTML=d.py.map(L).join('');
+  $('java-body').innerHTML=d.java.map(L).join('');
+  $('pj-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-eq]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-eq]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    eqRender(b.dataset.eq);
+  });
+});
+eqRender('hereda');
+
+// ─── W4: is-a vs has-a ──────────────────────────────────────
+const ihaData={
+  moto:{rel:'es un',cls:'isa',txt:'<strong>Moto es un Vehiculo.</strong> La frase tiene sentido perfecto → es herencia. En código: <code>class Moto(Vehiculo)</code>. La moto comparte la naturaleza del vehículo.'},
+  perro:{rel:'es un',cls:'isa',txt:'<strong>Perro es un Animal.</strong> Una subclase clásica → <code>class Perro(Animal)</code>. El perro hereda comer(), dormir() y añade ladrar().'},
+  ahorro:{rel:'es un',cls:'isa',txt:'<strong>CuentaAhorro es una Cuenta.</strong> Hereda saldo y depositar(), y añade su tasa de interés → <code>class CuentaAhorro(Cuenta)</code>. (¡La cuenta bancaria que ya programaste!)'},
+  motor:{rel:'tiene un',cls:'hasa',txt:'<strong>Moto tiene un Motor.</strong> Una moto NO "es un" motor — sería absurdo. El motor es un <em>atributo</em> de la moto: <code>self.motor = Motor()</code>. Composición, no herencia.'},
+  dueno:{rel:'tiene un',cls:'hasa',txt:'<strong>Perro tiene un Dueño.</strong> Un perro no "es un" dueño. Es una asociación: el perro guarda una referencia a su dueño como atributo, no lo hereda.'},
+  tarjeta:{rel:'tiene una',cls:'hasa',txt:'<strong>Cuenta tiene una Tarjeta.</strong> La cuenta no "es una" tarjeta. La tarjeta es un objeto que la cuenta posee → atributo. Si la frase con "es un" suena rara, no heredes.'},
+};
+function ihaRender(k){
+  const d=ihaData[k];
+  $('iha-rel').textContent=d.rel;
+  $('iha-rel').className='iha-rel '+d.cls;
+  $('iha-txt').innerHTML=d.txt;
+}
+document.querySelectorAll('.iha-card').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.iha-card').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    ihaRender(c.dataset.i);
+  });
+});
+ihaRender('moto');
+
+// ─── W5: método heredado ────────────────────────────────────
+const herData={
+  padre:{
+    code:[
+      ['<span class="kw">class</span> <span class="self">Vehiculo</span>:',0],
+      ['    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, modelo):',0],
+      ['        <span class="self">self</span>.marca = marca',0],
+      ['        <span class="self">self</span>.modelo = modelo',0],
+      ['',0],
+      ['    <span class="kw">def</span> arrancar(<span class="self">self</span>):',1],
+      ['        <span class="kw">print</span>(<span class="str">f"{self.marca} hace brrr..."</span>)',0],
+    ],
+    note:'La <strong>clase base</strong>. Define <code>arrancar()</code> una sola vez, aquí arriba. Nada nuevo todavía — es la POO que ya dominas del Bloque I.'
+  },
+  hija:{
+    code:[
+      ['<span class="kw">class</span> <span class="self">Moto</span>(<span class="self">Vehiculo</span>):',1],
+      ['    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, modelo, cc):',0],
+      ['        <span class="kw">super</span>().__init__(marca, modelo)',1],
+      ['        <span class="self">self</span>.cilindraje = cc',0],
+      ['',0],
+      ['    <span class="cm"># Moto NO define arrancar()...</span>',1],
+      ['    <span class="cm"># ...y aun así lo tendrá.</span>',0],
+    ],
+    note:'La hija solo añade <code>cilindraje</code>. <strong>No escribe arrancar()</strong> por ningún lado. Pero al heredar de Vehiculo, ese método ya viaja con ella — gratis.'
+  },
+  uso:{
+    code:[
+      ['m = <span class="self">Moto</span>(<span class="str">"Italika"</span>, <span class="str">"FT250"</span>, <span class="ty">250</span>)',0],
+      ['',0],
+      ['m.arrancar()',1],
+      ['',0],
+      ['<span class="cm"># Salida en consola:</span>',0],
+      ['<span class="out">Italika hace brrr...</span>',1],
+      ['',0],
+      ['<span class="cm"># Moto nunca definió arrancar().</span>',0],
+      ['<span class="cm"># Lo heredó completo de Vehiculo.</span>',0],
+    ],
+    note:'La magia: <strong>m.arrancar() funciona</strong> aunque Moto jamás escribió ese método. Lo heredó. Esto es el corazón de la herencia — reusar comportamiento sin copiarlo. En Java sería idéntico con <code>extends</code>.'
+  }
+};
+function herRender(k){
+  const d=herData[k];
+  $('her-code').innerHTML=d.code.map(([html,hl])=>'<span class="ln'+(hl?' hl':'')+'">'+html+'</span>').join('');
+  $('her-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-her]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-her]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    herRender(b.dataset.her);
+  });
+});
+herRender('padre');
+</script>
+</body>
+</html>

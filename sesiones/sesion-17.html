@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XVII — El contrato — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* caso */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS — SESIÓN XVII ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W1: explorador del contrato (ct-) */
+.ct-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.ct-doc{background:var(--ink);padding:1.6rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.95;color:rgba(239,230,210,.9);}
+.ct-l{white-space:pre;display:block;border-radius:2px;padding:0 .3rem;}
+.ct-l .kw{color:#D4956A;font-style:italic;}
+.ct-l .cls{color:#fff;font-weight:700;}
+.ct-l .ty{color:#A6C2D6;}
+.ct-l .self{color:#8EAF8B;font-weight:700;}
+.ct-l .cm{color:rgba(239,230,210,.42);font-style:italic;}
+.ct-l .dec{color:#C9A961;}
+.ct-sig{cursor:pointer;border-bottom:1px dotted rgba(201,169,97,.5);transition:all .2s;}
+.ct-sig:hover{background:rgba(201,169,97,.14);}
+.ct-sig.active{background:rgba(160,36,24,.4);border-bottom:1px solid var(--ochre);}
+.ct-panel{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.6rem;min-height:260px;display:flex;flex-direction:column;gap:.7rem;}
+.ct-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);}
+.ct-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--ink);line-height:1.1;}
+.ct-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);}
+.ct-desc strong{color:var(--ink);font-style:normal;font-weight:600;}
+.ct-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .35rem;border:1px solid var(--line);color:var(--blood);}
+.ct-meter{margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-soft);}
+.ct-meter strong{color:var(--olive);}
+
+/* W2: tabs ABC / Protocol / interface (cmp-) */
+.cmp-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.cmp-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.cmp-tab:hover{border-color:var(--blood);color:var(--blood);}
+.cmp-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.cmp-head{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;color:var(--ink-soft);margin-bottom:.6rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.cmp-head .badge{color:var(--ochre);}
+.cmp-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--paper);min-height:300px;overflow-x:auto;}
+.cmp-code .ln{white-space:pre;display:block;}
+.cmp-code .kw{color:#D4956A;font-style:italic;}
+.cmp-code .ty{color:#A6C2D6;}
+.cmp-code .self{color:#8EAF8B;font-weight:700;}
+.cmp-code .str{color:#C9A961;}
+.cmp-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.cmp-code .dec{color:#C9A961;}
+.cmp-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.cmp-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.cmp-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W3: implementa o explota (ie-) */
+.ie-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.ie-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:250px;}
+.ie-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;transition:background .3s;}
+.ie-code .ln.hl{background:rgba(232,176,74,.22);}
+.ie-code .ln.bad{background:rgba(160,36,24,.32);}
+.ie-code .kw{color:#D4956A;font-style:italic;}
+.ie-code .ty{color:#A6C2D6;}
+.ie-code .self{color:#8EAF8B;font-weight:700;}
+.ie-code .str{color:#C9A961;}
+.ie-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.ie-code .dec{color:#C9A961;}
+.ie-side{display:flex;flex-direction:column;gap:1rem;}
+.ie-console{background:#1c130d;border:1px solid rgba(239,230,210,.12);padding:1.1rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.7;flex:1;min-height:120px;overflow-x:auto;}
+.ie-prompt{color:var(--blood);}
+.ie-ok{color:#9FBF9C;}
+.ie-err{color:#E08A82;}
+.ie-dim{color:rgba(239,230,210,.5);}
+.ie-explain{padding:1.1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.ie-explain strong{color:var(--ink);font-style:normal;font-weight:600;}
+.ie-explain code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: niveles de encapsulamiento (enc-) */
+.enc-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.enc-castle{display:flex;flex-direction:column;gap:.5rem;}
+.enc-ring{border:2px solid var(--line);background:var(--paper);padding:1rem 1.2rem;cursor:pointer;transition:all .25s;position:relative;}
+.enc-ring:hover{border-color:var(--blood);}
+.enc-ring.on{border-color:var(--blood);box-shadow:0 0 0 3px rgba(160,36,24,.12);}
+.enc-ring.lv0.on{border-color:var(--olive);box-shadow:0 0 0 3px rgba(93,102,56,.14);}
+.enc-sym{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;color:var(--blood);}
+.enc-ring.lv0 .enc-sym{color:var(--olive);}
+.enc-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-top:.15rem;}
+.enc-hint{font-size:.85rem;color:var(--ink-soft);margin-top:.2rem;}
+.enc-panel{background:var(--ink);padding:1.5rem;min-height:280px;display:flex;flex-direction:column;gap:.8rem;}
+.enc-ptag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.enc-pcode{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:var(--paper);background:rgba(239,230,210,.06);padding:.9rem 1rem;border-left:2px solid var(--ochre);}
+.enc-pcode .kw{color:#D4956A;font-style:italic;}
+.enc-pcode .self{color:#8EAF8B;font-weight:700;}
+.enc-pcode .dec{color:#C9A961;}
+.enc-pcode .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.enc-pcode .err{color:#E08A82;}
+.enc-pcode .ok{color:#9FBF9C;}
+.enc-pdesc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.enc-pdesc strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* W5: duck typing (dt-) */
+.dt-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
+.dt-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);}
+.dt-code .ln{white-space:pre;display:block;}
+.dt-code .kw{color:#D4956A;font-style:italic;}
+.dt-code .ty{color:#A6C2D6;}
+.dt-code .self{color:#8EAF8B;font-weight:700;}
+.dt-code .str{color:#C9A961;}
+.dt-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.dt-pick{display:flex;flex-direction:column;gap:.7rem;justify-content:center;}
+.dt-opt{background:var(--paper);border:1px solid var(--line);padding:1.1rem 1.3rem;cursor:pointer;transition:all .2s;display:flex;gap:.9rem;align-items:center;}
+.dt-opt:hover{border-color:var(--blood);}
+.dt-opt.on{border-color:var(--olive);background:rgba(93,102,56,.07);}
+.dt-emoji{font-size:1.6rem;flex-shrink:0;}
+.dt-opt-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);}
+.dt-opt-d{font-size:.85rem;color:var(--ink-soft);}
+.dt-out{margin-top:1.4rem;padding:1.1rem 1.3rem;background:#1c130d;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;color:#9FBF9C;min-height:3.2rem;}
+.dt-out .ie-dim{color:rgba(239,230,210,.5);}
+.dt-explain{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;color:var(--ink-soft);}
+.dt-explain strong{color:var(--olive);font-style:normal;font-weight:600;}
+.dt-explain code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--olive);}
+
+/* tabla resumen */
+.tcmp{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
+.tcmp th,.tcmp td{border:1px solid var(--line);padding:.75rem 1rem;text-align:left;vertical-align:top;}
+.tcmp th{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;}
+.tcmp td:first-child{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ink);background:var(--paper);}
+.tcmp td{background:var(--paper);color:var(--ink-soft);}
+.tcmp code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blood);}
+
+/* guía */
+.guia{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.guia-card{background:var(--paper);border:1px solid var(--line);padding:1.3rem 1.5rem;}
+.guia-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--ink);line-height:1.4;}
+.guia-q::before{content:'¿';color:var(--blood);}
+.guia-hint{font-size:.88rem;color:rgba(42,29,20,.55);margin-top:.5rem;font-style:italic;}
+
+/* reglas IA */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .ct-stage,.ie-stage,.enc-stage,.dt-stage,.guia{grid-template-columns:1fr;}
+  .tcmp{font-size:.82rem;}
+  .tcmp th,.tcmp td{padding:.5rem .55rem;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-16.html" class="back">Sesión 16</a>
+  <span class="session-label">Sesión 17 · 15.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Pago(ABC):</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">@abstractmethod</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">interface Notificable</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">self.__saldo  ·  @property</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">def cobrar(self) -&gt; bool: ...</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XVII · Bloque II · Interfaces · Ref. Temario 5.4 · 5.5 · Python · Java</div>
+    <h1>El <em>contrato.</em></h1>
+    <p class="hero-sub">Una interfaz no escribe código: escribe una <em>promesa</em>. Dice <em>qué</em> debe poder hacerse, jamás cómo. Hoy aprendes a prometer sin implementar — y a hacer que el lenguaje te obligue a cumplir.</p>
+  </div>
+</section>
+
+<!-- I: la idea -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · Prometer sin implementar</p>
+    <p class="lead">Una interfaz es un <em>contrato.</em><br>Define el <em>qué</em>, nunca el <em>cómo.</em></p>
+    <p class="subtle">Hasta hoy, cada clase decía qué hacía <strong>y cómo lo hacía</strong>. Una interfaz separa esas dos cosas: declara los métodos que algo <em>debe</em> tener — su firma, su nombre, lo que recibe y lo que devuelve — y deja el cuerpo vacío. Es una lista de obligaciones. Quien firme el contrato (quien lo implemente) está <strong>forzado</strong> a cumplir cada cláusula, o el programa ni siquiera arranca.</p>
+    <div class="caso">
+      Piensa en un <strong>enchufe</strong>. La pared no sabe ni le importa si conectas una lámpara, un cargador o una licuadora. Solo exige una cosa: <strong>dos clavijas, este voltaje</strong>. Ese es el contrato. La lámpara y la licuadora lo cumplen de formas internas completamente distintas — pero ambas <em>encajan</em>. En software, esa pared es la <strong>interfaz</strong>: define la forma del enchufe, no lo que hay del otro lado.
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">En <strong>Java</strong> esto tiene una palabra dedicada: <span class="inlinecode">interface</span>. En <strong>Python</strong> — nuestro lenguaje base — lo logramos con <span class="inlinecode">ABC</span> (Abstract Base Class) y con <span class="inlinecode">Protocol</span>. Tres caminos, la misma idea. Vamos a recorrerlos.</p>
+  </div>
+</section>
+
+<!-- II: explorador del contrato -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · Anatomía de un contrato</p>
+    <p class="lead">Cada firma sin cuerpo<br>es una <em>obligación</em> que heredas.</p>
+    <p class="subtle">Aquí está una ABC de Python: una pasarela de pagos. Fíjate que ningún método tiene cuerpo — solo <span class="inlinecode">...</span> o <span class="inlinecode">pass</span>. Eso no es código incompleto: es <strong>una promesa exigida</strong>. Toca cada firma marcada para ver a qué te obliga si decides implementar este contrato:</p>
+    <div class="widget" data-tag="Toca cada firma">
+      <div class="ct-stage">
+        <div class="ct-doc" id="ct-doc">
+          <span class="ct-l"><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod</span>
+          <span class="ct-l"></span>
+          <span class="ct-l"><span class="kw">class</span> <span class="cls">MetodoPago</span>(ABC):</span>
+          <span class="ct-l">    <span class="cm"># el contrato: QUÉ debe poder hacer</span></span>
+          <span class="ct-l">    <span class="cm"># todo medio de pago. No el CÓMO.</span></span>
+          <span class="ct-l"></span>
+          <span class="ct-l">    <span class="dec">@abstractmethod</span></span>
+          <span class="ct-l">    <span class="kw">def</span> <span class="ct-sig" data-s="cobrar">cobrar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span></span>: ...</span>
+          <span class="ct-l"></span>
+          <span class="ct-l">    <span class="dec">@abstractmethod</span></span>
+          <span class="ct-l">    <span class="kw">def</span> <span class="ct-sig" data-s="reembolsar">reembolsar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span></span>: ...</span>
+          <span class="ct-l"></span>
+          <span class="ct-l">    <span class="dec">@property</span></span>
+          <span class="ct-l">    <span class="dec">@abstractmethod</span></span>
+          <span class="ct-l">    <span class="kw">def</span> <span class="ct-sig" data-s="comision">comision(<span class="self">self</span>) -&gt; <span class="ty">float</span></span>: ...</span>
+        </div>
+        <div class="ct-panel">
+          <div class="ct-tag" id="ct-tag">El contrato</div>
+          <div class="ct-title" id="ct-title">Una promesa, tres cláusulas</div>
+          <div class="ct-desc" id="ct-desc">Toca cualquiera de las firmas resaltadas a la izquierda. Cada una es un método que <strong>cualquier</strong> medio de pago real — tarjeta, transferencia, criptomoneda — estará <em>obligado</em> a escribir, cada uno a su manera.</div>
+          <div class="ct-meter" id="ct-meter">Cláusulas exploradas: <strong>0 de 3</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: tres caminos -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Tres caminos, una idea</p>
+    <p class="lead">ABC, Protocol e <em>interface.</em><br>El mismo contrato, distinta letra.</p>
+    <p class="subtle">El contrato <span class="inlinecode">MetodoPago</span> de la sección anterior se puede escribir de tres maneras. Dos son de Python (nuestra base), una es de Java para que veas el contraste. Recorre las pestañas y lee la nota de cada una — la diferencia entre <strong>ABC</strong> y <strong>Protocol</strong> es la más importante del día:</p>
+    <div class="widget" data-tag="Mismo contrato · tres formas">
+      <div class="cmp-tabs">
+        <button class="cmp-tab on" data-cmp="abc">Python · ABC</button>
+        <button class="cmp-tab" data-cmp="proto">Python · Protocol</button>
+        <button class="cmp-tab" data-cmp="java">Java · interface</button>
+      </div>
+      <div class="cmp-head"><span id="cmp-title">Python · ABC — herencia explícita</span><span class="badge" id="cmp-badge">abc.ABC + @abstractmethod</span></div>
+      <div class="cmp-code" id="cmp-code"></div>
+      <div class="cmp-note" id="cmp-note"></div>
+    </div>
+    <table class="tcmp">
+      <thead>
+        <tr><th>Criterio</th><th>ABC (Python)</th><th>Protocol (Python)</th><th>interface (Java)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Cómo se firma</td><td>Heredar: <code>class Tarjeta(MetodoPago)</code></td><td>Nada: solo tener los métodos</td><td><code>implements Notificable</code></td></tr>
+        <tr><td>Verifica el contrato</td><td>Al <strong>instanciar</strong> (en ejecución)</td><td>Por <strong>estructura</strong> (duck typing)</td><td>Al <strong>compilar</strong></td></tr>
+        <tr><td>Acoplamiento</td><td>La clase conoce a la ABC</td><td>Cero: la clase ni se entera</td><td>La clase nombra la interfaz</td></tr>
+        <tr><td>Úsalo cuando…</td><td>Quieres jerarquía + código compartido</td><td>Quieres encajar sin heredar</td><td>Programas en Java</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- IV: implementa o explota -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Implementa o explota</p>
+    <p class="lead">Un contrato que no obliga<br>no es un <em>contrato.</em></p>
+    <p class="subtle">Aquí está la fuerza de una ABC: si firmas el contrato pero olvidas una cláusula, Python <strong>no te deja crear el objeto</strong>. El error salta al instanciar, no a la hora de usar el método. Recórrelo paso a paso — verás la clase incompleta, el intento de instanciarla y la explosión:</p>
+    <div class="widget" data-tag="Avanza paso a paso">
+      <div class="ie-stage">
+        <div class="ie-code" id="ie-code"></div>
+        <div class="ie-side">
+          <div class="ie-console" id="ie-console"></div>
+          <div class="ie-explain" id="ie-explain">Pulsa <strong>Siguiente</strong> para ver qué pasa cuando una clase firma el contrato pero deja una cláusula sin cumplir.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="ie-reset">⟲ Reset</button>
+        <button class="btn" id="ie-prev">◀ Atrás</button>
+        <button class="btn on" id="ie-next">Siguiente ▶</button>
+        <button class="btn" id="ie-play">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: encapsulamiento avanzado -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El castillo del encapsulamiento</p>
+    <p class="lead">No todo lo de un objeto<br>es para el <em>mundo exterior.</em></p>
+    <p class="subtle">Un buen contrato expone solo la puerta principal y esconde la maquinaria. Python tiene <strong>cuatro niveles</strong> de acceso, de la muralla más baja a la más alta. Ojo: en Python son <em>convenciones y trucos</em>, no candados de verdad como en Java — pero un profesional los respeta. Toca cada anillo del castillo:</p>
+    <div class="widget" data-tag="Toca cada anillo">
+      <div class="enc-stage">
+        <div class="enc-castle">
+          <div class="enc-ring lv0 on" data-enc="pub">
+            <div class="enc-sym">saldo</div>
+            <div class="enc-name">Público</div>
+            <div class="enc-hint">Sin guion bajo · cualquiera lo toca</div>
+          </div>
+          <div class="enc-ring" data-enc="prot">
+            <div class="enc-sym">_saldo</div>
+            <div class="enc-name">Protegido</div>
+            <div class="enc-hint">Un guion bajo · "uso interno, por favor"</div>
+          </div>
+          <div class="enc-ring" data-enc="priv">
+            <div class="enc-sym">__saldo</div>
+            <div class="enc-name">Privado</div>
+            <div class="enc-hint">Dos guiones · name mangling</div>
+          </div>
+          <div class="enc-ring" data-enc="prop">
+            <div class="enc-sym">@property</div>
+            <div class="enc-name">Propiedad</div>
+            <div class="enc-hint">La puerta controlada · acceso con reglas</div>
+          </div>
+        </div>
+        <div class="enc-panel">
+          <div class="enc-ptag" id="enc-ptag">Nivel 0 · público</div>
+          <div class="enc-pcode" id="enc-pcode"></div>
+          <div class="enc-pdesc" id="enc-pdesc"></div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">La estrella es <span class="inlinecode">@property</span>: te deja escribir <span class="inlinecode">cuenta.saldo</span> como si fuera un atributo simple, pero por debajo corre un método que <strong>valida, calcula o protege</strong>. Es el getter de Java (Sesión 3) con la cara amable de un atributo. Y en Java, el equivalente del <span class="inlinecode">__privado</span> es la palabra real <span class="inlinecode">private</span> — ahí sí el compilador te corta la mano.</p>
+  </div>
+</section>
+
+<!-- VI: duck typing, puente a polimorfismo -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Adelanto — duck typing</p>
+    <p class="lead">Si camina como pato<br>y grazna como pato…<br><em>es</em> un pato.</p>
+    <p class="subtle">Aquí se cierra el círculo y se abre el siguiente. Una función que recibe "algo que sabe cobrar" no pregunta <em>de qué clase eres</em> — solo te pide que cumplas el contrato. Eso es <strong>duck typing</strong>, y es la antesala directa del <strong>polimorfismo</strong> del Sprint 2. Elige qué objeto le pasas a la misma función y mira qué pasa:</p>
+    <div class="widget" data-tag="Elige el objeto">
+      <div class="dt-stage">
+        <div class="dt-code" id="dt-code">
+          <span class="ln"><span class="kw">def</span> procesar(metodo, monto):</span>
+          <span class="ln">    <span class="cm"># no pregunto QUÉ eres,</span></span>
+          <span class="ln">    <span class="cm"># solo pido que sepas cobrar()</span></span>
+          <span class="ln">    <span class="kw">if</span> metodo.cobrar(monto):</span>
+          <span class="ln">        <span class="kw">return</span> <span class="str">"Pago aprobado ✓"</span></span>
+          <span class="ln">    <span class="kw">return</span> <span class="str">"Pago rechazado ✗"</span></span>
+        </div>
+        <div class="dt-pick">
+          <div class="dt-opt on" data-dt="tarjeta">
+            <div class="dt-emoji">💳</div>
+            <div><div class="dt-opt-t">Tarjeta()</div><div class="dt-opt-d">tiene cobrar() · implementa el contrato</div></div>
+          </div>
+          <div class="dt-opt" data-dt="cripto">
+            <div class="dt-emoji">🪙</div>
+            <div><div class="dt-opt-t">Cripto()</div><div class="dt-opt-d">tiene cobrar() · ni hereda de la ABC</div></div>
+          </div>
+          <div class="dt-opt" data-dt="taco">
+            <div class="dt-emoji">🌮</div>
+            <div><div class="dt-opt-t">Taco()</div><div class="dt-opt-d">no tiene cobrar() · no cumple el contrato</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="dt-out" id="dt-out"></div>
+      <div class="dt-explain" id="dt-explain"></div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: el taller -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · El taller de hoy — tu proyecto integrador</p>
+    <p class="lead">Diseña el contrato<br>de tu <em>proyecto.</em></p>
+    <p class="subtle">La experiencia de aprendizaje de hoy es práctica: vas a diseñar e implementar <strong>una interfaz o ABC para tu proyecto integrador</strong>, y a comparar cómo se vería en Java (<span class="inlinecode">interface</span>) versus Python (<span class="inlinecode">ABC</span> / <span class="inlinecode">Protocol</span>). Estas preguntas te guían — las respuestas las decides tú según tu dominio:</p>
+    <div class="guia">
+      <div class="guia-card">
+        <div class="guia-q">Qué familia de objetos de tu proyecto comparte un mismo "deber hacer"?</div>
+        <div class="guia-hint">Pista: busca varias clases que respondan a la misma pregunta de formas distintas.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Cuáles son las 2 o 3 cláusulas mínimas del contrato? (sus firmas)</div>
+        <div class="guia-hint">Nombre del método, qué recibe, qué devuelve. Nada de cuerpo todavía.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Te conviene ABC (jerarquía + código común) o Protocol (encajar sin heredar)?</div>
+        <div class="guia-hint">Si dos clases ya existentes deben "encajar" sin tocarlas, piensa en Protocol.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Qué atributos esconderías con _ o __, y cuál expondrías con @property?</div>
+        <div class="guia-hint">El saldo, una clave, un identificador interno… ¿qué no debe tocar el exterior?</div>
+      </div>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">Reglas de la IA para diseñar tu contrato</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿cuándo conviene un Protocol en vez de una ABC?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>critique tu diseño</em>: "este es mi contrato Notificable, ¿le sobra o falta algún método?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te ayude a <em>traducir</em> tu ABC de Python a una <code>interface</code> de Java, para la comparativa</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "diseña la arquitectura de mi proyecto" — <em>en la presentación defenderás cada cláusula: si no sabes por qué está ahí, no es tu contrato.</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para la próxima clase</p>
+    <p class="lead">Define el <em>qué.</em><br>El <em>cómo</em> llega en el Sprint 2.</p>
+    <p class="subtle">Hoy prometiste sin implementar. La próxima sesión vas a cumplir esas promesas de muchas formas distintas — eso es <strong>polimorfismo</strong>, y el contrato que diseñes hoy es exactamente la base que necesita.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance del proyecto · entregable de la sesión</div>
+      <ol>
+        <li><strong>Diseña el contrato</strong> de tu proyecto integrador: una <code>ABC</code> o <code>Protocol</code> en Python con 2–3 métodos abstractos (solo firmas, sin cuerpo).</li>
+        <li><strong>Implementa al menos dos clases</strong> que firmen ese contrato, cada una cumpliendo las cláusulas a su manera.</li>
+        <li>Aplica <strong>encapsulamiento avanzado</strong>: esconde lo interno con <code>_</code> / <code>__</code> y expón lo necesario con <code>@property</code>.</li>
+        <li>Haz la <strong>comparativa</strong>: escribe cómo se vería ese mismo contrato como <code>interface</code> en Java. Una columna Python, una Java.</li>
+        <li><strong>Prepara tu presentación en clase:</strong> 3 minutos defendiendo tu contrato — qué obliga, por qué esas cláusulas y no otras.</li>
+        <li>Deja lista la semilla del <strong>polimorfismo del Sprint 2</strong>: una función que reciba "cualquier cosa que cumpla el contrato".</li>
+        <li>Sube todo a tu repo. El contrato bien diseñado hoy te ahorrará reescrituras la próxima semana.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: explorador del contrato ────────────────────────────
+const ctData={
+  cobrar:{tag:'Cláusula 1 · método abstracto',title:'cobrar(monto) → bool',
+    desc:'Todo medio de pago <strong>debe poder cobrar</strong>. Recibe un monto, devuelve <code>True</code> si el cobro funcionó. La ABC no dice <em>cómo</em>: una tarjeta llama a un banco, una cripto firma una transacción. Cada quien su manera — pero todos lo tienen.'},
+  reembolsar:{tag:'Cláusula 2 · método abstracto',title:'reembolsar(monto) → bool',
+    desc:'Si se puede cobrar, se debe poder <strong>devolver</strong>. Misma firma, lógica inversa. Que esté en el contrato significa que <em>ningún</em> medio de pago puede existir sin saber reembolsar — eso es lo que garantiza una interfaz.'},
+  comision:{tag:'Cláusula 3 · propiedad abstracta',title:'comision → float',
+    desc:'Una propiedad abstracta: el contrato exige que <strong>cualquier medio de pago exponga su comisión</strong> con <code>@property</code>, pero no fija el valor. Una tarjeta cobra 3%, una transferencia 0%. La forma de acceso es obligatoria; el número, libre.'},
+};
+let ctSeen=new Set();
+function ctRender(k){
+  const d=ctData[k];
+  $('ct-tag').textContent=d.tag;
+  $('ct-title').textContent=d.title;
+  $('ct-desc').innerHTML=d.desc;
+  ctSeen.add(k);
+  $('ct-meter').innerHTML='Cláusulas exploradas: <strong>'+ctSeen.size+' de 3</strong>'+(ctSeen.size===3?' — ya viste el contrato completo. Quien lo firme, las cumple todas.':'');
+}
+document.querySelectorAll('.ct-sig').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.ct-sig').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    ctRender(el.dataset.s);
+  });
+});
+
+// ─── W2: ABC / Protocol / interface ─────────────────────────
+const L2=h=>'<span class="ln">'+h+'</span>';
+const cmpData={
+  abc:{
+    title:'Python · ABC — herencia explícita',
+    badge:'abc.ABC + @abstractmethod',
+    code:[
+      '<span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod',
+      '',
+      '<span class="kw">class</span> MetodoPago(ABC):',
+      '    <span class="dec">@abstractmethod</span>',
+      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span>: ...',
+      '',
+      '<span class="cm"># firmar = heredar de la ABC</span>',
+      '<span class="kw">class</span> Tarjeta(MetodoPago):',
+      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto):',
+      '        <span class="kw">return</span> <span class="self">self</span>._banco.autorizar(monto)',
+    ],
+    note:'La forma <strong>clásica</strong> de Python. La clase <code>Tarjeta</code> <strong>hereda</strong> de <code>MetodoPago</code>, declarando explícitamente "yo firmo este contrato". Ventaja: la ABC puede traer <strong>código común</strong> ya hecho. Verificación: al instanciar.'
+  },
+  proto:{
+    title:'Python · Protocol — duck typing estructural',
+    badge:'typing.Protocol · sin heredar',
+    code:[
+      '<span class="kw">from</span> typing <span class="kw">import</span> Protocol',
+      '',
+      '<span class="kw">class</span> MetodoPago(Protocol):',
+      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span>: ...',
+      '',
+      '<span class="cm"># NO hereda de nada. Solo tiene</span>',
+      '<span class="cm"># el método. Ya cumple el Protocol.</span>',
+      '<span class="kw">class</span> Tarjeta:',
+      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto):',
+      '        <span class="kw">return</span> <span class="self">self</span>._banco.autorizar(monto)',
+    ],
+    note:'La forma <strong>moderna</strong>. <code>Tarjeta</code> <em>ni se entera</em> de que existe <code>MetodoPago</code>: como <strong>tiene la forma correcta</strong> (un <code>cobrar</code> compatible), encaja. Esto es <strong>duck typing estructural</strong>. Acoplamiento cero — ideal para hacer encajar clases que ya existen.'
+  },
+  java:{
+    title:'Java · interface — verificada al compilar',
+    badge:'interface + implements',
+    code:[
+      '<span class="kw">public interface</span> MetodoPago {',
+      '    <span class="cm">// solo firmas, sin cuerpo</span>',
+      '    <span class="ty">boolean</span> cobrar(<span class="ty">double</span> monto);',
+      '}',
+      '',
+      '<span class="cm">// firmar = implements</span>',
+      '<span class="kw">public class</span> Tarjeta <span class="kw">implements</span> MetodoPago {',
+      '    <span class="dec">@Override</span>',
+      '    <span class="kw">public</span> <span class="ty">boolean</span> cobrar(<span class="ty">double</span> monto) {',
+      '        <span class="kw">return</span> banco.autorizar(monto);',
+      '    }',
+      '}',
+    ],
+    note:'Java tiene la palabra dedicada: <code>interface</code>. La clase la firma con <code>implements</code>. La gran diferencia: Java verifica el contrato <strong>al compilar</strong> — si olvidas un método, el programa <em>ni siquiera se construye</em>. En Python el chequeo es en ejecución.'
+  },
+};
+function cmpRender(k){
+  const d=cmpData[k];
+  $('cmp-title').textContent=d.title;
+  $('cmp-badge').textContent=d.badge;
+  $('cmp-code').innerHTML=d.code.map(L2).join('');
+  $('cmp-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-cmp]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-cmp]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    cmpRender(b.dataset.cmp);
+  });
+});
+cmpRender('abc');
+
+// ─── W3: implementa o explota ───────────────────────────────
+const ieLines=[
+  '<span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod',
+  '',
+  '<span class="kw">class</span> MetodoPago(ABC):',
+  '    <span class="dec">@abstractmethod</span>',
+  '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto): ...',
+  '    <span class="dec">@abstractmethod</span>',
+  '    <span class="kw">def</span> reembolsar(<span class="self">self</span>, monto): ...',
+  '',
+  '<span class="kw">class</span> Transferencia(MetodoPago):',
+  '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto):',
+  '        <span class="kw">return</span> <span class="kw">True</span>',
+  '    <span class="cm"># falta reembolsar() ... ¿pasará?</span>',
+  '',
+  't = Transferencia()',
+];
+const ieSteps=[
+  {hl:[2,3,4,5,6],bad:[],con:[['ie-dim','# 1. El contrato exige DOS métodos:']],
+    txt:'La ABC <strong>MetodoPago</strong> declara dos cláusulas obligatorias: <code>cobrar</code> y <code>reembolsar</code>. Ambas con <code>@abstractmethod</code>: son promesas que quien herede <em>debe</em> cumplir.'},
+  {hl:[8,9,10],bad:[],con:[['ie-dim','# 2. Transferencia firma el contrato...']],
+    txt:'<strong>Transferencia</strong> hereda de <code>MetodoPago</code> — firma el contrato. Implementa <code>cobrar</code>… pero mira la línea 11: <strong>olvidó reembolsar</strong>. El contrato quedó a medias.'},
+  {hl:[11],bad:[11],con:[['ie-dim','# 3. La cláusula sin cumplir:'],['ie-err','#    reembolsar() nunca se escribió']],
+    txt:'Ahí está el hueco. En un lenguaje sin contratos, esto pasaría desapercibido hasta que alguien llamara a <code>reembolsar</code> en producción. Con una ABC, Python lo caza <strong>antes</strong>.'},
+  {hl:[13],bad:[],con:[['ie-prompt','&gt;&gt;&gt; t = Transferencia()']],
+    txt:'Intentamos <strong>crear el objeto</strong>. Nota: ni siquiera estamos llamando a <code>reembolsar</code> — solo instanciando. Aquí es donde la ABC hace su trabajo.'},
+  {hl:[13],bad:[13],con:[['ie-prompt','&gt;&gt;&gt; t = Transferencia()'],['ie-err','TypeError: Can\'t instantiate abstract'],['ie-err','class Transferencia with abstract'],['ie-err','method reembolsar']],
+    txt:'💥 <strong>TypeError al instanciar.</strong> El objeto no llega a nacer. La ABC garantiza que <em>no existe</em> un Transferencia incompleto rondando tu sistema. Eso es un contrato que <strong>obliga</strong> — exactamente lo que querías.'},
+];
+function ieRender(idx){
+  $('ie-code').innerHTML=ieLines.map((h,i)=>{
+    let cls='ln';
+    if(idx>=0){
+      if(ieSteps[idx].bad.includes(i)) cls+=' bad';
+      else if(ieSteps[idx].hl.includes(i)) cls+=' hl';
+    }
+    return '<span class="'+cls+'">'+(h||' ')+'</span>';
+  }).join('');
+  if(idx<0){
+    $('ie-console').innerHTML='<span class="ie-dim">&gt;&gt;&gt; esperando...</span>';
+    $('ie-explain').innerHTML='Pulsa <strong>Siguiente</strong> para ver qué pasa cuando una clase firma el contrato pero deja una cláusula sin cumplir.';
+  }else{
+    $('ie-console').innerHTML=ieSteps[idx].con.map(([c,t])=>'<div class="'+c+'">'+t+'</div>').join('');
+    $('ie-explain').innerHTML=ieSteps[idx].txt;
+  }
+}
+let ieIdx=-1,ieTimer=null;
+function ieStop(){if(ieTimer){clearInterval(ieTimer);ieTimer=null;$('ie-play').textContent='▶ Play';}}
+$('ie-next').addEventListener('click',()=>{ieStop();if(ieIdx<ieSteps.length-1){ieIdx++;ieRender(ieIdx);}});
+$('ie-prev').addEventListener('click',()=>{ieStop();if(ieIdx>-1){ieIdx--;ieRender(ieIdx);}});
+$('ie-reset').addEventListener('click',()=>{ieStop();ieIdx=-1;ieRender(ieIdx);});
+$('ie-play').addEventListener('click',()=>{
+  if(ieTimer){ieStop();return;}
+  if(ieIdx>=ieSteps.length-1){ieIdx=-1;ieRender(ieIdx);}
+  $('ie-play').textContent='❚❚ Pausa';
+  ieTimer=setInterval(()=>{
+    if(ieIdx<ieSteps.length-1){ieIdx++;ieRender(ieIdx);}
+    else ieStop();
+  },1900);
+});
+ieRender(-1);
+
+// ─── W4: niveles de encapsulamiento ─────────────────────────
+const encData={
+  pub:{lv0:true,ptag:'Nivel 0 · público',
+    code:'<span class="kw">class</span> Cuenta:\n    <span class="kw">def</span> __init__(<span class="self">self</span>):\n        <span class="self">self</span>.saldo = <span class="ok">1000</span>\n\nc.saldo = -<span class="ok">99999</span>  <span class="cm"># nadie lo impide</span>',
+    desc:'<strong>Público:</strong> sin guion bajo. Cualquier código, desde cualquier parte, puede leerlo <em>y modificarlo</em>. Cómodo, pero peligroso: nada impide poner un saldo negativo. Úsalo solo para datos que <strong>de verdad</strong> son libres.'},
+  prot:{lv0:false,ptag:'Nivel 1 · protegido',
+    code:'<span class="kw">class</span> Cuenta:\n    <span class="kw">def</span> __init__(<span class="self">self</span>):\n        <span class="self">self</span>._saldo = <span class="ok">1000</span>\n\n<span class="cm"># funciona, pero el _ grita:</span>\nc._saldo  <span class="cm"># "no me toques desde fuera"</span>',
+    desc:'<strong>Protegido:</strong> un guion bajo <code>_saldo</code>. Es una <em>convención</em>, no un candado: Python no lo impide, pero le dice a otros programadores "esto es uso interno de la clase y sus hijas". En Java esto sería <code>protected</code>.'},
+  priv:{lv0:false,ptag:'Nivel 2 · privado · name mangling',
+    code:'<span class="kw">class</span> Cuenta:\n    <span class="kw">def</span> __init__(<span class="self">self</span>):\n        <span class="self">self</span>.__saldo = <span class="ok">1000</span>\n\nc.__saldo\n<span class="err"># AttributeError: no existe __saldo</span>\n<span class="cm"># Python lo renombró: _Cuenta__saldo</span>',
+    desc:'<strong>Privado:</strong> dos guiones <code>__saldo</code>. Aquí entra el <strong>name mangling</strong>: Python lo renombra internamente a <code>_Cuenta__saldo</code> para que no choque ni se acceda por accidente desde fuera. No es seguridad real, pero es la muralla más alta de Python.'},
+  prop:{lv0:false,ptag:'Nivel 3 · la puerta controlada',
+    code:'<span class="kw">class</span> Cuenta:\n    <span class="dec">@property</span>\n    <span class="kw">def</span> saldo(<span class="self">self</span>):\n        <span class="kw">return</span> <span class="self">self</span>.__saldo\n\n    <span class="dec">@saldo.setter</span>\n    <span class="kw">def</span> saldo(<span class="self">self</span>, v):\n        <span class="kw">if</span> v &lt; <span class="ok">0</span>: <span class="kw">raise</span> ValueError\n        <span class="self">self</span>.__saldo = v',
+    desc:'<strong>@property:</strong> la joya. Escribes <code>c.saldo</code> como si fuera un atributo simple, pero por dentro corre un método que <em>valida</em>. El <code>setter</code> rechaza un saldo negativo. Guardas lo privado adentro y expones una <strong>puerta con reglas</strong>. Es el getter/setter de Java con cara de atributo.'},
+};
+function encRender(k){
+  const d=encData[k];
+  $('enc-ptag').textContent=d.ptag;
+  $('enc-pcode').innerHTML=d.code.replace(/\n/g,'<br>');
+  $('enc-pdesc').innerHTML=d.desc;
+}
+document.querySelectorAll('[data-enc]').forEach(r=>{
+  r.addEventListener('click',()=>{
+    document.querySelectorAll('[data-enc]').forEach(x=>x.classList.remove('on'));
+    r.classList.add('on');
+    encRender(r.dataset.enc);
+  });
+});
+encRender('pub');
+
+// ─── W5: duck typing ────────────────────────────────────────
+const dtData={
+  tarjeta:{
+    out:'<span class="ie-dim">&gt;&gt;&gt; procesar(Tarjeta(), 250)</span><br>Pago aprobado ✓',
+    txt:'<strong>Encaja.</strong> <code>Tarjeta</code> implementa la ABC y tiene <code>cobrar()</code>. La función ni preguntó su clase: pidió el comportamiento, lo recibió. <em>Camina como pato, grazna como pato.</em>'
+  },
+  cripto:{
+    out:'<span class="ie-dim">&gt;&gt;&gt; procesar(Cripto(), 250)</span><br>Pago aprobado ✓',
+    txt:'<strong>También encaja — y esto es lo bonito.</strong> <code>Cripto</code> <em>no hereda</em> de la ABC, pero tiene un <code>cobrar()</code> compatible. A la función le da igual el linaje: solo le importa la <strong>forma</strong>. Eso es duck typing puro, y la base del Protocol.'
+  },
+  taco:{
+    out:'<span class="ie-dim">&gt;&gt;&gt; procesar(Taco(), 250)</span><br><span class="ie-err">AttributeError: \'Taco\' object has<br>no attribute \'cobrar\'</span>',
+    txt:'<strong>Explota.</strong> Un <code>Taco</code> no sabe cobrar — no cumple el contrato. Python no lo detecta antes (a menos que uses un Protocol con verificación): <em>truena al usarlo</em>. Por eso los contratos importan: te avisan temprano quién no encaja.'
+  },
+};
+function dtRender(k){
+  const d=dtData[k];
+  $('dt-out').innerHTML=d.out;
+  $('dt-explain').innerHTML=d.txt;
+}
+document.querySelectorAll('[data-dt]').forEach(o=>{
+  o.addEventListener('click',()=>{
+    document.querySelectorAll('[data-dt]').forEach(x=>x.classList.remove('on'));
+    o.classList.add('on');
+    dtRender(o.dataset.dt);
+  });
+});
+dtRender('tarjeta');
+</script>
+</body>
+</html>

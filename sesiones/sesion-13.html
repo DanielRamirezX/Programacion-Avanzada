@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XIII — Todo junto, una vez más — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS DE LA SESIÓN 13 ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* prólogo · línea de tiempo del bloque */
+.tl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;}
+.tl-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.3rem 1.2rem;}
+.tl-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.5rem;}
+.tl-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.35rem;line-height:1.15;}
+.tl-d{font-size:.9rem;color:var(--ink-soft);line-height:1.45;}
+
+/* W1 · mapa de los 4 temas */
+.map-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.map-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.map-tile{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:1.3rem 1.2rem;cursor:pointer;transition:all .25s;}
+.map-tile:hover{border-left-color:var(--blood);transform:translateY(-2px);}
+.map-tile.on{border-left-color:var(--blood);background:rgba(160,36,24,.05);}
+.map-tile-n{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.4rem;}
+.map-tile-t{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);line-height:1.05;}
+.map-tile-s{font-size:.82rem;color:rgba(42,29,20,.55);margin-top:.3rem;font-style:italic;}
+.map-panel{background:var(--ink);padding:1.7rem;min-height:330px;display:flex;flex-direction:column;gap:.9rem;}
+.map-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ochre);}
+.map-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--paper);line-height:1.05;}
+.map-sum{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.map-sum strong{color:#C9A961;font-style:normal;font-weight:600;}
+.map-key{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-top:.2rem;}
+.map-key li{font-size:.96rem;color:rgba(239,230,210,.82);padding-left:1.3rem;position:relative;line-height:1.4;}
+.map-key li::before{content:'▸';position:absolute;left:0;color:var(--ochre);}
+.map-key li strong{color:#E8B04A;font-weight:600;}
+.map-err{margin-top:auto;padding:.9rem 1.1rem;background:rgba(160,36,24,.18);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.02rem;line-height:1.4;color:rgba(239,230,210,.9);}
+.map-err strong{color:#E08A82;font-style:normal;}
+.map-err::before{content:'⚠ error típico — ';font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:#E08A82;}
+
+/* W2 · flashcards */
+.fc-deck{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.4rem;}
+.fcard{background:transparent;height:175px;cursor:pointer;perspective:1100px;}
+.fcard-in{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,.1,.2,1);transform-style:preserve-3d;}
+.fcard.flip .fcard-in{transform:rotateY(180deg);}
+.fcard-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center;padding:1.3rem;border:1px solid var(--line);}
+.fcard-q{background:var(--paper);}
+.fcard-a{background:var(--ink);transform:rotateY(180deg);}
+.fcard-tag{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.6rem;}
+.fcard-q .fcard-tag{color:var(--blood);}
+.fcard-a .fcard-tag{color:var(--ochre);}
+.fcard-q-txt{font-family:'Cormorant Garamond',serif;font-size:1.28rem;line-height:1.2;color:var(--ink);}
+.fcard-a-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.4;color:rgba(239,230,210,.9);}
+.fcard-a-txt strong{color:#C9A961;font-style:normal;}
+.fcard-a-txt code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.76rem;background:rgba(239,230,210,.1);padding:.05rem .3rem;border-radius:2px;color:#D4956A;}
+.fcard-hint{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(42,29,20,.35);margin-top:auto;}
+.fc-counter{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink-soft);margin-top:1.3rem;}
+.fc-counter strong{color:var(--blood);}
+
+/* W3 · simulacro quiz */
+.qz-q{background:var(--paper);border:1px solid var(--line);padding:1.5rem 1.6rem;margin-bottom:1.1rem;}
+.qz-q.locked{opacity:.96;}
+.qz-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.qz-stem{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--ink);line-height:1.25;margin-bottom:1rem;}
+.qz-stem code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+.qz-code{font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;background:var(--ink);color:var(--paper);padding:1rem 1.2rem;margin-bottom:1rem;overflow-x:auto;white-space:pre;}
+.qz-code .kw{color:#D4956A;font-style:italic;}
+.qz-code .str{color:#C9A961;}
+.qz-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.qz-code .self{color:#8EAF8B;font-weight:700;}
+.qz-opts{display:flex;flex-direction:column;gap:.55rem;}
+.qz-opt{display:flex;gap:.8rem;align-items:flex-start;padding:.7rem .95rem;background:var(--paper-deep);border:1px solid var(--line);cursor:pointer;transition:all .18s;font-size:1rem;color:var(--ink-soft);}
+.qz-opt:hover{border-color:var(--blood);}
+.qz-opt .qz-letter{font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;color:var(--blood);flex-shrink:0;}
+.qz-opt.right{background:rgba(93,102,56,.14);border-color:var(--olive);color:var(--ink);}
+.qz-opt.right .qz-letter{color:var(--olive);}
+.qz-opt.wrong{background:rgba(160,36,24,.1);border-color:var(--blood);}
+.qz-fb{margin-top:1rem;padding:.9rem 1.1rem;border-left:2px solid var(--ochre);background:var(--paper-deep);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.45;color:var(--ink-soft);display:none;}
+.qz-fb.show{display:block;}
+.qz-fb strong{color:var(--ink);font-style:normal;font-weight:600;}
+.qz-score{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);margin-top:1.5rem;padding:1.2rem 1.4rem;background:var(--paper);border-left:3px solid var(--olive);display:none;}
+.qz-score.show{display:block;}
+.qz-score em{font-style:italic;color:var(--blood);}
+
+/* W4 · checklist listo para el parcial */
+.rd-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.rd-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.rd-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.rd-verdict{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--blood);margin-top:.6rem;}
+.rd-group{margin-top:1.4rem;}
+.rd-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.rd-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.rd-item:hover{border-color:var(--olive);}
+.rd-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.rd-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.rd-item.done .rd-box{background:var(--olive);border-color:var(--olive);}
+.rd-item.done .rd-box::after{content:'✓';}
+.rd-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.rd-item.done .rd-txt{color:var(--ink);}
+.rd-txt strong{color:var(--ink);}
+
+/* W5 · galería NO/SÍ */
+.ns-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.ns-col{display:flex;flex-direction:column;gap:1rem;}
+.ns-head{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.5rem 0;border-bottom:1px solid var(--line);}
+.ns-head.no{color:var(--blood);}
+.ns-head.si{color:var(--olive);}
+.ns-card{background:var(--paper);border:1px solid var(--line);padding:0;overflow:hidden;}
+.ns-card.no{border-left:3px solid var(--blood);}
+.ns-card.si{border-left:3px solid var(--olive);}
+.ns-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.75;padding:1rem 1.2rem;white-space:pre;overflow-x:auto;color:var(--ink);}
+.ns-code .kw{color:var(--blood);font-style:italic;}
+.ns-code .str{color:#8a6420;}
+.ns-code .cm{color:rgba(42,29,20,.45);font-style:italic;}
+.ns-code .self{color:var(--olive);font-weight:700;}
+.ns-code .bad{background:rgba(160,36,24,.12);border-radius:2px;}
+.ns-code .good{background:rgba(93,102,56,.14);border-radius:2px;}
+.ns-why{font-size:.9rem;color:var(--ink-soft);padding:.8rem 1.2rem;border-top:1px solid var(--line);line-height:1.4;}
+.ns-why strong{color:var(--ink);}
+
+/* dudas */
+.dud-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.dud-card{background:var(--paper);border:1px solid var(--line);padding:1.3rem 1.5rem;}
+.dud-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;color:var(--ink);line-height:1.4;}
+.dud-q::before{content:'¿';color:var(--blood);}
+.dud-hint{font-size:.88rem;color:rgba(42,29,20,.55);margin-top:.5rem;font-style:italic;}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .tl-grid,.map-stage,.map-grid,.fc-deck,.ns-grid,.dud-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-12.html" class="back">Sesión 12</a>
+  <span class="session-label">Sesión 13 · 01.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Cuenta: __init__</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">self._saldo = 0</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">for x in arreglo:</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">if edad &gt;= 18: ...</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">temas 1 — 4 · repaso</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XIII · Cierre del Bloque I · Ref. Temario Repaso · Temas 1 – 4 · Python</div>
+    <h1>Todo junto,<br>una <em>vez más.</em></h1>
+    <p class="hero-sub">Es la víspera. No hay tema nuevo hoy — hoy <em>amarramos los cuatro</em> del primer bloque, resolvemos tus dudas y entras al parcial sabiendo exactamente qué dominas y qué te falta.</p>
+  </div>
+</section>
+
+<!-- I: el prólogo -->
+<section>
+  <div class="wrap">
+    <p class="marker">I · Dónde estamos</p>
+    <p class="lead">Repaso general —<br>el <em>cierre</em> del Bloque I.</p>
+    <p class="subtle">Estos cuatro temas no son islas: se apilan. Sin <strong>tipos</strong> no hay atributos; sin <strong>control de flujo</strong> los métodos no deciden nada; sin <strong>arrays</strong> un objeto no puede guardar muchas cosas. El examen parcial mide los cuatro <em>juntos</em>. Hoy los repasamos en ese orden — el orden en que se construyen.</p>
+    <div class="tl-grid">
+      <div class="tl-card">
+        <div class="tl-num">Tema 01</div>
+        <div class="tl-t">POO</div>
+        <div class="tl-d">Clases, objetos, encapsulamiento y constructores. El corazón del bloque.</div>
+      </div>
+      <div class="tl-card">
+        <div class="tl-num">Tema 02</div>
+        <div class="tl-t">Identificadores y tipos</div>
+        <div class="tl-d">Nombres válidos, <span class="inlinecode">int</span> / <span class="inlinecode">float</span> / <span class="inlinecode">str</span> / <span class="inlinecode">bool</span> y la conversión entre ellos.</div>
+      </div>
+      <div class="tl-card">
+        <div class="tl-num">Tema 03</div>
+        <div class="tl-t">Control de flujo</div>
+        <div class="tl-d">Condicionales y ciclos: cómo el programa <em>decide</em> y <em>repite</em>.</div>
+      </div>
+      <div class="tl-card">
+        <div class="tl-num">Tema 04</div>
+        <div class="tl-t">Arrays / colecciones</div>
+        <div class="tl-d">Listas en Python: guardar, recorrer y procesar muchos datos a la vez.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- II: mapa interactivo -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El mapa del bloque</p>
+    <p class="lead">Cuatro temas, una sola foto.<br>Toca cada uno y <em>revívelo.</em></p>
+    <p class="subtle">Cada tarjeta te da el <strong>resumen</strong>, los <strong>3 puntos que sí o sí caen</strong> y el <strong>error típico</strong> que te hace perder puntos. Empieza por el que sientas más flojo — sé honesto contigo:</p>
+    <div class="widget" data-tag="Click en cada tema">
+      <div class="map-stage">
+        <div class="map-grid">
+          <div class="map-tile on" data-m="poo">
+            <div class="map-tile-n">Tema 01</div>
+            <div class="map-tile-t">POO</div>
+            <div class="map-tile-s">clases · objetos · self</div>
+          </div>
+          <div class="map-tile" data-m="tipos">
+            <div class="map-tile-n">Tema 02</div>
+            <div class="map-tile-t">Tipos</div>
+            <div class="map-tile-s">int · str · bool · cast</div>
+          </div>
+          <div class="map-tile" data-m="control">
+            <div class="map-tile-n">Tema 03</div>
+            <div class="map-tile-t">Control</div>
+            <div class="map-tile-s">if · for · while</div>
+          </div>
+          <div class="map-tile" data-m="arrays">
+            <div class="map-tile-n">Tema 04</div>
+            <div class="map-tile-t">Arrays</div>
+            <div class="map-tile-s">list · index · recorrer</div>
+          </div>
+        </div>
+        <div class="map-panel">
+          <div class="map-tag" id="map-tag"></div>
+          <div class="map-title" id="map-title"></div>
+          <div class="map-sum" id="map-sum"></div>
+          <ul class="map-key" id="map-key"></ul>
+          <div class="map-err" id="map-err"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: flashcards -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Calentamiento — flashcards</p>
+    <p class="lead">Antes del simulacro,<br>la <em>memoria activa.</em></p>
+    <p class="subtle">Lee la pregunta, <strong>responde en tu cabeza primero</strong>, y luego voltea la tarjeta para comprobar. Si la fallaste, vuélvela a leer al final. Toca para voltear:</p>
+    <div class="widget" data-tag="Toca para voltear">
+      <div class="fc-deck" id="fc-deck"></div>
+      <div class="fc-counter">Volteadas: <strong id="fc-count">0</strong> de <span id="fc-total">6</span> · <span id="fc-msg">vuélvelas todas para repasar el bloque completo.</span></div>
+      <div class="w-controls">
+        <button class="btn" id="fc-flipall">Voltear todas</button>
+        <button class="btn" id="fc-reset">⟲ Reiniciar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: simulacro de quiz -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Simulacro tipo examen</p>
+    <p class="lead">Cuatro preguntas, como en el parcial.<br>Elige y recibe <em>feedback al instante.</em></p>
+    <p class="subtle">No es por la calificación — es para <strong>detectar tu hueco antes que el examen lo detecte</strong>. Lee con calma, elige una opción y lee la explicación aunque hayas acertado. Una pregunta por tema:</p>
+    <div class="widget" data-tag="Selecciona una respuesta">
+      <div id="qz-container"></div>
+      <div class="qz-score" id="qz-score"></div>
+      <div class="w-controls">
+        <button class="btn" id="qz-reset">⟲ Intentar de nuevo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: errores comunes NO/SÍ -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Errores comunes — NO / SÍ</p>
+    <p class="lead">El parcial no castiga lo difícil.<br>Castiga lo que se hace <em>por costumbre mal.</em></p>
+    <p class="subtle">Estos cuatro son los que más se repiten en el Bloque I. A la izquierda, lo que NO; a la derecha, lo que SÍ. Reconócelos hoy para no escribirlos el viernes:</p>
+    <div class="widget" data-tag="Mal vs Bien">
+      <div class="ns-grid">
+        <div class="ns-col">
+          <div class="ns-head no">✗ Así NO</div>
+          <div class="ns-card no">
+            <div class="ns-code"><span class="kw">class</span> Cuenta:
+    <span class="cm"># atributo de CLASE, no de objeto</span>
+    <span class="bad">saldo = 0</span>
+    <span class="kw">def</span> depositar(monto):
+        saldo += monto   <span class="cm"># ¿quién es saldo?</span></div>
+            <div class="ns-why"><strong>Falta <span class="inlinecode">self</span>.</strong> Sin él, no hay método de instancia ni atributo propio del objeto.</div>
+          </div>
+          <div class="ns-card no">
+            <div class="ns-code">edad = <span class="str">"18"</span>
+<span class="kw">if</span> edad &gt;= 18:        <span class="cm"># TypeError</span>
+    <span class="kw">print</span>(<span class="str">"mayor"</span>)</div>
+            <div class="ns-why"><strong>Comparar texto con número.</strong> <span class="inlinecode">"18"</span> es <span class="inlinecode">str</span>, no <span class="inlinecode">int</span>. Revienta.</div>
+          </div>
+          <div class="ns-card no">
+            <div class="ns-code">nums = [10, 20, 30]
+<span class="kw">print</span>(nums[<span class="bad">3</span>])   <span class="cm"># IndexError</span></div>
+            <div class="ns-why"><strong>Índice fuera de rango.</strong> 3 elementos = índices <span class="inlinecode">0,1,2</span>. El último NO es 3.</div>
+          </div>
+          <div class="ns-card no">
+            <div class="ns-code"><span class="kw">if</span> activo <span class="bad">=</span> <span class="kw">True</span>:   <span class="cm"># SyntaxError</span>
+    ...</div>
+            <div class="ns-why"><strong>Asignar en vez de comparar.</strong> <span class="inlinecode">=</span> asigna; <span class="inlinecode">==</span> compara.</div>
+          </div>
+        </div>
+        <div class="ns-col">
+          <div class="ns-head si">✓ Así SÍ</div>
+          <div class="ns-card si">
+            <div class="ns-code"><span class="kw">class</span> Cuenta:
+    <span class="kw">def</span> __init__(<span class="self">self</span>):
+        <span class="self">self</span>.<span class="good">_saldo</span> = 0
+    <span class="kw">def</span> depositar(<span class="self">self</span>, monto):
+        <span class="self">self</span>._saldo += monto</div>
+            <div class="ns-why">Atributo <strong>por objeto</strong>, encapsulado con <span class="inlinecode">_</span>, y métodos que reciben <span class="inlinecode">self</span>.</div>
+          </div>
+          <div class="ns-card si">
+            <div class="ns-code">edad = <span class="good"><span class="kw">int</span>(<span class="str">"18"</span>)</span>
+<span class="kw">if</span> edad &gt;= 18:
+    <span class="kw">print</span>(<span class="str">"mayor"</span>)</div>
+            <div class="ns-why"><strong>Convierte primero.</strong> <span class="inlinecode">int(...)</span> pasa el texto a número antes de comparar.</div>
+          </div>
+          <div class="ns-card si">
+            <div class="ns-code">nums = [10, 20, 30]
+<span class="kw">print</span>(nums[<span class="good">-1</span>])  <span class="cm"># 30, el último</span>
+<span class="kw">for</span> n <span class="kw">in</span> nums:    <span class="cm"># sin índices</span>
+    <span class="kw">print</span>(n)</div>
+            <div class="ns-why"><strong>Índice negativo o for-in.</strong> <span class="inlinecode">-1</span> es el último; recorrer evita el error.</div>
+          </div>
+          <div class="ns-card si">
+            <div class="ns-code"><span class="kw">if</span> activo <span class="good">==</span> <span class="kw">True</span>:
+    ...
+<span class="kw">if</span> activo:        <span class="cm"># aún mejor</span>
+    ...</div>
+            <div class="ns-why"><strong>Compara con <span class="inlinecode">==</span></strong> — y si es booleano, <span class="inlinecode">if activo:</span> basta.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: dudas + IA -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Q&amp;A — trae tus dudas</p>
+    <p class="lead">Hoy es <em>tu</em> turno de preguntar.<br>La pregunta tonta es la que no se hace.</p>
+    <p class="subtle">Repaso colaborativo en parejas: junta tus 5 minutos de dudas con tu compañero y traigan las que no resuelvan entre los dos. Para arrancar, estas son las que <strong>cada ciclo aparecen</strong> — si alguna te suena, ya sabes qué levantar la mano a preguntar:</p>
+    <div class="dud-grid">
+      <div class="dud-card">
+        <div class="dud-q">cuál es la diferencia exacta entre la clase y el objeto?</div>
+        <div class="dud-hint">El molde vs lo que sale del molde. Una clase, muchos objetos.</div>
+      </div>
+      <div class="dud-card">
+        <div class="dud-q">cuándo uso for y cuándo while?</div>
+        <div class="dud-hint">¿Sabes cuántas veces repetir? for. ¿Repites hasta que algo pase? while.</div>
+      </div>
+      <div class="dud-card">
+        <div class="dud-q">por qué mi atributo lleva guion bajo si igual puedo tocarlo?</div>
+        <div class="dud-hint">Encapsulamiento por convención: el <span class="inlinecode">_</span> dice "no me toques desde fuera".</div>
+      </div>
+      <div class="dud-card">
+        <div class="dud-q">qué pasa si recorro una lista y la modifico al mismo tiempo?</div>
+        <div class="dud-hint">Cosas raras. Recorre una copia o construye una lista nueva.</div>
+      </div>
+    </div>
+    <div class="tarea" style="border-left-color:var(--blood);margin-top:2.5rem;">
+      <div class="tarea-tag" style="color:var(--blood)">La IA como compañero de repaso — úsala bien</div>
+      <ul style="list-style:none;margin-left:0;">
+        <li style="padding:.4rem 0;"><strong style="color:var(--olive)">✓</strong> &nbsp;Pídele que te <em>haga preguntas</em>: "hazme 5 preguntas de opción múltiple sobre encapsulamiento en Python".</li>
+        <li style="padding:.4rem 0;"><strong style="color:var(--olive)">✓</strong> &nbsp;Pídele que <em>explique tu error</em>: pega un <span class="inlinecode">TypeError</span> y pregunta "¿por qué pasa esto?".</li>
+        <li style="padding:.4rem 0;"><strong style="color:var(--blood)">✗</strong> &nbsp;Pedirle "resuélveme el examen" — <em>en el parcial estás tú solo. Si la IA lo entendió por ti, tú no lo entendiste.</em></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- VII: listo para el parcial -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · ¿Estás listo para el parcial?</p>
+    <p class="lead">El termómetro honesto.<br>Marca solo lo que <em>de verdad</em> puedes hacer.</p>
+    <p class="subtle">No marques por marcar — marca lo que podrías escribir <strong>en una hoja en blanco, sin ayuda</strong>. La barra te dice qué tan listo estás de verdad. Lo que quede sin marcar es tu plan de estudio de esta noche:</p>
+    <div class="widget" data-tag="Autodiagnóstico">
+      <div class="rd-progress">Dominas: <span id="rd-count">0</span> de 10 habilidades
+        <div class="rd-bar"><div class="rd-fill" id="rd-fill"></div></div>
+        <div class="rd-verdict" id="rd-verdict">Marca lo que ya dominas para ver tu nivel.</div>
+      </div>
+      <div class="rd-group">
+        <div class="rd-group-t">Tema 1 · POO</div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Escribo una <strong>clase con <span class="inlinecode">__init__</span></strong> y atributos sin verla.</div></div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Explico qué es <strong><span class="inlinecode">self</span></strong> y por qué va en cada método.</div></div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Distingo <strong>clase</strong> de <strong>objeto</strong> y sé qué es <strong>encapsulamiento</strong>.</div></div>
+      </div>
+      <div class="rd-group">
+        <div class="rd-group-t">Tema 2 · Tipos</div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Identifico el tipo de un valor y sé <strong>convertir</strong> con <span class="inlinecode">int()</span> / <span class="inlinecode">str()</span>.</div></div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Sé qué nombres de variable son <strong>identificadores válidos</strong>.</div></div>
+      </div>
+      <div class="rd-group">
+        <div class="rd-group-t">Tema 3 · Control de flujo</div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Escribo un <strong><span class="inlinecode">if</span> / <span class="inlinecode">elif</span> / <span class="inlinecode">else</span></strong> con la indentación correcta.</div></div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Sé cuándo usar <strong><span class="inlinecode">for</span></strong> y cuándo <strong><span class="inlinecode">while</span></strong>.</div></div>
+      </div>
+      <div class="rd-group">
+        <div class="rd-group-t">Tema 4 · Arrays</div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Creo una <strong>lista</strong>, accedo por índice y entiendo que empieza en <strong>0</strong>.</div></div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Recorro una lista y <strong>acumulo</strong> (sumo, cuento, busco) dentro de un ciclo.</div></div>
+        <div class="rd-item"><div class="rd-box"></div><div class="rd-txt">Combino los cuatro: una <strong>clase con una lista de objetos</strong> que recorro.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para el parcial</p>
+    <p class="lead">No es un examen sorpresa.<br>Es todo lo que ya <em>construiste</em> — junto.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Quiz de evaluación continua (5%)</div>
+      <ol>
+        <li>El <strong>quiz de evaluación continua de hoy</strong> vale el <strong>5% de tu calificación final</strong> — es tu boleto de calentamiento previo al examen parcial. Entrégalo antes de salir.</li>
+        <li>Esta noche, repasa el <strong>mapa de los 4 temas</strong> de la sección II y vuelve a hacer el <strong>simulacro</strong> hasta sacar 4 de 4.</li>
+        <li>Cierra tus huecos: lo que dejaste <strong>sin marcar en el autodiagnóstico</strong> es exactamente lo que tienes que estudiar.</li>
+        <li>Relee la galería de <strong>errores comunes</strong> — evitarlos es la forma más fácil de ganar puntos.</li>
+        <li>Llega <strong>descansado al examen parcial del viernes</strong>: dormir bien rinde más que la última desvelada. Confía en lo que ya sabes.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: mapa de los 4 temas ────────────────────────────────
+const mapData={
+  poo:{tag:'Tema 1 · el corazón del bloque',title:'POO',
+    sum:'Una <strong>clase</strong> es el molde; un <strong>objeto</strong> es lo que sale del molde. El objeto guarda datos (atributos) y sabe hacer cosas (métodos).',
+    key:['El <strong>constructor</strong> <code>__init__</code> da vida al objeto y crea sus atributos.',
+         '<strong>self</strong> es el propio objeto: va primero en cada método y antepone cada atributo.',
+         '<strong>Encapsulamiento</strong>: atributos con <code>_</code> = "protégeme, accédeme por métodos".'],
+    err:'Olvidar <code>self</code> — ni en la firma del método ni al escribir <code>self.atributo</code>. Sin self, no hay objeto.'},
+  tipos:{tag:'Tema 2 · los ladrillos',title:'Identificadores y tipos',
+    sum:'Cada valor tiene un <strong>tipo</strong>: <code>int</code> entero, <code>float</code> decimal, <code>str</code> texto, <code>bool</code> verdadero/falso. Y cada variable, un <strong>nombre</strong> que sigue reglas.',
+    key:['Un identificador válido empieza con letra o <code>_</code>, nunca con número ni espacio.',
+         'Conviertes entre tipos con <code>int()</code>, <code>float()</code>, <code>str()</code> — el "casting".',
+         'El <code>input()</code> siempre devuelve <strong>str</strong>: si esperas número, conviértelo.'],
+    err:'Sumar o comparar tipos incompatibles: <code>"3" + 4</code> revienta; <code>"3" == 3</code> da False.'},
+  control:{tag:'Tema 3 · las decisiones',title:'Control de flujo',
+    sum:'El programa no va siempre derecho: <strong>decide</strong> con <code>if/elif/else</code> y <strong>repite</strong> con <code>for</code> y <code>while</code>. La indentación define qué está dentro.',
+    key:['<strong>if/elif/else</strong>: ejecuta una rama según la condición. El orden importa.',
+         '<strong>for</strong> cuando sabes cuántas veces; <strong>while</strong> cuando repites hasta una condición.',
+         'Comparas con <code>==</code> <code>!=</code> <code>&lt;</code> <code>&gt;=</code> y combinas con <code>and</code> / <code>or</code> / <code>not</code>.'],
+    err:'Confundir <code>=</code> (asignar) con <code>==</code> (comparar) — y olvidar avanzar el contador en un <code>while</code> (ciclo infinito).'},
+  arrays:{tag:'Tema 4 · muchos a la vez',title:'Arrays y colecciones',
+    sum:'Una <strong>lista</strong> guarda muchos valores en orden. Accedes por <strong>índice</strong> (empezando en 0), agregas con <code>append()</code> y la recorres con un ciclo.',
+    key:['El primer elemento es el <strong>índice 0</strong>; el último es <code>lista[-1]</code>.',
+         'Recorres con <code>for x in lista:</code> — casi nunca necesitas el índice a mano.',
+         'Patrón estrella: <strong>recorrer y acumular</strong> (sumar un total, contar, buscar el mayor).'],
+    err:'Salirte de rango: una lista de 3 tiene índices 0, 1, 2 — pedir <code>lista[3]</code> da IndexError.'},
+};
+function mapRender(k){
+  const d=mapData[k];
+  $('map-tag').innerHTML=d.tag;
+  $('map-title').textContent=d.title;
+  $('map-sum').innerHTML=d.sum;
+  $('map-key').innerHTML=d.key.map(li=>'<li>'+li+'</li>').join('');
+  $('map-err').innerHTML=d.err;
+}
+document.querySelectorAll('.map-tile').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.map-tile').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    mapRender(t.dataset.m);
+  });
+});
+mapRender('poo');
+
+// ─── W2: flashcards ─────────────────────────────────────────
+const fcData=[
+  {tag:'POO',q:'¿Qué hace el método __init__?',a:'Es el <strong>constructor</strong>: se ejecuta al crear el objeto y le da sus atributos iniciales con <code>self.x = ...</code>'},
+  {tag:'POO',q:'¿Qué es self?',a:'El <strong>objeto mismo</strong>. Va primero en cada método y antepone cada atributo de instancia: <code>self.saldo</code>.'},
+  {tag:'Tipos',q:'¿Qué tipo devuelve input()?',a:'Siempre <strong>str</strong> (texto). Si esperas un número, conviértelo: <code>int(input())</code>.'},
+  {tag:'Tipos',q:'¿Cuál es un identificador inválido: edad2, 2edad, _edad?',a:'<strong>2edad</strong>. Ningún nombre puede <strong>empezar con número</strong>. Los otros dos son válidos.'},
+  {tag:'Control',q:'¿for o while para repetir 10 veces exactas?',a:'<strong>for</strong>: <code>for i in range(10):</code>. El while es para repetir <em>hasta</em> que algo se cumpla.'},
+  {tag:'Arrays',q:'En [5, 8, 3], ¿qué devuelve lista[-1]?',a:'<strong>3</strong>, el último elemento. El índice <code>-1</code> cuenta desde el final.'},
+];
+const fcDeck=$('fc-deck');
+let fcFlipped=new Set();
+fcData.forEach((c,i)=>{
+  const card=document.createElement('div');
+  card.className='fcard';card.dataset.i=i;
+  card.innerHTML='<div class="fcard-in">'+
+    '<div class="fcard-face fcard-q"><div class="fcard-tag">'+c.tag+' · pregunta</div><div class="fcard-q-txt">'+c.q+'</div><div class="fcard-hint">toca para ver →</div></div>'+
+    '<div class="fcard-face fcard-a"><div class="fcard-tag">'+c.tag+' · respuesta</div><div class="fcard-a-txt">'+c.a+'</div></div>'+
+  '</div>';
+  fcDeck.appendChild(card);
+});
+function fcUpdate(){
+  $('fc-count').textContent=fcFlipped.size;
+  if(fcFlipped.size===fcData.length){$('fc-msg').innerHTML='¡repasaste el bloque completo! Pasa al simulacro.';}
+  else{$('fc-msg').textContent='vuélvelas todas para repasar el bloque completo.';}
+}
+$('fc-total').textContent=fcData.length;
+fcDeck.querySelectorAll('.fcard').forEach(card=>{
+  card.addEventListener('click',()=>{
+    card.classList.toggle('flip');
+    if(card.classList.contains('flip'))fcFlipped.add(card.dataset.i);
+    fcUpdate();
+  });
+});
+$('fc-flipall').addEventListener('click',()=>{
+  fcDeck.querySelectorAll('.fcard').forEach(card=>{card.classList.add('flip');fcFlipped.add(card.dataset.i);});
+  fcUpdate();
+});
+$('fc-reset').addEventListener('click',()=>{
+  fcDeck.querySelectorAll('.fcard').forEach(card=>card.classList.remove('flip'));
+  fcFlipped.clear();fcUpdate();
+});
+fcUpdate();
+
+// ─── W3: simulacro de quiz ──────────────────────────────────
+const qzData=[
+  {tema:'POO',stem:'¿Qué le falta a este método para ser correcto?',
+   code:'<span class="kw">class</span> Perro:\n    <span class="kw">def</span> ladrar():\n        <span class="kw">print</span>(<span class="str">"Guau"</span>)',
+   opts:['Nada, está perfecto','El parámetro <code>self</code> en la firma','Un <code>return</code> al final','Un punto y coma'],
+   correct:1,
+   fb:'En Python <strong>todo método de instancia recibe <code>self</code></strong> como primer parámetro. Sin él, no puede acceder al objeto.'},
+  {tema:'Tipos',stem:'¿Qué imprime este código?',
+   code:'x = <span class="str">"5"</span>\ny = 3\n<span class="kw">print</span>(x + y)',
+   opts:['8','53','Error de tipos (TypeError)','5 3'],
+   correct:2,
+   fb:'No puedes sumar <code>str</code> + <code>int</code>. Python lanza <strong>TypeError</strong>. Habría que convertir: <code>int(x) + y</code> daría 8.'},
+  {tema:'Control',stem:'Quieres repetir hasta que el usuario escriba "salir". ¿Qué usas?',
+   code:null,
+   opts:['<code>for</code>, porque sabes el número de vueltas','<code>while</code>, porque repites hasta cumplir una condición','<code>if</code>, porque es una decisión','Ninguno, no se puede'],
+   correct:1,
+   fb:'No sabes <em>cuántas</em> veces el usuario escribirá algo antes de "salir": repites <strong>hasta una condición</strong> → <code>while</code>.'},
+  {tema:'Arrays',stem:'Dada <code>nums = [10, 20, 30]</code>, ¿qué hace este ciclo?',
+   code:'total = 0\n<span class="kw">for</span> n <span class="kw">in</span> nums:\n    total += n\n<span class="kw">print</span>(total)',
+   opts:['Imprime 3 (la cantidad)','Imprime 30 (el último)','Imprime 60 (la suma)','Da IndexError'],
+   correct:2,
+   fb:'Es el patrón <strong>recorrer y acumular</strong>: suma cada elemento → 10+20+30 = <strong>60</strong>. El más frecuente en el parcial.'},
+];
+const letters=['A','B','C','D'];
+const qzCont=$('qz-container');
+let qzAnswered=new Array(qzData.length).fill(false);
+function qzBuild(){
+  qzCont.innerHTML='';
+  qzAnswered=new Array(qzData.length).fill(false);
+  qzData.forEach((q,qi)=>{
+    const block=document.createElement('div');
+    block.className='qz-q';block.id='qz-'+qi;
+    let html='<div class="qz-num">Pregunta '+(qi+1)+' · '+q.tema+'</div>'+
+             '<div class="qz-stem">'+q.stem+'</div>';
+    if(q.code)html+='<div class="qz-code">'+q.code+'</div>';
+    html+='<div class="qz-opts">';
+    q.opts.forEach((o,oi)=>{
+      html+='<div class="qz-opt" data-q="'+qi+'" data-o="'+oi+'"><span class="qz-letter">'+letters[oi]+'</span><span>'+o+'</span></div>';
+    });
+    html+='</div><div class="qz-fb" id="qz-fb-'+qi+'"></div>';
+    block.innerHTML=html;
+    qzCont.appendChild(block);
+  });
+  qzCont.querySelectorAll('.qz-opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      const qi=+opt.dataset.q, oi=+opt.dataset.o;
+      if(qzAnswered[qi])return;
+      qzAnswered[qi]=true;
+      const q=qzData[qi];
+      const block=$('qz-'+qi);
+      block.classList.add('locked');
+      block.querySelectorAll('.qz-opt').forEach(o=>{
+        const ooi=+o.dataset.o;
+        if(ooi===q.correct)o.classList.add('right');
+        else if(ooi===oi)o.classList.add('wrong');
+      });
+      const fb=$('qz-fb-'+qi);
+      fb.innerHTML=(oi===q.correct?'<strong>✓ Correcto.</strong> ':'<strong>✗ Casi.</strong> ')+q.fb;
+      fb.classList.add('show');
+      qzScore();
+    });
+  });
+  $('qz-score').classList.remove('show');
+}
+function qzScore(){
+  if(qzAnswered.every(a=>a)){
+    let right=0;
+    qzData.forEach((q,qi)=>{
+      const sel=$('qz-'+qi).querySelector('.qz-opt.wrong');
+      if(!sel)right++;
+    });
+    const sc=$('qz-score');
+    let msg;
+    if(right===4)msg='<em>4 de 4.</em> Vas listísimo. Repasa los errores comunes y llega descansado.';
+    else if(right>=2)msg='<em>'+right+' de 4.</em> Buen ritmo — repasa el tema que fallaste en el mapa de la sección II.';
+    else msg='<em>'+right+' de 4.</em> Hay huecos por cerrar. Vuelve al mapa y a las flashcards esta noche, con calma.';
+    sc.innerHTML='Resultado del simulacro: '+msg;
+    sc.classList.add('show');
+  }
+}
+$('qz-reset').addEventListener('click',qzBuild);
+qzBuild();
+
+// ─── W4: checklist listo para el parcial ────────────────────
+const rdItems=document.querySelectorAll('.rd-item');
+function rdUpdate(){
+  const done=document.querySelectorAll('.rd-item.done').length;
+  const pct=done/rdItems.length*100;
+  $('rd-count').textContent=done;
+  $('rd-fill').style.width=pct+'%';
+  let v;
+  if(done===0)v='Marca lo que ya dominas para ver tu nivel.';
+  else if(pct<40)v='Apenas arrancando — hay material para esta noche. Tú puedes.';
+  else if(pct<70)v='Vas bien. Cierra los que faltan y quedas sólido.';
+  else if(pct<100)v='Casi listo. Solo afina los últimos detalles.';
+  else v='Dominio completo — llega descansado y confía en ti.';
+  $('rd-verdict').textContent=v;
+}
+rdItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');rdUpdate();});
+});
+rdUpdate();
+</script>
+</body>
+</html>

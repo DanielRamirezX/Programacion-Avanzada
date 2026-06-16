@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XXV — Abierto al mundo — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS DE LA SESIÓN 25 (REST · FastAPI) ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* intro: tarjetas qué es REST */
+.rs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.rs-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.rs-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.rs-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.4rem;}
+.rs-d{font-size:.94rem;color:var(--ink-soft);line-height:1.45;}
+.rs-d code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W1: explorador de verbos HTTP */
+.vb-stage{display:grid;grid-template-columns:1fr 1.1fr;gap:1.5rem;align-items:start;}
+.vb-list{display:flex;flex-direction:column;gap:.6rem;}
+.vb-pill{display:flex;align-items:center;gap:.9rem;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--line);padding:.85rem 1.1rem;cursor:pointer;transition:all .2s;}
+.vb-pill:hover{border-left-color:var(--blood);}
+.vb-pill.on{border-left-color:var(--blood);background:rgba(160,36,24,.06);}
+.vb-verb{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.92rem;letter-spacing:.05em;min-width:74px;}
+.vb-verb.get{color:var(--olive);}
+.vb-verb.post{color:var(--blood);}
+.vb-verb.put{color:var(--ochre);}
+.vb-verb.delete{color:var(--blood-dark);}
+.vb-route{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);}
+.vb-panel{background:var(--ink);padding:1.6rem;min-height:300px;display:flex;flex-direction:column;gap:.9rem;}
+.vb-head{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:#E8B04A;letter-spacing:.04em;}
+.vb-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:rgba(239,230,210,.88);}
+.vb-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
+.vb-attrs{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.4rem;}
+.vb-chip{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.06em;padding:.4rem .7rem;border-radius:2px;background:rgba(239,230,210,.08);color:rgba(239,230,210,.8);border:1px solid rgba(239,230,210,.18);}
+.vb-chip.yes{color:#9FBF9C;border-color:rgba(159,191,156,.4);}
+.vb-chip.no{color:#E08A82;border-color:rgba(224,138,130,.4);}
+.vb-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--paper);padding:.8rem 1rem;background:rgba(239,230,210,.06);border-left:2px solid var(--ochre);margin-top:auto;}
+.vb-code .kw{color:#D4956A;font-style:italic;}
+.vb-code .dec{color:#E8B04A;}
+.vb-code .str{color:#C9A961;}
+.vb-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+
+/* W2: galería de códigos de respuesta */
+.sc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem;margin-top:.5rem;}
+.sc-tile{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--line);padding:1.1rem .6rem;text-align:center;cursor:pointer;transition:all .2s;}
+.sc-tile:hover{transform:translateY(-3px);}
+.sc-tile.on{box-shadow:0 4px 0 rgba(42,29,20,.12);}
+.sc-tile.c2{border-top-color:var(--olive);}
+.sc-tile.c4{border-top-color:var(--ochre);}
+.sc-tile.c5{border-top-color:var(--blood);}
+.sc-tile.on.c2{background:rgba(93,102,56,.1);}
+.sc-tile.on.c4{background:rgba(181,133,42,.12);}
+.sc-tile.on.c5{background:rgba(160,36,24,.08);}
+.sc-code{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.5rem;color:var(--ink);}
+.sc-mini{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:.3rem;}
+.sc-panel{margin-top:1.4rem;background:var(--paper);border-left:3px solid var(--blood);padding:1.3rem 1.6rem;min-height:5rem;}
+.sc-fam{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.4rem;}
+.sc-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);line-height:1.15;margin-bottom:.4rem;}
+.sc-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;color:var(--ink-soft);line-height:1.5;}
+.sc-desc strong{color:var(--ink);font-style:normal;font-weight:600;}
+.sc-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.sc-legend{display:flex;gap:1.4rem;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--ink-soft);margin-top:1rem;}
+.sc-legend span{display:flex;align-items:center;gap:.4rem;}
+.sc-legend i{width:.8rem;height:.8rem;border-radius:2px;display:inline-block;}
+.sc-legend i.l2{background:var(--olive);}
+.sc-legend i.l4{background:var(--ochre);}
+.sc-legend i.l5{background:var(--blood);}
+
+/* W3: animador del ciclo petición→respuesta */
+.cy-scroll{overflow-x:auto;}
+.cy-canvas{position:relative;width:680px;height:300px;margin:0 auto;}
+.cy-node{position:absolute;top:60px;width:120px;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.7rem;text-align:center;padding:.7rem .4rem;font-weight:700;border:2px solid var(--ink);transition:all .35s;line-height:1.25;}
+.cy-node small{display:block;font-weight:400;font-size:.58rem;color:rgba(239,230,210,.6);margin-top:.25rem;}
+.cy-node.lit{background:var(--blood);border-color:var(--blood);box-shadow:0 0 0 4px rgba(160,36,24,.18);}
+.cy-arrow{position:absolute;height:2px;background:rgba(42,29,20,.4);top:80px;opacity:.35;transition:opacity .3s,background .3s;}
+.cy-arrow .ah{position:absolute;right:-2px;top:-5px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:9px solid rgba(42,29,20,.4);}
+.cy-arrow.back{top:200px;}
+.cy-arrow.back .ah{right:auto;left:-2px;border-left:none;border-right:9px solid rgba(42,29,20,.4);}
+.cy-arrow.lit{opacity:1;background:var(--blood);}
+.cy-arrow.lit .ah{border-left-color:var(--blood);}
+.cy-arrow.back.lit .ah{border-right-color:var(--blood);border-left:none;}
+.cy-arrow .lbl{position:absolute;left:50%;transform:translateX(-50%);top:-22px;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ink-soft);background:rgba(239,230,210,.85);padding:0 .35rem;opacity:0;transition:opacity .3s;}
+.cy-arrow.back .lbl{top:8px;}
+.cy-arrow.lit .lbl{opacity:1;color:var(--blood);font-weight:700;}
+.cy-desc{margin-top:1.4rem;padding:1.2rem 1.5rem;background:var(--ink);min-height:5rem;display:flex;gap:1rem;align-items:flex-start;}
+.cy-step{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.2rem;color:var(--ochre);line-height:1;flex-shrink:0;}
+.cy-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.45;color:rgba(239,230,210,.88);}
+.cy-txt strong{color:#C9A961;font-style:normal;font-weight:600;}
+.cy-txt code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.05rem .3rem;border-radius:2px;}
+
+/* W4: demo validación Pydantic */
+.pd-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:stretch;}
+.pd-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;}
+.pd-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.7rem 1.1rem;letter-spacing:.08em;}
+.pd-body{padding:1.1rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;flex:1;}
+.pd-body .kw{color:var(--blood);font-style:italic;}
+.pd-body .ty{color:#3E6E86;}
+.pd-body .str{color:var(--ochre);}
+.pd-body .num{color:var(--olive);font-weight:700;}
+.pd-body .key{color:var(--ink);font-weight:700;}
+.pd-body .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pd-resp{margin-top:1.2rem;background:var(--ink);padding:1.1rem 1.3rem;min-height:7rem;}
+.pd-status{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;margin-bottom:.6rem;letter-spacing:.04em;}
+.pd-status.ok{color:#9FBF9C;}
+.pd-status.err{color:#E08A82;}
+.pd-out{font-family:'JetBrains Mono',monospace;font-size:.73rem;line-height:1.7;color:rgba(239,230,210,.85);white-space:pre-wrap;}
+.pd-out .k{color:#E8B04A;}
+.pd-out .s{color:#C9A961;}
+
+/* W5: mockup Swagger UI */
+.sw-frame{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.sw-bar{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.65rem 1.1rem;display:flex;align-items:center;gap:.7rem;}
+.sw-bar .dot{width:.7rem;height:.7rem;border-radius:50%;background:var(--olive);}
+.sw-bar .url{color:rgba(239,230,210,.65);}
+.sw-op{border:1px solid var(--line);margin:.9rem;border-left:4px solid var(--line);transition:all .2s;}
+.sw-op.get{border-left-color:var(--olive);}
+.sw-op.post{border-left-color:var(--blood);}
+.sw-op-head{display:flex;align-items:center;gap:.9rem;padding:.8rem 1.1rem;cursor:pointer;background:var(--paper-deep);transition:background .2s;}
+.sw-op-head:hover{background:rgba(160,36,24,.05);}
+.sw-method{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.74rem;color:var(--paper);padding:.35rem .7rem;letter-spacing:.06em;min-width:62px;text-align:center;}
+.sw-method.get{background:var(--olive);}
+.sw-method.post{background:var(--blood);}
+.sw-path{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--ink);font-weight:700;}
+.sw-summary{font-size:.92rem;color:var(--ink-soft);margin-left:auto;font-style:italic;}
+.sw-body{max-height:0;overflow:hidden;transition:max-height .35s ease;background:var(--paper);}
+.sw-op.open .sw-body{max-height:640px;}
+.sw-inner{padding:1.2rem 1.3rem;border-top:1px solid var(--line);}
+.sw-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin:.2rem 0 .5rem;}
+.sw-pre{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.7;background:var(--ink);color:rgba(239,230,210,.88);padding:.9rem 1.1rem;white-space:pre-wrap;}
+.sw-pre .k{color:#E8B04A;}
+.sw-pre .s{color:#C9A961;}
+.sw-pre .n{color:#9FBF9C;}
+.sw-try{margin:1rem 0 .4rem;}
+.sw-resp{margin-top:1rem;display:none;}
+.sw-resp.show{display:block;animation:swfade .4s ease;}
+@keyframes swfade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.sw-respline{display:flex;align-items:baseline;gap:.7rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-bottom:.5rem;}
+.sw-respcode{font-weight:700;color:var(--olive);}
+
+/* reglas IA */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+/* puente al proyecto / checklist */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+
+@media(max-width:860px){
+  .vb-stage,.pd-stage,.rs-grid{grid-template-columns:1fr;}
+  .sc-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-24.html" class="back">Sesión 24</a>
+  <span class="session-label">Sesión 25 · 12.08.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:13%;left:8%;--r:-4deg">@app.get("/productos")</div>
+  <div class="hero-float" style="top:27%;right:10%;--r:3deg;animation-delay:-3s">201 Created</div>
+  <div class="hero-float" style="bottom:33%;left:12%;--r:2deg;animation-delay:-6s">{ "id": 1, "nombre": "..." }</div>
+  <div class="hero-float" style="bottom:18%;right:13%;--r:-3deg;animation-delay:-9s">class Producto(BaseModel):</div>
+  <div class="hero-float" style="top:51%;left:41%;--r:1deg;animation-delay:-4.5s">GET · POST · PUT · DELETE</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XXV · Bloque IV · API REST · Ref. Temario Extensión · API REST · Python · FastAPI</div>
+    <h1>Abierto al<br><em>mundo.</em></h1>
+    <p class="hero-sub">Hasta hoy tu código vivía en una terminal, hablando solo contigo. Hoy le abres una <em>puerta al mundo</em>: una API REST con FastAPI que cualquier app, móvil o navegador puede llamar — y tu base de datos contesta.</p>
+  </div>
+</section>
+
+<!-- I: qué es una API REST -->
+<section>
+  <div class="wrap">
+    <p class="marker">I · Qué es una API REST</p>
+    <p class="lead">Tu programa deja de ser una isla.<br>Se vuelve un <em>servicio</em> que otros consumen.</p>
+    <p class="subtle">Una <strong>API</strong> (Application Programming Interface) es un contrato: defines <em>qué pueden pedirte</em> y <em>qué les devuelves</em>. <strong>REST</strong> es el estilo más usado para APIs web: organiza todo alrededor de <em>recursos</em> (productos, usuarios, ventas), cada uno con una <strong>URL</strong>, y se opera con los <strong>verbos del protocolo HTTP</strong>. Tu base de datos queda detrás; la API es el mostrador de atención.</p>
+    <div class="rs-grid">
+      <div class="rs-card">
+        <div class="rs-num">Concepto 01</div>
+        <div class="rs-t">Recurso</div>
+        <div class="rs-d">Una "cosa" que tu sistema maneja, expuesta con una URL: <code>/productos</code>, <code>/productos/7</code>. Lo que en POO era una clase.</div>
+      </div>
+      <div class="rs-card">
+        <div class="rs-num">Concepto 02</div>
+        <div class="rs-t">Verbo HTTP</div>
+        <div class="rs-d">La acción sobre el recurso: <code>GET</code> leer, <code>POST</code> crear, <code>PUT</code> actualizar, <code>DELETE</code> borrar. El verbo es la intención.</div>
+      </div>
+      <div class="rs-card">
+        <div class="rs-num">Concepto 03</div>
+        <div class="rs-t">JSON</div>
+        <div class="rs-d">El idioma común: datos como texto estructurado. La API recibe JSON y responde JSON, no importa quién la llame.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">La gran promesa de REST: <strong>quien consume tu API no necesita saber Python</strong>. Una app de React, un script en Go, una hoja de cálculo o un teléfono Android pueden llamarla igual. Tú expones el contrato; ellos hablan HTTP.</p>
+  </div>
+</section>
+
+<!-- II: verbos HTTP -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · Los verbos del protocolo HTTP</p>
+    <p class="lead">Cuatro verbos.<br>Cuatro <em>intenciones</em> distintas.</p>
+    <p class="subtle">El mismo recurso <span class="inlinecode">/productos</span> cambia de significado según el verbo. Aprende a leerlos: ¿es <strong>idempotente</strong> (repetirlo da el mismo resultado)? ¿lleva <strong>body</strong> (datos en el cuerpo de la petición)? Toca cada verbo:</p>
+    <div class="widget" data-tag="Explora cada verbo">
+      <div class="vb-stage">
+        <div class="vb-list">
+          <div class="vb-pill on" data-vb="get">
+            <span class="vb-verb get">GET</span>
+            <span class="vb-route">/productos</span>
+          </div>
+          <div class="vb-pill" data-vb="post">
+            <span class="vb-verb post">POST</span>
+            <span class="vb-route">/productos</span>
+          </div>
+          <div class="vb-pill" data-vb="put">
+            <span class="vb-verb put">PUT</span>
+            <span class="vb-route">/productos/7</span>
+          </div>
+          <div class="vb-pill" data-vb="delete">
+            <span class="vb-verb delete">DELETE</span>
+            <span class="vb-route">/productos/7</span>
+          </div>
+        </div>
+        <div class="vb-panel">
+          <div class="vb-head" id="vb-head"></div>
+          <div class="vb-desc" id="vb-desc"></div>
+          <div class="vb-attrs" id="vb-attrs"></div>
+          <div class="vb-code" id="vb-code"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: códigos de respuesta -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Los códigos de respuesta</p>
+    <p class="lead">Cada respuesta trae un número.<br>Ese número <em>ya cuenta la historia.</em></p>
+    <p class="subtle">Antes de leer el JSON, el código de estado HTTP te dice qué pasó. Los de la familia <strong style="color:var(--olive)">2xx</strong> son éxito; los <strong style="color:var(--ochre)">4xx</strong> son culpa de quien pidió (mandó mal los datos); los <strong style="color:var(--blood)">5xx</strong> son culpa del servidor (algo se rompió de tu lado). Toca cada código:</p>
+    <div class="widget" data-tag="Galería de códigos · clic">
+      <div class="sc-grid">
+        <div class="sc-tile on c2" data-sc="200"><div class="sc-code">200</div><div class="sc-mini">OK</div></div>
+        <div class="sc-tile c2" data-sc="201"><div class="sc-code">201</div><div class="sc-mini">Created</div></div>
+        <div class="sc-tile c4" data-sc="404"><div class="sc-code">404</div><div class="sc-mini">Not Found</div></div>
+        <div class="sc-tile c4" data-sc="422"><div class="sc-code">422</div><div class="sc-mini">Unprocessable</div></div>
+        <div class="sc-tile c5" data-sc="500"><div class="sc-code">500</div><div class="sc-mini">Server Error</div></div>
+      </div>
+      <div class="sc-panel">
+        <div class="sc-fam" id="sc-fam"></div>
+        <div class="sc-title" id="sc-title"></div>
+        <div class="sc-desc" id="sc-desc"></div>
+      </div>
+      <div class="sc-legend">
+        <span><i class="l2"></i> 2xx · éxito</span>
+        <span><i class="l4"></i> 4xx · error del cliente</span>
+        <span><i class="l5"></i> 5xx · error del servidor</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: FastAPI y la ruta -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · FastAPI — del método al endpoint</p>
+    <p class="lead">Tu método de Python,<br>con un decorador, se vuelve <em>endpoint.</em></p>
+    <p class="subtle"><strong>FastAPI</strong> es un framework de Python para construir APIs: rápido, moderno y con validación automática gracias a <strong>Pydantic</strong>. La idea clave: una función Python normal se convierte en una <em>ruta</em> de tu API solo con poner un <strong>decorador</strong> encima. Lo que devuelvas con <span class="inlinecode">return</span> se serializa a JSON solo. Compara una API mínima completa:</p>
+    <div class="widget" data-tag="Una API en 12 líneas">
+      <div class="pd-stage">
+        <div class="pd-col">
+          <div class="pd-head">main.py — la API</div>
+          <div class="pd-body">
+<span class="kw">from</span> fastapi <span class="kw">import</span> <span class="ty">FastAPI</span><br>
+<span class="kw">from</span> pydantic <span class="kw">import</span> <span class="ty">BaseModel</span><br>
+<br>
+app = <span class="ty">FastAPI</span>()<br>
+<br>
+<span class="cm"># el modelo: forma del dato</span><br>
+<span class="kw">class</span> <span class="ty">Producto</span>(<span class="ty">BaseModel</span>):<br>
+&nbsp;&nbsp;<span class="key">nombre</span>: <span class="ty">str</span><br>
+&nbsp;&nbsp;<span class="key">precio</span>: <span class="ty">float</span><br>
+<br>
+<span class="cm"># una ruta = decorador + función</span><br>
+<span class="dec" style="color:#8a6420">@app.get(</span><span class="str">"/productos"</span><span class="dec" style="color:#8a6420">)</span><br>
+<span class="kw">def</span> <span class="key">listar</span>():<br>
+&nbsp;&nbsp;<span class="kw">return</span> productos
+          </div>
+        </div>
+        <div class="pd-col">
+          <div class="pd-head">cómo se lee</div>
+          <div class="pd-body" style="font-family:'Crimson Pro',serif;font-size:.98rem;line-height:1.6;color:var(--ink-soft);font-style:italic;">
+            <p style="margin-bottom:.7rem"><strong style="font-style:normal;color:var(--ink)">app = FastAPI()</strong> crea tu aplicación: el mostrador completo.</p>
+            <p style="margin-bottom:.7rem"><strong style="font-style:normal;color:var(--ink)">@app.get("/productos")</strong> dice: "cuando llegue un GET a esta URL, ejecuta la función de abajo".</p>
+            <p style="margin-bottom:.7rem">La función <strong style="font-style:normal;color:var(--ink)">listar()</strong> es Python puro — el que ya sabes. Lo que devuelve se vuelve JSON solo.</p>
+            <p>Lo arrancas con <span style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood)">uvicorn main:app --reload</span> y queda escuchando.</p>
+          </div>
+        </div>
+      </div>
+      <div class="vb-code" style="margin-top:1.2rem;background:var(--paper);border-left:2px solid var(--olive);color:var(--ink-soft)">
+<span style="color:var(--blood);font-style:italic">@app.post(</span><span style="color:var(--ochre)">"/productos"</span><span style="color:var(--blood);font-style:italic">)</span> &nbsp;<span style="color:rgba(42,29,20,.42);font-style:italic"># crear: recibe un Producto en el body</span><br>
+<span style="color:var(--blood);font-style:italic">def</span> <span style="font-weight:700">crear</span>(p: <span style="color:#3E6E86">Producto</span>):<br>
+&nbsp;&nbsp;productos.append(p)<br>
+&nbsp;&nbsp;<span style="color:var(--blood);font-style:italic">return</span> p &nbsp;<span style="color:rgba(42,29,20,.42);font-style:italic"># FastAPI responde 201 / 200 con el JSON</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: ciclo petición→respuesta -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El viaje de una petición</p>
+    <p class="lead">Del clic en el navegador<br>al JSON de vuelta. <em>Paso a paso.</em></p>
+    <p class="subtle">Cuando alguien llama tu API, ocurre un viaje completo: el cliente envía una petición HTTP, FastAPI la enruta a tu función, esa función consulta la <strong>base de datos del proyecto</strong>, y la respuesta regresa serializada como JSON. Recórrelo:</p>
+    <div class="widget" data-tag="Cliente → FastAPI → BD → respuesta">
+      <div class="cy-scroll">
+        <div class="cy-canvas" id="cy-canvas">
+          <div class="cy-node" id="cy-cli" style="left:11%">Cliente<small>navegador / app</small></div>
+          <div class="cy-node" id="cy-api" style="left:39%">FastAPI<small>la ruta</small></div>
+          <div class="cy-node" id="cy-fn" style="left:64%">Función<small>tu código</small></div>
+          <div class="cy-node" id="cy-db" style="left:89%">BD<small>SQLite / MySQL</small></div>
+          <div class="cy-arrow" id="cy-a0" style="left:11%;width:28%"><span class="lbl">GET /productos</span><span class="ah"></span></div>
+          <div class="cy-arrow" id="cy-a1" style="left:39%;width:25%"><span class="lbl">enruta</span><span class="ah"></span></div>
+          <div class="cy-arrow" id="cy-a2" style="left:64%;width:25%"><span class="lbl">SELECT * FROM ...</span><span class="ah"></span></div>
+          <div class="cy-arrow back" id="cy-a3" style="left:64%;width:25%"><span class="lbl">filas</span><span class="ah"></span></div>
+          <div class="cy-arrow back" id="cy-a4" style="left:11%;width:53%"><span class="lbl">200 OK · JSON</span><span class="ah"></span></div>
+        </div>
+      </div>
+      <div class="cy-desc">
+        <div class="cy-step" id="cy-step">·</div>
+        <div class="cy-txt" id="cy-txt">Pulsa <strong>Play</strong> o avanza paso a paso para ver el viaje completo de una petición.</div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="cy-reset">⟲ Reset</button>
+        <button class="btn" id="cy-prev">◀ Atrás</button>
+        <button class="btn on" id="cy-next">Siguiente ▶</button>
+        <button class="btn" id="cy-play">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: validación Pydantic -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Validación automática con Pydantic</p>
+    <p class="lead">No escribes ni un <code style="font-size:.6em">if</code> de validación.<br>El <em>modelo</em> lo hace por ti.</p>
+    <p class="subtle">Aquí está el superpoder de FastAPI. Declaras la forma del dato con un modelo <strong>Pydantic</strong> y, si el body que llega no cumple, FastAPI <em>rechaza la petición solo</em> con un <strong>422</strong> — antes de que tu función corra. Manda dos bodies al mismo endpoint <span class="inlinecode">POST /productos</span> y mira la diferencia:</p>
+    <div class="widget" data-tag="Manda un body · mira la respuesta">
+      <div class="pd-stage">
+        <div class="pd-col">
+          <div class="pd-head">el modelo que exige FastAPI</div>
+          <div class="pd-body">
+<span class="kw">class</span> <span class="ty">Producto</span>(<span class="ty">BaseModel</span>):<br>
+&nbsp;&nbsp;<span class="key">nombre</span>: <span class="ty">str</span><br>
+&nbsp;&nbsp;<span class="key">precio</span>: <span class="ty">float</span><br>
+&nbsp;&nbsp;<span class="key">stock</span>: <span class="ty">int</span><br>
+<br>
+<span class="cm"># precio y stock DEBEN</span><br>
+<span class="cm"># ser numéricos. nombre,</span><br>
+<span class="cm"># texto. Sin excepciones.</span>
+          </div>
+        </div>
+        <div class="pd-col">
+          <div class="pd-head">el body que mandas</div>
+          <div class="pd-body" id="pd-body"></div>
+          <div class="w-controls" style="padding:0 1.1rem 1.1rem">
+            <button class="btn on" data-pd="valido">Body válido</button>
+            <button class="btn" data-pd="invalido">Body inválido</button>
+          </div>
+        </div>
+      </div>
+      <div class="pd-resp">
+        <div class="pd-status" id="pd-status"></div>
+        <div class="pd-out" id="pd-out"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: Swagger UI -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Swagger UI — tu API documentada sola</p>
+    <p class="lead">FastAPI te regala<br>una <em>página para probar</em> tu API.</p>
+    <p class="subtle">No tienes que escribir documentación ni instalar Postman. FastAPI genera, solo, una interfaz interactiva en <span class="inlinecode">/docs</span> (Swagger UI) a partir de tus rutas y modelos. Ahí cualquiera ve tus endpoints, los expande, pulsa <em>Try it out</em> y ve la respuesta real. Pruébalo aquí — expande un endpoint y pulsa <strong style="color:var(--blood)">Execute</strong>:</p>
+    <div class="widget" data-tag="Mockup de /docs · interactivo">
+      <div class="sw-frame">
+        <div class="sw-bar"><span class="dot"></span><span class="url">localhost:8000/docs</span> · FastAPI — Swagger UI</div>
+        <div class="sw-op get" id="sw-get">
+          <div class="sw-op-head" data-sw="sw-get">
+            <span class="sw-method get">GET</span>
+            <span class="sw-path">/productos</span>
+            <span class="sw-summary">Listar productos</span>
+          </div>
+          <div class="sw-body">
+            <div class="sw-inner">
+              <div class="sw-lbl">Parámetros</div>
+              <div style="font-size:.92rem;color:var(--ink-soft);font-style:italic">Ninguno — devuelve todo el inventario.</div>
+              <button class="btn on sw-try" data-exec="sw-get">▶ Try it out · Execute</button>
+              <div class="sw-resp" id="resp-sw-get">
+                <div class="sw-respline"><span class="sw-respcode">200</span><span>respuesta del servidor</span></div>
+                <div class="sw-pre"><span class="k">[</span>
+  <span class="k">{</span> <span class="s">"id"</span>: <span class="n">1</span>, <span class="s">"nombre"</span>: <span class="s">"Café orgánico"</span>, <span class="s">"precio"</span>: <span class="n">89.0</span>, <span class="s">"stock"</span>: <span class="n">40</span> <span class="k">}</span>,
+  <span class="k">{</span> <span class="s">"id"</span>: <span class="n">2</span>, <span class="s">"nombre"</span>: <span class="s">"Miel artesanal"</span>, <span class="s">"precio"</span>: <span class="n">120.0</span>, <span class="s">"stock"</span>: <span class="n">15</span> <span class="k">}</span>
+<span class="k">]</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sw-op post" id="sw-post">
+          <div class="sw-op-head" data-sw="sw-post">
+            <span class="sw-method post">POST</span>
+            <span class="sw-path">/productos</span>
+            <span class="sw-summary">Crear producto</span>
+          </div>
+          <div class="sw-body">
+            <div class="sw-inner">
+              <div class="sw-lbl">Request body · application/json</div>
+              <div class="sw-pre"><span class="k">{</span>
+  <span class="s">"nombre"</span>: <span class="s">"Jabón natural"</span>,
+  <span class="s">"precio"</span>: <span class="n">45.0</span>,
+  <span class="s">"stock"</span>: <span class="n">30</span>
+<span class="k">}</span></div>
+              <button class="btn on sw-try" data-exec="sw-post">▶ Try it out · Execute</button>
+              <div class="sw-resp" id="resp-sw-post">
+                <div class="sw-respline"><span class="sw-respcode">201</span><span>creado correctamente</span></div>
+                <div class="sw-pre"><span class="k">{</span> <span class="s">"id"</span>: <span class="n">3</span>, <span class="s">"nombre"</span>: <span class="s">"Jabón natural"</span>, <span class="s">"precio"</span>: <span class="n">45.0</span>, <span class="s">"stock"</span>: <span class="n">30</span> <span class="k">}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ia-rules">
+        <div class="ia-rules-tag">La IA para construir tu API · úsala bien</div>
+        <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué FastAPI devuelve 422 y no 400 cuando el body está mal?"</span></div>
+        <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu endpoint</em>: "este es mi GET, ¿está bien el código de estado que devuelvo?"</span></div>
+        <div class="ia-rule"><span class="ok">✓</span><span>Pídele ayuda para <em>leer el error</em> de Uvicorn que no entiendes en la consola</span></div>
+        <div class="ia-rule"><span class="no">✗</span><span>Pedirle "hazme toda la API del proyecto" — <em>en la demo abres Swagger y ejecutas tus endpoints en vivo: si no sabes explicar tu código, se nota al instante.</em></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIII: taller / puente al proyecto -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · El taller — tu primer endpoint real</p>
+    <p class="lead">Hoy no es teoría:<br>sale el <em>primer endpoint vivo</em> de tu proyecto.</p>
+    <p class="subtle">En la clase construyes la primera API de tu proyecto integrador con FastAPI: una ruta <strong>GET</strong> que liste registros y una ruta <strong>POST</strong> que cree, ambas conectadas a la <strong>base de datos que ya tienes</strong>. Las pruebas en vivo con Swagger UI. Marca tu avance del taller:</p>
+    <div class="widget" data-tag="Checklist del taller">
+      <div class="chk-progress">Avance: <span id="chk-count">0</span> de 8 pasos
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Instala</strong> lo necesario: <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem">pip install fastapi uvicorn</code> en el entorno del proyecto.</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Crea <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem">main.py</code></strong> con <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem">app = FastAPI()</code> y arráncalo con <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem">uvicorn main:app --reload</code>.</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Define el modelo Pydantic</strong> de tu entidad principal (los campos de tu tabla, con sus tipos).</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Endpoint GET</strong> que liste los registros de tu BD (consulta + return de la lista).</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Endpoint POST</strong> que reciba el modelo, lo inserte en la BD y devuelva el registro creado.</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Conecta a tu BD real</strong> del proyecto — no a una lista en memoria. Reusa tu capa de datos.</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Pruébalo en <code style="font-family:'JetBrains Mono',monospace;font-size:.78rem">/docs</code></strong> (Swagger): ejecuta el GET y el POST, verifica los códigos 200/201.</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Sube el avance a tu repo</strong> de GitHub con un commit claro: "feat: primeros endpoints REST".</div></div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">Esto es <strong>evaluable</strong>: en la demo de la sesión muestras al menos <strong>2 endpoints funcionales</strong> de tu proyecto, ejecutándose en Swagger UI. No se entrega un PDF — se enseña la API <em>viva</em>.</p>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">IX · Para la próxima clase</p>
+    <p class="lead">Tu proyecto ya habla con el mundo.<br>Ahora hazlo <em>completo.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance del proyecto · primeros endpoints</div>
+      <ol>
+        <li><strong>GET y POST conectados a la BD</strong>: déjalos funcionando contra tu base de datos real y probados en Swagger (códigos 200/201 correctos).</li>
+        <li><strong>Prepara PUT y DELETE</strong>: diseña las rutas <code>/recurso/{id}</code> para actualizar y borrar — la siguiente clase los implementamos y discutimos idempotencia.</li>
+        <li><strong>Maneja el 404</strong>: que tu GET por id devuelva <code>404 Not Found</code> cuando el recurso no exista, no una lista vacía.</li>
+        <li><strong>Piensa el endpoint de IA</strong>: identifica qué recurso de tu proyecto se beneficiaría de una ruta que llame a un modelo (recomendación, resumen, clasificación). Lo conectaremos pronto.</li>
+        <li><strong>Sube todo a GitHub</strong> y deja tu Swagger listo para la <em>demo en clase</em>: 2 endpoints como mínimo, ejecutándose en vivo. Eso es la participación evaluada.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: explorador de verbos HTTP ──────────────────────────
+const vbData={
+  get:{head:'GET',
+    desc:'<strong>Leer</strong> sin modificar nada. Pides el recurso y te lo devuelven. El verbo más inofensivo: nunca cambia el estado del servidor.',
+    attrs:[['Idempotente','yes'],['Lleva body','no'],['Familia · 200 OK','plain']],
+    code:'<span class="dec">@app.get(</span><span class="str">"/productos"</span><span class="dec">)</span>\n<span class="kw">def</span> listar():\n    <span class="kw">return</span> productos'},
+  post:{head:'POST',
+    desc:'<strong>Crear</strong> un recurso nuevo. Mandas los datos en el <em>body</em> y el servidor lo agrega. Repetirlo crea otro: <strong>no</strong> es idempotente.',
+    attrs:[['Idempotente','no'],['Lleva body','yes'],['Familia · 201 Created','plain']],
+    code:'<span class="dec">@app.post(</span><span class="str">"/productos"</span><span class="dec">)</span>\n<span class="kw">def</span> crear(p: <span style="color:#A6C2D6">Producto</span>):\n    productos.append(p)\n    <span class="kw">return</span> p'},
+  put:{head:'PUT',
+    desc:'<strong>Actualizar</strong> un recurso que ya existe, identificado por su id. Mandas la versión nueva completa en el body. Repetirlo deja el mismo resultado: <strong>sí</strong> es idempotente.',
+    attrs:[['Idempotente','yes'],['Lleva body','yes'],['Familia · 200 OK','plain']],
+    code:'<span class="dec">@app.put(</span><span class="str">"/productos/{id}"</span><span class="dec">)</span>\n<span class="kw">def</span> actualizar(id: <span style="color:#A6C2D6">int</span>, p: <span style="color:#A6C2D6">Producto</span>):\n    <span class="kw">return</span> guardar(id, p)'},
+  delete:{head:'DELETE',
+    desc:'<strong>Borrar</strong> el recurso del id indicado. No lleva body — la URL ya dice qué borrar. Borrarlo dos veces deja igual el sistema: <strong>sí</strong> es idempotente.',
+    attrs:[['Idempotente','yes'],['Lleva body','no'],['Familia · 204 / 200','plain']],
+    code:'<span class="dec">@app.delete(</span><span class="str">"/productos/{id}"</span><span class="dec">)</span>\n<span class="kw">def</span> borrar(id: <span style="color:#A6C2D6">int</span>):\n    eliminar(id)\n    <span class="kw">return</span> {<span class="str">"ok"</span>: <span class="kw">True</span>}'},
+};
+function vbRender(k){
+  const d=vbData[k];
+  $('vb-head').textContent=d.head;
+  $('vb-desc').innerHTML=d.desc;
+  $('vb-attrs').innerHTML=d.attrs.map(([t,c])=>{
+    const cls=c==='yes'?'vb-chip yes':c==='no'?'vb-chip no':'vb-chip';
+    const pre=c==='yes'?'✓ ':c==='no'?'✗ ':'';
+    return '<span class="'+cls+'">'+pre+t+'</span>';
+  }).join('');
+  $('vb-code').innerHTML=d.code.replace(/\n/g,'<br>').replace(/    /g,'&nbsp;&nbsp;&nbsp;&nbsp;');
+}
+document.querySelectorAll('[data-vb]').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('[data-vb]').forEach(x=>x.classList.remove('on'));
+    p.classList.add('on');
+    vbRender(p.dataset.vb);
+  });
+});
+vbRender('get');
+
+// ─── W2: galería de códigos de respuesta ────────────────────
+const scData={
+  '200':{fam:'2xx · Éxito',title:'200 OK',desc:'La petición salió bien y aquí está lo que pediste. Es la respuesta típica de un <strong>GET</strong> exitoso o de un <strong>PUT</strong> que actualizó. El cuerpo trae el recurso en JSON.'},
+  '201':{fam:'2xx · Éxito',title:'201 Created',desc:'Se <strong>creó</strong> un recurso nuevo. La respuesta correcta de un <strong>POST</strong> exitoso: devuelve el objeto recién creado, normalmente ya con su <code>id</code> asignado por la BD.'},
+  '404':{fam:'4xx · Error del cliente',title:'404 Not Found',desc:'Pediste un recurso que <strong>no existe</strong>: <code>GET /productos/999</code> y no hay producto 999. Tu API debería responder esto, no una lista vacía ni un 500. En FastAPI: <code>raise HTTPException(404)</code>.'},
+  '422':{fam:'4xx · Error del cliente',title:'422 Unprocessable Entity',desc:'El body llegó pero <strong>no cumple el modelo</strong>: mandaste texto donde iba un número, o faltó un campo. Es <em>el código estrella de FastAPI</em> — lo lanza Pydantic solo, antes de que tu función corra.'},
+  '500':{fam:'5xx · Error del servidor',title:'500 Internal Server Error',desc:'Algo se rompió <strong>de tu lado</strong>: una excepción sin atrapar, la BD caída, un bug. No es culpa de quien pidió. Cuando lo veas, revisa el <em>traceback</em> en la consola de Uvicorn.'},
+};
+function scRender(k){
+  const d=scData[k];
+  $('sc-fam').textContent=d.fam;
+  $('sc-title').textContent=d.title;
+  $('sc-desc').innerHTML=d.desc;
+}
+document.querySelectorAll('[data-sc]').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('[data-sc]').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    scRender(t.dataset.sc);
+  });
+});
+scRender('200');
+
+// ─── W3: animador del ciclo petición→respuesta ──────────────
+const cySteps=[
+  {arr:'cy-a0',nodes:['cy-cli','cy-api'],txt:'El <strong>cliente</strong> (un navegador, una app móvil) envía una petición HTTP: <code>GET /productos</code>. Viaja por la red hasta tu servidor.'},
+  {arr:'cy-a1',nodes:['cy-api','cy-fn'],txt:'<strong>FastAPI</strong> mira la URL y el verbo, y los enruta: encuentra la función decorada con <code>@app.get("/productos")</code> y la ejecuta.'},
+  {arr:'cy-a2',nodes:['cy-fn','cy-db'],txt:'Tu <strong>función</strong> hace su trabajo: le pide los datos a la <strong>base de datos del proyecto</strong> con una consulta (<code>SELECT * FROM productos</code>).'},
+  {arr:'cy-a3',nodes:['cy-db','cy-fn'],txt:'La <strong>BD devuelve las filas</strong>. Tu función las recibe y arma la lista de objetos para responder. Lo de siempre en Python.'},
+  {arr:'cy-a4',nodes:['cy-api','cy-cli'],txt:'FastAPI <strong>serializa</strong> el resultado a JSON, le pone el código <code>200 OK</code> y lo envía de vuelta. El cliente recibe sus productos. <strong>Viaje completo.</strong>'},
+];
+let cyIdx=-1,cyTimer=null;
+function cyRender(){
+  document.querySelectorAll('.cy-arrow').forEach(a=>a.classList.remove('lit'));
+  document.querySelectorAll('.cy-node').forEach(n=>n.classList.remove('lit'));
+  if(cyIdx>=0){
+    const s=cySteps[cyIdx];
+    $(s.arr).classList.add('lit');
+    s.nodes.forEach(n=>$(n).classList.add('lit'));
+    $('cy-step').textContent=(cyIdx+1);
+    $('cy-txt').innerHTML=s.txt;
+  }else{
+    $('cy-step').textContent='·';
+    $('cy-txt').innerHTML='Pulsa <strong>Play</strong> o avanza paso a paso para ver el viaje completo de una petición.';
+  }
+}
+function cyStop(){if(cyTimer){clearInterval(cyTimer);cyTimer=null;$('cy-play').textContent='▶ Play';}}
+$('cy-next').addEventListener('click',()=>{cyStop();if(cyIdx<cySteps.length-1){cyIdx++;cyRender();}});
+$('cy-prev').addEventListener('click',()=>{cyStop();if(cyIdx>-1){cyIdx--;cyRender();}});
+$('cy-reset').addEventListener('click',()=>{cyStop();cyIdx=-1;cyRender();});
+$('cy-play').addEventListener('click',()=>{
+  if(cyTimer){cyStop();return;}
+  if(cyIdx>=cySteps.length-1){cyIdx=-1;cyRender();}
+  $('cy-play').textContent='❚❚ Pausa';
+  cyTimer=setInterval(()=>{
+    if(cyIdx<cySteps.length-1){cyIdx++;cyRender();}
+    else cyStop();
+  },1700);
+});
+cyRender();
+
+// ─── W4: demo validación Pydantic ───────────────────────────
+const pdData={
+  valido:{
+    body:'<span class="key">{</span><br>&nbsp;&nbsp;<span class="str">"nombre"</span>: <span class="str">"Café orgánico"</span>,<br>&nbsp;&nbsp;<span class="str">"precio"</span>: <span class="num">89.0</span>,<br>&nbsp;&nbsp;<span class="str">"stock"</span>: <span class="num">40</span><br><span class="key">}</span>',
+    status:'ok',statusTxt:'200 OK · creado',
+    out:'<span class="k">{</span>\n  <span class="s">"id"</span>: 3,\n  <span class="s">"nombre"</span>: <span class="s">"Café orgánico"</span>,\n  <span class="s">"precio"</span>: 89.0,\n  <span class="s">"stock"</span>: 40\n<span class="k">}</span>\n\n→ Pydantic validó los 3 campos. Tu\n   función corrió y guardó en la BD.'
+  },
+  invalido:{
+    body:'<span class="key">{</span><br>&nbsp;&nbsp;<span class="str">"nombre"</span>: <span class="str">"Café orgánico"</span>,<br>&nbsp;&nbsp;<span class="str">"precio"</span>: <span class="str">"barato"</span>,&nbsp;&nbsp;<span class="cm"># ✗ no es número</span><br>&nbsp;&nbsp;<span class="cm"># falta "stock" ✗</span><br><span class="key">}</span>',
+    status:'err',statusTxt:'422 Unprocessable Entity',
+    out:'<span class="k">{</span>\n  <span class="s">"detail"</span>: [\n    <span class="s">"precio"</span> → <span class="s">"value is not a valid float"</span>,\n    <span class="s">"stock"</span>  → <span class="s">"field required"</span>\n  ]\n<span class="k">}</span>\n\n→ FastAPI rechazó la petición SOLO.\n   Tu función nunca corrió. Cero ifs.'
+  },
+};
+function pdRender(k){
+  const d=pdData[k];
+  $('pd-body').innerHTML=d.body;
+  $('pd-status').className='pd-status '+d.status;
+  $('pd-status').textContent=d.statusTxt;
+  $('pd-out').innerHTML=d.out;
+}
+document.querySelectorAll('[data-pd]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-pd]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    pdRender(b.dataset.pd);
+  });
+});
+document.querySelector('.pd-resp').classList.add('show');
+document.querySelector('.pd-resp').style.display='block';
+pdRender('valido');
+
+// ─── W5: mockup Swagger UI ──────────────────────────────────
+document.querySelectorAll('[data-sw]').forEach(h=>{
+  h.addEventListener('click',()=>{
+    $(h.dataset.sw).classList.toggle('open');
+  });
+});
+document.querySelectorAll('[data-exec]').forEach(b=>{
+  b.addEventListener('click',e=>{
+    e.stopPropagation();
+    $('resp-'+b.dataset.exec).classList.add('show');
+    b.textContent='✓ Executed';
+    b.classList.add('btn-olive');
+  });
+});
+
+// ─── W6: checklist del taller ───────────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
+</script>
+</body>
+</html>

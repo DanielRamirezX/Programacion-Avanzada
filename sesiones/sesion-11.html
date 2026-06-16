@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XI — Repetir sin repetirte — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CSS DE WIDGETS · SESIÓN XI · CICLOS  (prefijos: lp- it- gen- mn- ex-)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W1 · lp- : animador de iteración paso a paso */
+.lp-stage{display:grid;grid-template-columns:1.05fr 1fr;gap:1.5rem;align-items:stretch;}
+.lp-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.95;color:var(--paper);}
+.lp-code .ln{white-space:pre;display:block;padding:.05rem .35rem;border-radius:2px;transition:background .25s;}
+.lp-code .ln.hl{background:rgba(232,176,74,.22);}
+.lp-code .kw{color:#D4956A;font-style:italic;}
+.lp-code .ty{color:#A6C2D6;}
+.lp-code .str{color:#C9A961;}
+.lp-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.lp-code .fn{color:#9FBF9C;}
+.lp-panel{background:var(--paper);border:1px solid var(--line);padding:1.4rem;display:flex;flex-direction:column;gap:1rem;}
+.lp-vars{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;}
+.lp-var{background:var(--paper-deep);border:1px solid var(--line);border-top:3px solid var(--olive);padding:.7rem .9rem;text-align:center;}
+.lp-var-k{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);}
+.lp-var-v{font-family:'JetBrains Mono',monospace;font-size:1.7rem;color:var(--blood);line-height:1.1;margin-top:.2rem;}
+.lp-cond{font-family:'JetBrains Mono',monospace;font-size:.92rem;text-align:center;padding:.7rem;border:1px solid var(--line);background:var(--paper-deep);transition:all .25s;}
+.lp-cond.t{border-color:var(--olive);background:rgba(93,102,56,.12);color:var(--olive);}
+.lp-cond.f{border-color:var(--blood);background:rgba(160,36,24,.1);color:var(--blood);}
+.lp-cond strong{font-weight:700;}
+.lp-out{background:var(--ink);padding:.8rem 1rem;min-height:3rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:#9FBF9C;line-height:1.7;word-break:break-word;}
+.lp-out .pr{color:var(--blood);}
+.lp-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.45;color:var(--ink-soft);margin-top:auto;}
+.lp-msg strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W2 · ct- : tabs de los tres ciclos (+ el for único de Go) */
+.ct-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.ct-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.ct-tab:hover{border-color:var(--blood);color:var(--blood);}
+.ct-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.ct-tab.go{border-style:dashed;}
+.ct-tab.go.on{background:var(--olive);border-color:var(--olive);}
+.ct-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.9;color:var(--paper);min-height:230px;overflow-x:auto;}
+.ct-code .ln{white-space:pre;display:block;}
+.ct-code .kw{color:#D4956A;font-style:italic;}
+.ct-code .ty{color:#A6C2D6;}
+.ct-code .str{color:#C9A961;}
+.ct-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.ct-code .fn{color:#9FBF9C;}
+.ct-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.ct-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.ct-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W3 · gen- : generador vs lista en memoria */
+.gen-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.gen-col{background:var(--paper);border:1px solid var(--line);padding:1.4rem;display:flex;flex-direction:column;gap:.9rem;}
+.gen-col.lazy{border-top:3px solid var(--olive);}
+.gen-col.eager{border-top:3px solid var(--blood);}
+.gen-h{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);}
+.gen-h.lazy{color:var(--olive);}
+.gen-h.eager{color:var(--blood);}
+.gen-cells{display:flex;flex-wrap:wrap;gap:.4rem;min-height:3.2rem;}
+.gen-cell{width:2.1rem;height:2.1rem;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.82rem;border:1px solid var(--line);background:var(--paper-deep);color:rgba(42,29,20,.3);transition:all .3s;}
+.gen-cell.live{background:var(--olive);border-color:var(--olive);color:var(--paper);transform:scale(1.05);}
+.gen-cell.held{background:var(--blood);border-color:var(--blood);color:var(--paper);}
+.gen-cell.ghost{opacity:.35;border-style:dashed;}
+.gen-mem{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-soft);}
+.gen-mem b{color:var(--blood);}
+.gen-bar{height:8px;background:var(--paper-deep);border:1px solid var(--line);overflow:hidden;}
+.gen-bar i{display:block;height:100%;width:0;transition:width .35s;}
+.gen-col.lazy .gen-bar i{background:var(--olive);}
+.gen-col.eager .gen-bar i{background:var(--blood);}
+.gen-note{margin-top:1.4rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);min-height:3.4rem;}
+.gen-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.gen-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4 · mn- : menú while simulado en consola */
+.mn-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.mn-term{background:var(--ink);padding:1.2rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.7;color:rgba(239,230,210,.9);min-height:320px;max-height:320px;overflow-y:auto;}
+.mn-term .pr{color:var(--blood);}
+.mn-term .out{color:#9FBF9C;}
+.mn-term .dim{color:rgba(239,230,210,.45);}
+.mn-term .you{color:#C9A961;}
+.mn-keys{display:flex;flex-direction:column;gap:.7rem;}
+.mn-keys-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);}
+.mn-opt{background:var(--paper);border:1px solid var(--line);padding:.8rem 1rem;cursor:pointer;transition:all .2s;display:flex;gap:.7rem;align-items:baseline;}
+.mn-opt:hover{border-color:var(--blood);transform:translateX(3px);}
+.mn-opt .k{font-family:'JetBrains Mono',monospace;color:var(--blood);font-weight:700;}
+.mn-opt .l{font-family:'Cormorant Garamond',serif;font-size:1.12rem;color:var(--ink);}
+.mn-opt.exit{border-left:3px solid var(--blood);}
+.mn-state{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;color:var(--ink-soft);padding:.7rem 1rem;background:var(--paper-deep);border:1px solid var(--line);}
+.mn-state strong{color:var(--olive);font-style:normal;font-weight:600;}
+.mn-state.off strong{color:var(--blood);}
+
+/* W5 · ex- : tabla de expresividad (4 lenguajes) */
+.ex-tabwrap{overflow-x:auto;margin-top:1.5rem;}
+.ex-table{width:100%;border-collapse:collapse;min-width:640px;background:var(--paper);}
+.ex-table th,.ex-table td{border:1px solid var(--line);padding:.85rem 1rem;text-align:left;vertical-align:top;}
+.ex-table thead th{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;}
+.ex-table tbody th{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);background:var(--paper-deep);white-space:nowrap;}
+.ex-table td{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink-soft);line-height:1.55;}
+.ex-table td.base{background:rgba(93,102,56,.08);}
+.ex-table td .tick{color:var(--olive);font-weight:700;}
+.ex-table td .cross{color:var(--blood);font-weight:700;}
+.ex-cap{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(42,29,20,.6);margin-top:.8rem;text-align:center;}
+
+/* tarjetas NO / SÍ */
+.ns-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
+.ns-col{border:1px solid var(--line);padding:1.4rem;background:var(--paper);}
+.ns-col.no{border-top:3px solid var(--blood);}
+.ns-col.si{border-top:3px solid var(--olive);}
+.ns-tag{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.9rem;}
+.ns-col.no .ns-tag{color:var(--blood);}
+.ns-col.si .ns-tag{color:var(--olive);}
+.ns-code{font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.8;color:var(--ink-soft);white-space:pre-wrap;}
+.ns-code .kw{color:var(--blood);font-style:italic;}
+.ns-code .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.ns-why{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.02rem;color:var(--ink-soft);margin-top:.9rem;line-height:1.45;}
+.ns-why strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* reglas IA */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);font-style:italic;}
+
+@media(max-width:860px){
+  .lp-stage,.gen-stage,.mn-stage,.ns-grid{grid-template-columns:1fr;}
+  .lp-vars{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-10.html" class="back">Sesión 10</a>
+  <span class="session-label">Sesión 11 · 24.06.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">for i in range(10):</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">while opcion != 0:</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">yield n  # lazy</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">for v := range xs {</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">do { ... } while (x);</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XI · Bloque I · Repetición · Ref. Temario 3.4 · 3.5 · 3.6 · Python · Java · Go</div>
+    <h1>Repetir sin<br><em>repetirte.</em></h1>
+    <p class="hero-sub">El programador no copia y pega cien veces — describe <em>una</em> vuelta y deja que la máquina la repita. Hoy domas el bucle: <em>for</em>, <em>while</em>, <em>do-while</em>, y los generadores que producen sin guardar.</p>
+  </div>
+</section>
+
+<!-- I: la idea -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · La idea</p>
+    <p class="lead">Un ciclo es una promesa:<br>"haz esto <em>otra vez</em>… hasta que ya no."</p>
+    <p class="subtle">Toda repetición tiene tres piezas: una <strong>condición</strong> que se revisa, un <strong>cuerpo</strong> que se ejecuta, y una <strong>actualización</strong> que acerca el bucle a su fin. Si la condición nunca se vuelve falsa, tienes un <em>ciclo infinito</em> — el error más clásico del repertorio. Hoy verás los tres ciclos clásicos, los iteradores y generadores de Python, y por qué <strong>Go</strong> decidió que con un solo <span class="inlinecode">for</span> le bastaba.</p>
+  </div>
+</section>
+
+<!-- II: animador paso a paso -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · Una vuelta a la vez</p>
+    <p class="lead">Un ciclo no es magia.<br>Es <em>la misma revisión</em>, repetida.</p>
+    <p class="subtle">Recorre este <span class="inlinecode">while</span> paso a paso. Fíjate en el orden: primero se evalúa la <strong>condición</strong>; si es verdadera, corre el <strong>cuerpo</strong>; luego la <strong>actualización</strong>; y se vuelve a empezar. Observa el momento exacto en que <span class="inlinecode">i &lt; 4</span> se vuelve <em>falsa</em> — ahí muere el bucle.</p>
+    <div class="widget" data-tag="Pulsa Siguiente o Play">
+      <div class="lp-stage">
+        <div class="lp-code" id="lp-code"></div>
+        <div class="lp-panel">
+          <div class="lp-vars">
+            <div class="lp-var"><div class="lp-var-k">contador i</div><div class="lp-var-v" id="lp-i">0</div></div>
+            <div class="lp-var"><div class="lp-var-k">vuelta nº</div><div class="lp-var-v" id="lp-n">0</div></div>
+          </div>
+          <div class="lp-cond" id="lp-cond">condición: <strong>i &lt; 4</strong></div>
+          <div class="lp-out" id="lp-out"><span class="dim">— la salida aparecerá aquí —</span></div>
+          <div class="lp-msg" id="lp-msg">Pulsa <strong>Siguiente</strong> para evaluar la condición por primera vez.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="lp-reset">⟲ Reset</button>
+        <button class="btn" id="lp-prev">◀ Atrás</button>
+        <button class="btn on" id="lp-next">Siguiente ▶</button>
+        <button class="btn" id="lp-play">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: los tres ciclos + Go -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Tres formas de repetir (y la de Go)</p>
+    <p class="lead">El mismo objetivo, contar del 1 al 5.<br>Tres <em>herramientas</em> distintas.</p>
+    <p class="subtle">Elegir el ciclo correcto es la mitad del oficio. El <span class="inlinecode">for</span> cuando sabes <strong>cuántas veces</strong>; el <span class="inlinecode">while</span> cuando repites <strong>mientras se cumpla algo</strong>; el <span class="inlinecode">do-while</span> cuando el cuerpo debe correr <strong>al menos una vez</strong>. Compara los cuatro paneles — el último te muestra cómo <strong>Go</strong> cubre los tres casos con una sola palabra:</p>
+    <div class="widget" data-tag="Compara los ciclos">
+      <div class="ct-tabs">
+        <button class="ct-tab on" data-ct="for">for · Python</button>
+        <button class="ct-tab" data-ct="while">while · Python</button>
+        <button class="ct-tab" data-ct="dowhile">do-while · Java</button>
+        <button class="ct-tab go" data-ct="go">▶ el for único · Go</button>
+      </div>
+      <div class="ct-code" id="ct-code"></div>
+      <div class="ct-note" id="ct-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: iteradores y generadores -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Generadores — producir sin guardar</p>
+    <p class="lead">¿Para qué cargar un millón de números<br>si solo necesitas <em>uno a la vez?</em></p>
+    <p class="subtle">Una <strong>lista</strong> en Python guarda <em>todos</em> sus valores en memoria de golpe. Un <strong>generador</strong> (con <span class="inlinecode">yield</span>) produce <em>uno</em>, lo entrega, y se pausa hasta que le pidas el siguiente — eso es <strong>lazy evaluation</strong>. Pulsa <em>pedir siguiente</em> y mira la diferencia: a la izquierda nace un valor a la vez; a la derecha, todo vive cargado desde el inicio.</p>
+    <div class="widget" data-tag="Pide valores y mira la memoria">
+      <div class="gen-stage">
+        <div class="gen-col lazy">
+          <div class="gen-h lazy">Generador · yield (lazy)</div>
+          <div class="gen-cells" id="gen-lazy"></div>
+          <div class="gen-bar"><i id="gen-lazy-bar"></i></div>
+          <div class="gen-mem">memoria viva: <b id="gen-lazy-mem">0</b> valor(es) · solo el actual</div>
+        </div>
+        <div class="gen-col eager">
+          <div class="gen-h eager">Lista · [ ] (eager)</div>
+          <div class="gen-cells" id="gen-eager"></div>
+          <div class="gen-bar"><i id="gen-eager-bar"></i></div>
+          <div class="gen-mem">memoria viva: <b id="gen-eager-mem">8</b> valor(es) · todos a la vez</div>
+        </div>
+      </div>
+      <div class="gen-note" id="gen-note">Pulsa <strong>pedir siguiente</strong>: el generador despertará, producirá un valor y se volverá a dormir. La lista ya tiene los ocho ocupando memoria desde que se creó.</div>
+      <div class="w-controls">
+        <button class="btn on" id="gen-next">next() ▶ pedir siguiente</button>
+        <button class="btn" id="gen-reset">⟲ Reset</button>
+      </div>
+    </div>
+    <div class="ns-grid">
+      <div class="ns-col no">
+        <div class="ns-tag">✗ Eager · todo en memoria</div>
+        <div class="ns-code"><span class="cm"># construye la lista COMPLETA</span>
+cuadrados = [n*n <span class="kw">for</span> n <span class="kw">in</span> range(1_000_000)]
+total = <span class="kw">sum</span>(cuadrados)  <span class="cm"># 1M en RAM</span></div>
+        <div class="ns-why">Si solo vas a <strong>recorrerlos una vez</strong>, guardar el millón completo es desperdicio puro de memoria.</div>
+      </div>
+      <div class="ns-col si">
+        <div class="ns-tag">✓ Lazy · uno a la vez</div>
+        <div class="ns-code"><span class="cm"># generador: paréntesis, no corchetes</span>
+cuadrados = (n*n <span class="kw">for</span> n <span class="kw">in</span> range(1_000_000))
+total = <span class="kw">sum</span>(cuadrados)  <span class="cm"># 1 a la vez</span></div>
+        <div class="ns-why">Mismo resultado, <strong>memoria constante</strong>. El generador entrega cada cuadrado y lo olvida. Esa es la ventaja de <em>lazy</em>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: menú while interactivo -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El menú — un while que escucha</p>
+    <p class="lead">El patrón más útil del semestre:<br>repetir <em>hasta que el usuario diga "salir".</em></p>
+    <p class="subtle">Casi todo programa interactivo es un <span class="inlinecode">while</span> que muestra opciones, lee una elección y reacciona — una y otra vez, <strong>mientras la opción no sea 0</strong>. Eso es exactamente lo que vas a construir hoy en clase. Prueba el menú: elige opciones y mira cómo el ciclo responde y vuelve a preguntar. Cuando elijas <strong>Salir</strong>, la condición se rompe y el bucle termina.</p>
+    <div class="widget" data-tag="Elige opciones · el loop responde">
+      <div class="mn-stage">
+        <div class="mn-term" id="mn-term"></div>
+        <div class="mn-keys">
+          <div class="mn-keys-t">Tú eliges (la entrada del usuario)</div>
+          <div class="mn-opt" data-mn="1"><span class="k">[1]</span><span class="l">Depositar a la cuenta</span></div>
+          <div class="mn-opt" data-mn="2"><span class="k">[2]</span><span class="l">Retirar de la cuenta</span></div>
+          <div class="mn-opt" data-mn="3"><span class="k">[3]</span><span class="l">Consultar saldo</span></div>
+          <div class="mn-opt exit" data-mn="0"><span class="k">[0]</span><span class="l">Salir del programa</span></div>
+          <div class="mn-state" id="mn-state">Estado del ciclo: <strong>corriendo</strong> · condición <span class="inlinecode">opcion != 0</span> = verdadera</div>
+        </div>
+      </div>
+      <div class="ct-note" style="margin-top:1.4rem">El motor de este menú es literalmente <code>while opcion != 0:</code> — lee, decide con un <code>if/elif</code>, actúa y <strong>vuelve a leer</strong>. La opción <code>0</code> es la única que cambia la condición a falsa. Ese es tu entregable de hoy: el mismo menú en <strong>Python, Java y Go</strong>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: tabla de expresividad -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Expresividad — cuatro lenguajes, un concepto</p>
+    <p class="lead">La idea de "repetir" es universal.<br>La <em>sintaxis</em> es donde se ven las decisiones de diseño.</p>
+    <p class="subtle">Cada lenguaje eligió qué darte y qué quitarte. <strong>Python</strong> (tu base) apuesta por leer como inglés: <span class="inlinecode">for x in coleccion</span>. <strong>Java</strong> conserva el <span class="inlinecode">for</span> clásico y añade el <em>for-each</em>. <strong>Go</strong> hace algo radical: borra <span class="inlinecode">while</span> y <span class="inlinecode">do-while</span> y deja un solo <span class="inlinecode">for</span> camaleónico. Lee la tabla de izquierda a derecha y nota las casillas con ✗ — ahí está la filosofía de cada lenguaje:</p>
+    <div class="ex-tabwrap">
+      <table class="ex-table">
+        <thead>
+          <tr><th>Necesidad</th><th>Python · base</th><th>Java</th><th>JavaScript</th><th>Go</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Contar N veces</th>
+            <td class="base">for i in range(n):</td>
+            <td>for(int i=0;i&lt;n;i++)</td>
+            <td>for(let i=0;i&lt;n;i++)</td>
+            <td>for i:=0; i&lt;n; i++ {</td>
+          </tr>
+          <tr>
+            <th>Recorrer colección</th>
+            <td class="base">for x in lista:</td>
+            <td>for(T x : lista)</td>
+            <td>for(const x of arr)</td>
+            <td>for _, x := range xs {</td>
+          </tr>
+          <tr>
+            <th>Repetir con condición</th>
+            <td class="base">while cond:</td>
+            <td>while(cond)</td>
+            <td>while(cond)</td>
+            <td>for cond {  <span class="tick">←</span> mismo for</td>
+          </tr>
+          <tr>
+            <th>Al menos una vez</th>
+            <td class="base"><span class="cross">✗</span> no hay do-while*</td>
+            <td>do{ }while(cond);</td>
+            <td>do{ }while(cond);</td>
+            <td><span class="cross">✗</span> se simula con for{}</td>
+          </tr>
+          <tr>
+            <th>Producción perezosa</th>
+            <td class="base"><span class="tick">✓</span> yield / generador</td>
+            <td>Stream / Iterator</td>
+            <td>function* yield</td>
+            <td>canales + goroutine</td>
+          </tr>
+          <tr>
+            <th>Bucle infinito</th>
+            <td class="base">while True:</td>
+            <td>while(true)</td>
+            <td>while(true)</td>
+            <td>for {  <span class="tick">←</span> sin condición</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ex-cap">* En Python el <em>do-while</em> se emula con <span class="inlinecode">while True:</span> + <span class="inlinecode">break</span> al final. Menos lenguaje, más responsabilidad tuya.</p>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">La IA y los ciclos · úsala con cabeza</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué este <span class="inlinecode">while</span> nunca termina?" — y que señale la actualización que falta.</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>traduzca</em> tu menú de Python a Go y que te diga <em>qué cambió y por qué</em>.</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele <em>casos de prueba</em>: "¿qué entradas romperían mi menú?"</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "hazme el menú completo en tres lenguajes" — <em>en la comparativa en clase tú defiendes tu código: si no puedes explicar por qué Go no tiene while, no es tuyo.</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VII · Para la próxima clase</p>
+    <p class="lead">Ya sabes repetir.<br>Ahora repítelo <em>en tu proyecto.</em></p>
+    <p class="subtle">El objetivo de hoy: que implementes distintos tipos de ciclo y <strong>elijas el más adecuado</strong> según el problema. La evaluación es la <strong>participación</strong> — traer tu menú implementado y defender, en la comparativa en clase, las diferencias de expresividad entre Python, Java y Go.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance del proyecto</div>
+      <ol>
+        <li>Implementa el <strong>menú interactivo con un ciclo while</strong> en <strong>Python</strong> (tu base): muestra opciones, lee, decide con <code>if/elif</code>, repite hasta la opción <code>0</code>.</li>
+        <li>Reescribe <strong>la misma lógica en Java y en Go</strong>. Prepárate para explicar qué cambió: ¿usaste <code>do-while</code>? ¿cómo se ve el <code>while</code> en el único <code>for</code> de Go?</li>
+        <li><strong>Integra un menú o recorrido con ciclos a tu proyecto integrador</strong>: una opción que recorra y muestre tus objetos, otra que acumule un total con un <code>for</code>.</li>
+        <li>Donde tenga sentido, usa un <strong>generador</strong> (<code>yield</code>) en lugar de construir una lista completa — y comenta por qué eligiste <em>lazy</em>.</li>
+        <li><strong>Prepara arrays/colecciones</strong> para la próxima sesión y para la <strong>Tarea 2</strong>: los ciclos de hoy son la herramienta con la que recorrerás los arreglos de mañana.</li>
+        <li>Sube tu menú (tres lenguajes) a tu repo. En clase: <strong>comparativa en vivo</strong> de las implementaciones — ese es tu punto de participación.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: animador de iteración paso a paso ──────────────────
+const lpCode=[
+  '<span class="kw">i</span> = 0',
+  '<span class="kw">while</span> i &lt; 4:',
+  '    <span class="fn">print</span>(<span class="str">"vuelta"</span>, i)',
+  '    i = i + 1',
+  '<span class="fn">print</span>(<span class="str">"fin del ciclo"</span>)',
+];
+// estados: cada paso = {linea resaltada, i, vuelta, cond(t/f/null), out(append?), msg}
+const lpSteps=[
+  {line:0,i:0,n:0,cond:null,out:null,msg:'Se inicializa el <strong>contador</strong>: <code>i = 0</code>. Aún no entramos al ciclo.'},
+  {line:1,i:0,n:0,cond:true,out:null,msg:'Se evalúa la <strong>condición</strong> <code>0 &lt; 4</code> → <strong>verdadera</strong>. Entramos al cuerpo.'},
+  {line:2,i:0,n:1,cond:true,out:'vuelta 0',msg:'<strong>Cuerpo:</strong> imprime <code>vuelta 0</code>. Primera vuelta completada.'},
+  {line:3,i:1,n:1,cond:true,out:null,msg:'<strong>Actualización:</strong> <code>i = i + 1</code> → ahora <code>i</code> vale 1. Volvemos a la condición.'},
+  {line:1,i:1,n:1,cond:true,out:null,msg:'Condición <code>1 &lt; 4</code> → <strong>verdadera</strong>. Otra vuelta.'},
+  {line:2,i:1,n:2,cond:true,out:'vuelta 1',msg:'<strong>Cuerpo:</strong> imprime <code>vuelta 1</code>.'},
+  {line:3,i:2,n:2,cond:true,out:null,msg:'<strong>Actualización:</strong> <code>i</code> pasa a 2.'},
+  {line:1,i:2,n:2,cond:true,out:null,msg:'Condición <code>2 &lt; 4</code> → <strong>verdadera</strong>.'},
+  {line:2,i:2,n:3,cond:true,out:'vuelta 2',msg:'<strong>Cuerpo:</strong> imprime <code>vuelta 2</code>.'},
+  {line:3,i:3,n:3,cond:true,out:null,msg:'<strong>Actualización:</strong> <code>i</code> pasa a 3.'},
+  {line:1,i:3,n:3,cond:true,out:null,msg:'Condición <code>3 &lt; 4</code> → <strong>verdadera</strong>. La última vuelta.'},
+  {line:2,i:3,n:4,cond:true,out:'vuelta 3',msg:'<strong>Cuerpo:</strong> imprime <code>vuelta 3</code>.'},
+  {line:3,i:4,n:4,cond:true,out:null,msg:'<strong>Actualización:</strong> <code>i</code> pasa a 4. Una revisión más…'},
+  {line:1,i:4,n:4,cond:false,out:null,msg:'Condición <code>4 &lt; 4</code> → <strong>FALSA</strong>. Aquí muere el ciclo: el cuerpo ya no corre.'},
+  {line:4,i:4,n:4,cond:false,out:'fin del ciclo',msg:'Salimos del bucle y seguimos abajo: imprime <code>fin del ciclo</code>. <strong>Cuatro vueltas, cero copiar y pegar.</strong>'},
+];
+let lpIdx=-1,lpTimer=null;
+function lpRender(){
+  const outLines=[];
+  for(let k=0;k<=lpIdx;k++){ if(lpSteps[k]&&lpSteps[k].out) outLines.push(lpSteps[k].out); }
+  $('lp-code').innerHTML=lpCode.map((h,li)=>{
+    const on=(lpIdx>=0&&lpSteps[lpIdx].line===li);
+    return '<span class="ln'+(on?' hl':'')+'">'+h+'</span>';
+  }).join('');
+  const st=lpIdx>=0?lpSteps[lpIdx]:{i:0,n:0,cond:null,msg:'Pulsa <strong>Siguiente</strong> para evaluar la condición por primera vez.'};
+  $('lp-i').textContent=st.i;
+  $('lp-n').textContent=st.n;
+  const c=$('lp-cond');
+  c.classList.remove('t','f');
+  if(st.cond===true){c.classList.add('t');c.innerHTML='condición: <strong>'+st.i+' &lt; 4 → verdadera ✓</strong>';}
+  else if(st.cond===false){c.classList.add('f');c.innerHTML='condición: <strong>'+st.i+' &lt; 4 → falsa ✗</strong>';}
+  else{c.innerHTML='condición: <strong>i &lt; 4</strong>';}
+  $('lp-out').innerHTML=outLines.length?outLines.map(o=>'<span class="pr">&gt;&gt;&gt;</span> '+o).join('<br>'):'<span class="dim">— la salida aparecerá aquí —</span>';
+  $('lp-msg').innerHTML=st.msg;
+}
+function lpStop(){if(lpTimer){clearInterval(lpTimer);lpTimer=null;$('lp-play').textContent='▶ Play';}}
+$('lp-next').addEventListener('click',()=>{lpStop();if(lpIdx<lpSteps.length-1){lpIdx++;lpRender();}});
+$('lp-prev').addEventListener('click',()=>{lpStop();if(lpIdx>-1){lpIdx--;lpRender();}});
+$('lp-reset').addEventListener('click',()=>{lpStop();lpIdx=-1;lpRender();});
+$('lp-play').addEventListener('click',()=>{
+  if(lpTimer){lpStop();return;}
+  if(lpIdx>=lpSteps.length-1){lpIdx=-1;lpRender();}
+  $('lp-play').textContent='❚❚ Pausa';
+  lpTimer=setInterval(()=>{
+    if(lpIdx<lpSteps.length-1){lpIdx++;lpRender();}
+    else lpStop();
+  },1100);
+});
+lpRender();
+
+// ─── W2: tabs de los tres ciclos (+ for único de Go) ────────
+const ctData={
+  for:{
+    code:[
+      '<span class="cm"># sabes CUÁNTAS veces: usa for</span>',
+      '<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(1, 6):',
+      '    <span class="fn">print</span>(i)',
+      '',
+      '<span class="cm"># range(1, 6) → 1,2,3,4,5</span>',
+    ],
+    note:'El <strong>for</strong> de Python no cuenta a mano: <strong>itera sobre algo</strong> (un range, una lista, un texto). Cuando conoces el número de vueltas, es la opción más limpia y la que menos errores de actualización produce.'
+  },
+  while:{
+    code:[
+      '<span class="cm"># repites MIENTRAS se cumpla algo</span>',
+      'i = 1',
+      '<span class="kw">while</span> i &lt;= 5:',
+      '    <span class="fn">print</span>(i)',
+      '    i += 1  <span class="cm"># ¡no la olvides!</span>',
+    ],
+    note:'El <strong>while</strong> repite mientras la condición sea verdadera. Tú eres responsable de la <strong>actualización</strong> (<code>i += 1</code>): si la olvidas, el ciclo es <em>infinito</em>. Úsalo cuando no sabes de antemano cuántas vueltas darás.'
+  },
+  dowhile:{
+    code:[
+      '<span class="cm">// Java · corre AL MENOS una vez</span>',
+      '<span class="ty">int</span> i = 1;',
+      '<span class="kw">do</span> {',
+      '    System.out.<span class="fn">println</span>(i);',
+      '    i++;',
+      '} <span class="kw">while</span> (i &lt;= 5);',
+    ],
+    note:'El <strong>do-while</strong> revisa la condición <strong>al final</strong>: por eso el cuerpo siempre corre <em>al menos una vez</em>. Perfecto para menús (muestra el menú, luego pregunta si seguir). <strong>Python no lo tiene</strong>: se emula con <code>while True</code> + <code>break</code>.'
+  },
+  go:{
+    code:[
+      '<span class="cm">// Go · un solo for, tres caras</span>',
+      '<span class="kw">for</span> i := 1; i &lt;= 5; i++ {  <span class="cm">// estilo for</span>',
+      '    <span class="ty">fmt</span>.<span class="fn">Println</span>(i)',
+      '}',
+      '<span class="kw">for</span> cond {  <span class="cm">// estilo while</span> }',
+      '<span class="kw">for</span> {  <span class="cm">// infinito, sin condición</span> }',
+    ],
+    note:'<strong>Go eliminó <code>while</code> y <code>do-while</code>.</strong> Su <code>for</code> hace los tres trabajos según cuántas partes le pongas: con tres → estilo for; con solo la condición → estilo while; sin nada → infinito. <em>Menos palabras clave, misma potencia.</em> Esa decisión de diseño es justo lo que discutiremos en clase.'
+  }
+};
+function ctRender(k){
+  const d=ctData[k];
+  $('ct-code').innerHTML=d.code.map(h=>'<span class="ln">'+h+'</span>').join('');
+  $('ct-note').innerHTML=d.note;
+}
+document.querySelectorAll('.ct-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.ct-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    ctRender(t.dataset.ct);
+  });
+});
+ctRender('for');
+
+// ─── W3: generador (lazy) vs lista (eager) ──────────────────
+const GEN_TOTAL=8;
+let genStep=0;
+const genLazy=$('gen-lazy'),genEager=$('gen-eager');
+function genBuild(){
+  genLazy.innerHTML='';genEager.innerHTML='';
+  for(let k=0;k<GEN_TOTAL;k++){
+    const v=(k+1)*(k+1); // cuadrados 1,4,9,...
+    const a=document.createElement('div');a.className='gen-cell ghost';a.textContent=v;a.dataset.k=k;
+    genLazy.appendChild(a);
+    const b=document.createElement('div');b.className='gen-cell held';b.textContent=v;
+    genEager.appendChild(b);
+  }
+  $('gen-eager-mem').textContent=GEN_TOTAL;
+  $('gen-eager-bar').style.width='100%';
+}
+function genRender(){
+  const cells=genLazy.querySelectorAll('.gen-cell');
+  cells.forEach((c,k)=>{
+    c.classList.remove('live','ghost');
+    if(k<genStep-1) c.classList.add('ghost'); // ya consumido y olvidado
+    else if(k===genStep-1) c.classList.add('live'); // el actual, vivo
+    else c.classList.add('ghost'); // aún no producido
+  });
+  $('gen-lazy-mem').textContent=genStep>0?1:0;
+  $('gen-lazy-bar').style.width=(genStep/GEN_TOTAL*100)+'%';
+  if(genStep===0){
+    $('gen-note').innerHTML='Pulsa <strong>pedir siguiente</strong>: el generador despertará, producirá un valor y se volverá a dormir. La lista ya tiene los ocho ocupando memoria desde que se creó.';
+  }else if(genStep<=GEN_TOTAL){
+    const v=genStep*genStep;
+    $('gen-note').innerHTML='El generador ejecutó hasta <code>yield '+v+'</code>, te entregó <strong>'+v+'</strong> y se <strong>pausó</strong>. En memoria solo vive ese valor — los anteriores ya se olvidaron. La lista, en cambio, sigue cargando los <strong>'+GEN_TOTAL+'</strong> completos.';
+  }
+  if(genStep>=GEN_TOTAL){
+    $('gen-note').innerHTML='El generador se <strong>agotó</strong> (lanzaría <code>StopIteration</code>) — y nunca tuvo más de <strong>un</strong> valor en memoria a la vez. La lista usó <strong>'+GEN_TOTAL+'×</strong> esa memoria todo el tiempo. <em>Esa es la apuesta de</em> lazy <em>evaluation.</em>';
+  }
+}
+$('gen-next').addEventListener('click',()=>{ if(genStep<GEN_TOTAL){genStep++;genRender();} });
+$('gen-reset').addEventListener('click',()=>{ genStep=0;genRender(); });
+genBuild();genRender();
+
+// ─── W4: menú while interactivo simulado ────────────────────
+let mnSaldo=1000, mnRunning=true, mnTurn=0;
+const mnTerm=$('mn-term');
+const mnActions={
+  '1':()=>{mnSaldo+=500;return ['<span class="you">&gt; 1</span>','<span class="out">Depositaste $500.00. Nuevo saldo: $'+mnSaldo.toFixed(2)+'</span>'];},
+  '2':()=>{
+    if(mnSaldo>=300){mnSaldo-=300;return ['<span class="you">&gt; 2</span>','<span class="out">Retiraste $300.00. Nuevo saldo: $'+mnSaldo.toFixed(2)+'</span>'];}
+    return ['<span class="you">&gt; 2</span>','<span class="out">Saldo insuficiente. Sigues con $'+mnSaldo.toFixed(2)+'</span>'];
+  },
+  '3':()=>['<span class="you">&gt; 3</span>','<span class="out">Tu saldo actual es $'+mnSaldo.toFixed(2)+'</span>'],
+  '0':()=>['<span class="you">&gt; 0</span>','<span class="out">Saliendo… ¡hasta luego!</span>'],
+};
+function mnMenu(){
+  return [
+    '<span class="dim">┌─ Cajero · vuelta nº '+(mnTurn)+' ─┐</span>',
+    '<span class="pr">?</span> [1] Depositar  [2] Retirar',
+    '<span class="pr">?</span> [3] Saldo      [0] Salir',
+    '<span class="pr">opcion &gt;</span> <span class="dim">(elige a la derecha)</span>',
+  ];
+}
+function mnReset(){
+  mnSaldo=1000;mnRunning=true;mnTurn=1;
+  mnTerm.innerHTML=['<span class="out">$ python cajero.py</span>','<span class="dim">while opcion != 0:</span>',''].concat(mnMenu()).join('<br>');
+  mnState();
+  mnTerm.scrollTop=mnTerm.scrollHeight;
+}
+function mnState(){
+  const s=$('mn-state');
+  if(mnRunning){s.classList.remove('off');s.innerHTML='Estado del ciclo: <strong>corriendo</strong> · condición <span class="inlinecode">opcion != 0</span> = verdadera';}
+  else{s.classList.add('off');s.innerHTML='Estado del ciclo: <strong>terminado</strong> · condición <span class="inlinecode">opcion != 0</span> = falsa → break';}
+}
+function mnAppend(lines){
+  mnTerm.innerHTML+= '<br>'+lines.join('<br>');
+}
+document.querySelectorAll('.mn-opt').forEach(o=>{
+  o.addEventListener('click',()=>{
+    if(!mnRunning){mnReset();return;}
+    const k=o.dataset.mn;
+    mnAppend(mnActions[k]());
+    if(k==='0'){
+      mnRunning=false;
+      mnAppend(['<span class="dim">— el ciclo while terminó tras '+mnTurn+' vueltas —</span>','<span class="dim">(pulsa cualquier opción para reiniciar)</span>']);
+    }else{
+      mnTurn++;
+      mnAppend([''].concat(mnMenu()));
+    }
+    mnState();
+    mnTerm.scrollTop=mnTerm.scrollHeight;
+  });
+});
+mnReset();
+</script>
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XXIV — Todo o nada: la transacción — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* caso / puente a la práctica */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.caso-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.caso p{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso p strong{color:var(--ink);font-style:normal;font-weight:600;}
+.req-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+.req-d code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W1: animador de transacción */
+.tx-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:stretch;}
+.tx-ops{display:flex;flex-direction:column;gap:.7rem;}
+.tx-op{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:.85rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);display:flex;align-items:center;gap:.8rem;transition:all .45s cubic-bezier(.16,1,.3,1);}
+.tx-op .tx-bullet{width:1.3rem;height:1.3rem;border:1.5px solid var(--line);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:transparent;transition:all .35s;}
+.tx-op.run{border-left-color:var(--ochre);background:rgba(181,133,42,.07);}
+.tx-op.ok{border-left-color:var(--olive);background:rgba(93,102,56,.08);}
+.tx-op.ok .tx-bullet{background:var(--olive);border-color:var(--olive);color:var(--paper);}
+.tx-op.fail{border-left-color:var(--blood);background:rgba(160,36,24,.1);}
+.tx-op.fail .tx-bullet{background:var(--blood);border-color:var(--blood);color:var(--paper);}
+.tx-op.undo{opacity:.35;text-decoration:line-through;border-left-color:var(--line);background:var(--paper);}
+.tx-op.undo .tx-bullet{background:var(--paper);border-color:var(--line);color:transparent;}
+.tx-screen{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.tx-state{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.tx-bignum{font-family:'Cormorant Garamond',serif;font-size:2.6rem;line-height:1;color:var(--paper);}
+.tx-bignum span{color:#9FBF9C;}
+.tx-bignum.bad span{color:#E08A82;}
+.tx-log{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.7;color:rgba(239,230,210,.85);margin-top:auto;min-height:5.5rem;}
+.tx-log .commit{color:#9FBF9C;font-weight:700;}
+.tx-log .rollback{color:#E08A82;font-weight:700;}
+.tx-log .dim{color:rgba(239,230,210,.5);}
+
+/* W2: mapa CRUD */
+.cr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.5rem;}
+.cr-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--line);padding:1.2rem 1rem;text-align:center;cursor:pointer;transition:all .25s;}
+.cr-card:hover{border-color:var(--blood);}
+.cr-card.on{border-top-color:var(--blood);box-shadow:0 0 0 2px rgba(160,36,24,.12);}
+.cr-letter{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--blood);line-height:1;}
+.cr-word{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:.5rem;}
+.cr-sql{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--olive);margin-top:.35rem;font-weight:700;}
+.cr-panel{background:var(--ink);padding:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;}
+.cr-col-t{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.7rem;}
+.cr-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:rgba(239,230,210,.9);white-space:pre-wrap;}
+.cr-code .kw{color:#D4956A;}
+.cr-code .str{color:#C9A961;}
+.cr-code .ph{color:#9FBF9C;font-weight:700;}
+.cr-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.cr-note{margin-top:1.3rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;color:var(--ink-soft);}
+.cr-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W3: sin rollback = datos corruptos (toggle) */
+.cor-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.cor-col{background:var(--paper);border:1px solid var(--line);padding:1.5rem;}
+.cor-col.bad{border-top:3px solid var(--blood);}
+.cor-col.good{border-top:3px solid var(--olive);}
+.cor-h{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1rem;}
+.cor-col.bad .cor-h{color:var(--blood);}
+.cor-col.good .cor-h{color:var(--olive);}
+.cor-row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.82rem;padding:.5rem .2rem;border-bottom:1px dashed var(--line);color:var(--ink-soft);}
+.cor-row span.bal{font-weight:700;color:var(--ink);}
+.cor-row.changed span.bal{color:var(--blood);}
+.cor-foot{margin-top:1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.45;color:var(--ink-soft);}
+.cor-foot strong{font-style:normal;}
+.cor-col.bad .cor-foot strong{color:var(--blood);}
+.cor-col.good .cor-foot strong{color:var(--olive);}
+.cor-sum{font-family:'JetBrains Mono',monospace;font-size:.74rem;margin-top:.6rem;}
+.cor-sum.ok{color:var(--olive);}
+.cor-sum.err{color:var(--blood);font-weight:700;}
+
+/* W4: patrón try/commit/except-rollback */
+.pat-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.pat-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.pat-tab:hover{border-color:var(--blood);color:var(--blood);}
+.pat-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.pat-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.9;color:var(--paper);min-height:340px;overflow-x:auto;}
+.pat-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;}
+.pat-code .ln.hl{background:rgba(232,176,74,.22);}
+.pat-code .kw{color:#D4956A;font-style:italic;}
+.pat-code .ty{color:#A6C2D6;}
+.pat-code .self{color:#8EAF8B;font-weight:700;}
+.pat-code .str{color:#C9A961;}
+.pat-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.pat-code .out{color:#9FBF9C;}
+.pat-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.pat-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.pat-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* NO / SÍ columnas */
+.nosi{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.nosi-col{background:var(--paper);border:1px solid var(--line);padding:1.5rem;}
+.nosi-col.no{border-left:3px solid var(--blood);}
+.nosi-col.si{border-left:3px solid var(--olive);}
+.nosi-h{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem;}
+.nosi-col.no .nosi-h{color:var(--blood);}
+.nosi-col.si .nosi-h{color:var(--olive);}
+.nosi-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.7;color:var(--ink-soft);white-space:pre-wrap;}
+.nosi-code .kw{color:var(--blood);font-style:italic;}
+.nosi-code .str{color:#8a6420;}
+.nosi-code .ph{color:var(--olive);font-weight:700;}
+.nosi-why{font-size:.9rem;color:var(--ink-soft);line-height:1.45;margin-top:1rem;font-style:italic;}
+.nosi-col.no .nosi-why strong{color:var(--blood);font-style:normal;}
+.nosi-col.si .nosi-why strong{color:var(--olive);font-style:normal;}
+
+/* W5: checklist Sprint 3 */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-group{margin-top:1.4rem;}
+.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+.chk-done-msg{margin-top:1.3rem;padding:1rem 1.3rem;background:rgba(93,102,56,.1);border-left:3px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;color:var(--ink-soft);opacity:0;transition:opacity .5s;}
+.chk-done-msg.show{opacity:1;}
+.chk-done-msg strong{color:var(--olive);font-style:normal;}
+
+/* IA */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .tx-stage,.cor-stage,.nosi,.req-grid,.cr-panel{grid-template-columns:1fr;}
+  .cr-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-23.html" class="back">Sesión 23</a>
+  <span class="session-label">Sesión 24 · Sprint 3 · 07.08.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">conn.commit()</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">UPDATE saldos SET ... WHERE id = ?</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">except sqlite3.Error: conn.rollback()</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">DELETE FROM reservas WHERE id = ?</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">BEGIN · COMMIT · ROLLBACK</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XXIV · Bloque III · Bases de datos · Sprint 3 Review · Ref. Temario 7.4.3 · 7.4.4 · Python · Java</div>
+    <h1>Todo o <em>nada.</em></h1>
+    <p class="hero-sub">Una transferencia que resta de una cuenta pero no suma en la otra es peor que ninguna transferencia. Hoy cierras el CRUD con <em>UPDATE</em> y <em>DELETE</em>, y aprendes la regla que protege tus datos: <em>commit</em> si todo sale bien, <em>rollback</em> si algo falla.</p>
+  </div>
+</section>
+
+<!-- I: la promesa de la transacción -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · La promesa</p>
+    <p class="lead">Una transacción es un trato:<br>se ejecuta <em>completa</em>, o no se ejecuta <em>nada.</em></p>
+    <p class="subtle">Hasta ahora hiciste <strong>INSERT</strong> (Create) y <strong>SELECT</strong> (Read). Hoy cierras el CRUD con las dos operaciones que <em>modifican lo que ya existe</em>: <strong>UPDATE</strong> y <strong>DELETE</strong>. Y justo porque modifican, necesitan una red de seguridad. Esa red se llama <strong>transacción</strong>: agrupa varias operaciones y exige que <em>todas</em> tengan éxito antes de quedar grabadas. Si una falla, se deshace todo con un <strong>rollback</strong> — como si nunca hubiera pasado. Es la propiedad de <strong>atomicidad</strong>: indivisible, todo o nada.</p>
+  </div>
+</section>
+
+<!-- II: animador de transacción -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · Todo o nada — la transacción en vivo</p>
+    <p class="lead">Transferir $500 son <em>dos</em> UPDATE:<br>restar de una cuenta, sumar en la otra.</p>
+    <p class="subtle">Si el primero funciona y el segundo falla, el dinero <strong>se evapora</strong>. La transacción evita eso: las dos operaciones viven o mueren juntas. Pulsa <strong>Confirmar (commit)</strong> y se graban; provoca un error y mira cómo el <strong>rollback</strong> devuelve todo a su estado original. Ningún saldo a medias.</p>
+    <div class="widget" data-tag="Pulsa commit · o provoca el fallo">
+      <div class="tx-stage">
+        <div class="tx-ops" id="tx-ops">
+          <div class="tx-op" data-step="0"><span class="tx-bullet"></span>BEGIN — abrir transacción</div>
+          <div class="tx-op" data-step="1"><span class="tx-bullet"></span>UPDATE: Ana −$500</div>
+          <div class="tx-op" data-step="2"><span class="tx-bullet"></span>UPDATE: Luis +$500</div>
+          <div class="tx-op" data-step="3"><span class="tx-bullet"></span>COMMIT — sellar el trato</div>
+        </div>
+        <div class="tx-screen">
+          <div class="tx-state" id="tx-state">Estado: lista para empezar</div>
+          <div class="tx-bignum" id="tx-ana">Ana <span>$1500</span></div>
+          <div class="tx-bignum" id="tx-luis">Luis <span>$300</span></div>
+          <div class="tx-log" id="tx-log"><span class="dim"># el dinero total siempre debe ser $1800</span></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="tx-commit">▶ Transferir y hacer commit</button>
+        <button class="btn" id="tx-fail">⚡ Provocar fallo a mitad</button>
+        <button class="btn" id="tx-reset">⟲ Reset</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: mapa CRUD -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · El mapa CRUD — cerrar el ciclo</p>
+    <p class="lead">Cuatro verbos de tu app.<br>Cuatro sentencias <em>SQL.</em></p>
+    <p class="subtle">CRUD es el lenguaje común de toda aplicación con datos: <strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate, <strong>D</strong>elete. Cada uno tiene su sentencia SQL exacta. Hoy completas las dos que faltan. Toca cada letra para ver el SQL y el código Python con <strong>parámetros</strong> (<span class="inlinecode">?</span>) — nunca concatenes, siempre parametriza:</p>
+    <div class="widget" data-tag="Click en cada verbo">
+      <div class="cr-grid" id="cr-grid">
+        <div class="cr-card on" data-cr="create"><div class="cr-letter">C</div><div class="cr-word">Create</div><div class="cr-sql">INSERT</div></div>
+        <div class="cr-card" data-cr="read"><div class="cr-letter">R</div><div class="cr-word">Read</div><div class="cr-sql">SELECT</div></div>
+        <div class="cr-card" data-cr="update"><div class="cr-letter">U</div><div class="cr-word">Update</div><div class="cr-sql">UPDATE</div></div>
+        <div class="cr-card" data-cr="delete"><div class="cr-letter">D</div><div class="cr-word">Delete</div><div class="cr-sql">DELETE</div></div>
+      </div>
+      <div class="cr-panel">
+        <div>
+          <div class="cr-col-t">SQL</div>
+          <div class="cr-code" id="cr-sql"></div>
+        </div>
+        <div>
+          <div class="cr-col-t">Python · cursor parametrizado</div>
+          <div class="cr-code" id="cr-py"></div>
+        </div>
+      </div>
+      <div class="cr-note" id="cr-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: sin rollback = datos corruptos -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Sin rollback — datos a medias</p>
+    <p class="lead">El bug más caro no es el que truena.<br>Es el que deja la base <em>mintiendo.</em></p>
+    <p class="subtle">Un programa que se cae <strong>se nota</strong>. Pero una transferencia que restó y no sumó deja datos <em>silenciosamente corruptos</em>: el programa siguió, nadie vio el error, y la base ahora afirma algo falso. Mira la misma falla en las dos columnas — sin red de seguridad a la izquierda, con <strong>rollback</strong> a la derecha:</p>
+    <div class="widget" data-tag="Pulsa para provocar el fallo">
+      <div class="cor-stage">
+        <div class="cor-col bad">
+          <div class="cor-h">✗ Sin transacción (autocommit)</div>
+          <div class="cor-row" id="bad-ana"><span>Ana</span><span class="bal">$1500</span></div>
+          <div class="cor-row" id="bad-luis"><span>Luis</span><span class="bal">$300</span></div>
+          <div class="cor-sum" id="bad-sum">Total en el banco: $1800 ✓</div>
+          <div class="cor-foot" id="bad-foot">Cada UPDATE se graba al instante. <strong>Nadie vigila el conjunto.</strong></div>
+        </div>
+        <div class="cor-col good">
+          <div class="cor-h">✓ Con transacción + rollback</div>
+          <div class="cor-row" id="good-ana"><span>Ana</span><span class="bal">$1500</span></div>
+          <div class="cor-row" id="good-luis"><span>Luis</span><span class="bal">$300</span></div>
+          <div class="cor-sum" id="good-sum">Total en el banco: $1800 ✓</div>
+          <div class="cor-foot" id="good-foot">Nada se graba hasta el <strong>commit</strong>. Si algo falla, <strong>rollback</strong>.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="cor-go">⚡ El 2.º UPDATE falla</button>
+        <button class="btn" id="cor-reset">⟲ Reset</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: patrón try/commit/except-rollback -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El patrón blindado — Python ↔ Java</p>
+    <p class="lead">try → ejecuta → <em>commit.</em><br>except → <em>rollback</em> → relanza.</p>
+    <p class="subtle">Aquí está el molde que vas a copiar en cada operación de escritura de tu proyecto. La idea es idéntica en los dos lenguajes; cambia la sintaxis. Recorre las pestañas: el patrón en <strong>Python</strong> (tu lenguaje base), el equivalente en <strong>Java</strong>, y un <strong>DELETE</strong> seguro con su <span class="inlinecode">WHERE</span>:</p>
+    <div class="widget" data-tag="Mismo patrón · dos lenguajes">
+      <div class="pat-tabs">
+        <button class="pat-tab on" data-pat="py">Python · sqlite3</button>
+        <button class="pat-tab" data-pat="java">Java · JDBC</button>
+        <button class="pat-tab" data-pat="delete">DELETE seguro</button>
+      </div>
+      <div class="pat-code" id="pat-code"></div>
+      <div class="pat-note" id="pat-note"></div>
+    </div>
+    <p class="subtle" style="margin-top:2.5rem">Y el detalle que separa un UPDATE/DELETE profesional de un desastre: <strong>el <span class="inlinecode">WHERE</span></strong>. Olvidarlo no da error — hace algo mucho peor:</p>
+    <div class="nosi">
+      <div class="nosi-col no">
+        <div class="nosi-h">✗ Lo que jamás debes escribir</div>
+        <div class="nosi-code"><span class="kw">cur</span>.execute(
+  <span class="str">"DELETE FROM reservas"</span>
+)
+<span class="kw">cur</span>.execute(
+  <span class="str">"UPDATE cuentas SET saldo = 0"</span>
+)</div>
+        <div class="nosi-why"><strong>Sin WHERE, afecta TODA la tabla.</strong> Un DELETE sin condición borra cada reserva del hotel. SQL te obedece sin chistar — no hay "deshacer" después del commit.</div>
+      </div>
+      <div class="nosi-col si">
+        <div class="nosi-h">✓ Lo que sí, siempre</div>
+        <div class="nosi-code"><span class="kw">cur</span>.execute(
+  <span class="str">"DELETE FROM reservas WHERE id = ?"</span>,
+  (reserva_id,)   <span class="kw">#</span> <span class="ph">parámetro</span>
+)
+<span class="kw">if</span> <span class="kw">cur</span>.rowcount == 0:
+  <span class="kw">raise</span> ValueError(<span class="str">"no existe"</span>)</div>
+        <div class="nosi-why"><strong>WHERE acota · ? parametriza · rowcount verifica.</strong> Revisa <span class="inlinecode">rowcount</span>: si es 0, no afectaste nada — probablemente el id no existía, y eso merece una excepción.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: puente a la práctica institucional 6 -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Puente a la práctica — el hotel</p>
+    <p class="lead">Modificar una reservación es <em>UPDATE.</em><br>Cancelarla es <em>DELETE.</em></p>
+    <p class="subtle">Lo que cierras hoy es exactamente lo que pide la <strong>Práctica institucional 6</strong> (en Java): el sistema del hotel debe permitir <em>cambiar</em> y <em>cancelar</em> reservaciones, con <span class="inlinecode">PreparedStatement</span> — el parámetro <span class="inlinecode">?</span> de Java. Mismo concepto que tu proyecto en Python, otra sintaxis:</p>
+    <div class="caso">
+      <div class="caso-tag">Practicario MCT158 · Práctica 6 de 6 · operaciones de escritura</div>
+      <p>El hotel necesita que un recepcionista pueda <strong>modificar una reservación existente</strong> (cambiar fechas o número de huéspedes) y <strong>cancelar reservaciones</strong> cuando el cliente desiste. Toda escritura a la base debe usar <strong>PreparedStatement</strong> para evitar inyección SQL, manejar excepciones de base de datos, y <strong>confirmar o revertir</strong> según el resultado.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Requerimiento · UPDATE</div>
+        <div class="req-t">Modificar reservación</div>
+        <div class="req-d">Cambiar fechas o huéspedes de una reserva por su <code>id</code>. WHERE obligatorio, parámetros <code>?</code>, y commit solo si todo salió bien.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento · DELETE</div>
+        <div class="req-t">Cancelar reservación</div>
+        <div class="req-d">Eliminar la reserva por <code>id</code>. Verifica <code>rowcount</code> / filas afectadas; si nada cambió, avisa al usuario con una excepción propia.</div>
+      </div>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">La IA en tus operaciones de escritura</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu manejo de errores</em>: "¿mi rollback cubre todos los caminos de fallo?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em> la diferencia entre commit, rollback y autocommit</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "hazme el CRUD completo del proyecto" — <em>en el Sprint Review lo defiendes tú: si no puedes explicar dónde va el rollback, no es tu código.</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: checklist Sprint 3 -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Sprint 3 Review — qué debe demostrar tu proyecto</p>
+    <p class="lead">Hoy no entregas un avance.<br>Hoy <em>demuestras</em> que el CRUD vive.</p>
+    <p class="subtle">El Sprint 3 Review es una <strong>demostración en clase del CRUD completo</strong> del proyecto integrador — y es <strong>insumo crítico para el examen final</strong>. Marca cada punto: si todos quedan en verde, tu proyecto está listo para la demo. Esto es exactamente lo que voy a revisar:</p>
+    <div class="widget" data-tag="Tu lista de demo">
+      <div class="chk-progress">Listo para la demo: <span id="chk-count">0</span> de 10 puntos
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">CRUD completo — los cuatro verbos funcionando</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Create</strong> — INSERT parametrizado agrega un registro nuevo y lo confirma</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Read</strong> — SELECT lista los registros (y un SELECT por id)</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Update</strong> — modifica un registro existente <em>con WHERE</em> y parámetros</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Delete</strong> — elimina por id; verifica <code>rowcount</code> antes de confirmar</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Transacciones y excepciones de BD</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Cada escritura usa <strong>try → commit</strong> y <strong>except → rollback</strong></div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Captura la excepción <strong>específica de la BD</strong> (no un <code>except:</code> pelón)</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Demuestras un <strong>rollback real</strong>: provocas un fallo y los datos no quedan a medias</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">La conexión se <strong>cierra siempre</strong> (<code>finally</code> o <code>with</code>)</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Integración — BD + Excepciones + OOP</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">El acceso a datos vive en una <strong>clase</strong> (repositorio / DAO), no suelto en el main</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedes <strong>explicar tu código línea por línea</strong> — es la prueba del Sprint</div></div>
+      </div>
+      <div class="chk-done-msg" id="chk-done">
+        <strong>Listo.</strong> Tu CRUD completo, con transacciones y manejo de excepciones, está listo para la demo del Sprint 3. Este mismo proyecto será tu base para el examen final.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para el Sprint Review</p>
+    <p class="lead">Tu base de datos guarda valor real.<br>Trátala con la seriedad de quien sabe que <em>un dato corrupto cuesta más que un crash.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">Sprint 3 Review · CRUD completo</div>
+      <ol>
+        <li><strong>Cierra el CRUD:</strong> agrega <code>UPDATE</code> y <code>DELETE</code> a tu proyecto, ambos con <code>WHERE</code> y parámetros <code>?</code>.</li>
+        <li><strong>Blinda cada escritura:</strong> patrón <code>try</code> → ejecuta → <code>commit</code>; <code>except</code> de BD → <code>rollback</code> → avisa.</li>
+        <li><strong>Prepara la demo del rollback:</strong> ten listo un caso que falle a propósito y muestra que los datos quedan intactos.</li>
+        <li><strong>Verifica la integración:</strong> el acceso a datos en una clase repositorio; excepciones específicas; conexión que se cierra siempre.</li>
+        <li><strong>Presenta el Sprint 3 en clase:</strong> demuestra los cuatro verbos en vivo y explica tu código. Es el <strong>insumo crítico para el examen final</strong>.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="ln">'+html+'</span>';
+
+// ─── W1: animador de transacción ────────────────────────────
+const txOps=document.querySelectorAll('#tx-ops .tx-op');
+let txBusy=false;
+function txClear(){
+  txOps.forEach(o=>o.classList.remove('run','ok','fail','undo'));
+  $('tx-state').textContent='Estado: lista para empezar';
+  $('tx-ana').classList.remove('bad');$('tx-luis').classList.remove('bad');
+  $('tx-ana').innerHTML='Ana <span>$1500</span>';
+  $('tx-luis').innerHTML='Luis <span>$300</span>';
+  $('tx-log').innerHTML='<span class="dim"># el dinero total siempre debe ser $1800</span>';
+}
+function txStep(i){return txOps[i];}
+function txRun(fail){
+  if(txBusy)return;txBusy=true;txClear();
+  let log='';
+  const seq=[
+    ()=>{txStep(0).classList.add('ok');$('tx-state').textContent='Estado: transacción abierta';log+='<span class="dim">BEGIN</span><br>';$('tx-log').innerHTML=log;},
+    ()=>{txStep(1).classList.add('run');},
+    ()=>{txStep(1).classList.remove('run');txStep(1).classList.add('ok');$('tx-ana').innerHTML='Ana <span>$1000</span>';log+='UPDATE Ana → $1000 <span class="dim">(en memoria)</span><br>';$('tx-log').innerHTML=log;},
+    ()=>{txStep(2).classList.add('run');},
+    ()=>{
+      if(fail){
+        txStep(2).classList.remove('run');txStep(2).classList.add('fail');
+        $('tx-state').textContent='Estado: ERROR — sqlite3.OperationalError';
+        log+='<span class="rollback">✗ UPDATE Luis falló</span><br>';$('tx-log').innerHTML=log;
+      }else{
+        txStep(2).classList.remove('run');txStep(2).classList.add('ok');
+        $('tx-luis').innerHTML='Luis <span>$800</span>';
+        log+='UPDATE Luis → $800 <span class="dim">(en memoria)</span><br>';$('tx-log').innerHTML=log;
+      }
+    },
+    ()=>{
+      if(fail){
+        // rollback: deshacer todo
+        txStep(0).classList.add('undo');txStep(1).classList.remove('ok');txStep(1).classList.add('undo');
+        txStep(3).classList.add('undo');
+        $('tx-ana').innerHTML='Ana <span>$1500</span>';
+        $('tx-luis').innerHTML='Luis <span>$300</span>';
+        $('tx-state').textContent='Estado: ROLLBACK — todo deshecho';
+        log+='<span class="rollback">↺ conn.rollback()</span> — saldos restaurados<br><span class="dim"># total: $1800 ✓ intacto</span>';
+        $('tx-log').innerHTML=log;
+      }else{
+        txStep(3).classList.add('ok');
+        $('tx-state').textContent='Estado: COMMIT — cambios grabados';
+        log+='<span class="commit">✓ conn.commit()</span> — trato sellado<br><span class="dim"># total: $1800 ✓ conservado</span>';
+        $('tx-log').innerHTML=log;
+      }
+    }
+  ];
+  let k=0;
+  const t=setInterval(()=>{
+    seq[k]();k++;
+    if(k>=seq.length){clearInterval(t);txBusy=false;}
+  },650);
+}
+$('tx-commit').addEventListener('click',()=>txRun(false));
+$('tx-fail').addEventListener('click',()=>txRun(true));
+$('tx-reset').addEventListener('click',()=>{if(!txBusy)txClear();});
+
+// ─── W2: mapa CRUD ──────────────────────────────────────────
+const crData={
+  create:{
+    sql:'<span class="kw">INSERT INTO</span> productos\n  (nombre, precio)\n<span class="kw">VALUES</span> (<span class="ph">?</span>, <span class="ph">?</span>);',
+    py:'cur.execute(\n  <span class="str">"INSERT INTO productos "</span>\n  <span class="str">"(nombre, precio) "</span>\n  <span class="str">"VALUES (?, ?)"</span>,\n  (nombre, precio)\n)\nconn.commit()',
+    note:'<strong>Create = INSERT.</strong> Ya lo dominas de la clase pasada. Los valores van como <em>tupla de parámetros</em>, nunca pegados en el string. Y como modifica la base, necesita su <code>commit</code>.'
+  },
+  read:{
+    sql:'<span class="kw">SELECT</span> id, nombre, precio\n<span class="kw">FROM</span> productos\n<span class="kw">WHERE</span> precio &lt; <span class="ph">?</span>;',
+    py:'cur.execute(\n  <span class="str">"SELECT id, nombre, precio "</span>\n  <span class="str">"FROM productos "</span>\n  <span class="str">"WHERE precio &lt; ?"</span>,\n  (tope,)\n)\nfilas = cur.fetchall()',
+    note:'<strong>Read = SELECT.</strong> La única operación que <em>no</em> modifica nada — por eso no lleva commit. Recuperas con <code>fetchall()</code> o <code>fetchone()</code>. La coma en <code>(tope,)</code> no es opcional: hace que sea una tupla.'
+  },
+  update:{
+    sql:'<span class="kw">UPDATE</span> productos\n<span class="kw">SET</span> precio = <span class="ph">?</span>\n<span class="kw">WHERE</span> id = <span class="ph">?</span>;',
+    py:'cur.execute(\n  <span class="str">"UPDATE productos "</span>\n  <span class="str">"SET precio = ? "</span>\n  <span class="str">"WHERE id = ?"</span>,\n  (nuevo_precio, id)\n)\nconn.commit()',
+    note:'<strong>Update = UPDATE.</strong> Lo nuevo de hoy. El <code>WHERE id = ?</code> es <em>sagrado</em>: sin él, cambiarías el precio de TODOS los productos. El último parámetro de la tupla siempre acota a quién afectas.'
+  },
+  delete:{
+    sql:'<span class="kw">DELETE FROM</span> productos\n<span class="kw">WHERE</span> id = <span class="ph">?</span>;',
+    py:'cur.execute(\n  <span class="str">"DELETE FROM productos "</span>\n  <span class="str">"WHERE id = ?"</span>,\n  (id,)\n)\n<span class="kw">if</span> cur.rowcount:\n  conn.commit()',
+    note:'<strong>Delete = DELETE.</strong> La más peligrosa: borra sin preguntar. Siempre con <code>WHERE</code>, y revisa <code>cur.rowcount</code> — te dice cuántas filas borraste. Si es 0, ese id no existía: vale la pena avisar.'
+  }
+};
+function crRender(k){
+  const d=crData[k];
+  $('cr-sql').innerHTML=d.sql.replace(/\n/g,'<br>');
+  $('cr-py').innerHTML=d.py.replace(/\n/g,'<br>');
+  $('cr-note').innerHTML=d.note;
+}
+document.querySelectorAll('.cr-card').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.cr-card').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    crRender(c.dataset.cr);
+  });
+});
+crRender('create');
+
+// ─── W3: sin rollback = datos corruptos ─────────────────────
+let corBusy=false;
+function corReset(){
+  $('bad-ana').classList.remove('changed');$('bad-luis').classList.remove('changed');
+  $('good-ana').classList.remove('changed');$('good-luis').classList.remove('changed');
+  $('bad-ana').querySelector('.bal').textContent='$1500';
+  $('bad-luis').querySelector('.bal').textContent='$300';
+  $('good-ana').querySelector('.bal').textContent='$1500';
+  $('good-luis').querySelector('.bal').textContent='$300';
+  $('bad-sum').className='cor-sum';$('bad-sum').textContent='Total en el banco: $1800 ✓';
+  $('good-sum').className='cor-sum';$('good-sum').textContent='Total en el banco: $1800 ✓';
+  $('bad-foot').innerHTML='Cada UPDATE se graba al instante. <strong>Nadie vigila el conjunto.</strong>';
+  $('good-foot').innerHTML='Nada se graba hasta el <strong>commit</strong>. Si algo falla, <strong>rollback</strong>.';
+}
+function corGo(){
+  if(corBusy)return;corBusy=true;corReset();
+  // paso 1: ambos restan a Ana (UPDATE 1 OK)
+  setTimeout(()=>{
+    $('bad-ana').classList.add('changed');$('bad-ana').querySelector('.bal').textContent='$1000';
+    $('good-ana').classList.add('changed');$('good-ana').querySelector('.bal').textContent='$1000';
+    $('bad-sum').className='cor-sum err';$('bad-sum').textContent='Total en el banco: $1300 ✗ (a medias)';
+    $('good-sum').className='cor-sum';$('good-sum').textContent='Total: $1800 (cambio en memoria)';
+  },500);
+  // paso 2: el 2.º UPDATE falla
+  setTimeout(()=>{
+    $('bad-foot').innerHTML='<strong>El 2.º UPDATE falló — pero el 1.º ya quedó grabado.</strong> Ana perdió $500 y Luis nunca los recibió. La base miente y nadie lo sabe.';
+    $('good-foot').innerHTML='<strong>El 2.º UPDATE falló → rollback.</strong> Se descarta el cambio en memoria; nada llegó al disco.';
+    $('good-ana').classList.remove('changed');$('good-ana').querySelector('.bal').textContent='$1500';
+    $('good-sum').className='cor-sum ok';$('good-sum').textContent='Total en el banco: $1800 ✓ intacto';
+    corBusy=false;
+  },1500);
+}
+$('cor-go').addEventListener('click',corGo);
+$('cor-reset').addEventListener('click',()=>{if(!corBusy)corReset();});
+
+// ─── W4: patrón try/commit/except-rollback ──────────────────
+const patData={
+  py:{
+    code:[
+      ['<span class="kw">import</span> sqlite3',0],
+      ['',0],
+      ['conn = sqlite3.connect(<span class="str">"banco.db"</span>)',0],
+      ['cur  = conn.cursor()',0],
+      ['<span class="kw">try</span>:',1],
+      ['    cur.execute(<span class="str">"UPDATE cuentas SET saldo = saldo - ? "</span>',0],
+      ['                <span class="str">"WHERE id = ?"</span>, (500, ana_id))',0],
+      ['    cur.execute(<span class="str">"UPDATE cuentas SET saldo = saldo + ? "</span>',0],
+      ['                <span class="str">"WHERE id = ?"</span>, (500, luis_id))',0],
+      ['    conn.commit()          <span class="cm"># todo salió bien → sella</span>',1],
+      ['<span class="kw">except</span> sqlite3.Error <span class="kw">as</span> e:',1],
+      ['    conn.rollback()        <span class="cm"># algo falló → deshaz TODO</span>',1],
+      ['    <span class="kw">raise</span>                  <span class="cm"># relanza para que se entere quien llamó</span>',0],
+      ['<span class="kw">finally</span>:',0],
+      ['    conn.close()           <span class="cm"># la conexión se cierra pase lo que pase</span>',0],
+    ],
+    note:'<strong>El molde de oro.</strong> Las dos escrituras viven dentro del <code>try</code>; el <code>commit</code> es la última línea — si llegaste ahí, todo salió bien. El <code>except sqlite3.Error</code> hace <code>rollback</code> y <strong>relanza</strong> (no se traga el error). Y <code>finally</code> cierra la conexión siempre.'
+  },
+  java:{
+    code:[
+      ['Connection conn = DriverManager.getConnection(url);',0],
+      ['<span class="kw">try</span> {',1],
+      ['    conn.setAutoCommit(<span class="kw">false</span>);   <span class="cm">// abrir transacción manual</span>',1],
+      ['    PreparedStatement p1 = conn.prepareStatement(',0],
+      ['        <span class="str">"UPDATE cuentas SET saldo = saldo - ? WHERE id = ?"</span>);',0],
+      ['    p1.setInt(1, 500); p1.setInt(2, anaId); p1.executeUpdate();',0],
+      ['    PreparedStatement p2 = conn.prepareStatement(',0],
+      ['        <span class="str">"UPDATE cuentas SET saldo = saldo + ? WHERE id = ?"</span>);',0],
+      ['    p2.setInt(1, 500); p2.setInt(2, luisId); p2.executeUpdate();',0],
+      ['    conn.commit();                  <span class="cm">// sella el trato</span>',1],
+      ['} <span class="kw">catch</span> (SQLException e) {',1],
+      ['    conn.rollback();                <span class="cm">// deshaz todo</span>',1],
+      ['    <span class="kw">throw</span> e;',0],
+      ['} <span class="kw">finally</span> {',0],
+      ['    conn.close();',0],
+      ['}',0],
+    ],
+    note:'<strong>Java, mismo esqueleto.</strong> La diferencia clave: en JDBC el autocommit viene <em>encendido</em>, así que tú lo apagas con <code>setAutoCommit(false)</code> para abrir la transacción. Después es idéntico: <code>commit()</code> al final del <code>try</code>, <code>rollback()</code> en el <code>catch</code>. <code>PreparedStatement</code> es el <code>?</code> de Java — el de tu Práctica 6.'
+  },
+  delete:{
+    code:[
+      ['<span class="kw">def</span> <span class="self">cancelar_reserva</span>(conn, reserva_id):',0],
+      ['    cur = conn.cursor()',0],
+      ['    <span class="kw">try</span>:',1],
+      ['        cur.execute(',0],
+      ['            <span class="str">"DELETE FROM reservas WHERE id = ?"</span>,',1],
+      ['            (reserva_id,)        <span class="cm"># tupla con UN elemento</span>',0],
+      ['        )',0],
+      ['        <span class="kw">if</span> cur.rowcount == 0:',1],
+      ['            <span class="kw">raise</span> ValueError(<span class="str">"No existe esa reserva"</span>)',0],
+      ['        conn.commit()',1],
+      ['        <span class="kw">return</span> cur.rowcount',0],
+      ['    <span class="kw">except</span> sqlite3.Error:',1],
+      ['        conn.rollback()',1],
+      ['        <span class="kw">raise</span>',0],
+    ],
+    note:'<strong>DELETE seguro, paso a paso.</strong> El <code>WHERE id = ?</code> acota; <code>rowcount</code> confirma cuántas filas se borraron. Si es 0, ese id no existía: lanzas tu <em>propia</em> excepción de negocio. Y solo después de validar, haces <code>commit</code>. Cualquier error de la BD → <code>rollback</code>.'
+  }
+};
+function patRender(k){
+  const d=patData[k];
+  $('pat-code').innerHTML=d.code.map(([html,hl])=>'<span class="ln'+(hl?' hl':'')+'">'+html+'</span>').join('');
+  $('pat-note').innerHTML=d.note;
+}
+document.querySelectorAll('.pat-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.pat-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    patRender(t.dataset.pat);
+  });
+});
+patRender('py');
+
+// ─── W5: checklist Sprint 3 ─────────────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+  $('chk-done').classList.toggle('show',done===chkItems.length);
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
+</script>
+</body>
+</html>

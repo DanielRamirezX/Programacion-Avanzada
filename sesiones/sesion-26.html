@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XXVI — La inteligencia, integrada — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS DE LA SESIÓN 26 ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─ caso / nota institucional ─ */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.2rem;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-weight:600;}
+.caso em{color:var(--blood);}
+
+/* ─ W1: arquitectura full-stack en capas (clic) ─ */
+.arq-stage{display:grid;grid-template-columns:1fr 1.05fr;gap:1.5rem;align-items:start;}
+.arq-stack{display:flex;flex-direction:column;gap:.7rem;}
+.arq-layer{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--line);padding:1.05rem 1.3rem;cursor:pointer;transition:all .25s;position:relative;}
+.arq-layer:hover{border-left-color:var(--blood);transform:translateX(4px);}
+.arq-layer.lit{border-left-color:var(--blood);background:rgba(160,36,24,.06);box-shadow:0 0 0 2px rgba(160,36,24,.12);}
+.arq-cap{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.3rem;}
+.arq-t{font-family:'Cormorant Garamond',serif;font-size:1.45rem;color:var(--ink);line-height:1.1;}
+.arq-tech{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-soft);margin-top:.25rem;}
+.arq-flow{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.95rem;color:var(--blood);opacity:.45;line-height:.6;}
+.arq-panel{background:var(--ink);padding:1.6rem;min-height:280px;display:flex;flex-direction:column;gap:.8rem;}
+.arq-ptag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.arq-ptitle{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--paper);line-height:1.05;}
+.arq-pdesc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.arq-pdesc strong{color:#C9A961;font-style:normal;font-weight:600;}
+.arq-pconn{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:#8EAF8B;line-height:1.6;margin-top:auto;border-top:1px solid rgba(239,230,210,.15);padding-top:.8rem;}
+.arq-pconn b{color:#D4956A;font-weight:700;}
+
+/* ─ W2: demo endpoint de IA (paso a paso) ─ */
+.ia-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1.4rem;}
+.ia-node{background:var(--paper);border:1px solid var(--line);padding:.8rem .6rem;text-align:center;opacity:.4;transition:all .35s;}
+.ia-node.on{opacity:1;border-color:var(--blood);background:rgba(160,36,24,.06);}
+.ia-node.done{opacity:.85;border-color:var(--olive);}
+.ia-node-n{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--blood);}
+.ia-node-t{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);line-height:1.1;margin-top:.3rem;}
+.ia-screen{background:var(--ink);padding:1.5rem;min-height:230px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.75;color:rgba(239,230,210,.9);overflow-x:auto;}
+.ia-screen .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.ia-screen .kw{color:#D4956A;font-style:italic;}
+.ia-screen .str{color:#C9A961;}
+.ia-screen .ty{color:#A6C2D6;}
+.ia-screen .self{color:#8EAF8B;font-weight:700;}
+.ia-screen .out{color:#9FBF9C;}
+.ia-screen .key{color:#D4956A;}
+.ia-screen .ln{white-space:pre;display:block;}
+.ia-caption{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);min-height:4.6rem;}
+.ia-caption strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* ─ W3: mapeo excepción → código HTTP ─ */
+.exc-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.exc-col{display:flex;flex-direction:column;gap:.7rem;}
+.exc-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:1rem 1.2rem;cursor:pointer;transition:all .25s;}
+.exc-card:hover{border-left-color:var(--blood);}
+.exc-card.lit{border-left-color:var(--blood);background:rgba(160,36,24,.06);box-shadow:0 0 0 2px rgba(160,36,24,.12);}
+.exc-name{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--blood);font-weight:700;}
+.exc-when{font-size:.92rem;color:var(--ink-soft);font-style:italic;margin-top:.3rem;line-height:1.35;}
+.exc-http{display:flex;align-items:center;gap:.9rem;background:var(--ink);padding:1.1rem 1.3rem;border:1px solid var(--line);opacity:.35;transition:all .3s;}
+.exc-http.lit{opacity:1;}
+.exc-code{font-family:'JetBrains Mono',monospace;font-size:1.9rem;font-weight:700;color:#D4956A;line-height:1;flex-shrink:0;}
+.exc-meaning{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:rgba(239,230,210,.88);line-height:1.3;}
+.exc-meaning strong{color:#C9A961;}
+.exc-note{margin-top:1.4rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);min-height:4rem;}
+.exc-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.exc-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .35rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ W4: PUT vs DELETE tabs de código ─ */
+.crud-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.crud-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.crud-tab:hover{border-color:var(--blood);color:var(--blood);}
+.crud-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.crud-verb{font-size:.58rem;color:var(--ochre);display:block;letter-spacing:.1em;}
+.crud-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.85;color:var(--paper);min-height:280px;overflow-x:auto;}
+.crud-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;}
+.crud-code .ln.hl{background:rgba(232,176,74,.18);}
+.crud-code .kw{color:#D4956A;font-style:italic;}
+.crud-code .ty{color:#A6C2D6;}
+.crud-code .self{color:#8EAF8B;font-weight:700;}
+.crud-code .str{color:#C9A961;}
+.crud-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.crud-code .dec{color:#E8B04A;}
+.crud-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.crud-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.crud-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ W5: prompt engineering ✓/✗ ─ */
+.pe-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pe-col{border:1px solid var(--line);background:var(--paper);overflow:hidden;}
+.pe-head{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;padding:.7rem 1.2rem;color:var(--paper);display:flex;justify-content:space-between;align-items:center;}
+.pe-col.bad .pe-head{background:var(--blood);}
+.pe-col.good .pe-head{background:var(--olive);}
+.pe-body{padding:1.3rem;}
+.pe-prompt{font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.6;background:var(--paper-deep);border:1px solid var(--line);padding:.9rem 1rem;color:var(--ink);min-height:5.5rem;}
+.pe-prompt .hl-bad{color:var(--blood);font-weight:700;}
+.pe-prompt .hl-good{color:var(--olive);font-weight:700;}
+.pe-why{margin-top:.9rem;font-size:.95rem;color:var(--ink-soft);line-height:1.45;}
+.pe-why b{color:var(--ink);}
+.pe-out{margin-top:.9rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.55;padding:.7rem .9rem;border-radius:2px;}
+.pe-col.bad .pe-out{background:rgba(160,36,24,.07);color:var(--blood-dark);}
+.pe-col.good .pe-out{background:rgba(93,102,56,.1);color:var(--olive);}
+
+/* ─ W6: checklist Demo Day / README ─ */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-group{margin-top:1.4rem;}
+.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+
+/* ─ reglas IA ─ */
+.iar{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.iar-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.iar-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.iar-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.iar-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.iar-rule em{color:var(--ink);}
+
+/* ─ tabla comparativa de stacks ─ */
+.cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.cmp-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.cmp-card.base{border-top-color:var(--olive);}
+.cmp-lang{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;display:flex;justify-content:space-between;}
+.cmp-card.base .cmp-lang{color:var(--olive);}
+.cmp-card.base .cmp-lang::after{content:'base del curso';font-size:.58rem;color:var(--olive);}
+.cmp-snip{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.55;color:var(--ink);background:var(--paper-deep);border:1px solid var(--line);padding:.7rem .8rem;white-space:pre-wrap;word-break:break-word;}
+.cmp-snip .kw{color:var(--blood);font-style:italic;}
+.cmp-snip .str{color:#8a6420;}
+.cmp-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;margin-top:.7rem;}
+.cmp-d strong{color:var(--ink);}
+
+@media(max-width:860px){
+  .arq-stage,.exc-stage,.pe-stage,.crud-tabs,.cmp-grid{grid-template-columns:1fr;}
+  .ia-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-25.html" class="back">Sesión 25</a>
+  <span class="session-label">Sesión 26 · 14.08.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">@app.put("/productos/{id}")</div>
+  <div class="hero-float" style="top:27%;right:10%;--r:3deg;animation-delay:-3s">raise HTTPException(404)</div>
+  <div class="hero-float" style="bottom:33%;left:12%;--r:2deg;animation-delay:-6s">POST /recomendar → IA</div>
+  <div class="hero-float" style="bottom:17%;right:13%;--r:-3deg;animation-delay:-9s">OOP → BD → API → IA</div>
+  <div class="hero-float" style="top:51%;left:41%;--r:1deg;animation-delay:-4.5s">{ "sugerencia": "..." }</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XXVI · Bloque IV · API REST + IA · Ref. Temario Extensión · API REST + IA · Python · FastAPI · IA</div>
+    <h1>La inteligencia,<br><em>integrada.</em></h1>
+    <p class="hero-sub">Tu proyecto ya piensa en objetos, recuerda en base de datos y habla por HTTP. Hoy le das lo último: un endpoint que <em>razona</em>. Cuando termines, tendrás un sistema full-stack listo para defender en público.</p>
+  </div>
+</section>
+
+<!-- I: el punto de llegada -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · El punto de llegada</p>
+    <p class="lead">Todo lo del curso,<br>por fin <em>conectado.</em></p>
+    <p class="subtle">No empezamos algo nuevo: hoy <strong>cerramos el círculo</strong>. La POO te dio las clases; la base de datos, la memoria; la API REST, la puerta de entrada. Falta el último piso del edificio — un módulo de <strong>IA generativa</strong> que convierte tus datos en una respuesta inteligente. Cuatro capas, un solo sistema.</p>
+    <div class="caso">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;">Carta Descriptiva · Bloque IV · objetivo de la sesión</div>
+      <p style="margin-bottom:1rem;">Hoy completas el <strong>CRUD de tu API</strong> (faltan <em>PUT</em> y <em>DELETE</em>), conviertes tus excepciones propias en <strong>códigos HTTP correctos</strong>, y añades un <strong>endpoint que consulta a un modelo de IA</strong>. El taller integrador une las cuatro capas en tu proyecto.</p>
+      <p>Al terminar, el alumno habrá integrado <strong>una API REST completa con un módulo de IA</strong> en su proyecto, creando un sistema full-stack funcional y listo para <em>defensa pública</em> en el Demo Day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- II: arquitectura full-stack -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La arquitectura — cuatro capas, un sistema</p>
+    <p class="lead">Cada capa hace <em>una cosa</em><br>y le habla solo a su vecina.</p>
+    <p class="subtle">Una petición entra por arriba y baja capa por capa; la respuesta sube de vuelta. Eso es <strong>separación de responsabilidades</strong> — el mismo principio de la POO, ahora a escala de sistema. Toca cada capa para ver qué hace y con qué se conecta:</p>
+    <div class="widget" data-tag="Click en cada capa">
+      <div class="arq-stage">
+        <div class="arq-stack">
+          <div class="arq-layer lit" data-a="api">
+            <div class="arq-cap">Capa 4 · entrada</div>
+            <div class="arq-t">API REST</div>
+            <div class="arq-tech">FastAPI · rutas GET/POST/PUT/DELETE</div>
+          </div>
+          <div class="arq-flow">↓ ↑</div>
+          <div class="arq-layer" data-a="ia">
+            <div class="arq-cap">Capa 4b · razonamiento</div>
+            <div class="arq-t">Módulo de IA</div>
+            <div class="arq-tech">prompt → modelo → respuesta</div>
+          </div>
+          <div class="arq-flow">↓ ↑</div>
+          <div class="arq-layer" data-a="oop">
+            <div class="arq-cap">Capa 1 · lógica</div>
+            <div class="arq-t">OOP — tus clases</div>
+            <div class="arq-tech">Producto, Servicio, Repositorio</div>
+          </div>
+          <div class="arq-flow">↓ ↑</div>
+          <div class="arq-layer" data-a="bd">
+            <div class="arq-cap">Capa 2 · memoria</div>
+            <div class="arq-t">Base de datos</div>
+            <div class="arq-tech">SQLite / SQL · persistencia</div>
+          </div>
+        </div>
+        <div class="arq-panel">
+          <div class="arq-ptag" id="arq-ptag">Capa 4 · entrada</div>
+          <div class="arq-ptitle" id="arq-ptitle">API REST</div>
+          <div class="arq-pdesc" id="arq-pdesc">Es la <strong>puerta</strong> del sistema. Recibe peticiones HTTP, valida la entrada, llama a tu lógica y devuelve <strong>JSON</strong>. No sabe SQL ni sabe de IA: solo orquesta.</div>
+          <div class="arq-pconn" id="arq-pconn">conecta con → <b>lógica OOP</b> (le pide hacer cosas) · <b>módulo IA</b> (en /recomendar)</div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2.5rem">La capa de entrada existe en todos los lenguajes — solo cambia la herramienta. Nosotros usamos <strong>FastAPI</strong> porque Python es la base del curso y porque convierte una función en un endpoint con un solo decorador. Mira la misma idea, "una ruta que saluda", en tres stacks:</p>
+    <div class="cmp-grid">
+      <div class="cmp-card base">
+        <div class="cmp-lang">Python · FastAPI</div>
+        <div class="cmp-snip"><span class="kw">@app.get</span>(<span class="str">"/"</span>)
+<span class="kw">def</span> raiz():
+    <span class="kw">return</span> {<span class="str">"ok"</span>: <span class="kw">True</span>}</div>
+        <div class="cmp-d"><strong>Lo que usas hoy.</strong> El decorador <em>es</em> la ruta. Tipos de Python + Pydantic te dan validación y docs automáticas en <span class="inlinecode">/docs</span>.</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-lang">JavaScript · Express</div>
+        <div class="cmp-snip">app.<span class="kw">get</span>(<span class="str">"/"</span>, (req, res) =&gt; {
+  res.json({ ok: <span class="kw">true</span> });
+});</div>
+        <div class="cmp-d">El estándar de Node. Mismo concepto — método, ruta y handler — con callbacks <strong>(req, res)</strong> en lugar de un valor de retorno.</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-lang">Go · net/http</div>
+        <div class="cmp-snip">http.<span class="kw">HandleFunc</span>(<span class="str">"/"</span>,
+  <span class="kw">func</span>(w, r) {
+    fmt.Fprint(w, <span class="str">"ok"</span>)
+})</div>
+        <div class="cmp-d">Compilado y veloz. Más verboso, pero la <strong>misma anatomía</strong>: registras una ruta y escribes la respuesta. Lo que aprendes hoy se traduce solo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: completar el CRUD -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Completar el CRUD — PUT y DELETE</p>
+    <p class="lead">Ya sabes leer y crear.<br>Faltan <em>actualizar</em> y <em>borrar.</em></p>
+    <p class="subtle">CRUD = <strong>C</strong>reate · <strong>R</strong>ead · <strong>U</strong>pdate · <strong>D</strong>elete. Ya tienes GET y POST de la clase pasada; hoy cierras la tabla con <strong>PUT</strong> (reemplaza un recurso) y <strong>DELETE</strong> (lo elimina). Cada verbo HTTP tiene su semántica — recórrelos en este ejemplo de catálogo de productos:</p>
+    <div class="widget" data-tag="Los 4 verbos · FastAPI">
+      <div class="crud-tabs">
+        <button class="crud-tab on" data-cr="get"><span class="crud-verb">GET</span>Leer</button>
+        <button class="crud-tab" data-cr="post"><span class="crud-verb">POST</span>Crear</button>
+        <button class="crud-tab" data-cr="put"><span class="crud-verb">PUT</span>Actualizar</button>
+        <button class="crud-tab" data-cr="delete"><span class="crud-verb">DELETE</span>Borrar</button>
+      </div>
+      <div class="crud-code" id="crud-code"></div>
+      <div class="crud-note" id="crud-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: excepción → HTTP -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Errores con sentido — excepción propia → código HTTP</p>
+    <p class="lead">Un error no es un crash.<br>Es un <em>mensaje</em> con número.</p>
+    <p class="subtle">Tus clases ya lanzan excepciones propias — las creaste en la unidad de manejo de errores. El truco de una buena API es <strong>traducir cada una al código HTTP correcto</strong>: así el cliente sabe si la culpa fue suya (4xx) o tuya (5xx). Toca una excepción y mira a qué código se mapea:</p>
+    <div class="widget" data-tag="Mapea tu excepción">
+      <div class="exc-stage">
+        <div class="exc-col">
+          <div class="exc-card lit" data-e="noenc">
+            <div class="exc-name">RegistroNoEncontradoException</div>
+            <div class="exc-when">Pediste el producto 999 y no existe en la base.</div>
+          </div>
+          <div class="exc-card" data-e="invalido">
+            <div class="exc-name">DatosInvalidosException</div>
+            <div class="exc-when">Mandaste un precio negativo o un nombre vacío.</div>
+          </div>
+          <div class="exc-card" data-e="server">
+            <div class="exc-name">Exception (no controlada)</div>
+            <div class="exc-when">Se cayó la base de datos o un bug inesperado.</div>
+          </div>
+        </div>
+        <div class="exc-col">
+          <div class="exc-http lit" id="exc-http">
+            <div class="exc-code" id="exc-code">404</div>
+            <div class="exc-meaning" id="exc-meaning"><strong>Not Found</strong><br>El recurso no existe.</div>
+          </div>
+          <div class="exc-note" id="exc-note"></div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">En FastAPI esto se hace en un solo lugar con un <span class="inlinecode">@app.exception_handler</span>: capturas tu excepción de dominio y devuelves el <span class="inlinecode">JSONResponse</span> con el status correcto. Tu lógica de negocio <strong>nunca</strong> habla de HTTP — solo lanza excepciones limpias.</p>
+  </div>
+</section>
+
+<!-- V: endpoint de IA -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El endpoint que razona — /recomendar</p>
+    <p class="lead">La IA no es magia.<br>Es una <em>llamada más</em> dentro de tu ruta.</p>
+    <p class="subtle">Integrar IA generativa es exactamente como llamar a cualquier servicio: armas una <strong>petición</strong>, esperas una <strong>respuesta</strong> y la devuelves como JSON. Lo único nuevo es que en medio construyes un <strong>prompt</strong> con los datos de tu sistema. Avanza paso a paso por el viaje de una petición a <span class="inlinecode">/recomendar</span>:</p>
+    <div class="widget" data-tag="Petición → prompt → IA → JSON">
+      <div class="ia-grid">
+        <div class="ia-node on" data-n="0"><div class="ia-node-n">Paso 1</div><div class="ia-node-t">Llega la petición</div></div>
+        <div class="ia-node" data-n="1"><div class="ia-node-n">Paso 2</div><div class="ia-node-t">Se arma el prompt</div></div>
+        <div class="ia-node" data-n="2"><div class="ia-node-n">Paso 3</div><div class="ia-node-t">Responde la IA</div></div>
+        <div class="ia-node" data-n="3"><div class="ia-node-n">Paso 4</div><div class="ia-node-t">JSON al cliente</div></div>
+      </div>
+      <div class="ia-screen" id="ia-screen"></div>
+      <div class="ia-caption" id="ia-caption"></div>
+      <div class="w-controls">
+        <button class="btn" id="ia-reset">⟲ Reset</button>
+        <button class="btn" id="ia-prev">◀ Atrás</button>
+        <button class="btn on" id="ia-next">Siguiente ▶</button>
+        <button class="btn" id="ia-play">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: prompt engineering -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Prompt engineering — aplicado a tu API</p>
+    <p class="lead">El modelo es el mismo.<br>El resultado depende del <em>prompt.</em></p>
+    <p class="subtle">Dentro de tu endpoint, el prompt es código: lo construyes con f-strings y los datos del sistema. Un prompt pobre da respuestas inservibles para una API; uno bueno da <strong>salida predecible y parseable</strong>. Compara los dos enfoques en el mismo endpoint <span class="inlinecode">/recomendar</span>:</p>
+    <div class="widget" data-tag="Prompt pobre vs. prompt diseñado">
+      <div class="pe-stage">
+        <div class="pe-col bad">
+          <div class="pe-head">Prompt pobre <span>✗</span></div>
+          <div class="pe-body">
+            <div class="pe-prompt"><span class="hl-bad">"recomiéndame algo"</span></div>
+            <div class="pe-why"><b>Sin rol, sin contexto, sin formato.</b> No le dices quién es, qué datos tiene ni cómo quieres la respuesta. La IA improvisa — y cada llamada contesta distinto.</div>
+            <div class="pe-out">→ respuesta en prosa libre, imposible de convertir a JSON sin romperse</div>
+          </div>
+        </div>
+        <div class="pe-col good">
+          <div class="pe-head">Prompt diseñado <span>✓</span></div>
+          <div class="pe-body">
+            <div class="pe-prompt"><span class="hl-good">Eres un asesor de ventas.</span> El cliente compró: {historial}. Del catálogo {productos}, sugiere <span class="hl-good">1 producto</span> y devuelve <span class="hl-good">solo JSON</span>: {"id": int, "razon": str}.</div>
+            <div class="pe-why"><b>Rol + contexto + formato explícito.</b> Le das un papel, le inyectas tus datos reales y le exiges la estructura exacta que tu API necesita.</div>
+            <div class="pe-out">→ {"id": 7, "razon": "complementa su última compra"} · listo para devolver</div>
+          </div>
+        </div>
+      </div>
+      <div class="iar">
+        <div class="iar-tag">La regla de oro · si la IA lo hizo, tú lo defiendes</div>
+        <div class="iar-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em> un código HTTP: "¿cuándo conviene 422 en vez de 400?"</span></div>
+        <div class="iar-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu prompt</em>: "¿este prompt garantiza salida JSON válida?"</span></div>
+        <div class="iar-rule"><span class="ok">✓</span><span>Pídele que te ayude a <em>leer un error</em> de FastAPI que no entiendes</span></div>
+        <div class="iar-rule"><span class="no">✗</span><span>Pedirle "hazme toda la API con IA" — <em>en el Demo Day vas a defender tu código línea por línea; si no lo entiendes, no es tuyo.</em></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: Demo Day / README -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · El Demo Day — tu proyecto, en público</p>
+    <p class="lead">Construir es la mitad.<br>La otra mitad es <em>defenderlo.</em></p>
+    <p class="subtle">La Tarea 5 es el proyecto completo en GitHub: <strong>OOP + BD + API REST + IA</strong>, con README profesional y una sección obligatoria <strong>"Cómo usé IA"</strong>. Marca tu progreso — cada ítem es algo que revisaré:</p>
+    <div class="widget" data-tag="Checklist del entregable">
+      <div class="chk-progress">Progreso: <span id="chk-count">0</span> de 12 elementos
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">El sistema · las cuatro capas</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Clases OOP</strong> con encapsulamiento y excepciones propias</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Persistencia</strong> en base de datos (las operaciones sobreviven al reinicio)</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>CRUD completo</strong>: GET, POST, PUT y DELETE funcionando</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Errores HTTP</strong>: 404 y 422 mapeados desde tus excepciones</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Endpoint de IA</strong> (/recomendar o /analizar) que devuelve JSON</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">El repositorio · README profesional</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Descripción</strong> del problema y de qué resuelve el sistema</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Instrucciones</strong> para instalar y correr (<code>requirements.txt</code> + <code>uvicorn</code>)</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Tabla de endpoints</strong> con método, ruta y ejemplo de respuesta</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Sección <strong>"Cómo usé IA"</strong>: qué le pediste, qué aceptaste y qué corregiste</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">La defensa · el Demo Day</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Video</strong> corto del sistema funcionando de punta a punta</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Puedes explicar</strong> cualquier línea de tu código si te la señalo</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Quiz</strong> previo al examen final estudiado (vale 5%)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para la próxima clase</p>
+    <p class="lead">Hoy uniste cuatro capas.<br>Ahora <em>haz que se sostengan</em> solas.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Tarea 5 (1 pt · entrega 19/08/26) · Quiz previo (5%)</div>
+      <ol>
+        <li><strong>Completa el CRUD</strong> de tu API: que GET, POST, PUT y DELETE funcionen contra tu base de datos.</li>
+        <li><strong>Mapea tus excepciones</strong>: <code>DatosInvalidosException → 422</code> y <code>RegistroNoEncontradoException → 404</code> con un exception handler.</li>
+        <li><strong>Añade el endpoint de IA</strong> (/recomendar o /analizar): arma el prompt con tus datos y devuelve JSON limpio.</li>
+        <li><strong>Escribe el README</strong> completo con la tabla de endpoints y la sección obligatoria <em>"Cómo usé IA"</em>.</li>
+        <li><strong>Graba el video</strong> del sistema funcionando y sube todo a GitHub — ese repo es tu entregable de Tarea 5.</li>
+        <li><strong>Estudia para el quiz</strong> previo al examen final y prepárate para <em>defender tu proyecto</em> en el Demo Day.</li>
+      </ol>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Llevas todo el curso construyendo este sistema sprint a sprint. Hoy quedó completo: piensa en objetos, recuerda en base de datos, responde por HTTP y razona con IA. Lo que falta no es código — es que <strong>tú</strong> puedas pararte frente al grupo y explicar cada decisión. <em>Eso</em> es ser ingeniero.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="ln">'+html+'</span>';
+
+// ─── W1: arquitectura full-stack en capas ───────────────────
+const arqData={
+  api:{tag:'Capa 4 · entrada',title:'API REST',
+    desc:'Es la <strong>puerta</strong> del sistema. Recibe peticiones HTTP, valida la entrada, llama a tu lógica y devuelve <strong>JSON</strong>. No sabe SQL ni sabe de IA: solo orquesta.',
+    conn:'conecta con → <b>lógica OOP</b> (le pide hacer cosas) · <b>módulo IA</b> (en /recomendar)'},
+  ia:{tag:'Capa 4b · razonamiento',title:'Módulo de IA',
+    desc:'Vive <strong>dentro de un endpoint</strong>. Toma datos de tu sistema, los mete en un <strong>prompt</strong>, llama al modelo y devuelve texto que tu API convierte en JSON. Es opcional, pero es lo que diferencia tu proyecto.',
+    conn:'conecta con → <b>API REST</b> (la llama) · <b>lógica OOP</b> (de ahí saca los datos del prompt)'},
+  oop:{tag:'Capa 1 · lógica',title:'OOP — tus clases',
+    desc:'El <strong>corazón</strong> del sistema: tus clases con atributos privados, métodos y excepciones propias. Aquí viven las reglas de negocio. No sabe de HTTP ni de pantallas — solo de tu dominio.',
+    conn:'conecta con → <b>base de datos</b> (le pide guardar/leer) · lanza <b>excepciones</b> que la API traduce a HTTP'},
+  bd:{tag:'Capa 2 · memoria',title:'Base de datos',
+    desc:'La <strong>memoria persistente</strong>. Guarda los registros en tablas para que sobrevivan al reinicio del programa. Tu lógica le habla por SQL — la API ni se entera de que existe.',
+    conn:'conecta con → <b>lógica OOP</b> (es la única capa que le habla); es el piso más bajo del edificio'},
+};
+function arqRender(k){
+  const d=arqData[k];
+  $('arq-ptag').textContent=d.tag;
+  $('arq-ptitle').textContent=d.title;
+  $('arq-pdesc').innerHTML=d.desc;
+  $('arq-pconn').innerHTML=d.conn;
+}
+document.querySelectorAll('.arq-layer').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.arq-layer').forEach(x=>x.classList.remove('lit'));
+    el.classList.add('lit');
+    arqRender(el.dataset.a);
+  });
+});
+
+// ─── W2: completar el CRUD (PUT / DELETE) ───────────────────
+const crudData={
+  get:{
+    code:[
+      ['<span class="dec">@app.get</span>(<span class="str">"/productos/{id}"</span>)',1],
+      ['<span class="kw">def</span> obtener(id: <span class="ty">int</span>):',0],
+      ['    <span class="cm"># R de Read — leer un recurso</span>',0],
+      ['    p = servicio.buscar(id)',0],
+      ['    <span class="kw">return</span> p   <span class="cm"># 200 OK + JSON</span>',0],
+    ],
+    note:'<strong>GET</strong> lee y nunca modifica. Si el producto no existe, <code>servicio.buscar</code> lanza tu <code>RegistroNoEncontradoException</code> → 404. Esto ya lo tenías de la clase pasada.'
+  },
+  post:{
+    code:[
+      ['<span class="dec">@app.post</span>(<span class="str">"/productos"</span>, status_code=201)',1],
+      ['<span class="kw">def</span> crear(datos: <span class="ty">ProductoIn</span>):',0],
+      ['    <span class="cm"># C de Create — nace un recurso</span>',0],
+      ['    p = servicio.crear(datos.nombre, datos.precio)',0],
+      ['    <span class="kw">return</span> p   <span class="cm"># 201 Created</span>',0],
+    ],
+    note:'<strong>POST</strong> crea. Devuelve <code>201</code> (no 200) porque <em>algo nuevo nació</em>. Si los datos vienen mal, tu <code>DatosInvalidosException</code> → 422. También lo tenías.'
+  },
+  put:{
+    code:[
+      ['<span class="dec">@app.put</span>(<span class="str">"/productos/{id}"</span>)',1],
+      ['<span class="kw">def</span> actualizar(id: <span class="ty">int</span>, datos: <span class="ty">ProductoIn</span>):',1],
+      ['    <span class="cm"># U de Update — reemplaza el recurso</span>',0],
+      ['    p = servicio.buscar(id)        <span class="cm"># 404 si no existe</span>',1],
+      ['    p.nombre = datos.nombre',1],
+      ['    p.precio = datos.precio        <span class="cm"># valida → 422</span>',1],
+      ['    servicio.guardar(p)',1],
+      ['    <span class="kw">return</span> p   <span class="cm"># 200 OK con lo actualizado</span>',1],
+    ],
+    note:'<strong>PUT — lo nuevo de hoy.</strong> Recibe el <code>id</code> en la ruta y los datos nuevos en el cuerpo. Primero <strong>busca</strong> (puede dar 404), luego <strong>reemplaza</strong> y guarda. Por convención PUT manda el recurso <em>completo</em>.'
+  },
+  delete:{
+    code:[
+      ['<span class="dec">@app.delete</span>(<span class="str">"/productos/{id}"</span>, status_code=204)',1],
+      ['<span class="kw">def</span> borrar(id: <span class="ty">int</span>):',1],
+      ['    <span class="cm"># D de Delete — elimina el recurso</span>',0],
+      ['    servicio.buscar(id)            <span class="cm"># 404 si no existe</span>',1],
+      ['    servicio.eliminar(id)',1],
+      ['    <span class="kw">return</span>      <span class="cm"># 204 No Content (sin body)</span>',1],
+    ],
+    note:'<strong>DELETE — lo nuevo de hoy.</strong> Borra y devuelve <code>204 No Content</code>: la operación funcionó, pero <em>no hay nada que regresar</em>. Igual valida que exista antes — borrar lo inexistente es 404, no un crash.'
+  },
+};
+function crudRender(k){
+  const d=crudData[k];
+  $('crud-code').innerHTML=d.code.map(([html,hl])=>'<span class="ln'+(hl?' hl':'')+'">'+html+'</span>').join('');
+  $('crud-note').innerHTML=d.note;
+}
+document.querySelectorAll('.crud-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.crud-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    crudRender(t.dataset.cr);
+  });
+});
+crudRender('get');
+
+// ─── W3: excepción propia → código HTTP ─────────────────────
+const excData={
+  noenc:{code:'404',meaning:'<strong>Not Found</strong><br>El recurso no existe.',
+    note:'<strong>RegistroNoEncontradoException → 404.</strong> El cliente pidió algo que no está. Culpa del cliente (4xx). En FastAPI: <code>raise HTTPException(404, "Producto no encontrado")</code>, o mejor, un exception handler global.'},
+  invalido:{code:'422',meaning:'<strong>Unprocessable Entity</strong><br>Entendí la petición, pero los datos no pasan las reglas.',
+    note:'<strong>DatosInvalidosException → 422.</strong> Precio negativo, nombre vacío: la sintaxis estaba bien pero rompe <em>tu</em> lógica de negocio. Por eso 422 y no 400. FastAPI ya usa 422 para errores de validación de Pydantic — el tuyo encaja perfecto.'},
+  server:{code:'500',meaning:'<strong>Internal Server Error</strong><br>Algo se rompió de tu lado.',
+    note:'<strong>Exception no controlada → 500.</strong> La base se cayó, un bug inesperado… aquí la culpa es <em>tuya</em> (5xx). Nunca le muestres el stack trace al cliente: registra el error en tu log y devuelve un mensaje genérico.'},
+};
+function excRender(k){
+  const d=excData[k];
+  $('exc-code').textContent=d.code;
+  $('exc-meaning').innerHTML=d.meaning;
+  $('exc-note').innerHTML=d.note;
+}
+document.querySelectorAll('.exc-card').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.exc-card').forEach(x=>x.classList.remove('lit'));
+    c.classList.add('lit');
+    $('exc-http').classList.add('lit');
+    excRender(c.dataset.e);
+  });
+});
+excRender('noenc');
+
+// ─── W4: endpoint de IA paso a paso ─────────────────────────
+const iaSteps=[
+  {screen:[
+      '<span class="cm"># El cliente llama a tu endpoint</span>',
+      '<span class="key">POST</span> /recomendar',
+      '<span class="key">Content-Type:</span> application/json',
+      '',
+      '{ <span class="key">"cliente_id"</span>: <span class="str">42</span> }',
+    ],
+    cap:'<strong>Paso 1 · llega la petición.</strong> Igual que cualquier endpoint: FastAPI recibe el POST, valida el cuerpo con Pydantic y entra a tu función. Hasta aquí, nada de IA.'},
+  {screen:[
+      '<span class="cm"># Sacas datos reales de tu sistema...</span>',
+      'historial = servicio.compras_de(<span class="str">42</span>)',
+      'catalogo  = servicio.listar_productos()',
+      '',
+      '<span class="cm"># ...y construyes el prompt</span>',
+      'prompt = <span class="kw">f</span><span class="str">"Eres un asesor. Cliente compró:</span>',
+      '<span class="str">{historial}. Del catálogo {catalogo},</span>',
+      '<span class="str">sugiere 1 producto. Devuelve solo JSON."</span>',
+    ],
+    cap:'<strong>Paso 2 · se arma el prompt.</strong> Aquí está la clave: el prompt no es texto fijo, es <em>código</em>. Inyectas los datos de tu OOP/BD con un f-string. Buen prompt = rol + contexto + formato exigido.'},
+  {screen:[
+      '<span class="cm"># Una llamada más, como a cualquier servicio</span>',
+      'respuesta = modelo_ia.completar(prompt)',
+      '',
+      '<span class="cm"># La IA devuelve texto:</span>',
+      '<span class="out">\'{"id": 7, "razon": "complementa</span>',
+      '<span class="out"> su última compra"}\'</span>',
+    ],
+    cap:'<strong>Paso 3 · responde la IA.</strong> Llamas al modelo y esperas — síncrono, como pedir a la base de datos. Como diseñaste el prompt pidiendo <em>solo JSON</em>, la respuesta llega lista para parsear.'},
+  {screen:[
+      '<span class="cm"># Conviertes el texto a objeto y lo devuelves</span>',
+      'data = json.loads(respuesta)',
+      '<span class="kw">return</span> { <span class="key">"sugerencia"</span>: data }',
+      '',
+      '<span class="cm"># El cliente recibe:</span>',
+      '<span class="out">200 OK</span>',
+      '<span class="out">{ "sugerencia": { "id": 7,</span>',
+      '<span class="out">  "razon": "complementa..." } }</span>',
+    ],
+    cap:'<strong>Paso 4 · JSON al cliente.</strong> Parseas, validas y devuelves como cualquier endpoint. Para el cliente, <em>tu API simplemente es más inteligente</em> — no sabe ni le importa que por dentro hubo un modelo de IA.'},
+];
+let iaIdx=0,iaTimer=null;
+function iaRender(){
+  document.querySelectorAll('.ia-node').forEach((n,i)=>{
+    n.classList.toggle('on',i===iaIdx);
+    n.classList.toggle('done',i<iaIdx);
+  });
+  $('ia-screen').innerHTML=iaSteps[iaIdx].screen.map(L).join('');
+  $('ia-caption').innerHTML=iaSteps[iaIdx].cap;
+}
+function iaStop(){if(iaTimer){clearInterval(iaTimer);iaTimer=null;$('ia-play').textContent='▶ Play';}}
+$('ia-next').addEventListener('click',()=>{iaStop();if(iaIdx<iaSteps.length-1){iaIdx++;iaRender();}});
+$('ia-prev').addEventListener('click',()=>{iaStop();if(iaIdx>0){iaIdx--;iaRender();}});
+$('ia-reset').addEventListener('click',()=>{iaStop();iaIdx=0;iaRender();});
+$('ia-play').addEventListener('click',()=>{
+  if(iaTimer){iaStop();return;}
+  if(iaIdx>=iaSteps.length-1){iaIdx=0;iaRender();}
+  $('ia-play').textContent='❚❚ Pausa';
+  iaTimer=setInterval(()=>{
+    if(iaIdx<iaSteps.length-1){iaIdx++;iaRender();}
+    else iaStop();
+  },2000);
+});
+iaRender();
+
+// ─── W6: checklist Demo Day / README ────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
+</script>
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión X — Muchos caminos, una palabra — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ═══════════════════════════════════════════════════════════════
+   CSS DE WIDGETS · Sesión 10 (prefijos: mx-, sp-, sw-, dz-, rv-)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W1: mx- · tabs de cuatro lenguajes */
+.mx-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.mx-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .95rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.45rem;}
+.mx-tab:hover{border-color:var(--blood);color:var(--blood);}
+.mx-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.mx-tab .lg{font-size:.6rem;color:var(--ochre);letter-spacing:.1em;}
+.mx-tab.on .lg{color:#C9A961;}
+.mx-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--paper);min-height:300px;overflow-x:auto;}
+.mx-code .ln{white-space:pre;display:block;}
+.mx-code .kw{color:#D4956A;font-style:italic;}
+.mx-code .ty{color:#A6C2D6;}
+.mx-code .self{color:#8EAF8B;font-weight:700;}
+.mx-code .str{color:#C9A961;}
+.mx-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.mx-code .out{color:#9FBF9C;}
+.mx-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.mx-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.mx-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W2: sp- · explorador de structural pattern matching */
+.sp-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.sp-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.95;color:var(--paper);min-height:260px;}
+.sp-line{white-space:pre;display:block;padding:0 .35rem;border-radius:2px;cursor:pointer;transition:background .2s;}
+.sp-line:hover{background:rgba(232,176,74,.12);}
+.sp-line.lit{background:rgba(232,176,74,.22);}
+.sp-line.dim{cursor:default;}
+.sp-line.dim:hover{background:none;}
+.sp-line .kw{color:#D4956A;font-style:italic;}
+.sp-line .str{color:#C9A961;}
+.sp-line .self{color:#8EAF8B;font-weight:700;}
+.sp-line .ty{color:#A6C2D6;}
+.sp-line .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.sp-line .cap{color:#E8B04A;font-weight:700;}
+.sp-panel{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:1.6rem;min-height:260px;display:flex;flex-direction:column;gap:.8rem;}
+.sp-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);}
+.sp-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);line-height:1.05;}
+.sp-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.5;color:var(--ink-soft);}
+.sp-desc strong{color:var(--ink);font-style:normal;font-weight:600;}
+.sp-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.sp-match{margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--olive);background:rgba(93,102,56,.1);border:1px solid rgba(93,102,56,.3);padding:.6rem .8rem;line-height:1.6;}
+.sp-match b{color:var(--ink);}
+
+/* W3: rv- · evaluador paso a paso de match */
+.rv-subject{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--ink);color:var(--paper);padding:.8rem 1.1rem;margin-bottom:1.2rem;}
+.rv-subject .cap{color:#E8B04A;font-weight:700;}
+.rv-subject .lbl{color:rgba(239,230,210,.5);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;margin-right:.6rem;}
+.rv-cases{display:flex;flex-direction:column;gap:.45rem;}
+.rv-case{display:flex;align-items:center;gap:1rem;background:var(--paper);border:1px solid var(--line);padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;transition:all .3s;opacity:.55;}
+.rv-case .kw{color:var(--blood);font-style:italic;}
+.rv-case .str{color:var(--ochre);}
+.rv-case.cur{opacity:1;border-color:var(--ochre);background:rgba(181,133,42,.08);box-shadow:0 0 0 2px rgba(181,133,42,.15);}
+.rv-case.miss{opacity:.4;text-decoration:line-through;text-decoration-color:rgba(160,36,24,.5);}
+.rv-case.hit{opacity:1;border-color:var(--olive);background:rgba(93,102,56,.12);}
+.rv-verdict{flex-shrink:0;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(42,29,20,.35);min-width:5.5rem;text-align:right;}
+.rv-case.miss .rv-verdict{color:var(--blood);}
+.rv-case.hit .rv-verdict{color:var(--olive);font-weight:700;}
+.rv-case.cur .rv-verdict{color:var(--ochre);font-weight:700;}
+.rv-out{margin-top:1.3rem;padding:1.1rem 1.4rem;background:var(--ink);min-height:4.6rem;display:flex;gap:1rem;align-items:flex-start;}
+.rv-step{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.2rem;color:var(--ochre);line-height:1;flex-shrink:0;}
+.rv-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.45;color:rgba(239,230,210,.88);}
+.rv-txt strong{color:#C9A961;font-style:normal;font-weight:600;}
+.rv-txt code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;}
+
+/* W4: dz- · decisor switch vs if-else */
+.dz-stage{background:var(--paper);border:1px solid var(--line);padding:1.8rem;min-height:230px;display:flex;flex-direction:column;justify-content:center;}
+.dz-q{font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1.3;color:var(--ink);text-align:center;margin-bottom:1.6rem;}
+.dz-q::before{content:'¿';color:var(--blood);}
+.dz-choices{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.dz-choice{font-family:'JetBrains Mono',monospace;font-size:.78rem;padding:.85rem 1.6rem;background:var(--paper-deep);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.06em;}
+.dz-choice:hover{border-color:var(--blood);color:var(--blood);transform:translateY(-2px);}
+.dz-prog{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(42,29,20,.4);text-align:center;margin-bottom:1.2rem;}
+.dz-result{text-align:center;}
+.dz-verdict{font-family:'Cormorant Garamond',serif;font-size:2.3rem;color:var(--blood);margin-bottom:.8rem;line-height:1.05;}
+.dz-verdict.match-rec{color:var(--olive);}
+.dz-why{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:var(--ink-soft);max-width:520px;margin:0 auto;}
+.dz-why code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* tabla comparativa */
+.cmp-table{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
+.cmp-table th,.cmp-table td{border:1px solid var(--line);padding:.8rem 1rem;text-align:left;vertical-align:top;}
+.cmp-table th{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);background:var(--paper);}
+.cmp-table td{color:var(--ink-soft);background:var(--paper-deep);}
+.cmp-table td strong{color:var(--ink);}
+.cmp-table code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blood);}
+.cmp-table tr td:first-child{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ink);font-style:italic;}
+
+/* W5: checklist sprint review */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-group{margin-top:1.4rem;}
+.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+.chk-final{margin-top:1.4rem;padding:1rem 1.3rem;background:rgba(93,102,56,.08);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;color:var(--ink-soft);}
+.chk-final strong{color:var(--olive);font-style:normal;font-weight:600;}
+
+/* columnas NO/SI */
+.ns-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.ns-col{background:var(--paper);border:1px solid var(--line);padding:1.5rem;}
+.ns-col.no{border-top:3px solid var(--blood);}
+.ns-col.si{border-top:3px solid var(--olive);}
+.ns-h{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1rem;}
+.ns-col.no .ns-h{color:var(--blood);}
+.ns-col.si .ns-h{color:var(--olive);}
+.ns-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--ink);white-space:pre-wrap;}
+.ns-code .kw{color:var(--blood);font-style:italic;}
+.ns-code .str{color:#8a6420;}
+.ns-code .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.ns-why{margin-top:1rem;font-size:.92rem;color:var(--ink-soft);font-style:italic;line-height:1.45;}
+.ns-why strong{color:var(--ink);font-style:normal;}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .sp-stage,.ns-grid{grid-template-columns:1fr;}
+  .cmp-table{font-size:.82rem;}
+  .cmp-table th,.cmp-table td{padding:.5rem .6rem;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-09.html" class="back">Sesión 09</a>
+  <span class="session-label">Sesión 10 · Sprint 1 · 19.06.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">match comando:</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">case ["mover", x, y]:</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">switch (dia) { case 1: ... }</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">case Punto(x=0, y=0):</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">case _:  # el comodín</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión X · Bloque I · Control de flujo · Sprint 1 Review · Ref. Temario 3.3 · Python · Java · Go</div>
+    <h1>Muchos caminos,<br>una <em>palabra.</em></h1>
+    <p class="hero-sub">Diez <span style="font-style:normal">if-elif-else</span> apilados son una escalera incómoda. Hoy aprendes a decir lo mismo con una sola estructura — y a reconocer cuándo <em>match</em> deja de ser un switch y se vuelve algo mucho más poderoso.</p>
+  </div>
+</section>
+
+<!-- I: el problema -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · La escalera de elif</p>
+    <p class="lead">Cuando comparas <em>una</em> cosa<br>contra <em>muchos</em> valores, el if-else se cansa.</p>
+    <p class="subtle">Imagina traducir un código de error a su mensaje, o un día de la semana a su nombre. Con <strong>if-elif-else</strong> repites la misma variable y el mismo operador una y otra vez: <span class="inlinecode">if dia == 1 ... elif dia == 2 ...</span>. Funciona, pero el ojo se pierde y un olvido se cuela fácil. Casi todos los lenguajes inventaron una estructura para <strong>el caso "una variable, muchos valores"</strong>: el <em>switch</em>. Python llegó tarde y, en vez de copiarlo, trajo algo más ambicioso en la versión 3.10: <strong>match/case</strong> con coincidencia estructural.</p>
+    <p class="subtle" style="margin-top:1.4rem">Hoy hacemos tres cosas: ver el mismo problema en <strong>cuatro formas</strong>, entender cuándo conviene cada una, y cerrar con el <strong>Sprint 1 Review</strong> — la primera vez que tu proyecto se defiende en público.</p>
+  </div>
+</section>
+
+<!-- II: mismo problema, cuatro formas -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · Un problema, cuatro formas</p>
+    <p class="lead">El mismo enrutador de comandos,<br>escrito en <em>cuatro</em> idiomas.</p>
+    <p class="subtle">Un mini-intérprete recibe un comando de texto (<span class="inlinecode">"norte"</span>, <span class="inlinecode">"sur"</span>, <span class="inlinecode">"salir"</span>) y decide qué hacer. Es el caso clásico de selección múltiple. Pulsa cada pestaña y compara: <strong>misma lógica, distinta gramática</strong>. Python es tu base; los demás te dan perspectiva.</p>
+    <div class="widget" data-tag="Mismo enrutador · 4 lenguajes">
+      <div class="mx-tabs">
+        <button class="mx-tab on" data-mx="ifelse">if-elif-else <span class="lg">Python</span></button>
+        <button class="mx-tab" data-mx="match">match/case <span class="lg">Python 3.10+</span></button>
+        <button class="mx-tab" data-mx="java">switch <span class="lg">Java</span></button>
+        <button class="mx-tab" data-mx="go">switch <span class="lg">Go</span></button>
+      </div>
+      <div class="mx-code" id="mx-code"></div>
+      <div class="mx-note" id="mx-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- III: anatomía del fallthrough -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · El detalle que rompe todo · break y fallthrough</p>
+    <p class="lead">La diferencia más cara<br>entre lenguajes vive en <em>una</em> palabra.</p>
+    <p class="subtle">En Java y C, un <span class="inlinecode">switch</span> que olvida el <span class="inlinecode">break</span> sigue ejecutando los casos siguientes — es el famoso <em>fallthrough</em>, fuente eterna de bugs. Python y Go lo arreglaron, cada uno a su manera. Mira el contraste:</p>
+    <div class="ns-grid">
+      <div class="ns-col no">
+        <div class="ns-h">✗ Java · olvidaste el break</div>
+        <div class="ns-code"><span class="kw">switch</span> (dia) {
+  <span class="kw">case</span> <span class="str">6</span>:
+    msg = <span class="str">"sábado"</span>;
+    <span class="cm">// sin break ↓</span>
+  <span class="kw">case</span> <span class="str">7</span>:
+    msg = <span class="str">"domingo"</span>;
+    <span class="kw">break</span>;
+}</div>
+        <div class="ns-why">Con <code style="font-family:'JetBrains Mono',monospace">dia = 6</code> esperabas <strong>"sábado"</strong>… pero el código <em>cae</em> al caso 7 y termina en <strong>"domingo"</strong>. El compilador no se queja. Un bug silencioso.</div>
+      </div>
+      <div class="ns-col si">
+        <div class="ns-h">✓ Go · sin break, salida automática</div>
+        <div class="ns-code"><span class="kw">switch</span> dia {
+<span class="kw">case</span> <span class="str">6</span>:
+    msg = <span class="str">"sábado"</span>
+    <span class="cm">// rompe solo, automático</span>
+<span class="kw">case</span> <span class="str">7</span>:
+    msg = <span class="str">"domingo"</span>
+}
+<span class="cm">// fallthrough es OPT-IN</span></div>
+        <div class="ns-why">Go invirtió la regla: <strong>cada caso rompe solo</strong>. Si de verdad quieres caer al siguiente, lo pides explícito con la palabra <code style="font-family:'JetBrains Mono',monospace">fallthrough</code>. Lo peligroso ahora es lo intencional.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">Python no tiene este problema porque <strong>no hay <span class="inlinecode">break</span> ni fallthrough</strong>: el primer <span class="inlinecode">case</span> que coincide gana, ejecuta su bloque y <em>match</em> termina. Limpio por diseño.</p>
+  </div>
+</section>
+
+<!-- IV: cómo evalúa match (animador) -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Cómo piensa el match · paso a paso</p>
+    <p class="lead">match no compara todo a la vez.<br>Prueba caso por caso, <em>de arriba hacia abajo.</em></p>
+    <p class="subtle">El orden importa: gana el <strong>primer</strong> patrón que coincide. Por eso el comodín <span class="inlinecode">case _</span> siempre va al final — si lo pones arriba, se traga todo. Avanza paso a paso y mira cómo el intérprete recorre los casos con el comando <span class="inlinecode">"correr al norte"</span>:</p>
+    <div class="widget" data-tag="El intérprete, en cámara lenta">
+      <div class="rv-subject"><span class="lbl">match</span> comando = <span class="cap">"correr al norte"</span></div>
+      <div class="rv-cases" id="rv-cases">
+        <div class="rv-case" data-i="0"><span><span class="kw">case</span> <span class="str">"salir"</span>:</span><span class="rv-verdict">—</span></div>
+        <div class="rv-case" data-i="1"><span><span class="kw">case</span> <span class="str">"norte"</span> | <span class="str">"sur"</span>:</span><span class="rv-verdict">—</span></div>
+        <div class="rv-case" data-i="2"><span><span class="kw">case</span> s <span class="kw">if</span> <span class="str">"norte"</span> <span class="kw">in</span> s:</span><span class="rv-verdict">—</span></div>
+        <div class="rv-case" data-i="3"><span><span class="kw">case</span> _:</span><span class="rv-verdict">—</span></div>
+      </div>
+      <div class="rv-out">
+        <div class="rv-step" id="rv-step">·</div>
+        <div class="rv-txt" id="rv-txt">Pulsa <strong>Siguiente</strong> o <strong>Play</strong> para ver al intérprete probar cada caso en orden.</div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="rv-reset">⟲ Reset</button>
+        <button class="btn" id="rv-prev">◀ Atrás</button>
+        <button class="btn on" id="rv-next">Siguiente ▶</button>
+        <button class="btn" id="rv-play">▶ Play</button>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Fíjate en el caso 3: <span class="inlinecode">case s if "norte" in s</span> usa una <strong>guarda</strong> (un <span class="inlinecode">if</span> extra) y <em>captura</em> el valor en la variable <span class="inlinecode">s</span>. Eso ya no es un switch — es coincidencia de patrones. Lo vemos en la siguiente sección.</p>
+  </div>
+</section>
+
+<!-- V: structural pattern matching -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · La joya de Python · structural pattern matching</p>
+    <p class="lead">match no solo compara valores.<br>Compara <em>la forma</em> de los datos.</p>
+    <p class="subtle">Aquí Python deja atrás al switch clásico de Java y Go. Un patrón puede <strong>desarmar</strong> una lista, un diccionario o un objeto, verificar su estructura y <em>capturar</em> sus partes en variables — todo en la misma línea. Toca cada <span class="inlinecode">case</span> para entender qué patrón usa:</p>
+    <div class="widget" data-tag="Toca cada patrón">
+      <div class="sp-stage">
+        <div class="sp-code">
+          <span class="sp-line dim"><span class="kw">match</span> evento:</span>
+          <span class="sp-line" data-sp="literal">    <span class="kw">case</span> <span class="str">"ping"</span>:</span>
+          <span class="sp-line dim">        responder()</span>
+          <span class="sp-line" data-sp="secuencia">    <span class="kw">case</span> [<span class="cap">"mover"</span>, <span class="cap">x</span>, <span class="cap">y</span>]:</span>
+          <span class="sp-line dim">        mover_a(x, y)</span>
+          <span class="sp-line" data-sp="estrella">    <span class="kw">case</span> [<span class="str">"sumar"</span>, *<span class="cap">nums</span>]:</span>
+          <span class="sp-line dim">        total(nums)</span>
+          <span class="sp-line" data-sp="mapeo">    <span class="kw">case</span> {<span class="str">"tipo"</span>: <span class="cap">t</span>, <span class="str">"id"</span>: <span class="cap">n</span>}:</span>
+          <span class="sp-line dim">        procesar(t, n)</span>
+          <span class="sp-line" data-sp="clase">    <span class="kw">case</span> <span class="ty">Punto</span>(<span class="cap">x</span>=<span class="cap">px</span>, <span class="cap">y</span>=<span class="cap">py</span>):</span>
+          <span class="sp-line dim">        dibujar(px, py)</span>
+          <span class="sp-line" data-sp="comodin">    <span class="kw">case</span> _:</span>
+          <span class="sp-line dim">        ignorar()</span>
+        </div>
+        <div class="sp-panel">
+          <div class="sp-tag" id="sp-tag">Toca un case</div>
+          <div class="sp-title" id="sp-title">Cinco patrones</div>
+          <div class="sp-desc" id="sp-desc">Cada <code>case</code> de la izquierda usa un tipo distinto de patrón. Tócalos en orden para ver cómo Python desarma listas, diccionarios y objetos — capturando sus partes sobre la marcha.</div>
+          <div class="sp-match" id="sp-match">Las variables en <b style="color:var(--ochre)">ámbar</b> son <b>capturas</b>: si el patrón coincide, Python las llena por ti.</div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Esto es lo que ni Java ni Go tenían cuando Python lo lanzó (Java lo está incorporando apenas, con <em>record patterns</em>). Para un proyecto que procesa comandos, mensajes JSON o eventos, <strong>match</strong> reemplaza decenas de <span class="inlinecode">if isinstance(...)</span> por algo que se lee como la estructura del dato.</p>
+  </div>
+</section>
+
+<!-- VI: ¿switch o if-else? -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · La decisión honesta · ¿switch o if-else?</p>
+    <p class="lead">match es elegante,<br>pero no siempre es la <em>respuesta.</em></p>
+    <p class="subtle">Un buen programador no usa la herramienta más nueva: usa la <strong>correcta</strong>. Responde tres preguntas sobre tu caso y deja que el decisor te recomiende. No hay trampa — la lógica es la misma que aplicarás en tu proyecto:</p>
+    <div class="widget" data-tag="Responde y decide">
+      <div class="dz-prog" id="dz-prog">Pregunta 1 de 3</div>
+      <div class="dz-stage" id="dz-stage"></div>
+      <div class="w-controls" style="justify-content:center">
+        <button class="btn" id="dz-reset">⟲ Empezar de nuevo</button>
+      </div>
+    </div>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Cuándo</th><th>Python</th><th>Java</th><th>Go</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Una variable vs muchos valores fijos</td><td><code>match</code> (o dict)</td><td><code>switch</code></td><td><code>switch</code></td></tr>
+        <tr><td>Condiciones con rangos / operadores</td><td><code>if-elif</code></td><td><code>if-else</code></td><td><code>switch</code> sin condición</td></tr>
+        <tr><td>Desarmar listas / dicts / objetos</td><td><strong><code>match</code></strong> ★</td><td>verboso</td><td>no nativo</td></tr>
+        <tr><td>Dos o tres ramas simples</td><td><code>if-else</code></td><td><code>if-else</code></td><td><code>if-else</code></td></tr>
+        <tr><td>Riesgo de fallthrough</td><td>ninguno</td><td>alto (usa <code>break</code>)</td><td>opt-in</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- VII: taller -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Taller en clase · reescribe las calificaciones</p>
+    <p class="lead">Esa cadena de elif del proyecto<br>tiene su <em>gemelo</em> en match.</p>
+    <p class="subtle">Recuerda el clasificador de calificaciones que escribimos con <strong>if-elif</strong>. Hoy lo reescribes con <strong>match</strong> usando guardas — porque las calificaciones son rangos, no valores exactos. Compara y luego hazlo con tu propio caso:</p>
+    <div class="ns-grid">
+      <div class="ns-col no">
+        <div class="ns-h">Antes · cadena de if-elif</div>
+        <div class="ns-code"><span class="kw">def</span> letra(c):
+    <span class="kw">if</span> c >= <span class="str">90</span>:
+        <span class="kw">return</span> <span class="str">"A"</span>
+    <span class="kw">elif</span> c >= <span class="str">80</span>:
+        <span class="kw">return</span> <span class="str">"B"</span>
+    <span class="kw">elif</span> c >= <span class="str">70</span>:
+        <span class="kw">return</span> <span class="str">"C"</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="str">"Reprobado"</span></div>
+        <div class="ns-why">Funciona perfecto. Para <strong>rangos</strong>, el if-elif sigue siendo natural — no todo necesita match.</div>
+      </div>
+      <div class="ns-col si">
+        <div class="ns-h">Con match · guardas por rango</div>
+        <div class="ns-code"><span class="kw">def</span> letra(c):
+    <span class="kw">match</span> c:
+        <span class="kw">case</span> n <span class="kw">if</span> n >= <span class="str">90</span>:
+            <span class="kw">return</span> <span class="str">"A"</span>
+        <span class="kw">case</span> n <span class="kw">if</span> n >= <span class="str">80</span>:
+            <span class="kw">return</span> <span class="str">"B"</span>
+        <span class="kw">case</span> n <span class="kw">if</span> n >= <span class="str">70</span>:
+            <span class="kw">return</span> <span class="str">"C"</span>
+        <span class="kw">case</span> _:
+            <span class="kw">return</span> <span class="str">"Reprobado"</span></div>
+        <div class="ns-why">Mismo resultado, leído como una tabla. <strong>La guarda</strong> (<code style="font-family:'JetBrains Mono',monospace">if n >= 90</code>) es lo que permite rangos dentro de match. El <code style="font-family:'JetBrains Mono',monospace">case _</code> reemplaza al <code style="font-family:'JetBrains Mono',monospace">else</code>.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem"><strong>Tu turno (10 min):</strong> toma una de las cadenas <span class="inlinecode">if-elif</span> de tu proyecto integrador — la validación de un dato, el menú de opciones, el cálculo de una categoría — y decide honestamente: ¿gana en claridad si la reescribes con <strong>match</strong>, o el <strong>if-elif</strong> ya estaba bien? Justifica tu decisión: <em>eso</em> es lo que evalúo, no la moda.</p>
+  </div>
+</section>
+
+<!-- VIII: SPRINT 1 REVIEW -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · Sprint 1 Review · tu proyecto se defiende hoy</p>
+    <p class="lead">El primer sprint termina.<br>No con un entregable: con una <em>demostración.</em></p>
+    <p class="subtle">Cerramos el Bloque I. Tu proyecto integrador ya debería tener cuerpo: <strong>clases base, encapsulamiento y control de flujo</strong>. En el Sprint Review lo presentas en vivo — corto, claro y defendible. Marca lo que ya tienes listo; el contador te dice qué tan cerca estás de poder demostrar hoy:</p>
+    <div class="widget" data-tag="Checklist del Sprint 1 Review">
+      <div class="chk-progress">Listo para demostrar: <span id="chk-count">0</span> de 10 puntos
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Estructura · lo que construiste (Bloque I)</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Al menos dos clases base</strong> del dominio, con atributos y métodos coherentes con el caso</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Encapsulamiento aplicado</strong> — atributos privados con sus getters/setters o <code>@property</code>, no atributos públicos sueltos</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Validaciones</strong> en los puntos de entrada: un constructor o setter que rechaza datos inválidos</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Control de flujo real</strong> — al menos una decisión múltiple (if-elif o <code>match</code>) que dirige el comportamiento</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Evidencia · lo que se ve correr</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Un main / bloque de prueba</strong> que instancia objetos y ejecuta el flujo principal sin errores</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Salida en consola</strong> que demuestra que las clases y validaciones funcionan</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Repositorio en GitHub</strong> actualizado, con commits que cuentan el avance del sprint</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">Presentación · los 5 minutos de defensa</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedes <strong>explicar tu diseño</strong>: por qué esas clases, por qué esos atributos son privados</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedes <strong>defender tu código línea por línea</strong> — si lo escribiste con ayuda de IA, lo entiendes y lo justificas</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Tienes claro <strong>qué sigue en el Bloque II</strong>: dónde entrará la herencia en tu proyecto</div></div>
+      </div>
+      <div class="chk-final" id="chk-final"><strong>Recuerda:</strong> un Sprint Review no es un examen de perfección. Es mostrar avance honesto y saber explicarlo. Marca tus puntos y ve qué te falta para llegar listo a la mesa.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">IX · Para la próxima clase</p>
+    <p class="lead">Cierra el control de flujo.<br>El Bloque II abre con <em>herencia.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">Sprint 1 Review</div>
+      <ol>
+        <li><strong>Presenta tu avance hoy en clase:</strong> clases base + encapsulamiento + control de flujo, corriendo y defendido. Es insumo de tu participación.</li>
+        <li><strong>Aplica lo de hoy donde aporte:</strong> revisa tus cadenas de <code>if-elif</code> y reescribe con <code>match</code> solo las que ganen en claridad — justifica cada decisión.</li>
+        <li><strong>Deja el flujo limpio:</strong> sin <code>break</code> olvidados (si tocas Java), sin comodines mal ubicados, con un <code>case _</code> / <code>else</code> que cubra lo inesperado.</li>
+        <li><strong>Sube todo a GitHub</strong> con commits claros del sprint. Tu repo es la foto oficial del avance.</li>
+        <li><strong>Prepara el terreno para herencia:</strong> identifica en tu proyecto dos clases que compartan atributos o métodos — ahí nacerá una clase padre en el Bloque II.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="ln">'+html+'</span>';
+
+// ─── W1: tabs cuatro lenguajes ──────────────────────────────
+const mxData={
+  ifelse:{
+    code:[
+      '<span class="cm"># Python · lo de siempre</span>',
+      '<span class="kw">def</span> enrutar(cmd):',
+      '    <span class="kw">if</span> cmd == <span class="str">"norte"</span>:',
+      '        avanzar(<span class="str">"N"</span>)',
+      '    <span class="kw">elif</span> cmd == <span class="str">"sur"</span>:',
+      '        avanzar(<span class="str">"S"</span>)',
+      '    <span class="kw">elif</span> cmd == <span class="str">"salir"</span>:',
+      '        terminar()',
+      '    <span class="kw">else</span>:',
+      '        print(<span class="str">"comando desconocido"</span>)',
+    ],
+    note:'La forma que ya conoces. Nota cómo <strong>repites <code>cmd ==</code> en cada rama</strong>. Para 3 casos es tolerable; para 15 se vuelve ruido. Cada estructura de abajo ataca exactamente esa repetición.'
+  },
+  match:{
+    code:[
+      '<span class="cm"># Python 3.10+ · match/case</span>',
+      '<span class="kw">def</span> enrutar(cmd):',
+      '    <span class="kw">match</span> cmd:',
+      '        <span class="kw">case</span> <span class="str">"norte"</span>:',
+      '            avanzar(<span class="str">"N"</span>)',
+      '        <span class="kw">case</span> <span class="str">"sur"</span>:',
+      '            avanzar(<span class="str">"S"</span>)',
+      '        <span class="kw">case</span> <span class="str">"salir"</span>:',
+      '            terminar()',
+      '        <span class="kw">case</span> _:  <span class="cm"># el comodín = else</span>',
+      '            print(<span class="str">"comando desconocido"</span>)',
+    ],
+    note:'La variable <code>cmd</code> se nombra <strong>una sola vez</strong>, arriba. No hay <code>break</code>: el primer <code>case</code> que coincide gana y match termina. El <code>case _</code> es el comodín, equivalente al <code>else</code>. <em>Requiere Python 3.10 o superior.</em>'
+  },
+  java:{
+    code:[
+      '<span class="cm">// Java · switch clásico</span>',
+      '<span class="kw">switch</span> (cmd) {',
+      '    <span class="kw">case</span> <span class="str">"norte"</span>:',
+      '        avanzar(<span class="str">"N"</span>);',
+      '        <span class="kw">break</span>;  <span class="cm">// ¡no lo olvides!</span>',
+      '    <span class="kw">case</span> <span class="str">"sur"</span>:',
+      '        avanzar(<span class="str">"S"</span>);',
+      '        <span class="kw">break</span>;',
+      '    <span class="kw">case</span> <span class="str">"salir"</span>:',
+      '        terminar();',
+      '        <span class="kw">break</span>;',
+      '    <span class="kw">default</span>:',
+      '        System.out.println(<span class="str">"desconocido"</span>);',
+      '}',
+    ],
+    note:'El <code>switch</code> de toda la vida. El peligro vive en el <strong><code>break</code></strong>: si lo olvidas, el código <em>cae</em> al siguiente caso (fallthrough). El <code>default</code> es el comodín. <em>Java moderno tiene <code>switch -></code> con flechas que evita el break — investígalo.</em>'
+  },
+  go:{
+    code:[
+      '<span class="cm">// Go · switch sin break</span>',
+      '<span class="kw">switch</span> cmd {',
+      '<span class="kw">case</span> <span class="str">"norte"</span>:',
+      '    avanzar(<span class="str">"N"</span>)',
+      '<span class="kw">case</span> <span class="str">"sur"</span>:',
+      '    avanzar(<span class="str">"S"</span>)',
+      '<span class="kw">case</span> <span class="str">"salir"</span>:',
+      '    terminar()',
+      '<span class="kw">default</span>:',
+      '    fmt.Println(<span class="str">"desconocido"</span>)',
+      '}',
+    ],
+    note:'Go aprendió de los errores de C: <strong>cada caso rompe solo</strong>, sin <code>break</code>. Más limpio que Java. Si de verdad quieres caer al siguiente caso, lo pides explícito con <code>fallthrough</code>. Lo peligroso ahora es lo intencional, no lo olvidado.'
+  }
+};
+function mxRender(k){
+  const d=mxData[k];
+  $('mx-code').innerHTML=d.code.map(L).join('');
+  $('mx-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-mx]').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('[data-mx]').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    mxRender(t.dataset.mx);
+  });
+});
+mxRender('ifelse');
+
+// ─── W2: structural pattern matching explorer ───────────────
+const spData={
+  literal:{tag:'Patrón literal',title:'Valor exacto',
+    desc:'El patrón más simple: coincide si el valor es <strong>igual a un literal</strong>. Es el caso que también haría un switch normal. <code>"ping"</code> solo coincide con la cadena "ping".',
+    match:'<b>evento = "ping"</b> → coincide ✓ · cualquier otra cosa pasa de largo.'},
+  secuencia:{tag:'Patrón de secuencia',title:'Lista con forma fija',
+    desc:'Coincide si <code>evento</code> es una <strong>lista/tupla de exactamente 3 elementos</strong> cuyo primero sea "mover". Los otros dos se <em>capturan</em> en <code>x</code> y <code>y</code>.',
+    match:'<b>evento = ["mover", 10, 5]</b> → coincide, con <b style="color:var(--ochre)">x=10</b>, <b style="color:var(--ochre)">y=5</b>.'},
+  estrella:{tag:'Patrón con *',title:'Resto variable',
+    desc:'El <code>*nums</code> captura <strong>todos los elementos restantes</strong> en una lista, sin importar cuántos. Ideal para comandos con argumentos de longitud variable.',
+    match:'<b>evento = ["sumar", 2, 4, 8]</b> → coincide, con <b style="color:var(--ochre)">nums=[2, 4, 8]</b>.'},
+  mapeo:{tag:'Patrón de mapeo',title:'Diccionario por llaves',
+    desc:'Coincide si <code>evento</code> es un <strong>dict que contiene esas llaves</strong>. Los valores se capturan en <code>t</code> y <code>n</code>. Puede haber más llaves: solo exige las que nombras.',
+    match:'<b>evento = {"tipo": "user", "id": 42}</b> → coincide, con <b style="color:var(--ochre)">t="user"</b>, <b style="color:var(--ochre)">n=42</b>.'},
+  clase:{tag:'Patrón de clase',title:'Objeto desarmado',
+    desc:'Coincide si <code>evento</code> es una <strong>instancia de <code>Punto</code></strong> y extrae sus atributos <code>x</code> e <code>y</code> en <code>px</code> y <code>py</code>. Reemplaza el viejo <code>isinstance() + acceso a atributos</code>.',
+    match:'<b>evento = Punto(3, 7)</b> → coincide, con <b style="color:var(--ochre)">px=3</b>, <b style="color:var(--ochre)">py=7</b>.'},
+  comodin:{tag:'Comodín',title:'case _ · el último recurso',
+    desc:'El guion bajo <strong>coincide con todo</strong> lo que no encajó arriba. Por eso va <em>al final</em>: si lo pones primero, se traga todos los casos. Es el <code>else</code>/<code>default</code> de match.',
+    match:'Siempre coincide. Úsalo para el caso inesperado — o para un error explícito.'}
+};
+const spLines=document.querySelectorAll('.sp-line[data-sp]');
+function spRender(k){
+  spLines.forEach(l=>l.classList.toggle('lit',l.dataset.sp===k));
+  const d=spData[k];
+  $('sp-tag').textContent=d.tag;
+  $('sp-title').textContent=d.title;
+  $('sp-desc').innerHTML=d.desc;
+  $('sp-match').innerHTML=d.match;
+}
+spLines.forEach(l=>l.addEventListener('click',()=>spRender(l.dataset.sp)));
+
+// ─── W3: evaluador paso a paso de match ─────────────────────
+const rvSteps=[
+  {state:['cur','','',''],step:1,txt:'Empezamos por arriba. ¿<code>"correr al norte"</code> es igual a <strong>"salir"</strong>? Comparamos el caso 1.'},
+  {state:['miss','cur','',''],step:2,txt:'No coincide con "salir". Bajamos. ¿Es exactamente <strong>"norte" o "sur"</strong>? El patrón <code>|</code> prueba ambos.'},
+  {state:['miss','miss','cur',''],step:3,txt:'Tampoco — la cadena no es exactamente "norte". Bajamos. El caso 3 captura en <code>s</code> y aplica la guarda: ¿<strong>"norte" está dentro de s</strong>?'},
+  {state:['miss','miss','hit',''],step:'✓',txt:'<strong>¡Coincide!</strong> "norte" sí está contenido en "correr al norte". La guarda se cumple, <code>s</code> queda con el valor completo y <strong>match termina aquí</strong>: el caso 4 ni se prueba.'},
+];
+const rvCases=document.querySelectorAll('.rv-case');
+let rvIdx=-1,rvTimer=null;
+function rvApply(state){
+  rvCases.forEach((c,i)=>{
+    c.classList.remove('cur','miss','hit');
+    const s=state[i];
+    if(s){c.classList.add(s);
+      c.querySelector('.rv-verdict').textContent = s==='cur'?'probando…':s==='miss'?'no':'coincide';
+    } else {
+      c.querySelector('.rv-verdict').textContent='—';
+    }
+  });
+}
+function rvRender(){
+  if(rvIdx<0){
+    rvCases.forEach(c=>{c.classList.remove('cur','miss','hit');c.querySelector('.rv-verdict').textContent='—';});
+    $('rv-step').textContent='·';
+    $('rv-txt').innerHTML='Pulsa <strong>Siguiente</strong> o <strong>Play</strong> para ver al intérprete probar cada caso en orden.';
+    return;
+  }
+  const s=rvSteps[rvIdx];
+  rvApply(s.state);
+  $('rv-step').textContent=s.step;
+  $('rv-txt').innerHTML=s.txt;
+}
+function rvStop(){if(rvTimer){clearInterval(rvTimer);rvTimer=null;$('rv-play').textContent='▶ Play';}}
+$('rv-next').addEventListener('click',()=>{rvStop();if(rvIdx<rvSteps.length-1){rvIdx++;rvRender();}});
+$('rv-prev').addEventListener('click',()=>{rvStop();if(rvIdx>-1){rvIdx--;rvRender();}});
+$('rv-reset').addEventListener('click',()=>{rvStop();rvIdx=-1;rvRender();});
+$('rv-play').addEventListener('click',()=>{
+  if(rvTimer){rvStop();return;}
+  if(rvIdx>=rvSteps.length-1){rvIdx=-1;rvRender();}
+  $('rv-play').textContent='❚❚ Pausa';
+  rvTimer=setInterval(()=>{
+    if(rvIdx<rvSteps.length-1){rvIdx++;rvRender();}
+    else rvStop();
+  },1600);
+});
+rvRender();
+
+// ─── W4: decisor switch vs if-else ──────────────────────────
+const dzQs=[
+  {q:'Comparas UNA sola variable contra varios valores concretos',
+   a:'Sí, una variable',b:'No, son condiciones distintas',
+   ya:'switch',yb:'ifelse'},
+  {q:'Necesitas rangos, operadores (>, <) o varias variables a la vez',
+   a:'Sí, hay rangos/operadores',b:'No, son valores exactos',
+   ya:'ifelse',yb:'switchpure'},
+  {q:'El dato es una estructura (lista, dict, objeto) que quieres desarmar',
+   a:'Sí, quiero desarmarlo',b:'No, es un valor simple',
+   ya:'match',yb:'switchplain'},
+];
+const dzVerdicts={
+  ifelse:{cls:'',v:'Usa if-elif-else',
+    why:'Tu decisión depende de <strong>condiciones</strong> (rangos, operadores), no de un solo valor. El <code>match</code> no te daría claridad extra aquí — el if-elif es la herramienta honesta.'},
+  switchpure:{cls:'match-rec',v:'match / switch limpio',
+    why:'Una variable contra valores exactos: el caso de libro para <code>match</code> en Python (o <code>switch</code> en Java/Go). Nombras la variable una vez y listas los casos como una tabla.'},
+  match:{cls:'match-rec',v:'match · structural',
+    why:'Aquí Python brilla: <code>match</code> puede <strong>desarmar y capturar</strong> la estructura en la misma línea. Ningún switch clásico hace esto. Es exactamente para lo que se diseñó.'},
+  switchplain:{cls:'match-rec',v:'match / switch simple',
+    why:'Valor simple contra muchas opciones, sin rangos: <code>match</code> en Python o <code>switch</code> en Java/Go. Limpio y legible. Reserva el if-elif para cuando aparezcan condiciones.'},
+};
+let dzStep=0;
+function dzRenderQ(){
+  const q=dzQs[dzStep];
+  $('dz-prog').textContent='Pregunta '+(dzStep+1)+' de 3';
+  $('dz-stage').innerHTML=
+    '<div class="dz-q">'+q.q+'</div>'+
+    '<div class="dz-choices">'+
+      '<button class="dz-choice" data-go="'+q.ya+'">'+q.a+'</button>'+
+      '<button class="dz-choice" data-go="'+q.yb+'">'+q.b+'</button>'+
+    '</div>';
+  $('dz-stage').querySelectorAll('.dz-choice').forEach(btn=>{
+    btn.addEventListener('click',()=>dzAnswer(btn.dataset.go));
+  });
+}
+function dzAnswer(go){
+  // 'switch' en P1 → seguir afinando; lo demás → veredicto directo
+  if(go==='switch'){ dzStep=1; dzRenderQ(); return; }
+  if(go==='ifelse' && dzStep===0){ dzStep=2; dzRenderQ(); return; }
+  dzVerdict(go);
+}
+function dzVerdict(key){
+  const d=dzVerdicts[key];
+  $('dz-prog').textContent='Recomendación';
+  $('dz-stage').innerHTML=
+    '<div class="dz-result">'+
+      '<div class="dz-verdict '+d.cls+'">'+d.v+'</div>'+
+      '<div class="dz-why">'+d.why+'</div>'+
+    '</div>';
+}
+$('dz-reset').addEventListener('click',()=>{dzStep=0;dzRenderQ();});
+dzRenderQ();
+
+// ─── W5: checklist sprint review ────────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+  if(done===chkItems.length){
+    $('chk-final').innerHTML='<strong>Listo para la mesa.</strong> Tienes estructura, evidencia y discurso. Preséntalo con calma: avance honesto, bien explicado. Cierras el Bloque I — el Bloque II abre con herencia.';
+  }
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
+</script>
+</body>
+</html>

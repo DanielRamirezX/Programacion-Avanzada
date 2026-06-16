@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XVI — Dos padres, un orden — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════ CSS DE WIDGETS · SESIÓN XVI ═══════════════ */
+
+/* caja de caso / nota lateral genérica */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W1: visualizador del MRO (diamante) */
+.mro-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.mro-draw{background:var(--paper);border:1px solid var(--line);padding:1rem;min-height:330px;}
+.mro-svg{width:100%;height:auto;display:block;}
+.mro-svg .edge{stroke:rgba(42,29,20,.4);stroke-width:2;fill:none;}
+.mro-node{cursor:default;}
+.mro-node rect{fill:var(--paper-deep);stroke:var(--ink);stroke-width:1.6;transition:all .3s;}
+.mro-node text{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;fill:var(--ink);text-anchor:middle;dominant-baseline:middle;}
+.mro-node.dim rect{opacity:.35;}
+.mro-node.lit rect{fill:var(--blood);stroke:var(--blood);}
+.mro-node.lit text{fill:var(--paper);}
+.mro-node .ord{font-size:13px;fill:var(--ochre);font-weight:700;opacity:0;}
+.mro-node.lit .ord{opacity:1;fill:#E8B04A;}
+.mro-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;min-height:330px;}
+.mro-chain{font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:2;color:rgba(239,230,210,.55);letter-spacing:.04em;}
+.mro-chain .tk{padding:.12rem .35rem;border-radius:3px;transition:all .25s;}
+.mro-chain .tk.on{background:var(--blood);color:var(--paper);}
+.mro-chain .arr{color:rgba(239,230,210,.3);margin:0 .1rem;}
+.mro-expl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);margin-top:auto;}
+.mro-expl strong{color:#C9A961;font-style:normal;font-weight:600;}
+.mro-expl code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* W2: animador de super() encadenado */
+.sup-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
+.sup-stack{background:var(--paper);border:1px solid var(--line);padding:1.3rem;display:flex;flex-direction:column;gap:.6rem;min-height:300px;}
+.sup-frame{border:1.5px solid var(--line);background:var(--paper-deep);padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--ink-soft);opacity:.4;transition:all .35s;position:relative;}
+.sup-frame .who{font-weight:700;color:var(--ink);}
+.sup-frame .call{color:rgba(42,29,20,.55);font-style:italic;}
+.sup-frame.active{opacity:1;border-color:var(--blood);background:rgba(160,36,24,.07);transform:translateX(6px);}
+.sup-frame.done{opacity:1;border-color:var(--olive);background:rgba(93,102,56,.08);}
+.sup-frame.done::after{content:'✓ greet() ejecutado';position:absolute;right:.9rem;top:50%;transform:translateY(-50%);font-size:.62rem;color:var(--olive);letter-spacing:.05em;}
+.sup-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+.sup-out{font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;color:#9FBF9C;background:rgba(239,230,210,.05);border-left:2px solid var(--olive);padding:.8rem 1rem;min-height:5rem;}
+.sup-out .pl{color:rgba(239,230,210,.35);}
+.sup-narr{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.88);margin-top:auto;}
+.sup-narr strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* W3: tabs Python ↔ Java */
+.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
+.pj-head .badge{font-size:.6rem;color:var(--ochre);}
+.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:280px;}
+.pj-line{white-space:pre;display:block;padding:0 .3rem;border-radius:2px;}
+.pj-line .kw{color:var(--blood);font-style:italic;}
+.pj-line .cls{color:var(--ink);font-weight:700;}
+.pj-line .str{color:var(--ochre);}
+.pj-line .self{color:var(--olive);font-weight:700;}
+.pj-line .ty{color:#3E6E86;}
+.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.pj-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: el problema del diamante (toggle Python/Java) */
+.dia-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
+.dia-draw{background:var(--paper);border:1px solid var(--line);padding:1.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.dia-svg{width:100%;max-width:300px;height:auto;}
+.dia-svg .edge{stroke:rgba(42,29,20,.4);stroke-width:2;fill:none;}
+.dia-svg .edge.conflict{stroke:var(--blood);stroke-dasharray:5 4;}
+.dia-svg .nbox{fill:var(--paper-deep);stroke:var(--ink);stroke-width:1.6;}
+.dia-svg .nlabel{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;fill:var(--ink);text-anchor:middle;dominant-baseline:middle;}
+.dia-svg .qmark{font-family:'Cormorant Garamond',serif;font-size:34px;fill:var(--blood);text-anchor:middle;dominant-baseline:middle;font-style:italic;opacity:0;transition:opacity .3s;}
+.dia-svg .qmark.show{opacity:1;}
+.dia-verdict{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;margin-top:1rem;padding:.4rem .9rem;border-radius:3px;}
+.dia-verdict.ok{background:rgba(93,102,56,.15);color:var(--olive);border:1px solid var(--olive);}
+.dia-verdict.err{background:rgba(160,36,24,.1);color:var(--blood);border:1px solid var(--blood);}
+.dia-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+.dia-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.75;color:var(--paper);background:rgba(239,230,210,.05);padding:.9rem 1.1rem;border-left:2px solid var(--ochre);overflow-x:auto;}
+.dia-code .kw{color:#D4956A;font-style:italic;}
+.dia-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.dia-code .err{color:#E08A82;}
+.dia-code .out{color:#9FBF9C;}
+.dia-expl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);margin-top:auto;}
+.dia-expl strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* W5: final / sealed explorador */
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.5rem;}
+.fin-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--line);padding:1.2rem;cursor:pointer;transition:all .25s;}
+.fin-card:hover{border-top-color:var(--blood);}
+.fin-card.on{border-top-color:var(--blood);background:rgba(160,36,24,.05);}
+.fin-card .fk{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--blood);font-weight:700;}
+.fin-card .ft{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--ink);margin-top:.3rem;}
+.fin-panel{margin-top:1.4rem;background:var(--ink);padding:1.5rem;display:grid;grid-template-columns:1.1fr 1fr;gap:1.3rem;align-items:start;}
+.fin-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:var(--paper);overflow-x:auto;}
+.fin-code .ln{white-space:pre;display:block;}
+.fin-code .kw{color:#D4956A;font-style:italic;}
+.fin-code .ty{color:#A6C2D6;}
+.fin-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.fin-code .err{color:#E08A82;}
+.fin-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.88);}
+.fin-text strong{color:#C9A961;font-style:normal;font-weight:600;}
+.fin-text code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* tabla comparativa */
+.cmp{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
+.cmp th,.cmp td{border:1px solid var(--line);padding:.8rem 1rem;text-align:left;vertical-align:top;}
+.cmp th{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);background:var(--paper);}
+.cmp td{color:var(--ink-soft);}
+.cmp td strong{color:var(--ink);}
+.cmp tr:nth-child(even) td{background:rgba(42,29,20,.03);}
+.cmp code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--blood);}
+
+/* roles del ejercicio */
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.role-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--olive);padding:1.4rem;}
+.role-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.4rem;}
+.role-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+.role-d code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--blood);}
+
+/* reglas IA */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+@media(max-width:860px){
+  .mro-stage,.sup-stage,.pj-stage,.dia-stage,.fin-panel,.fin-grid,.role-grid{grid-template-columns:1fr;}
+  .cmp{font-size:.85rem;}
+  .cmp th,.cmp td{padding:.55rem .6rem;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-15.html" class="back">Sesión 15</a>
+  <span class="session-label">Sesión 16 · 10.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Admin(Empleado, Cliente):</div>
+  <div class="hero-float" style="top:28%;right:10%;--r:3deg;animation-delay:-3s">super().__init__()</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">Admin.__mro__</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">linealización C3</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">final class · sealed</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XVI · Bloque II · Herencia · Ref. Temario 5.1.3 · 5.2 · 5.3 · Python · Java</div>
+    <h1>Dos padres,<br>un <em>orden.</em></h1>
+    <p class="hero-sub">Cuando una clase hereda de <em>dos</em> a la vez, surge la pregunta: ¿a quién le hace caso primero? Python no improvisa — tiene un orden exacto, el <em>MRO</em>. Hoy aprendes a leerlo y a respetarlo.</p>
+  </div>
+</section>
+
+<!-- I: el problema -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · El problema de tener dos padres</p>
+    <p class="lead">Heredar de uno es fácil.<br>Heredar de <em>dos</em> abre una pregunta nueva.</p>
+    <p class="subtle">Hasta ahora una clase hija tenía <strong>un</strong> padre y todo era una línea recta: si la hija no tiene un método, sube al padre. Pero Python permite <strong>herencia múltiple</strong>: una clase puede heredar de varias a la vez. Y entonces, si dos abuelos definen el mismo método <span class="inlinecode">saludar()</span>… ¿cuál gana? La respuesta no es "el primero que se te ocurra" — es un <strong>orden formal</strong> llamado <strong>MRO</strong> (Method Resolution Order). Hoy lo desarmamos, vemos cómo <span class="inlinecode">super()</span> lo recorre, y por qué <em>Java prefirió prohibir todo esto</em>.</p>
+  </div>
+</section>
+
+<!-- II: visualizador del MRO -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El MRO — la linealización C3</p>
+    <p class="lead">Python toma el diamante<br>y lo aplana en una <em>fila ordenada.</em></p>
+    <p class="subtle">El diamante clásico: <strong>D</strong> hereda de <strong>B</strong> y <strong>C</strong>; ambas heredan de <strong>A</strong>. Cuando llamas un método en un objeto <span class="inlinecode">D</span>, Python no se pierde: aplica el <strong>algoritmo C3</strong> y produce <em>una sola lista</em> de búsqueda. Pulsa para ver cómo ilumina la clase en cada paso, y fíjate en la regla de oro: <strong>A va al final</strong>, después de todas sus hijas.</p>
+    <div class="widget" data-tag="Recorre el MRO paso a paso">
+      <div class="mro-stage">
+        <div class="mro-draw">
+          <svg class="mro-svg" viewBox="0 0 300 300" id="mro-svg">
+            <line class="edge" x1="150" y1="62" x2="80" y2="118"/>
+            <line class="edge" x1="150" y1="62" x2="220" y2="118"/>
+            <line class="edge" x1="80" y1="162" x2="150" y2="218"/>
+            <line class="edge" x1="220" y1="162" x2="150" y2="218"/>
+            <g class="mro-node" id="n-A"><rect x="118" y="22" width="64" height="40" rx="3"/><text x="150" y="42">A</text><text class="ord" x="195" y="42" id="o-A"></text></g>
+            <g class="mro-node" id="n-B"><rect x="48" y="118" width="64" height="40" rx="3"/><text x="80" y="138">B</text><text class="ord" x="32" y="138" id="o-B"></text></g>
+            <g class="mro-node" id="n-C"><rect x="188" y="118" width="64" height="40" rx="3"/><text x="220" y="138">C</text><text class="ord" x="268" y="138" id="o-C"></text></g>
+            <g class="mro-node" id="n-D"><rect x="118" y="218" width="64" height="40" rx="3"/><text x="150" y="238">D</text><text class="ord" x="195" y="238" id="o-D"></text></g>
+          </svg>
+        </div>
+        <div class="mro-side">
+          <div class="mro-chain" id="mro-chain"></div>
+          <div class="mro-expl" id="mro-expl">Pulsa <strong>Siguiente</strong> para que Python busque el método empezando por <code>D</code>. Verás el orden exacto que sigue.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="mro-reset">⟲ Reset</button>
+        <button class="btn" id="mro-prev">◀ Atrás</button>
+        <button class="btn on" id="mro-next">Siguiente ▶</button>
+        <button class="btn" id="mro-all">Mostrar lista completa</button>
+      </div>
+    </div>
+    <div class="caso" style="font-style:normal;font-size:1.02rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem;">Lo que verías en la terminal</div>
+      <span class="inlinecode">&gt;&gt;&gt; D.__mro__</span> &nbsp;te devuelve la tupla <span class="inlinecode">(D, B, C, A, object)</span>. <strong>Toda</strong> clase termina en <span class="inlinecode">object</span> — es la raíz universal de Python. El MRO no es magia: es una propiedad que puedes <em>inspeccionar</em> en cualquier momento con <span class="inlinecode">D.__mro__</span> o <span class="inlinecode">D.mro()</span>.
+    </div>
+  </div>
+</section>
+
+<!-- III: super() encadenado -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · super() — no es "el padre", es "el siguiente"</p>
+    <p class="lead">El error más común:<br>creer que <em>super()</em> llama al padre.</p>
+    <p class="subtle">Falso. <span class="inlinecode">super()</span> llama a la <strong>siguiente clase en el MRO</strong> — que no siempre es un padre directo. En herencia múltiple, si cada clase hace su trabajo y luego llama a <span class="inlinecode">super()</span>, el control viaja por <em>toda</em> la cadena, en orden, sin saltarse a nadie. A esto se le llama <strong>cooperación</strong>: cada clase coopera pasando el testigo. Pulsa <strong>Play</strong> y mira cómo el saludo recorre las cuatro clases del diamante.</p>
+    <div class="widget" data-tag="super() recorre el MRO">
+      <div class="sup-stage">
+        <div class="sup-stack" id="sup-stack">
+          <div class="sup-frame" data-f="0"><span class="who">D.greet()</span> <span class="call">→ "soy D" + super()</span></div>
+          <div class="sup-frame" data-f="1"><span class="who">B.greet()</span> <span class="call">→ "soy B" + super()</span></div>
+          <div class="sup-frame" data-f="2"><span class="who">C.greet()</span> <span class="call">→ "soy C" + super()</span></div>
+          <div class="sup-frame" data-f="3"><span class="who">A.greet()</span> <span class="call">→ "soy A" (fin de la cadena)</span></div>
+        </div>
+        <div class="sup-side">
+          <div class="sup-out" id="sup-out"><span class="pl">consola — pulsa Play o Siguiente…</span></div>
+          <div class="sup-narr" id="sup-narr">Cada clase imprime lo suyo y llama a <strong>super()</strong>, que consulta el MRO para saber a quién le toca. Nadie llama a "su padre": llaman <strong>al siguiente de la fila</strong>.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="sup-reset">⟲ Reset</button>
+        <button class="btn on" id="sup-next">Siguiente ▶</button>
+        <button class="btn" id="sup-play">▶ Play</button>
+      </div>
+    </div>
+    <div class="caso" style="font-style:normal;font-size:1.02rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem;">La regla práctica</div>
+      Si <strong>todas</strong> las clases de la jerarquía llaman a <span class="inlinecode">super().__init__(...)</span> en su constructor, cada clase se inicializa <em>exactamente una vez</em> y en el orden del MRO. Si <strong>una sola</strong> rompe la cadena (no llama a super), las que vienen después en el MRO <em>nunca se ejecutan</em>. Por eso la disciplina importa: en herencia múltiple, super() es un contrato colectivo.
+    </div>
+  </div>
+</section>
+
+<!-- IV: Python vs Java -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Python ↔ Java — dos filosofías</p>
+    <p class="lead">Python dice: <em>"confía en el orden".</em><br>Java dice: <em>"mejor no te dejo".</em></p>
+    <p class="subtle">Java <strong>no permite</strong> heredar de dos clases a la vez (no hay <span class="inlinecode">extends A, B</span>). En su lugar, una clase implementa varias <strong>interfaces</strong>: contratos sin estado compartido, donde el conflicto del diamante casi desaparece. Compara el mismo modelo de roles — un <strong>Administrador</strong> que es a la vez Empleado y Cliente — en los dos lenguajes:</p>
+    <div class="widget" data-tag="Mismo modelo · dos lenguajes">
+      <div class="pj-stage">
+        <div class="pj-col">
+          <div class="pj-head">Python <span class="badge">herencia múltiple real</span></div>
+          <div class="pj-body" id="py-body"></div>
+        </div>
+        <div class="pj-col">
+          <div class="pj-head">Java <span class="badge">interfaces (implements)</span></div>
+          <div class="pj-body" id="java-body"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-eq="declara">Declarar la clase</button>
+        <button class="btn" data-eq="ctor">Constructor + super</button>
+        <button class="btn" data-eq="metodo">Método compartido</button>
+        <button class="btn" data-eq="mro">Inspeccionar el orden</button>
+        <button class="btn" data-eq="uso">Usarlo</button>
+      </div>
+      <div class="pj-note" id="pj-note"></div>
+    </div>
+    <table class="cmp">
+      <thead><tr><th>Aspecto</th><th>Python</th><th>Java</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Herencia múltiple de clases</strong></td><td>Sí, nativa: <code>class D(B, C)</code></td><td>No permitida</td></tr>
+        <tr><td><strong>Cómo se combinan varios padres</strong></td><td>MRO + linealización C3</td><td>Interfaces: <code>implements A, B</code></td></tr>
+        <tr><td><strong>Estado heredado de varios</strong></td><td>Sí (atributos de cada padre)</td><td>No (interfaces no tienen estado)</td></tr>
+        <tr><td><strong>Problema del diamante</strong></td><td>Resuelto por C3</td><td>Evitado por diseño</td></tr>
+        <tr><td><strong>Llamar al "siguiente"</strong></td><td><code>super().metodo()</code></td><td><code>Interfaz.super.metodo()</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- V: el problema del diamante -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El problema del diamante</p>
+    <p class="lead">El mismo abuelo, heredado<br>por <em>dos caminos.</em> ¿Quién manda?</p>
+    <p class="subtle">Este es el clásico que durante décadas hizo que muchos lenguajes le tuvieran miedo a la herencia múltiple. Dos clases (<strong>B</strong> y <strong>C</strong>) comparten un abuelo (<strong>A</strong>), y <strong>D</strong> hereda de ambas. Si A se ejecutara dos veces, o si nadie supiera cuál versión usar, sería un caos. Cambia entre los dos lenguajes y mira la diferencia de filosofía:</p>
+    <div class="widget" data-tag="Python lo resuelve · Java lo prohíbe">
+      <div class="dia-stage">
+        <div class="dia-draw">
+          <svg class="dia-svg" viewBox="0 0 300 280" id="dia-svg">
+            <line class="edge" id="de-ba" x1="120" y1="62" x2="70" y2="108"/>
+            <line class="edge" id="de-ca" x1="180" y1="62" x2="230" y2="108"/>
+            <line class="edge" id="de-db" x1="70" y1="152" x2="120" y2="198"/>
+            <line class="edge" id="de-dc" x1="230" y1="152" x2="180" y2="198"/>
+            <rect class="nbox" x="120" y="22" width="60" height="40" rx="3"/><text class="nlabel" x="150" y="42">A</text>
+            <rect class="nbox" x="40" y="108" width="60" height="40" rx="3"/><text class="nlabel" x="70" y="128">B</text>
+            <rect class="nbox" x="200" y="108" width="60" height="40" rx="3"/><text class="nlabel" x="230" y="128">C</text>
+            <rect class="nbox" x="120" y="198" width="60" height="40" rx="3"/><text class="nlabel" x="150" y="218">D</text>
+            <text class="qmark" id="dia-q" x="150" y="130">?</text>
+          </svg>
+          <div class="dia-verdict" id="dia-verdict"></div>
+        </div>
+        <div class="dia-side">
+          <div class="dia-code" id="dia-code"></div>
+          <div class="dia-expl" id="dia-expl"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-dia="py">🐍 Python · C3 lo resuelve</button>
+        <button class="btn" data-dia="java">☕ Java · lo prohíbe</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: final / sealed -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Frenos a la herencia — final y sealed</p>
+    <p class="lead">A veces lo correcto<br>es decir: <em>"de aquí no pasas".</em></p>
+    <p class="subtle">Heredar es poderoso, pero no todo debe heredarse. Hay clases y métodos que <strong>no deben extenderse ni sobrescribirse</strong> — por seguridad, por contrato o porque su comportamiento es definitivo. Java lo expresa con <span class="inlinecode">final</span> y <span class="inlinecode">sealed</span>; Python, fiel a su estilo, lo hace por <em>convención</em> y con ayudas. Pulsa cada concepto:</p>
+    <div class="widget" data-tag="Qué bloquea cada uno">
+      <div class="fin-grid">
+        <div class="fin-card on" data-fin="fclase"><div class="fk">final class</div><div class="ft">Clase no heredable</div></div>
+        <div class="fin-card" data-fin="fmetodo"><div class="fk">final method</div><div class="ft">Método no sobrescribible</div></div>
+        <div class="fin-card" data-fin="sealed"><div class="fk">sealed</div><div class="ft">Herencia restringida</div></div>
+      </div>
+      <div class="fin-panel">
+        <div class="fin-code" id="fin-code"></div>
+        <div class="fin-text" id="fin-text"></div>
+      </div>
+    </div>
+    <div class="caso" style="font-style:normal;font-size:1.02rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem;">¿Y en Python?</div>
+      Python <strong>no tiene</strong> <span class="inlinecode">final</span> a nivel de lenguaje: confía en que el equipo respete las reglas ("somos todos adultos aquí"). Pero hay herramientas: el decorador <span class="inlinecode">@final</span> del módulo <span class="inlinecode">typing</span> avisa al verificador de tipos (mypy) si alguien intenta heredar o sobrescribir, y <span class="inlinecode">__init_subclass__</span> permite <em>bloquear</em> la herencia en tiempo de ejecución. La filosofía es la misma de siempre: Python <em>te advierte</em>, Java <em>te detiene</em>.
+    </div>
+  </div>
+</section>
+
+<!-- VII: la actividad -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Tu turno — roles de usuario</p>
+    <p class="lead">Modela un sistema donde un<br><em>Administrador</em> es Empleado <em>y</em> Cliente.</p>
+    <p class="subtle">El ejercicio de hoy: una plataforma tiene tres tipos de usuario, pero el administrador es un caso especial — cobra como empleado <em>y</em> compra como cliente. Es el escenario perfecto para herencia múltiple. Diseña la jerarquía, haz que <span class="inlinecode">super()</span> coopere y luego <em>verifica tu diseño imprimiendo el MRO</em>.</p>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-t">Empleado</div>
+        <div class="role-d">Atributos como <code>num_empleado</code>, <code>salario</code>. Método <code>__init__</code> que llama a <code>super().__init__()</code> para cooperar con la cadena.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-t">Cliente</div>
+        <div class="role-d">Atributos como <code>id_cliente</code>, <code>saldo</code>. También coopera: hace su parte y delega con <code>super()</code>.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-t">Administrador</div>
+        <div class="role-d"><code>class Administrador(Empleado, Cliente)</code>: hereda de ambos. Inspecciona <code>Administrador.__mro__</code> y explica el orden que ves.</div>
+      </div>
+    </div>
+    <div class="caso" style="font-style:normal;font-size:1.02rem;margin-top:2rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem;">Las tres preguntas que tu código debe poder responder</div>
+      <p style="margin-bottom:.6rem;">1 · ¿En qué orden queda el MRO de <strong>Administrador</strong>, y por qué <span class="inlinecode">object</span> va al final?</p>
+      <p style="margin-bottom:.6rem;">2 · Si <strong>una</strong> de tus clases olvida llamar a <span class="inlinecode">super().__init__()</span>, ¿qué atributos quedan sin inicializar? Pruébalo.</p>
+      <p>3 · ¿Cómo se vería esto mismo en Java? Esboza qué sería clase y qué sería <em>interfaz</em>.</p>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">La IA en este ejercicio</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué el MRO de mi clase pone B antes que C?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu cadena de super()</em>: "¿está cooperando bien o se rompe en alguna clase?"</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "escríbeme toda la jerarquía de roles" — <em>en el commit y en clase tú la defiendes: si no puedes explicar el orden del MRO, no entendiste la herencia.</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para la próxima clase</p>
+    <p class="lead">La herencia bien diseñada no se nota.<br>La mal diseñada, <em>se sufre.</em></p>
+    <p class="subtle">Tu proyecto integrador ya tiene clases sueltas. Es hora de darles una <strong>jerarquía</strong>: qué hereda de qué, dónde coopera <span class="inlinecode">super()</span>, y qué clases conviene dejar como base para lo que viene — porque la próxima unidad son <strong>interfaces y clases abstractas (ABC)</strong>, y se construyen sobre lo de hoy.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Commit de la jerarquía de herencia</div>
+      <ol>
+        <li><strong>Diseña la jerarquía de tu proyecto</strong>: identifica qué clases comparten comportamiento y modélalo con herencia (múltiple solo donde de verdad aporte — el Administrador es buen candidato, no fuerces diamantes).</li>
+        <li><strong>Cadena de super() correcta</strong>: cada <code>__init__</code> que herede debe llamar a <code>super().__init__(...)</code>. Verifica que cada clase se inicializa una sola vez.</li>
+        <li><strong>Imprime y comenta el MRO</strong>: agrega una línea que muestre <code>TuClase.__mro__</code> y un comentario que explique por qué ese orden.</li>
+        <li><strong>Prepara el terreno para ABC</strong>: marca qué clases serán <em>base</em> (no instanciables directamente) — la próxima sesión las volveremos abstractas con <code>abc</code> e interfaces.</li>
+        <li><strong>Sube el commit a GitHub</strong> con la jerarquía y el MRO documentado. <em>Es tu participación de la sesión</em> — ese commit es la evidencia.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="pj-line">'+html+'</span>';
+
+// ─── W1: visualizador del MRO ───────────────────────────────
+const mroOrder=['D','B','C','A'];
+const mroExpl={
+  D:'<strong>Paso 1 · D.</strong> Python siempre empieza por la propia clase. Si <code>D</code> define el método, lo usa y ya. Si no, pasa al siguiente del MRO.',
+  B:'<strong>Paso 2 · B.</strong> El primer padre escrito en <code>class D(B, C)</code>. El orden en que listas los padres <em>importa</em>: B va antes que C.',
+  C:'<strong>Paso 3 · C.</strong> El segundo padre. Fíjate en algo crucial: C va <em>antes</em> que A, aunque C también herede de A. C3 nunca pone a un padre antes que a sus hijas.',
+  A:'<strong>Paso 4 · A.</strong> El abuelo común, hasta el final. Esta es la regla de oro de C3: <strong>una clase aparece después de todas las que heredan de ella</strong>. Después de A vendría <code>object</code>.'
+};
+let mroIdx=-1,mroFull=false;
+function mroRender(){
+  mroOrder.forEach(c=>{
+    const n=$('n-'+c);
+    n.classList.remove('lit','dim');
+    $('o-'+c).textContent='';
+  });
+  if(mroFull){
+    mroOrder.forEach((c,i)=>{$('n-'+c).classList.add('lit');$('o-'+c).textContent=(i+1);});
+    $('mro-chain').innerHTML=mroOrder.map((c,i)=>'<span class="tk on">'+c+'</span>').join('<span class="arr">→</span>')+'<span class="arr">→</span><span class="tk">object</span>';
+    $('mro-expl').innerHTML='<strong>El MRO completo:</strong> <code>(D, B, C, A, object)</code>. Esta es exactamente la tupla que devuelve <code>D.__mro__</code>. Cuando buscas un método, Python recorre esta fila de izquierda a derecha y usa la <em>primera</em> clase que lo define.';
+    return;
+  }
+  mroOrder.forEach((c,i)=>{
+    const n=$('n-'+c);
+    if(i<mroIdx) n.classList.add('dim');
+    if(i===mroIdx){n.classList.add('lit');$('o-'+c).textContent=(i+1);}
+  });
+  $('mro-chain').innerHTML=mroOrder.map((c,i)=>{
+    const cls=i===mroIdx?'tk on':(i<mroIdx?'tk':'tk');
+    return '<span class="'+cls+'" style="'+(i>mroIdx?'opacity:.4':'')+'">'+c+'</span>';
+  }).join('<span class="arr">→</span>')+'<span class="arr">→</span><span class="tk" style="opacity:.4">object</span>';
+  $('mro-expl').innerHTML=mroIdx<0
+    ?'Pulsa <strong>Siguiente</strong> para que Python busque el método empezando por <code>D</code>. Verás el orden exacto que sigue.'
+    :mroExpl[mroOrder[mroIdx]];
+}
+$('mro-next').addEventListener('click',()=>{mroFull=false;if(mroIdx<mroOrder.length-1){mroIdx++;}mroRender();});
+$('mro-prev').addEventListener('click',()=>{mroFull=false;if(mroIdx>-1){mroIdx--;}mroRender();});
+$('mro-reset').addEventListener('click',()=>{mroFull=false;mroIdx=-1;mroRender();});
+$('mro-all').addEventListener('click',()=>{mroFull=true;mroRender();});
+mroRender();
+
+// ─── W2: super() encadenado ─────────────────────────────────
+const supSteps=[
+  {frame:0,out:['soy D'],narr:'<strong>D.greet()</strong> se ejecuta primero (D está al frente del MRO). Imprime "soy D" y llama a <code>super()</code>. ¿A quién? Al siguiente del MRO: <strong>B</strong>.'},
+  {frame:1,out:['soy D','soy B'],narr:'<strong>super() saltó a B</strong>, no a A. Aunque B hereda de A, super() respeta el MRO: D → <strong>B</strong> → C → A. B imprime y vuelve a delegar.'},
+  {frame:2,out:['soy D','soy B','soy C'],narr:'Ahora <strong>C</strong>. Este es el punto clave de la herencia múltiple cooperativa: el <code>super()</code> dentro de <em>B</em> no llamó a A — llamó a <strong>C</strong>, su "hermana" en el diamante. C3 hace que A se ejecute una sola vez.'},
+  {frame:3,out:['soy D','soy B','soy C','soy A'],narr:'<strong>A</strong>, el final de la cadena. A imprime y ya no llama a super (o llama a object). Cuatro clases, <strong>cada una ejecutada exactamente una vez</strong>, en el orden del MRO. Eso es cooperación.'}
+];
+let supIdx=-1,supTimer=null;
+function supRender(){
+  document.querySelectorAll('.sup-frame').forEach((f,i)=>{
+    f.classList.remove('active','done');
+    if(i<supIdx) f.classList.add('done');
+    if(i===supIdx) f.classList.add('active');
+  });
+  if(supIdx<0){
+    $('sup-out').innerHTML='<span class="pl">consola — pulsa Play o Siguiente…</span>';
+    $('sup-narr').innerHTML='Cada clase imprime lo suyo y llama a <strong>super()</strong>, que consulta el MRO para saber a quién le toca. Nadie llama a "su padre": llaman <strong>al siguiente de la fila</strong>.';
+  }else{
+    const s=supSteps[supIdx];
+    $('sup-out').innerHTML=s.out.map(o=>'&gt; '+o).join('<br>');
+    $('sup-narr').innerHTML=s.narr;
+  }
+}
+function supStop(){if(supTimer){clearInterval(supTimer);supTimer=null;$('sup-play').textContent='▶ Play';}}
+$('sup-next').addEventListener('click',()=>{supStop();if(supIdx<supSteps.length-1){supIdx++;supRender();}});
+$('sup-reset').addEventListener('click',()=>{supStop();supIdx=-1;supRender();});
+$('sup-play').addEventListener('click',()=>{
+  if(supTimer){supStop();return;}
+  if(supIdx>=supSteps.length-1){supIdx=-1;supRender();}
+  $('sup-play').textContent='❚❚ Pausa';
+  supTimer=setInterval(()=>{
+    if(supIdx<supSteps.length-1){supIdx++;supRender();}
+    else supStop();
+  },1500);
+});
+supRender();
+
+// ─── W3: Python ↔ Java (roles) ──────────────────────────────
+const eqData={
+  declara:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Empleado</span>:',
+      '    <span class="cm"># ...</span>',
+      '',
+      '<span class="kw">class</span> <span class="cls">Cliente</span>:',
+      '    <span class="cm"># ...</span>',
+      '',
+      '<span class="kw">class</span> <span class="cls">Administrador</span>(<span class="cls">Empleado</span>, <span class="cls">Cliente</span>):',
+      '    <span class="cm"># hereda de AMBAS clases</span>',
+      '    <span class="kw">pass</span>',
+    ],
+    java:[
+      '<span class="kw">interface</span> <span class="cls">Empleado</span> {',
+      '    <span class="cm">// solo el contrato</span>',
+      '}',
+      '<span class="kw">interface</span> <span class="cls">Cliente</span> {',
+      '    <span class="cm">// solo el contrato</span>',
+      '}',
+      '',
+      '<span class="kw">class</span> <span class="cls">Administrador</span>',
+      '        <span class="kw">implements</span> <span class="cls">Empleado</span>, <span class="cls">Cliente</span> {',
+      '}',
+    ],
+    note:'En Python <code>Administrador</code> hereda <strong>todo</strong> (estado + comportamiento) de dos clases reales. En Java no puedes hacer <code>extends Empleado, Cliente</code>: usas <strong>interfaces</strong>, que son contratos sin atributos. Misma idea de "es ambas cosas", reglas distintas.'
+  },
+  ctor:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Empleado</span>:',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, **kw):',
+      '        <span class="self">self</span>.salario = 0',
+      '        <span class="kw">super</span>().__init__(**kw)  <span class="cm"># coopera</span>',
+      '',
+      '<span class="kw">class</span> <span class="cls">Administrador</span>(<span class="cls">Empleado</span>, <span class="cls">Cliente</span>):',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>):',
+      '        <span class="kw">super</span>().__init__()  <span class="cm"># dispara la cadena</span>',
+    ],
+    java:[
+      '<span class="kw">class</span> <span class="cls">Administrador</span>',
+      '        <span class="kw">implements</span> <span class="cls">Empleado</span>, <span class="cls">Cliente</span> {',
+      '    <span class="ty">double</span> salario;',
+      '    <span class="ty">double</span> saldo;',
+      '    <span class="kw">public</span> Administrador() {',
+      '        <span class="self">this</span>.salario = 0;',
+      '        <span class="self">this</span>.saldo = 0;',
+      '    <span class="cm">// sin super múltiple: tú inicializas todo</span>',
+      '    }',
+      '}',
+    ],
+    note:'Python encadena los constructores con <code>super().__init__()</code>: el MRO garantiza que <strong>cada clase se inicializa una vez</strong>. Java no tiene ese problema porque las interfaces no tienen estado — el constructor de la clase concreta inicializa todo a mano.'
+  },
+  metodo:{
+    py:[
+      '<span class="kw">class</span> <span class="cls">Empleado</span>:',
+      '    <span class="kw">def</span> describir(<span class="self">self</span>):',
+      '        <span class="kw">return</span> <span class="str">"trabaja aquí"</span>',
+      '',
+      '<span class="kw">class</span> <span class="cls">Cliente</span>:',
+      '    <span class="kw">def</span> describir(<span class="self">self</span>):',
+      '        <span class="kw">return</span> <span class="str">"compra aquí"</span>',
+      '',
+      '<span class="cm"># Admin hereda describir() de... ¿quién?</span>',
+      '<span class="cm"># del PRIMERO en el MRO: Empleado</span>',
+    ],
+    java:[
+      '<span class="kw">interface</span> <span class="cls">Empleado</span> {',
+      '    <span class="kw">default</span> <span class="ty">String</span> describir() {',
+      '        <span class="kw">return</span> <span class="str">"trabaja aquí"</span>;',
+      '    }',
+      '}',
+      '<span class="cm">// Si Cliente también tiene describir(),</span>',
+      '<span class="cm">// Java OBLIGA a Administrador a</span>',
+      '<span class="cm">// reescribirlo y elegir explícitamente.</span>',
+    ],
+    note:'Si dos padres definen el mismo método, Python elige por <strong>orden del MRO</strong> (gana <code>Empleado</code>, el primero listado). Java con <strong>default methods</strong> en interfaces te <em>obliga</em> a resolver el choque a mano con <code>Empleado.super.describir()</code>. Ningún lenguaje deja la ambigüedad sin resolver.'
+  },
+  mro:{
+    py:[
+      '<span class="cm"># inspecciona el orden de resolución</span>',
+      '<span class="kw">print</span>(<span class="cls">Administrador</span>.__mro__)',
+      '',
+      '<span class="cm"># (Administrador, Empleado, Cliente,</span>',
+      '<span class="cm">#  object)</span>',
+      '',
+      '<span class="cls">Administrador</span>.mro()  <span class="cm"># mismo resultado, lista</span>',
+    ],
+    java:[
+      '<span class="cm">// Java no tiene un "MRO" que imprimir:</span>',
+      '<span class="cm">// no hay herencia múltiple de clases,</span>',
+      '<span class="cm">// así que no hay orden que resolver.</span>',
+      '',
+      '<span class="cm">// Las interfaces se consultan por nombre</span>',
+      '<span class="cm">// explícito, no por una linealización.</span>',
+    ],
+    note:'<code>__mro__</code> es una <strong>superpotencia de Python</strong>: puedes ver, en cualquier momento, el orden exacto de resolución. Java no necesita un equivalente porque eliminó la fuente del problema. <em>En tu ejercicio, imprimir el MRO es la forma de demostrar que entendiste.</em>'
+  },
+  uso:{
+    py:[
+      'admin = <span class="cls">Administrador</span>()',
+      '<span class="kw">print</span>(admin.salario)   <span class="cm"># de Empleado</span>',
+      '<span class="kw">print</span>(admin.saldo)     <span class="cm"># de Cliente</span>',
+      '<span class="kw">print</span>(admin.describir())  <span class="cm"># "trabaja aquí"</span>',
+      '',
+      '<span class="kw">isinstance</span>(admin, <span class="cls">Cliente</span>)   <span class="cm"># True</span>',
+      '<span class="kw">isinstance</span>(admin, <span class="cls">Empleado</span>) <span class="cm"># True</span>',
+    ],
+    java:[
+      'Administrador admin = <span class="kw">new</span> Administrador();',
+      'admin.describir();',
+      '',
+      '<span class="cm">// es ambos tipos a la vez:</span>',
+      'admin <span class="kw">instanceof</span> <span class="cls">Empleado</span>  <span class="cm">// true</span>',
+      'admin <span class="kw">instanceof</span> <span class="cls">Cliente</span>   <span class="cm">// true</span>',
+    ],
+    note:'El resultado es el mismo: el administrador <strong>es</strong> empleado <strong>y</strong> cliente — <code>isinstance</code> / <code>instanceof</code> lo confirman con ambos. La diferencia está en <em>cómo</em> se llegó: Python combinó dos clases con estado; Java combinó dos contratos sin estado.'
+  }
+};
+function eqRender(key){
+  const d=eqData[key];
+  $('py-body').innerHTML=d.py.map(L).join('');
+  $('java-body').innerHTML=d.java.map(L).join('');
+  $('pj-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-eq]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-eq]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    eqRender(b.dataset.eq);
+  });
+});
+eqRender('declara');
+
+// ─── W4: problema del diamante ──────────────────────────────
+const diaData={
+  py:{
+    edges:['de-ba','de-ca','de-db','de-dc'],
+    conflict:false,
+    verdict:{cls:'ok',txt:'✓ Compila y corre'},
+    code:[
+      '<span class="kw">class</span> A: ...',
+      '<span class="kw">class</span> B(A): ...',
+      '<span class="kw">class</span> C(A): ...',
+      '<span class="kw">class</span> D(B, C): ...   <span class="cm"># válido</span>',
+      '',
+      '<span class="out">&gt;&gt;&gt; D.__mro__</span>',
+      '<span class="out">(D, B, C, A, object)</span>',
+    ],
+    expl:'<strong>Python lo resuelve.</strong> El algoritmo <em>C3</em> linealiza el diamante en una sola fila: <code>D → B → C → A → object</code>. A aparece <strong>una sola vez</strong>, al final. No hay ambigüedad ni doble ejecución: hay un orden, y es inspeccionable.'
+  },
+  java:{
+    edges:['de-ba','de-ca','de-db','de-dc'],
+    conflict:true,
+    verdict:{cls:'err',txt:'✗ No compila'},
+    code:[
+      '<span class="kw">class</span> A { }',
+      '<span class="kw">class</span> B <span class="kw">extends</span> A { }',
+      '<span class="kw">class</span> C <span class="kw">extends</span> A { }',
+      '<span class="err">class D extends B, C { }</span>',
+      '',
+      '<span class="err">// error: clase no puede extender</span>',
+      '<span class="err">// varias clases a la vez</span>',
+    ],
+    expl:'<strong>Java lo prohíbe.</strong> No existe <code>extends B, C</code>: el lenguaje eliminó el problema del diamante <em>quitando la herencia múltiple de clases</em>. ¿La solución para "ser varias cosas"? <strong>Interfaces</strong> — que no tienen estado, así que el abuelo nunca se hereda dos veces con datos en conflicto.'
+  }
+};
+function diaRender(key){
+  const d=diaData[key];
+  ['de-ba','de-ca','de-db','de-dc'].forEach(e=>$(e).classList.remove('conflict'));
+  if(d.conflict) d.edges.forEach(e=>$(e).classList.add('conflict'));
+  $('dia-q').classList.toggle('show',d.conflict);
+  const v=$('dia-verdict');
+  v.className='dia-verdict '+d.verdict.cls;
+  v.textContent=d.verdict.txt;
+  $('dia-code').innerHTML=d.code.map(h=>'<span class="ln" style="display:block;white-space:pre">'+h+'</span>').join('');
+  $('dia-expl').innerHTML=d.expl;
+}
+document.querySelectorAll('[data-dia]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-dia]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    diaRender(b.dataset.dia);
+  });
+});
+diaRender('py');
+
+// ─── W5: final / sealed ─────────────────────────────────────
+const finData={
+  fclase:{
+    code:[
+      '<span class="kw">final class</span> <span class="ty">Configuracion</span> {',
+      '    <span class="cm">// nadie puede heredar de esto</span>',
+      '}',
+      '',
+      '<span class="err">class Hack extends Configuracion { }</span>',
+      '<span class="cm">// error: cannot inherit from final</span>',
+    ],
+    text:'<strong>final class</strong> sella la clase entera: <em>nadie puede heredar de ella.</em> Se usa cuando una clase es definitiva y no debe extenderse — por seguridad o porque su comportamiento ya está completo. En Java, <code>String</code> es <code>final</code>: por eso nunca podrás crear un "String alternativo" que rompa sus garantías.'
+  },
+  fmetodo:{
+    code:[
+      '<span class="kw">class</span> <span class="ty">Cuenta</span> {',
+      '    <span class="kw">public final</span> <span class="ty">void</span> validar() {',
+      '        <span class="cm">// las hijas NO pueden cambiar esto</span>',
+      '    }',
+      '}',
+      '',
+      '<span class="err">// @Override validar() → error</span>',
+    ],
+    text:'<strong>final method</strong> deja heredar la clase, pero <em>blinda un método concreto:</em> las hijas lo reciben pero <strong>no pueden sobrescribirlo</strong>. Útil para reglas que no deben alterarse — una validación de seguridad, un cálculo legal. Heredas el comportamiento, pero no el permiso de cambiarlo.'
+  },
+  sealed:{
+    code:[
+      '<span class="kw">sealed class</span> <span class="ty">Figura</span>',
+      '    <span class="kw">permits</span> <span class="ty">Circulo</span>, <span class="ty">Cuadrado</span> { }',
+      '',
+      '<span class="kw">final class</span> <span class="ty">Circulo</span> <span class="kw">extends</span> Figura { }',
+      '<span class="kw">final class</span> <span class="ty">Cuadrado</span> <span class="kw">extends</span> Figura { }',
+      '<span class="err">class Triangulo extends Figura { }  // ✗</span>',
+    ],
+    text:'<strong>sealed</strong> (Java 17+) es el punto medio: <em>permite herencia, pero solo a una lista cerrada</em> de clases declaradas con <code>permits</code>. Es "herencia con lista de invitados". Sirve para modelar conjuntos finitos y exhaustivos — y deja que el compilador verifique que cubriste todos los casos.'
+  }
+};
+function finRender(key){
+  const d=finData[key];
+  $('fin-code').innerHTML=d.code.map(h=>'<span class="ln">'+h+'</span>').join('');
+  $('fin-text').innerHTML=d.text;
+}
+document.querySelectorAll('[data-fin]').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('[data-fin]').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    finRender(c.dataset.fin);
+  });
+});
+finRender('fclase');
+</script>
+</body>
+</html>

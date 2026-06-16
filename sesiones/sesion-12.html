@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XII — La cuadrícula — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* caso (puente a práctica) */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+
+/* W1: matriz de calificaciones */
+.mx-stage{display:grid;grid-template-columns:1.2fr 1fr;gap:1.5rem;align-items:start;}
+.mx-grid-wrap{background:var(--paper);border:1px solid var(--line);padding:1.4rem;overflow-x:auto;}
+.mx-table{border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.78rem;margin:0 auto;}
+.mx-table th{padding:.5rem .55rem;color:var(--ink-soft);font-weight:500;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;}
+.mx-table th.mx-corner{color:var(--blood);}
+.mx-table th.mx-rh{text-align:right;color:var(--ink);font-weight:700;}
+.mx-cell{width:3rem;height:2.6rem;text-align:center;border:1px solid var(--line);background:var(--paper-deep);color:var(--ink);cursor:pointer;transition:all .18s;font-weight:500;}
+.mx-cell:hover{background:rgba(181,133,42,.18);border-color:var(--ochre);}
+.mx-cell.sel{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.mx-cell.rowlit{background:rgba(160,36,24,.08);}
+.mx-cell.collit{background:rgba(160,36,24,.08);}
+.mx-cell.sel.rowlit,.mx-cell.sel.collit{background:var(--blood);}
+.mx-panel{background:var(--ink);padding:1.6rem;min-height:240px;display:flex;flex-direction:column;gap:.9rem;}
+.mx-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.mx-idx{font-family:'JetBrains Mono',monospace;font-size:1.7rem;color:#D4956A;letter-spacing:.02em;}
+.mx-idx .val{color:#9FBF9C;}
+.mx-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.mx-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
+.mx-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+.mx-stats{margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(239,230,210,.7);line-height:1.7;}
+.mx-stats b{color:#9FBF9C;}
+
+/* W2 & W4: tabs de código (Python / Java / Go) */
+.cx-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.cx-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .95rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.cx-tab:hover{border-color:var(--blood);color:var(--blood);}
+.cx-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.cx-tab[data-lang="py"].on{background:var(--olive);border-color:var(--olive);}
+.cx-tab[data-lang="java"].on{background:#3E6E86;border-color:#3E6E86;}
+.cx-tab[data-lang="go"].on{background:var(--blood);border-color:var(--blood);}
+.cx-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:240px;overflow-x:auto;}
+.cx-code .ln{white-space:pre;display:block;}
+.cx-code .kw{color:#D4956A;font-style:italic;}
+.cx-code .ty{color:#A6C2D6;}
+.cx-code .self{color:#8EAF8B;font-weight:700;}
+.cx-code .str{color:#C9A961;}
+.cx-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.cx-code .out{color:#9FBF9C;}
+.cx-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.cx-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.cx-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.cx-step{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.1rem;}
+
+/* W3: shallow vs deep copy */
+.sc-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.sc-mem{background:var(--paper);border:1px solid var(--line);padding:1.5rem;min-height:300px;}
+.sc-mem-t{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:1.1rem;text-align:center;}
+.sc-var{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink);display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.sc-var .nm{min-width:5.5rem;color:var(--blood);font-weight:700;}
+.sc-var .ar{color:var(--ink-soft);}
+.sc-obj{display:inline-block;border:1.5px solid var(--ink);background:var(--paper-deep);padding:.4rem .75rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.05em;transition:all .35s;position:relative;}
+.sc-obj.flash{background:rgba(160,36,24,.22);border-color:var(--blood);box-shadow:0 0 0 4px rgba(160,36,24,.12);}
+.sc-objline{margin:.9rem 0;min-height:2.6rem;display:flex;align-items:center;gap:.6rem;}
+.sc-objtag{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ink-soft);min-width:3.5rem;}
+.sc-link{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--olive);font-style:italic;margin-top:.4rem;min-height:1.2rem;}
+.sc-link.shared{color:var(--blood);font-weight:700;font-style:normal;}
+.sc-console{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.85;color:var(--paper);}
+.sc-console .ln{white-space:pre;display:block;min-height:1.2rem;}
+.sc-console .kw{color:#D4956A;font-style:italic;}
+.sc-console .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.sc-console .out{color:#9FBF9C;}
+.sc-console .danger{color:#E08A82;font-weight:700;}
+.sc-verdict{margin-top:1.3rem;padding:1.2rem 1.4rem;border-left:3px solid var(--ochre);background:var(--paper);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:var(--ink-soft);min-height:4rem;}
+.sc-verdict strong{color:var(--ink);font-style:normal;font-weight:600;}
+.sc-verdict.bad{border-left-color:var(--blood);}
+.sc-verdict.good{border-left-color:var(--olive);}
+.sc-verdict.bad strong{color:var(--blood);}
+.sc-verdict.good strong{color:var(--olive);}
+
+/* tabla comparativa lenguajes */
+.cmp-table{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
+.cmp-table th,.cmp-table td{border:1px solid var(--line);padding:.85rem 1rem;text-align:left;vertical-align:top;}
+.cmp-table th{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;}
+.cmp-table td:first-child{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--blood);background:var(--paper);white-space:nowrap;}
+.cmp-table tbody tr:nth-child(even) td{background:rgba(42,29,20,.03);}
+.cmp-table code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--ink);}
+
+/* preguntas guía */
+.guia{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.guia-card{background:var(--paper);border:1px solid var(--line);padding:1.3rem 1.5rem;}
+.guia-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--ink);line-height:1.4;}
+.guia-q::before{content:'¿';color:var(--blood);}
+.guia-hint{font-size:.88rem;color:rgba(42,29,20,.55);margin-top:.5rem;font-style:italic;}
+
+/* reglas IA */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+/* W5: checklist tarea */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-group{margin-top:1.4rem;}
+.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .mx-stage,.sc-stage,.req-grid,.guia{grid-template-columns:1fr;}
+  .cmp-table{font-size:.82rem;}
+  .cmp-table th,.cmp-table td{padding:.6rem .6rem;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-11.html" class="back">Sesión 11</a>
+  <span class="session-label">Sesión 12 · 26.06.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">notas = [[8, 9, 7], [6, 10, 9]]</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">int[][] m = new int[3][4];</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">copy.deepcopy(matriz)</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">s := make([]int, 0, 8)</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">m[i][j]  →  fila i, columna j</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XII · Bloque I · Arrays · Ref. Temario 4.1 · 4.2 · 4.3 · 4.4 · 4.5 · 4.6 · Python · Java · Go</div>
+    <h1>La <em>cuadrícula.</em></h1>
+    <p class="hero-sub">Una variable guarda un dato. Un arreglo guarda <em>cien</em> — alineados, numerados, listos para recorrer. Hoy aprendes a pensar en casillas indexadas, en filas y columnas, y en lo que de verdad ocurre cuando copias una.</p>
+  </div>
+</section>
+
+<!-- I: por qué arrays -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · De una variable a muchas</p>
+    <p class="lead">Antes: una caja por cada dato.<br>Ahora: una <em>cuadrícula</em> con todo dentro.</p>
+    <p class="subtle">Imagina que necesitas las calificaciones de <strong>30 alumnos en 5 materias</strong>. ¿Vas a declarar 150 variables sueltas (<span class="inlinecode">nota1, nota2, nota3…</span>)? Imposible de recorrer, imposible de mantener. La respuesta es el <strong>arreglo</strong>: una sola estructura, indexada, donde cada dato vive en una <em>casilla numerada</em>. Y cuando un arreglo guarda otros arreglos, nace la <strong>matriz</strong> — la cuadrícula de filas y columnas que organizará todo el taller de hoy.</p>
+    <p class="subtle">Hoy lo vemos en <strong>Python</strong> (tu lenguaje base) y lo comparamos con <strong>Java</strong> y <strong>Go</strong>, porque cada uno entiende los arreglos de forma distinta — y entender la diferencia es entender la memoria.</p>
+  </div>
+</section>
+
+<!-- II: matriz de calificaciones -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La matriz — alumnos × materias</p>
+    <p class="lead">Dos índices, una casilla.<br><em>m[i][j]</em> es fila i, columna j.</p>
+    <p class="subtle">Esta es la matriz del taller de hoy: cada <strong>fila es un alumno</strong>, cada <strong>columna una materia</strong>. Para llegar a un dato necesitas <em>dos</em> coordenadas: primero la fila, luego la columna. Toca cualquier casilla y observa su índice <span class="inlinecode">[i][j]</span> y su valor:</p>
+    <div class="widget" data-tag="Toca una casilla">
+      <div class="mx-stage">
+        <div class="mx-grid-wrap">
+          <table class="mx-table" id="mx-table"></table>
+        </div>
+        <div class="mx-panel">
+          <div class="mx-tag" id="mx-tag">Sin selección</div>
+          <div class="mx-idx" id="mx-idx">notas[ i ][ j ]</div>
+          <div class="mx-desc" id="mx-desc">Toca una casilla de la cuadrícula. Te mostraré <strong>quién</strong> es esa fila, <strong>qué materia</strong> es esa columna, y cómo se accede al dato en código: <code>notas[i][j]</code>.</div>
+          <div class="mx-stats" id="mx-stats"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cx-code" style="margin-top:1.5rem">
+      <span class="ln"><span class="cm"># La misma matriz, declarada en Python — una lista de listas</span></span>
+      <span class="ln">notas = [</span>
+      <span class="ln">    [<span class="str">8</span>, <span class="str">9</span>, <span class="str">7</span>, <span class="str">10</span>],   <span class="cm"># Ana   → fila 0</span></span>
+      <span class="ln">    [<span class="str">6</span>, <span class="str">10</span>, <span class="str">9</span>, <span class="str">8</span>],   <span class="cm"># Luis  → fila 1</span></span>
+      <span class="ln">    [<span class="str">9</span>, <span class="str">7</span>, <span class="str">8</span>, <span class="str">9</span>],   <span class="cm"># María → fila 2</span></span>
+      <span class="ln">]</span>
+      <span class="ln">print(notas[<span class="str">1</span>][<span class="str">2</span>])   <span class="out"># 9  → Luis, en Programación</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- III: declaración / creación / inicialización en 3 lenguajes -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Declarar · crear · inicializar</p>
+    <p class="lead">Tres lenguajes, tres maneras<br>de levantar la <em>misma</em> cuadrícula.</p>
+    <p class="subtle">El temario distingue tres momentos: <strong>declarar</strong> (decir que existe), <strong>crear</strong> (reservar la memoria) e <strong>inicializar</strong> (poner valores). En Python casi se funden en uno; en Java son pasos explícitos; en Go hay un verbo propio, <span class="inlinecode">make</span>. Recórrelo lenguaje por lenguaje — Python es tu base, los otros dos son la comparación:</p>
+    <div class="widget" data-tag="Mismo concepto · tres lenguajes">
+      <div class="cx-tabs" id="decl-tabs">
+        <button class="cx-tab on" data-lang="py" data-decl="py">Python</button>
+        <button class="cx-tab" data-lang="java" data-decl="java">Java</button>
+        <button class="cx-tab" data-lang="go" data-decl="go">Go</button>
+      </div>
+      <div class="cx-code" id="decl-code"></div>
+      <div class="cx-note" id="decl-note"></div>
+    </div>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Operación</th><th>Python (list)</th><th>Java (array fijo)</th><th>Go (slice)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>declarar + crear vacío</td><td><code>a = []</code></td><td><code>int[] a = new int[5];</code></td><td><code>a := make([]int, 5)</code></td></tr>
+        <tr><td>inicializar con valores</td><td><code>a = [1, 2, 3]</code></td><td><code>int[] a = {1, 2, 3};</code></td><td><code>a := []int{1, 2, 3}</code></td></tr>
+        <tr><td>tamaño</td><td><code>len(a)</code></td><td><code>a.length</code></td><td><code>len(a)</code></td></tr>
+        <tr><td>matriz 3×4</td><td><code>[[0]*4 for _ in range(3)]</code></td><td><code>new int[3][4]</code></td><td><code>make([][]int, 3)</code> + filas</td></tr>
+        <tr><td>tamaño fijo</td><td>No — crece</td><td>Sí — fijo al crear</td><td>Crece (cap. interna)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- IV: shallow vs deep copy -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · El taller del peligro — shallow vs deep</p>
+    <p class="lead">Copiar una matriz parece trivial.<br>Hasta que la copia <em>contagia</em> al original.</p>
+    <p class="subtle">El corazón del taller de hoy: cuando copias una matriz, ¿copiaste <strong>los datos</strong> o solo <strong>la dirección hacia los datos</strong>? Una <strong>copia superficial</strong> (shallow) duplica la lista de afuera pero <em>comparte las filas de adentro</em> — tocas una, se mueve la otra. Una <strong>copia profunda</strong> (deep) clona todo, hasta el último número. Ejecútalo paso a paso y mira la memoria:</p>
+    <div class="widget" data-tag="Ejecuta y observa la memoria">
+      <div class="w-controls" style="margin-top:0;margin-bottom:1.4rem">
+        <button class="btn on" id="sc-shallow">Modo: copia superficial</button>
+        <button class="btn btn-olive" id="sc-deep">Modo: copia profunda</button>
+      </div>
+      <div class="sc-stage">
+        <div class="sc-mem">
+          <div class="sc-mem-t">Memoria</div>
+          <div class="sc-var"><span class="nm">original</span><span class="ar">──▶</span>
+            <span class="sc-obj" id="sc-o-orig">[ fila0, fila1 ]</span>
+          </div>
+          <div class="sc-var" id="sc-copy-row" style="opacity:.25"><span class="nm" id="sc-copy-nm">copia</span><span class="ar">──▶</span>
+            <span class="sc-obj" id="sc-o-copy">[ ? , ? ]</span>
+          </div>
+          <div class="sc-link" id="sc-link"></div>
+          <div class="sc-objline"><span class="sc-objtag">fila0 →</span><span class="sc-obj" id="sc-f0">[8, 9, 7]</span></div>
+          <div class="sc-objline"><span class="sc-objtag">fila1 →</span><span class="sc-obj" id="sc-f1">[6, 10, 9]</span></div>
+        </div>
+        <div class="sc-console" id="sc-console"></div>
+      </div>
+      <div class="sc-verdict" id="sc-verdict">Elige un modo y pulsa <strong>Siguiente</strong> para ejecutar el experimento paso a paso.</div>
+      <div class="w-controls">
+        <button class="btn" id="sc-reset">⟲ Reset</button>
+        <button class="btn" id="sc-prev">◀ Atrás</button>
+        <button class="btn on" id="sc-next">Siguiente ▶</button>
+      </div>
+    </div>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Forma de copiar</th><th>¿Qué duplica?</th><th>¿Filas compartidas?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>copia = original</td><td>Nada — mismo objeto</td><td>Todo compartido (es un alias)</td></tr>
+        <tr><td>original[:] · list(original) · .copy()</td><td>La lista externa</td><td>Sí — las filas se comparten (shallow)</td></tr>
+        <tr><td>copy.copy(original)</td><td>La lista externa</td><td>Sí — shallow también</td></tr>
+        <tr><td>copy.deepcopy(original)</td><td>Todo, recursivo</td><td>No — clones independientes (deep)</td></tr>
+        <tr><td>[fila[:] for fila in original]</td><td>Externa + cada fila</td><td>No — deep "a mano"</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- V: list vs array fijo vs slice + redimensión -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Crecer o no crecer — list, array, slice</p>
+    <p class="lead">Python crece sin avisar.<br>Java tiene un <em>muro</em>. Go negocia.</p>
+    <p class="subtle">Aquí está la diferencia que define a cada lenguaje. La <strong>list de Python</strong> es dinámica: agregas con <span class="inlinecode">append</span> y crece sola. El <strong>array de Java</strong> es de <em>tamaño fijo</em>: si quieres uno más grande, creas otro y copias. El <strong>slice de Go</strong> crece con <span class="inlinecode">append</span>, pero por debajo gestiona una capacidad. Mira cómo reacciona cada uno a un <em>append</em> y a la <em>redimensión</em>:</p>
+    <div class="widget" data-tag="Append · redimensión · tres lenguajes">
+      <div class="cx-tabs" id="grow-tabs">
+        <button class="cx-tab on" data-lang="py" data-grow="py">Python · list</button>
+        <button class="cx-tab" data-lang="java" data-grow="java">Java · int[]</button>
+        <button class="cx-tab" data-lang="go" data-grow="go">Go · slice</button>
+      </div>
+      <div class="cx-code" id="grow-code"></div>
+      <div class="cx-note" id="grow-note"></div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">La <strong>redimensión</strong> del temario (4.4) es justo esto: cambiar el tamaño de un arreglo. En Python y Go el lenguaje lo hace por ti; en Java lo haces tú a mano (o usas <span class="inlinecode">Arrays.copyOf</span> / un <span class="inlinecode">ArrayList</span>). Saber cuál usar es saber qué te cuesta cada uno en <em>memoria</em>.</p>
+  </div>
+</section>
+
+<!-- VI: puente a la práctica 3 -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Puente a la Práctica institucional 3</p>
+    <p class="lead">Lo de hoy no se queda en el aula.<br>Es el <em>motor</em> de tu siguiente práctica.</p>
+    <p class="subtle">La <strong>Práctica institucional 3 (Arrays)</strong> usa exactamente lo de esta sesión: declaración, creación e inicialización de arreglos para administrar personal. Léela ya, porque tu Tarea 2 es el ensayo de estos mismos músculos:</p>
+    <div class="caso">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;">Practicario MCT158 · Práctica 3 de 6 · Arrays · resumen del caso</div>
+      <p style="font-style:normal;font-size:1.1rem;">La tienda <strong>"Mercado tecnológico"</strong> necesita administrar el <strong>inventario de personal por sucursal</strong>. En cada sucursal hay tres puestos: <strong>gerentes, vendedores y cajeros</strong>. El sistema debe <strong>registrar los datos básicos</strong> de los tres puestos, <strong>actualizar los datos de contacto</strong> y <strong>mostrar la ficha</strong> de cada empleado. Todo se modela con <em>arreglos</em>: declaración, creación e inicialización — los puestos como filas, los empleados como casillas.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Requerimiento 01</div>
+        <div class="req-t">Registrar personal</div>
+        <div class="req-d">Captura los datos básicos de gerentes, vendedores y cajeros usando <em>arreglos</em> por puesto.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 02</div>
+        <div class="req-t">Actualizar contacto</div>
+        <div class="req-d">Modifica los datos de contacto de un empleado <em>localizándolo por su índice</em> en el arreglo.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 03</div>
+        <div class="req-t">Mostrar ficha</div>
+        <div class="req-d">Recorre el arreglo y muestra la <em>ficha completa</em> de cada empleado por sucursal.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">La práctica pide, además de la solución, tres entregables de diseño que ya conoces de las sesiones 7 y 8 — <strong>caso de uso</strong>, <strong>tarjeta CRC</strong> y <strong>diagrama de secuencia</strong>. No empieces por el código: primero piensa la cuadrícula.</p>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">Reglas de la IA para arrays</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué <code>copia = original[:]</code> sigue compartiendo las filas?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu copia</em>: "pega tu deepcopy y pregunta si de verdad quedó independiente"</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "hazme la Práctica 3 completa" — <em>si la IA lo hizo, tú lo defiendes: en la revisión te pediré explicar qué pasa en memoria línea por línea.</em></span></div>
+    </div>
+    <p class="subtle" style="margin-top:2.5rem">Antes de salir, responde mentalmente — son las mismas preguntas que tu diseño debe contestar:</p>
+    <div class="guia">
+      <div class="guia-card">
+        <div class="guia-q">Tu inventario es un arreglo de empleados o una matriz puesto × empleado?</div>
+        <div class="guia-hint">Las dos sirven. Justifica cuál elegiste y por qué.</div>
+      </div>
+      <div class="guia-card">
+        <div class="guia-q">Cuando "actualizas contacto", modificas una copia o el original?</div>
+        <div class="guia-hint">Aquí es donde shallow vs deep deja de ser teoría.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VII · Para la próxima clase</p>
+    <p class="lead">Cierra el Bloque I integrando<br>control de flujo y arrays en tu <em>proyecto.</em></p>
+    <p class="subtle">La <strong>Tarea 2</strong> reúne lo de las últimas sesiones — los condicionales y ciclos que ya viste, más los arreglos de hoy — en un módulo real de tu proyecto en GitHub. Marca tu avance:</p>
+    <div class="widget" data-tag="Checklist de la Tarea 2">
+      <div class="chk-progress">Progreso: <span id="chk-count">0</span> de 8 elementos
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">El módulo (control de flujo + arrays)</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Estructura de datos</strong> — al menos un arreglo o matriz que organice los datos de tu proyecto</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Inicialización</strong> — el arreglo se declara, crea e inicializa con valores reales del dominio</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Recorrido</strong> — un ciclo que recorre el arreglo (for / while) haciendo algo útil</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Decisión</strong> — al menos un <code>if/elif/else</code> que actúe sobre los datos del arreglo</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Copia consciente</strong> — si copias una estructura, decide y comenta si es shallow o deep</div></div>
+      </div>
+      <div class="chk-group">
+        <div class="chk-group-t">La entrega en GitHub</div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Código <strong>integrado al repo del proyecto</strong>, no un archivo suelto</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Commit con mensaje claro</strong> y un README que explique qué hace el módulo</div></div>
+        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Probado</strong>: corre sin errores y muestra la salida esperada</div></div>
+      </div>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Tarea 2 (1 pt · entrega 03/07/26)</div>
+      <ol>
+        <li><strong>Integra el módulo</strong> de control de flujo + arrays a tu proyecto en GitHub — usa declaración, creación e inicialización reales del dominio de tu proyecto.</li>
+        <li><strong>Decide tus copias:</strong> si en algún punto duplicas una lista o matriz, comenta en el código si necesitas <code>shallow</code> o <code>deepcopy</code> y por qué.</li>
+        <li><strong>Sube el avance</strong> con un commit claro y actualiza el README. Entrega: <strong>03/07/26</strong>.</li>
+        <li><strong>Repasa el Bloque I</strong> completo (tipos, control de flujo, arrays): la próxima clase cerramos el bloque.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="ln">'+html+'</span>';
+
+// ─── W1: matriz de calificaciones alumnos×materias ──────────
+const mxAlumnos=['Ana','Luis','María'];
+const mxMaterias=['Cálculo','Física','Programación','Bases de Datos'];
+const mxDatos=[
+  [8,9,7,10],
+  [6,10,9,8],
+  [9,7,8,9],
+];
+(function buildMatrix(){
+  const t=$('mx-table');
+  let html='<tr><th class="mx-corner">i \\ j</th>';
+  mxMaterias.forEach((m,j)=>{html+='<th>['+j+'] '+m+'</th>';});
+  html+='</tr>';
+  mxDatos.forEach((fila,i)=>{
+    html+='<tr><th class="mx-rh">['+i+'] '+mxAlumnos[i]+'</th>';
+    fila.forEach((v,j)=>{
+      html+='<td class="mx-cell" data-i="'+i+'" data-j="'+j+'">'+v+'</td>';
+    });
+    html+='</tr>';
+  });
+  t.innerHTML=html;
+})();
+function mxStatsFor(i,j){
+  const fila=mxDatos[i];
+  const promFila=(fila.reduce((a,b)=>a+b,0)/fila.length).toFixed(2);
+  let sumCol=0; for(let r=0;r<mxDatos.length;r++) sumCol+=mxDatos[r][j];
+  const promCol=(sumCol/mxDatos.length).toFixed(2);
+  return 'promedio fila '+i+' ('+mxAlumnos[i]+'): <b>'+promFila+'</b><br>'+
+         'promedio columna '+j+' ('+mxMaterias[j]+'): <b>'+promCol+'</b>';
+}
+document.querySelectorAll('.mx-cell').forEach(c=>{
+  c.addEventListener('click',()=>{
+    const i=+c.dataset.i, j=+c.dataset.j, v=mxDatos[i][j];
+    document.querySelectorAll('.mx-cell').forEach(x=>x.classList.remove('sel','rowlit','collit'));
+    document.querySelectorAll('.mx-cell').forEach(x=>{
+      if(+x.dataset.i===i) x.classList.add('rowlit');
+      if(+x.dataset.j===j) x.classList.add('collit');
+    });
+    c.classList.add('sel');
+    $('mx-tag').textContent=mxAlumnos[i]+' · '+mxMaterias[j];
+    $('mx-idx').innerHTML='notas[ <b style="color:#E8B04A">'+i+'</b> ][ <b style="color:#E8B04A">'+j+'</b> ] = <span class="val">'+v+'</span>';
+    $('mx-desc').innerHTML='Fila <strong>'+i+'</strong> es <strong>'+mxAlumnos[i]+'</strong>; columna <strong>'+j+'</strong> es <strong>'+mxMaterias[j]+'</strong>. En código: <code>notas['+i+']['+j+']</code> devuelve <strong>'+v+'</strong>. Primero la fila, siempre, luego la columna.';
+    $('mx-stats').innerHTML=mxStatsFor(i,j);
+  });
+});
+
+// ─── W2: declarar / crear / inicializar (py/java/go) ────────
+const declData={
+  py:{
+    code:[
+      '<span class="cm"># Python: declarar, crear e inicializar</span>',
+      '<span class="cm"># casi se funden en una sola línea</span>',
+      'vacia   = []                 <span class="cm"># lista vacía, lista para crecer</span>',
+      'tamaño  = [<span class="str">0</span>] * <span class="str">5</span>           <span class="cm"># [0, 0, 0, 0, 0]</span>',
+      'valores = [<span class="str">8</span>, <span class="str">9</span>, <span class="str">7</span>, <span class="str">10</span>]      <span class="cm"># ya inicializada</span>',
+      '',
+      '<span class="cm"># matriz 3×4 (lista de listas) — ¡cuidado!</span>',
+      'matriz = [[<span class="str">0</span>] * <span class="str">4</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="kw">range</span>(<span class="str">3</span>)]',
+    ],
+    note:'En Python una <code>list</code> es dinámica: no declaras tipo ni tamaño. El patrón <code>[[0]*4 for _ in range(3)]</code> crea filas <strong>independientes</strong>. <em>No</em> uses <code>[[0]*4]*3</code>: eso repite la MISMA fila 3 veces — un clásico bug de shallow copy que veremos en la sección IV.'
+  },
+  java:{
+    code:[
+      '<span class="cm">// Java: tres pasos explícitos y con tipo</span>',
+      '<span class="ty">int</span>[] a;                  <span class="cm">// 1. declarar</span>',
+      'a = <span class="kw">new</span> <span class="ty">int</span>[<span class="str">5</span>];           <span class="cm">// 2. crear (reserva memoria)</span>',
+      'a[<span class="str">0</span>] = <span class="str">8</span>;               <span class="cm">// 3. inicializar casilla a casilla</span>',
+      '',
+      '<span class="cm">// o todo junto, con valores:</span>',
+      '<span class="ty">int</span>[] valores = {<span class="str">8</span>, <span class="str">9</span>, <span class="str">7</span>, <span class="str">10</span>};',
+      '',
+      '<span class="cm">// matriz 3×4: filas y columnas a la vez</span>',
+      '<span class="ty">int</span>[][] matriz = <span class="kw">new</span> <span class="ty">int</span>[<span class="str">3</span>][<span class="str">4</span>];',
+    ],
+    note:'Java separa los tres momentos del temario: <strong>declarar</strong> el tipo, <strong>crear</strong> con <code>new int[5]</code> (¡aquí se reserva la memoria!) e <strong>inicializar</strong> los valores. El tamaño es <strong>fijo</strong> al crear: <code>new int[5]</code> son 5 casillas, ni una más. Un <code>int[]</code> recién creado nace con ceros.'
+  },
+  go:{
+    code:[
+      '<span class="cm">// Go: make crea, los literales inicializan</span>',
+      'vacia   := make([]<span class="ty">int</span>, <span class="str">0</span>)     <span class="cm">// slice vacío</span>',
+      'tamaño  := make([]<span class="ty">int</span>, <span class="str">5</span>)     <span class="cm">// 5 ceros</span>',
+      'valores := []<span class="ty">int</span>{<span class="str">8</span>, <span class="str">9</span>, <span class="str">7</span>, <span class="str">10</span>}  <span class="cm">// inicializada</span>',
+      '',
+      '<span class="cm">// matriz 3×4: slice de slices</span>',
+      'matriz := make([][]<span class="ty">int</span>, <span class="str">3</span>)',
+      '<span class="kw">for</span> i := <span class="kw">range</span> matriz {',
+      '    matriz[i] = make([]<span class="ty">int</span>, <span class="str">4</span>)',
+      '}',
+    ],
+    note:'Go tiene un verbo propio para crear: <code>make</code>. Un <code>[]int</code> es un <strong>slice</strong> — una vista sobre un arreglo interno, con longitud y capacidad. Para una matriz, creas el slice externo y luego cada fila: por eso el <code>for</code>. Es el equivalente exacto del <code>for _ in range</code> de Python.'
+  }
+};
+function declRender(k){
+  const d=declData[k];
+  $('decl-code').innerHTML=d.code.map(L).join('');
+  $('decl-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-decl]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-decl]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    declRender(b.dataset.decl);
+  });
+});
+declRender('py');
+
+// ─── W3: shallow vs deep copy (animado paso a paso) ─────────
+let scMode='shallow', scIdx=-1;
+const scSteps={
+  shallow:[
+    {
+      copyShow:false, copyName:'copia', link:'', flash:[],
+      console:[
+        ['<span class="cm"># original = [[8, 9, 7], [6, 10, 9]]</span>',''],
+        ['<span class="cm"># una matriz: lista de DOS filas</span>',''],
+      ],
+      verdict:'Partimos del <strong>original</strong>: una lista externa que apunta a dos filas (fila0 y fila1). Pulsa <strong>Siguiente</strong> para copiarla de forma superficial.',
+      vclass:''
+    },
+    {
+      copyShow:true, copyName:'copia', link:'copia y original apuntan a las MISMAS filas', linkShared:true, flash:['sc-o-copy'],
+      console:[
+        ['copia = original[:]   <span class="cm"># shallow</span>',''],
+        ['<span class="cm"># se duplicó la lista EXTERNA…</span>',''],
+        ['<span class="cm"># …pero las filas se COMPARTEN</span>',''],
+      ],
+      verdict:'<code>original[:]</code> creó una <strong>lista externa nueva</strong> para <em>copia</em>… pero sus casillas siguen apuntando a las <strong>mismas filas</strong> que el original. Las filas no se clonaron.',
+      vclass:''
+    },
+    {
+      copyShow:true, copyName:'copia', link:'copia y original comparten fila1', linkShared:true, flash:['sc-f1'],
+      console:[
+        ['copia[<span class="str">1</span>][<span class="str">0</span>] = <span class="str">0</span>   <span class="cm"># toco la copia</span>',''],
+        ['',''],
+        ['print(original[<span class="str">1</span>])',''],
+        ['<span class="danger">[0, 10, 9]   # ¡el original cambió!</span>','danger'],
+      ],
+      verdict:'<strong>El contagio.</strong> Modificaste <code>copia[1][0]</code>… y el <strong>original también cambió</strong>, porque fila1 es el MISMO objeto en memoria. Esto es exactamente el bug que rompe inventarios y calificaciones.',
+      vclass:'bad'
+    }
+  ],
+  deep:[
+    {
+      copyShow:false, copyName:'copia', link:'', flash:[],
+      console:[
+        ['<span class="kw">import</span> copy',''],
+        ['<span class="cm"># original = [[8, 9, 7], [6, 10, 9]]</span>',''],
+      ],
+      verdict:'Mismo punto de partida. Esta vez copiaremos en <strong>profundidad</strong> con <code>copy.deepcopy</code>. Pulsa <strong>Siguiente</strong>.',
+      vclass:''
+    },
+    {
+      copyShow:true, copyName:'copia', link:'copia tiene filas CLONADAS, independientes', linkShared:false, flash:['sc-o-copy'],
+      console:[
+        ['copia = copy.deepcopy(original)',''],
+        ['<span class="cm"># se clonó la lista externa…</span>',''],
+        ['<span class="cm"># …Y cada fila por dentro</span>',''],
+      ],
+      verdict:'<code>deepcopy</code> clonó <strong>todo, recursivamente</strong>: la lista externa y cada fila. Ahora <em>copia</em> tiene sus propias filas (mostradas como clones) — nada se comparte con el original.',
+      vclass:''
+    },
+    {
+      copyShow:true, copyName:'copia', link:'cada matriz tiene sus propias filas', linkShared:false, flash:[],
+      console:[
+        ['copia[<span class="str">1</span>][<span class="str">0</span>] = <span class="str">0</span>   <span class="cm"># toco la copia</span>',''],
+        ['',''],
+        ['print(original[<span class="str">1</span>])',''],
+        ['<span class="out">[6, 10, 9]   # intacto ✓</span>','out'],
+      ],
+      verdict:'<strong>Independencia total.</strong> Modificaste la copia y el <strong>original quedó intacto</strong>. Eso es deep copy: más memoria, pero cero contagio. Úsalo cuando necesites una matriz que puedas alterar sin miedo.',
+      vclass:'good'
+    }
+  ]
+};
+function scRender(){
+  const steps=scSteps[scMode];
+  const copyRow=$('sc-copy-row'), copyObj=$('sc-o-copy');
+  // limpiar flashes
+  ['sc-o-orig','sc-o-copy','sc-f0','sc-f1'].forEach(id=>$(id).classList.remove('flash'));
+  $('sc-copy-nm').textContent='copia';
+  if(scIdx<0){
+    copyRow.style.opacity='.25';
+    copyObj.textContent='[ ? , ? ]';
+    $('sc-link').textContent='';
+    $('sc-link').className='sc-link';
+    $('sc-console').innerHTML='<span class="ln"><span class="cm"># pulsa Siguiente para ejecutar</span></span>';
+    $('sc-verdict').innerHTML='Modo <strong>'+(scMode==='shallow'?'copia superficial (shallow)':'copia profunda (deep)')+'</strong> seleccionado. Pulsa <strong>Siguiente</strong> para ejecutar paso a paso.';
+    $('sc-verdict').className='sc-verdict';
+    return;
+  }
+  const s=steps[scIdx];
+  copyRow.style.opacity=s.copyShow?'1':'.25';
+  copyObj.textContent=s.copyShow?(scMode==='shallow'?'[ →fila0, →fila1 ]':'[ →clon0, →clon1 ]'):'[ ? , ? ]';
+  $('sc-link').textContent=s.link||'';
+  $('sc-link').className='sc-link'+(s.linkShared?' shared':'');
+  $('sc-console').innerHTML=s.console.map(([h])=>'<span class="ln">'+h+'</span>').join('');
+  $('sc-verdict').innerHTML=s.verdict;
+  $('sc-verdict').className='sc-verdict'+(s.vclass?' '+s.vclass:'');
+  (s.flash||[]).forEach(id=>{const el=$(id); if(el) el.classList.add('flash');});
+}
+function scSetMode(m){
+  scMode=m; scIdx=-1;
+  $('sc-shallow').classList.toggle('on',m==='shallow');
+  $('sc-deep').classList.toggle('on',m==='deep');
+  // reflejar valores base de filas según si ya hubo modificación
+  $('sc-f1').textContent='[6, 10, 9]';
+  scRender();
+}
+$('sc-shallow').addEventListener('click',()=>scSetMode('shallow'));
+$('sc-deep').addEventListener('click',()=>scSetMode('deep'));
+$('sc-next').addEventListener('click',()=>{
+  const max=scSteps[scMode].length-1;
+  if(scIdx<max){scIdx++; if(scMode==='shallow'&&scIdx===2) $('sc-f1').textContent='[0, 10, 9]'; scRender();}
+});
+$('sc-prev').addEventListener('click',()=>{
+  if(scIdx>-1){scIdx--; $('sc-f1').textContent='[6, 10, 9]'; scRender();}
+});
+$('sc-reset').addEventListener('click',()=>{scIdx=-1; $('sc-f1').textContent='[6, 10, 9]'; scRender();});
+scSetMode('shallow');
+
+// ─── W4: crecer — list / array fijo / slice ─────────────────
+const growData={
+  py:{
+    code:[
+      '<span class="cm"># list: crece sola, sin límite</span>',
+      'a = [<span class="str">8</span>, <span class="str">9</span>, <span class="str">7</span>]',
+      'a.append(<span class="str">10</span>)        <span class="cm"># [8, 9, 7, 10]</span>',
+      '<span class="kw">print</span>(<span class="kw">len</span>(a))      <span class="out"># 4</span>',
+      '',
+      '<span class="cm"># "redimensionar" es solo seguir agregando</span>',
+      'a += [<span class="str">5</span>, <span class="str">6</span>]      <span class="cm"># [8, 9, 7, 10, 5, 6]</span>',
+      'a.pop()             <span class="cm"># quita el último</span>',
+    ],
+    note:'La <code>list</code> es <strong>dinámica por diseño</strong>: <code>append</code> agrega, <code>+=</code> concatena, <code>pop</code> quita. No piensas en tamaño ni en memoria — Python redimensiona el arreglo interno por ti. Comodísimo… y por eso a veces olvidas cuánta memoria mueves.'
+  },
+  java:{
+    code:[
+      '<span class="cm">// array fijo: NO crece. Tiene un muro.</span>',
+      '<span class="ty">int</span>[] a = {<span class="str">8</span>, <span class="str">9</span>, <span class="str">7</span>};',
+      '<span class="cm">// a[3] = 10;  → ArrayIndexOutOfBounds! ✗</span>',
+      '',
+      '<span class="cm">// redimensionar = crear otro y copiar</span>',
+      '<span class="ty">int</span>[] b = <span class="ty">Arrays</span>.copyOf(a, <span class="str">4</span>);',
+      'b[<span class="str">3</span>] = <span class="str">10</span>;        <span class="cm">// {8, 9, 7, 10}</span>',
+      '',
+      '<span class="cm">// ¿quieres crecer fácil? usa ArrayList</span>',
+      '<span class="ty">ArrayList</span>&lt;<span class="ty">Integer</span>&gt; l = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();',
+      'l.add(<span class="str">10</span>);          <span class="cm">// el "append" de Java</span>',
+    ],
+    note:'El <code>int[]</code> de Java es de <strong>tamaño fijo</strong>: pasarte del índice lanza <code>ArrayIndexOutOfBoundsException</code>. Para "redimensionar" creas otro arreglo y copias con <code>Arrays.copyOf</code>. Si necesitas la comodidad de la list de Python, usas <strong>ArrayList</strong> — el puente que viste en la Práctica 1.'
+  },
+  go:{
+    code:[
+      '<span class="cm">// slice: crece con append, gestiona capacidad</span>',
+      'a := []<span class="ty">int</span>{<span class="str">8</span>, <span class="str">9</span>, <span class="str">7</span>}',
+      'a = append(a, <span class="str">10</span>)   <span class="cm">// [8 9 7 10]</span>',
+      'fmt.Println(len(a), cap(a))  <span class="out">// 4 6</span>',
+      '',
+      '<span class="cm">// reservar capacidad de antemano (eficiente)</span>',
+      's := make([]<span class="ty">int</span>, <span class="str">0</span>, <span class="str">8</span>)  <span class="cm">// len 0, cap 8</span>',
+      's = append(s, <span class="str">1</span>, <span class="str">2</span>, <span class="str">3</span>)',
+    ],
+    note:'El <strong>slice</strong> de Go crece con <code>append</code>, pero distingue <strong>longitud</strong> (<code>len</code>, cuántos hay) de <strong>capacidad</strong> (<code>cap</code>, cuántos caben antes de re-reservar). Por eso ves <code>cap 6</code> aunque solo haya 4: Go reservó de más para no copiar en cada append. Es la list de Python… pero te deja ver la maquinaria.'
+  }
+};
+function growRender(k){
+  const d=growData[k];
+  $('grow-code').innerHTML=d.code.map(L).join('');
+  $('grow-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-grow]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-grow]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    growRender(b.dataset.grow);
+  });
+});
+growRender('py');
+
+// ─── W5: checklist tarea 2 ──────────────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
+</script>
+</body>
+</html>

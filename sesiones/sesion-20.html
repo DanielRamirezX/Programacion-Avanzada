@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XX — Conoce a tus enemigos — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE WIDGETS — SESIÓN XX · EXCEPCIONES ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* contraste rápido check/uncheck del intro */
+.exc-split{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.exc-side{background:var(--paper);border:1px solid var(--line);padding:1.5rem;}
+.exc-side.check{border-top:3px solid var(--olive);}
+.exc-side.uncheck{border-top:3px solid var(--blood);}
+.exc-side-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.6rem;}
+.exc-side.check .exc-side-tag{color:var(--olive);}
+.exc-side.uncheck .exc-side-tag{color:var(--blood);}
+.exc-side-t{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);margin-bottom:.5rem;}
+.exc-side-d{font-size:.95rem;color:var(--ink-soft);line-height:1.5;}
+.exc-side-d code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.05rem .35rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W1: árbol jerarquía built-in Python */
+.tree-stage{display:grid;grid-template-columns:1.05fr 1fr;gap:1.5rem;align-items:start;}
+.tree{background:var(--paper);border:1px solid var(--line);padding:1.6rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.35;overflow-x:auto;}
+.tree-node{cursor:pointer;display:inline-block;padding:.2rem .5rem;margin:.12rem 0;border-radius:2px;transition:all .2s;border:1px solid transparent;color:var(--ink-soft);}
+.tree-node:hover{background:rgba(160,36,24,.07);color:var(--blood);}
+.tree-node.lit{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.tree-node.base{color:var(--ink);font-weight:700;}
+.tree-row{white-space:pre;}
+.tree-branch{color:rgba(42,29,20,.35);}
+.tree-panel{background:var(--ink);padding:1.6rem;min-height:300px;display:flex;flex-direction:column;gap:.8rem;}
+.tree-p-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.tree-p-name{font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--paper);font-weight:700;}
+.tree-p-chain{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#A6C2D6;line-height:1.6;word-break:break-word;}
+.tree-p-chain b{color:#E8B04A;}
+.tree-p-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:rgba(239,230,210,.85);margin-top:auto;}
+.tree-p-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
+.tree-p-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* W2: galería de excepciones comunes */
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;}
+.gal-chip{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--blood);padding:.85rem 1rem;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink);}
+.gal-chip:hover{transform:translateX(3px);border-left-color:var(--ochre);}
+.gal-chip.on{background:var(--ink);color:var(--paper);border-left-color:var(--ochre);}
+.gal-chip small{display:block;font-family:'Crimson Pro',serif;font-size:.78rem;color:rgba(42,29,20,.5);margin-top:.2rem;}
+.gal-chip.on small{color:rgba(239,230,210,.55);}
+.gal-detail{margin-top:1.4rem;background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.gal-d-head{background:var(--ink);color:var(--paper);padding:.9rem 1.3rem;font-family:'JetBrains Mono',monospace;font-size:.9rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+.gal-d-head .when{font-size:.7rem;color:var(--ochre);font-family:'Crimson Pro',serif;font-style:italic;}
+.gal-d-body{padding:1.3rem;}
+.gal-d-code{font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.85;background:var(--paper-deep);border:1px solid var(--line);padding:1rem 1.2rem;overflow-x:auto;}
+.gal-d-code .ln{white-space:pre;display:block;}
+.gal-d-code .kw{color:var(--blood);font-style:italic;}
+.gal-d-code .str{color:#8a6420;}
+.gal-d-code .cm{color:rgba(42,29,20,.45);font-style:italic;}
+.gal-d-code .err{color:var(--blood);font-weight:700;}
+.gal-d-note{margin-top:1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);}
+.gal-d-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.gal-d-java{margin-top:.9rem;padding:.7rem 1rem;background:rgba(62,110,134,.07);border-left:2px solid #3E6E86;font-size:.92rem;color:var(--ink-soft);}
+.gal-d-java code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#2c5266;}
+
+/* W3: checked vs unchecked — el compilador decide */
+.cu-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.cu-code{background:var(--ink);padding:1.3rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:var(--paper);min-height:230px;overflow-x:auto;}
+.cu-code .ln{white-space:pre;display:block;}
+.cu-code .kw{color:#D4956A;font-style:italic;}
+.cu-code .ty{color:#A6C2D6;}
+.cu-code .str{color:#C9A961;}
+.cu-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.cu-verdict{background:var(--paper);border:1px solid var(--line);padding:1.4rem;display:flex;flex-direction:column;gap:.9rem;}
+.cu-stamp{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.5rem .8rem;display:inline-block;align-self:flex-start;border:1.5px solid;}
+.cu-stamp.ok{color:var(--olive);border-color:var(--olive);background:rgba(93,102,56,.08);}
+.cu-stamp.no{color:var(--blood);border-color:var(--blood);background:rgba(160,36,24,.06);}
+.cu-verdict-t{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);line-height:1.1;}
+.cu-verdict-d{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);}
+.cu-verdict-d strong{color:var(--ink);font-style:normal;font-weight:600;}
+.cu-verdict-d code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.cu-py{margin-top:1.2rem;padding:.9rem 1.2rem;background:rgba(93,102,56,.08);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.5;color:var(--ink-soft);}
+.cu-py strong{color:var(--olive);font-style:normal;font-weight:600;}
+.cu-py code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper);padding:.1rem .3rem;border:1px solid var(--line);color:var(--olive);}
+
+/* W3b: anatomía try/except/else/finally */
+.ana-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.ana-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:250px;overflow-x:auto;}
+.ana-line{white-space:pre;display:block;border-radius:2px;padding:0 .3rem;cursor:pointer;transition:all .2s;}
+.ana-line:hover{background:rgba(232,176,74,.12);}
+.ana-line.lit{background:rgba(232,176,74,.28);}
+.ana-line .kw{color:#D4956A;font-style:italic;}
+.ana-line .ty{color:#A6C2D6;}
+.ana-line .str{color:#C9A961;}
+.ana-line .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.ana-line .blk{color:#E8B04A;font-weight:700;}
+.ana-side{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;gap:.8rem;}
+.ana-s-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.ana-s-name{font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--blood);font-weight:700;}
+.ana-s-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:var(--ink-soft);}
+.ana-s-desc strong{color:var(--ink);font-style:normal;font-weight:600;}
+.ana-s-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.ana-jv{margin-top:1.2rem;padding:.9rem 1.2rem;background:rgba(62,110,134,.07);border-left:2px solid #3E6E86;font-size:.96rem;color:var(--ink-soft);line-height:1.5;}
+.ana-jv strong{color:#2c5266;}
+.ana-jv code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#2c5266;}
+
+/* W4: reglas de oro ✓/✗ */
+.rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem;}
+.rule-card{background:var(--paper);border:1px solid var(--line);overflow:hidden;cursor:pointer;transition:all .2s;}
+.rule-card:hover{border-color:var(--blood);}
+.rule-head{display:flex;align-items:center;gap:.7rem;padding:1rem 1.2rem;}
+.rule-mark{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.1rem;flex-shrink:0;width:1.6rem;height:1.6rem;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+.rule-card.good .rule-mark{color:var(--olive);background:rgba(93,102,56,.12);}
+.rule-card.bad .rule-mark{color:var(--blood);background:rgba(160,36,24,.1);}
+.rule-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);line-height:1.2;}
+.rule-body{max-height:0;overflow:hidden;transition:max-height .35s ease;background:var(--paper-deep);}
+.rule-card.open .rule-body{max-height:340px;}
+.rule-body-in{padding:0 1.2rem 1.2rem;}
+.rule-why{font-size:.95rem;color:var(--ink-soft);line-height:1.5;margin-bottom:.8rem;}
+.rule-why strong{color:var(--ink);}
+.rule-code{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.7;background:var(--ink);color:var(--paper);padding:.8rem 1rem;overflow-x:auto;}
+.rule-code .ln{white-space:pre;display:block;}
+.rule-code .kw{color:#D4956A;font-style:italic;}
+.rule-code .str{color:#C9A961;}
+.rule-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.rule-code .self{color:#8EAF8B;font-weight:700;}
+
+/* W5: mapa de excepciones por módulo */
+.map-intro{font-size:.98rem;color:var(--ink-soft);margin-bottom:1rem;}
+.map-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+.map-mod{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.3rem;}
+.map-mod-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--ink);margin-bottom:.2rem;}
+.map-mod-q{font-size:.85rem;font-style:italic;color:rgba(42,29,20,.55);margin-bottom:.9rem;}
+.map-risk{display:flex;align-items:flex-start;gap:.6rem;padding:.5rem .7rem;background:var(--paper-deep);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.map-risk:hover{border-color:var(--blood);}
+.map-risk.on{background:rgba(160,36,24,.07);border-color:var(--blood);}
+.map-risk-box{width:1.05rem;height:1.05rem;border:2px solid var(--line);flex-shrink:0;margin-top:.2rem;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--paper);}
+.map-risk.on .map-risk-box{background:var(--blood);border-color:var(--blood);}
+.map-risk.on .map-risk-box::after{content:'✓';}
+.map-risk-txt{font-size:.9rem;color:var(--ink-soft);line-height:1.35;}
+.map-risk-txt code{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--blood);}
+.map-risk.on .map-risk-txt{color:var(--ink);}
+.map-counter{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--line);}
+.map-counter strong{color:var(--blood);font-size:1.1rem;}
+.map-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.map-fill{height:100%;background:var(--blood);width:0;transition:width .4s;}
+
+/* puente a la práctica */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.caso-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.caso p{font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;line-height:1.6;color:var(--ink-soft);margin-bottom:.9rem;}
+.caso p strong{color:var(--ink);font-style:normal;font-weight:600;}
+.caso p:last-child{margin-bottom:0;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'JetBrains Mono',monospace;font-size:.92rem;color:var(--ink);margin-bottom:.4rem;font-weight:700;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .exc-split,.tree-stage,.gal-grid,.cu-stage,.ana-stage,.rule-grid,.map-grid,.req-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-19.html" class="back">Sesión 19</a>
+  <span class="session-label">Sesión 20 · 24.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">except ValueError as e:</div>
+  <div class="hero-float" style="top:27%;right:10%;--r:3deg;animation-delay:-3s">BaseException → Exception → …</div>
+  <div class="hero-float" style="bottom:33%;left:12%;--r:2deg;animation-delay:-6s">throws IOException</div>
+  <div class="hero-float" style="bottom:17%;right:13%;--r:-3deg;animation-delay:-9s">KeyError: 'usuario'</div>
+  <div class="hero-float" style="top:51%;left:41%;--r:1deg;animation-delay:-4.5s">NullPointerException</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XX · Bloque III · Excepciones · Ref. Temario 6.2 · 6.3 · 6.4 · 6.5 · Python · Java</div>
+    <h1>Conoce a tus<br><em>enemigos.</em></h1>
+    <p class="hero-sub">No puedes manejar lo que no sabes nombrar. Hoy aprendes la <em>taxonomía del error</em>: qué excepciones existen, de dónde vienen y cuáles te obligan a reaccionar. Conoce a tus enemigos antes de la batalla.</p>
+  </div>
+</section>
+
+<!-- I: por qué clasificar -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · Por qué clasificar el error</p>
+    <p class="lead">Un error sin nombre es un fantasma.<br>Un error <em>clasificado</em> es un plan.</p>
+    <p class="subtle">Cuando tu programa explota, no explota "porque sí": lanza un <strong>objeto excepción</strong> de un tipo concreto. Ese tipo es información. <span class="inlinecode">ValueError</span> te dice algo muy distinto que <span class="inlinecode">FileNotFoundError</span>, y cada uno pide un manejo distinto. Antes de escribir un solo <span class="inlinecode">try/except</span> útil, tienes que saber <strong>contra qué peleas</strong>. Hoy ordenamos el zoológico de los errores — en <strong>Python</strong>, tu lenguaje base, con la mirada puesta en <strong>Java</strong>, donde el compilador toma partido.</p>
+    <div class="exc-split">
+      <div class="exc-side check">
+        <div class="exc-side-tag">El gran corte de Java</div>
+        <div class="exc-side-t">Comprobadas</div>
+        <div class="exc-side-d"><em>Checked.</em> El compilador <strong>no te deja olvidarlas</strong>: o las atrapas con <code>try/catch</code>, o declaras <code>throws</code>. Suelen ser fallos del entorno: archivos, red, base de datos.</div>
+      </div>
+      <div class="exc-side uncheck">
+        <div class="exc-side-tag">El gran corte de Java</div>
+        <div class="exc-side-t">No comprobadas</div>
+        <div class="exc-side-d"><em>Unchecked.</em> El compilador <strong>las deja pasar</strong>; estallan en ejecución. Suelen ser <em>bugs</em>: índices fuera de rango, <code>null</code>, conversiones imposibles. <strong>Python entero vive aquí.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- II: árbol jerarquía Python -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La jerarquía built-in de Python</p>
+    <p class="lead">Toda excepción de Python<br>desciende de <em>un solo ancestro.</em></p>
+    <p class="subtle">En Python las excepciones son <strong>clases</strong>, y forman un árbol de herencia que arranca en <span class="inlinecode">BaseException</span>. Casi todo lo que atraparás cuelga de <span class="inlinecode">Exception</span>. Entender este árbol no es trivia: cuando escribes <span class="inlinecode">except Exception</span>, atrapas <em>a todos los descendientes</em> — por eso atrapar muy arriba es peligroso. Toca cada nodo para ver de qué hereda:</p>
+    <div class="widget" data-tag="Click en cada nodo">
+      <div class="tree-stage">
+        <div class="tree" id="exc-tree">
+<div class="tree-row"><span class="tree-node base" data-x="base">BaseException</span></div>
+<div class="tree-row"><span class="tree-branch"> ├─ </span><span class="tree-node" data-x="sysexit">SystemExit</span><span class="tree-branch">  ·  </span><span class="tree-node" data-x="kbd">KeyboardInterrupt</span></div>
+<div class="tree-row"><span class="tree-branch"> └─ </span><span class="tree-node base" data-x="exception">Exception</span></div>
+<div class="tree-row"><span class="tree-branch">     ├─ </span><span class="tree-node" data-x="arith">ArithmeticError</span></div>
+<div class="tree-row"><span class="tree-branch">     │    └─ </span><span class="tree-node" data-x="zero">ZeroDivisionError</span></div>
+<div class="tree-row"><span class="tree-branch">     ├─ </span><span class="tree-node" data-x="lookup">LookupError</span></div>
+<div class="tree-row"><span class="tree-branch">     │    ├─ </span><span class="tree-node" data-x="index">IndexError</span></div>
+<div class="tree-row"><span class="tree-branch">     │    └─ </span><span class="tree-node" data-x="key">KeyError</span></div>
+<div class="tree-row"><span class="tree-branch">     ├─ </span><span class="tree-node" data-x="value">ValueError</span></div>
+<div class="tree-row"><span class="tree-branch">     ├─ </span><span class="tree-node" data-x="type">TypeError</span></div>
+<div class="tree-row"><span class="tree-branch">     └─ </span><span class="tree-node" data-x="os">OSError</span></div>
+<div class="tree-row"><span class="tree-branch">          └─ </span><span class="tree-node" data-x="fnf">FileNotFoundError</span></div>
+        </div>
+        <div class="tree-panel">
+          <div class="tree-p-tag" id="tree-tag">El ancestro</div>
+          <div class="tree-p-name" id="tree-name">BaseException</div>
+          <div class="tree-p-chain" id="tree-chain">raíz de todo</div>
+          <div class="tree-p-desc" id="tree-desc">Toca un nodo del árbol para ver de qué hereda y qué significa.</div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">La lección de diseño: <strong>atrapa lo más específico posible</strong>. Si solo te interesa una división entre cero, atrapa <span class="inlinecode">ZeroDivisionError</span>, no <span class="inlinecode">ArithmeticError</span> ni mucho menos <span class="inlinecode">Exception</span>. Cuanto más arriba atrapas, más errores ocultas — incluidos los que <em>no</em> esperabas.</p>
+  </div>
+</section>
+
+<!-- III: galería de excepciones comunes -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · La galería de sospechosos comunes</p>
+    <p class="lead">Estos siete los verás<br><em>una y otra vez.</em> Apréndelos de memoria.</p>
+    <p class="subtle">No necesitas el árbol completo — necesitas reconocer al instante a los que más aparecen. Toca cada uno: verás <strong>cuándo ocurre</strong>, un <strong>ejemplo mínimo que lo dispara</strong>, y su <strong>gemelo en Java</strong>. Si memorizas estos, lees el 90 % de los <em>tracebacks</em> sin googlear.</p>
+    <div class="widget" data-tag="Toca un sospechoso">
+      <div class="gal-grid" id="gal-grid">
+        <div class="gal-chip on" data-g="value">ValueError<small>tipo correcto, valor inválido</small></div>
+        <div class="gal-chip" data-g="type">TypeError<small>tipo equivocado</small></div>
+        <div class="gal-chip" data-g="key">KeyError<small>llave inexistente</small></div>
+        <div class="gal-chip" data-g="index">IndexError<small>índice fuera de rango</small></div>
+        <div class="gal-chip" data-g="fnf">FileNotFoundError<small>el archivo no existe</small></div>
+        <div class="gal-chip" data-g="zero">ZeroDivisionError<small>división entre cero</small></div>
+        <div class="gal-chip" data-g="attr">AttributeError<small>no tiene ese atributo</small></div>
+      </div>
+      <div class="gal-detail">
+        <div class="gal-d-head">
+          <span id="gal-name">ValueError</span>
+          <span class="when" id="gal-when"></span>
+        </div>
+        <div class="gal-d-body">
+          <div class="gal-d-code" id="gal-code"></div>
+          <div class="gal-d-note" id="gal-note"></div>
+          <div class="gal-d-java" id="gal-java"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: checked vs unchecked -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · ¿Te obliga el compilador? — checked vs unchecked en Java</p>
+    <p class="lead">En Java, el error tiene<br>un <em>juez:</em> el compilador.</p>
+    <p class="subtle">Aquí está la gran diferencia con Python. Java parte sus excepciones en dos: las <strong>comprobadas (checked)</strong>, que el compilador te <em>obliga</em> a manejar, y las <strong>no comprobadas (unchecked)</strong>, que deja correr. La regla técnica: todo lo que hereda de <span class="inlinecode">Exception</span> pero <em>no</em> de <span class="inlinecode">RuntimeException</span> es checked. Pulsa cada caso y mira el veredicto del compilador:</p>
+    <div class="widget" data-tag="El veredicto del compilador">
+      <div class="cu-stage">
+        <div class="cu-code" id="cu-code"></div>
+        <div class="cu-verdict">
+          <span class="cu-stamp" id="cu-stamp"></span>
+          <div class="cu-verdict-t" id="cu-vt"></div>
+          <div class="cu-verdict-d" id="cu-vd"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-cu="io">FileReader (IOException)</button>
+        <button class="btn" data-cu="npe">objeto null</button>
+        <button class="btn" data-cu="aioobe">índice de array</button>
+        <button class="btn" data-cu="nfe">Integer.parseInt</button>
+      </div>
+      <div class="cu-py"><strong>¿Y en Python?</strong> No hay <code>checked</code>: <em>todas</em> las excepciones son, en términos de Java, unchecked. Python confía en ti — nunca te obliga a manejar nada. Más libertad, más responsabilidad: <strong>nadie te recordará que ese archivo puede no existir.</strong> El recordatorio tienes que ponértelo tú, con el mapa de excepciones que armas hoy.</div>
+    </div>
+  </div>
+</section>
+
+<!-- V: reglas de oro -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Las reglas de oro del manejo</p>
+    <p class="lead">Atrapar un error es fácil.<br>Atraparlo <em>bien</em> es el oficio.</p>
+    <p class="subtle">Manejar excepciones mal es peor que no manejarlas: un error silenciado es una bomba con temporizador. Estas son las cuatro reglas que separan al código profesional del que "compila pero miente". Toca cada tarjeta — las <span style="color:var(--olive);font-weight:700">verdes</span> son lo que SÍ, las <span style="color:var(--blood);font-weight:700">rojas</span> lo que NO:</p>
+    <div class="widget" data-tag="Toca para abrir">
+      <div class="rule-grid">
+        <div class="rule-card good" data-r="especifico">
+          <div class="rule-head"><span class="rule-mark">✓</span><span class="rule-title">Sé específico</span></div>
+          <div class="rule-body"><div class="rule-body-in">
+            <div class="rule-why">Atrapa <strong>el tipo exacto</strong> que esperas, no <code>Exception</code> a secas. Así, un error que NO previste sigue subiendo y se hace visible — en vez de quedar enterrado.</div>
+            <div class="rule-code"><span class="ln"><span class="cm"># sí: atrapas justo lo que puede fallar</span></span><span class="ln"><span class="kw">try</span>:</span><span class="ln">    edad = <span class="kw">int</span>(dato)</span><span class="ln"><span class="kw">except</span> ValueError:</span><span class="ln">    edad = <span class="kw">0</span></span></div>
+          </div></div>
+        </div>
+        <div class="rule-card bad" data-r="silenciar">
+          <div class="rule-head"><span class="rule-mark">✗</span><span class="rule-title">No silencies el error</span></div>
+          <div class="rule-body"><div class="rule-body-in">
+            <div class="rule-why">El <code>except: pass</code> vacío es el pecado capital. El programa sigue como si nada, pero con datos corruptos. <strong>Si atrapas, haz algo:</strong> repara, registra o relanza.</div>
+            <div class="rule-code"><span class="ln"><span class="cm"># NO: el error desaparece sin rastro</span></span><span class="ln"><span class="kw">try</span>:</span><span class="ln">    procesar(pago)</span><span class="ln"><span class="kw">except</span> Exception:</span><span class="ln">    <span class="kw">pass</span>  <span class="cm"># ¿qué falló? jamás lo sabrás</span></span></div>
+          </div></div>
+        </div>
+        <div class="rule-card bad" data-r="flujo">
+          <div class="rule-head"><span class="rule-mark">✗</span><span class="rule-title">No las uses como if/else</span></div>
+          <div class="rule-body"><div class="rule-body-in">
+            <div class="rule-why">Las excepciones son para lo <strong>excepcional</strong>, no para el flujo normal. Si un caso es esperado y frecuente, valídalo con un <code>if</code>. Lanzar excepciones por todo es lento y oculta los errores reales.</div>
+            <div class="rule-code"><span class="ln"><span class="cm"># NO: control de flujo disfrazado</span></span><span class="ln"><span class="kw">try</span>:</span><span class="ln">    valor = inventario[clave]</span><span class="ln"><span class="kw">except</span> KeyError:</span><span class="ln">    valor = <span class="kw">0</span>  <span class="cm"># mejor: inventario.get(clave, 0)</span></span></div>
+          </div></div>
+        </div>
+        <div class="rule-card good" data-r="contexto">
+          <div class="rule-head"><span class="rule-mark">✓</span><span class="rule-title">Conserva el contexto</span></div>
+          <div class="rule-body"><div class="rule-body-in">
+            <div class="rule-why">Cuando relances o registres, <strong>no pierdas el error original</strong>. En Python usa <code>raise ... from e</code> para encadenar la causa; deja que el mensaje cuente <em>qué</em> dato falló.</div>
+            <div class="rule-code"><span class="ln"><span class="kw">try</span>:</span><span class="ln">    config = leer(ruta)</span><span class="ln"><span class="kw">except</span> FileNotFoundError <span class="kw">as</span> e:</span><span class="ln">    <span class="kw">raise</span> ConfigError(ruta) <span class="kw">from</span> e</span></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: anatomía del try/except -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · La anatomía del manejo — try / except / else / finally</p>
+    <p class="lead">Cuatro bloques. Cada uno<br>responde una <em>pregunta distinta.</em></p>
+    <p class="subtle">Ya sabes <em>qué</em> errores existen y <em>cuándo</em> manejarlos. Ahora el cómo, en Python. El bloque completo tiene cuatro partes y la mayoría de la gente solo usa dos — perdiéndose <span class="inlinecode">else</span> y <span class="inlinecode">finally</span>, que existen por buenas razones. Toca cada línea para ver qué hace y cómo se llama en Java:</p>
+    <div class="widget" data-tag="Toca cada bloque">
+      <div class="ana-stage">
+        <div class="ana-code" id="ana-code">
+          <span class="ana-line lit" data-a="try"><span class="blk">try</span>:</span>
+          <span class="ana-line" data-a="try">    archivo = <span class="kw">open</span>(<span class="str">"ventas.csv"</span>)</span>
+          <span class="ana-line" data-a="try">    total = <span class="kw">int</span>(archivo.readline())</span>
+          <span class="ana-line" data-a="except"><span class="blk">except</span> FileNotFoundError:</span>
+          <span class="ana-line" data-a="except">    print(<span class="str">"No encontré el archivo"</span>)</span>
+          <span class="ana-line" data-a="except2"><span class="blk">except</span> ValueError <span class="kw">as</span> e:</span>
+          <span class="ana-line" data-a="except2">    print(<span class="str">f"Dato inválido: {e}"</span>)</span>
+          <span class="ana-line" data-a="else"><span class="blk">else</span>:</span>
+          <span class="ana-line" data-a="else">    print(<span class="str">f"Total leído: {total}"</span>)</span>
+          <span class="ana-line" data-a="finally"><span class="blk">finally</span>:</span>
+          <span class="ana-line" data-a="finally">    archivo.close()  <span class="cm"># pase lo que pase</span></span>
+        </div>
+        <div class="ana-side">
+          <div class="ana-s-tag" id="ana-tag">El bloque vigilado</div>
+          <div class="ana-s-name" id="ana-name">try</div>
+          <div class="ana-s-desc" id="ana-desc">El código que <strong>podría fallar</strong>. Mantenlo corto: solo lo arriesgado. Toca las otras líneas del código para recorrer los cuatro bloques.</div>
+          <div class="ana-jv" id="ana-jv"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: redefinición de métodos y excepciones -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Redefinir un método sin romper la promesa</p>
+    <p class="lead">Cuando sobrescribes un método,<br>heredas también su <em>contrato</em> de errores.</p>
+    <p class="subtle">Ya viste herencia y polimorfismo. Aquí va la regla fina que casi nadie cuenta: si una clase hija <strong>redefine</strong> (sobrescribe) un método del padre, <em>no puede inventar nuevos enemigos</em>. En Java, un método sobrescrito <strong>no puede lanzar excepciones comprobadas más amplias</strong> que las del método original — solo las mismas, subtipos, o ninguna. Es la regla de sustitución de Liskov aplicada a errores: quien usa al padre debe poder usar a la hija <em>sin sorpresas</em>.</p>
+    <div class="widget" data-tag="El contrato de errores">
+      <div class="cu-stage">
+        <div class="cu-code">
+<span class="ln"><span class="cm">// PADRE — declara que puede fallar leyendo</span></span>
+<span class="ln"><span class="kw">class</span> <span class="ty">Repositorio</span> {</span>
+<span class="ln">    <span class="ty">Datos</span> leer() <span class="kw">throws</span> <span class="ty">IOException</span> { ... }</span>
+<span class="ln">}</span>
+<span class="ln"> </span>
+<span class="ln"><span class="cm">// HIJA — al sobrescribir, el contrato manda</span></span>
+<span class="ln"><span class="kw">class</span> <span class="ty">RepoMemoria</span> <span class="kw">extends</span> <span class="ty">Repositorio</span> {</span>
+<span class="ln">    <span class="ty">Datos</span> leer() { ... }  <span class="cm">// ✓ lanza menos</span></span>
+<span class="ln">}</span>
+        </div>
+        <div class="cu-verdict">
+          <span class="cu-stamp ok">Permitido</span>
+          <div class="cu-verdict-t">Igual, más específico, o nada.</div>
+          <div class="cu-verdict-d">La hija puede lanzar <strong>las mismas</strong> excepciones comprobadas, <strong>subtipos</strong> de ellas (p. ej. <code>FileNotFoundException</code> en lugar de <code>IOException</code>) o <strong>ninguna</strong>. Lo que <em>no</em> puede es lanzar una checked <strong>nueva y más amplia</strong> (como <code>SQLException</code>): rompería al código que confía en el contrato del padre.</div>
+        </div>
+      </div>
+      <div class="cu-py"><strong>¿Y en Python?</strong> No hay <code>throws</code>, así que el lenguaje <em>no</em> lo verifica — pero la regla de diseño <strong>sigue valiendo</strong>. Documenta en el <em>docstring</em> qué excepciones lanza cada método, y al sobrescribir respeta esa promesa. Tu proyecto integrador depende de que una subclase sea sustituible por su padre sin volar todo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: puente a la práctica institucional 5 -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · Puente a la Práctica institucional 5</p>
+    <p class="lead">El caso <em>"Cine éxito"</em><br>te va a fallar a propósito.</p>
+    <p class="subtle">La quinta práctica institucional de MCT158 es, en el fondo, esta sesión hecha código en Java. Te entrega un sistema de venta de boletos que <strong>se rompe con entradas reales</strong> y te pide identificarlas, clasificarlas (comprobada vs no comprobada) y manejarlas. Es el ensayo de lo que harás en tu proyecto:</p>
+    <div class="caso">
+      <div class="caso-tag">Practicario MCT158 · Práctica 5 de 6 · el encargo</div>
+      <p>El cine <strong>"Cine éxito"</strong> tiene un sistema de taquilla en Java que captura datos del usuario por teclado: número de boletos, asiento elegido, nombre del cliente. Funciona… hasta que un usuario teclea <strong>"dos"</strong> donde se esperaba un número, elige el <strong>asiento 99</strong> en una sala de 50, o deja un campo <strong>vacío</strong>.</p>
+      <p>Tu encargo: <strong>identificar las excepciones comunes</strong> que el sistema puede lanzar, <strong>distinguir las comprobadas de las no comprobadas</strong>, y <strong>manejarlas</strong> para que el cine nunca vea un <em>crash</em> — solo un mensaje claro y otra oportunidad de capturar bien.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Enemigo 01</div>
+        <div class="req-t">NumberFormatException</div>
+        <div class="req-d">El usuario teclea "dos" y el sistema hace <span class="inlinecode">Integer.parseInt</span>. <strong>No comprobada.</strong> El equivalente del <span class="inlinecode">ValueError</span> de Python.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Enemigo 02</div>
+        <div class="req-t">ArrayIndexOutOfBounds…</div>
+        <div class="req-d">Pide el asiento 99 en un arreglo de 50. <strong>No comprobada.</strong> Gemelo de <span class="inlinecode">IndexError</span>.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Enemigo 03</div>
+        <div class="req-t">NullPointerException</div>
+        <div class="req-d">Un campo vacío o un objeto sin inicializar. <strong>No comprobada.</strong> La que más cuesta a los programadores del mundo.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Fíjate: los tres enemigos del cine son <strong>no comprobados</strong> — el compilador de Java <em>no</em> te avisó de ninguno. Por eso la práctica importa: te entrena el ojo para ver los errores que ninguna herramienta señala. Exactamente lo que necesitas para el mapa de tu proyecto.</p>
+  </div>
+</section>
+
+<!-- VIII: mapa de excepciones del proyecto (la actividad) -->
+<section>
+  <div class="wrap">
+    <p class="marker">IX · La actividad — el mapa de excepciones</p>
+    <p class="lead">¿Qué puede salir mal,<br>y <em>dónde?</em> Eso es el mapa.</p>
+    <p class="subtle">Esta es la actividad de hoy y el entregable de la sesión. Recorres tu proyecto integrador <strong>módulo por módulo</strong> y, en cada uno, te haces una sola pregunta: <em>¿qué puede salir mal aquí?</em> Abajo tienes una plantilla de ejemplo con cuatro módulos típicos. <strong>Marca los riesgos que aplican a tu proyecto</strong> para ver cómo se siente — luego harás el tuyo con tus módulos reales:</p>
+    <div class="widget" data-tag="Marca tus riesgos">
+      <p class="map-intro">Plantilla de ejemplo (un sistema con entrada de usuario, archivos y cálculo). Toca cada riesgo que también vive en tu proyecto:</p>
+      <div class="map-grid">
+        <div class="map-mod">
+          <div class="map-mod-name">Entrada de usuario</div>
+          <div class="map-mod-q">¿qué teclea el usuario que no esperabas?</div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Texto donde se espera número → <code>ValueError</code> / <code>NumberFormatException</code></span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Campo vacío o cancelado → <code>ValueError</code> / <code>NullPointerException</code></span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Opción de menú fuera de rango → <code>IndexError</code></span></div>
+        </div>
+        <div class="map-mod">
+          <div class="map-mod-name">Archivos y configuración</div>
+          <div class="map-mod-q">¿y si el archivo no está donde crees?</div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">El archivo no existe → <code>FileNotFoundError</code></span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Sin permisos / disco lleno → <code>OSError</code> / <code>IOException</code> (checked)</span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">JSON o CSV mal formado → <code>ValueError</code> / parse error</span></div>
+        </div>
+        <div class="map-mod">
+          <div class="map-mod-name">Lógica y cálculo</div>
+          <div class="map-mod-q">¿qué pasa con los datos límite?</div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Dividir entre una cantidad que puede ser 0 → <code>ZeroDivisionError</code></span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Llave ausente en un diccionario → <code>KeyError</code></span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Operar tipos incompatibles → <code>TypeError</code></span></div>
+        </div>
+        <div class="map-mod">
+          <div class="map-mod-name">Objetos y colaboración</div>
+          <div class="map-mod-q">¿y si el objeto aún no existe?</div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Llamar método de algo que es <code>None</code> → <code>AttributeError</code></span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Lista vacía cuando esperabas elementos → <code>IndexError</code></span></div>
+          <div class="map-risk" data-m><span class="map-risk-box"></span><span class="map-risk-txt">Excepción <em>propia</em> del dominio (p. ej. <code>SaldoInsuficiente</code>)</span></div>
+        </div>
+      </div>
+      <div class="map-counter">Riesgos identificados en tu proyecto: <strong id="map-count">0</strong> de 12
+        <div class="map-bar"><div class="map-fill" id="map-fill"></div></div>
+        <div id="map-msg" style="margin-top:.7rem;font-style:italic;color:rgba(42,29,20,.55);">Empieza a marcar. Cada riesgo que reconoces es un <code>try/except</code> que vas a escribir con intención, no a tientas.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Nota la última fila de cada módulo no es obligatoria que la marques todas: la idea es que <strong>el mapa de tu proyecto será distinto</strong>. Tal vez no leas archivos, pero sí consumas una API; tal vez necesites una excepción propia que aquí no aparece. <em>Ese</em> es exactamente el trabajo: pensar tu sistema, no copiar el mío.</p>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">X · Para la próxima clase</p>
+    <p class="lead">No esperes a que tu proyecto<br>te sorprenda. <em>Sorpréndelo tú primero.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">Mapa de excepciones del proyecto</div>
+      <ol>
+        <li>Lista <strong>los módulos de tu proyecto integrador</strong> (entrada, archivos/datos, lógica, objetos, integraciones). Uno por uno, sin saltarte ninguno.</li>
+        <li>En cada módulo responde <strong>¿qué puede salir mal aquí?</strong> y anota la <strong>excepción concreta</strong> esperada — con su nombre exacto, como en la galería de la sección III.</li>
+        <li>Marca cada excepción como <strong>comprobada o no comprobada</strong> (recuerda: en Python todas son unchecked; piensa cómo se clasificarían en Java).</li>
+        <li>Identifica al menos una <strong>excepción propia del dominio</strong> que tu proyecto necesita (p. ej. <code>SaldoInsuficiente</code>, <code>CupoLleno</code>) y prepárate para definirla — la creamos la próxima clase.</li>
+        <li>Trae el mapa en una tabla o diagrama por módulo: lo <strong>presentas en clase</strong>. Esa presentación es tu evaluación de participación de la sesión.</li>
+        <li><strong>Sube el mapa a tu repo</strong> junto al README del proyecto: es documentación de diseño, y un mapa de errores claro impresiona a quien revise tu código.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: árbol de jerarquía built-in de Python ───────────────
+const treeData={
+  base:{tag:'El ancestro absoluto',name:'BaseException',chain:'(raíz del árbol)',desc:'La cima de todo. <strong>Casi nunca la atrapas tú</strong>: bajo ella cuelgan señales del sistema como <code>SystemExit</code> y <code>KeyboardInterrupt</code>, que normalmente NO quieres interceptar. Por eso atrapas <code>Exception</code>, no esto.'},
+  sysexit:{tag:'Señal del sistema',name:'SystemExit',chain:'BaseException → <b>SystemExit</b>',desc:'La lanza <code>sys.exit()</code> para terminar el programa. <strong>No la atrapes con un except genérico</strong>: impedirías que tu programa cierre. Es la razón por la que existe la rama directa bajo BaseException.'},
+  kbd:{tag:'Señal del sistema',name:'KeyboardInterrupt',chain:'BaseException → <b>KeyboardInterrupt</b>',desc:'El usuario pulsó <code>Ctrl+C</code>. Cuelga de BaseException a propósito: si atraparas todo con <code>except Exception</code>, el usuario igual podría cancelar. Otra razón para nunca atrapar demasiado arriba.'},
+  exception:{tag:'La frontera práctica',name:'Exception',chain:'BaseException → <b>Exception</b>',desc:'<strong>El techo de lo que normalmente atrapas.</strong> Casi todos los errores de tu código heredan de aquí. <code>except Exception</code> los caza a todos — útil como red de último recurso, peligroso como hábito: oculta lo que no esperabas.'},
+  arith:{tag:'Familia aritmética',name:'ArithmeticError',chain:'Exception → <b>ArithmeticError</b>',desc:'Padre de los errores de cálculo. Rara vez la usas directa: atrapas a su hija concreta. Ejemplo de por qué conocer el árbol importa — atrapar <code>ArithmeticError</code> caza más de lo que crees.'},
+  zero:{tag:'Error de cálculo',name:'ZeroDivisionError',chain:'Exception → ArithmeticError → <b>ZeroDivisionError</b>',desc:'Dividiste entre cero. <strong>Hija de ArithmeticError.</strong> Atrápala específica: <code>except ZeroDivisionError</code>. En tu proyecto: cualquier promedio o porcentaje donde el divisor pueda ser 0.'},
+  lookup:{tag:'Familia de búsqueda',name:'LookupError',chain:'Exception → <b>LookupError</b>',desc:'Padre de los errores de "no encontré lo que buscabas en una colección". Truco útil: <code>except LookupError</code> atrapa <em>tanto</em> IndexError como KeyError de un golpe — cuando de verdad quieres ambos.'},
+  index:{tag:'Acceso por posición',name:'IndexError',chain:'Exception → LookupError → <b>IndexError</b>',desc:'Pediste <code>lista[5]</code> y la lista tiene 3 elementos. <strong>Hija de LookupError.</strong> Su gemelo en Java es <code>ArrayIndexOutOfBoundsException</code> — el enemigo 02 del cine.'},
+  key:{tag:'Acceso por llave',name:'KeyError',chain:'Exception → LookupError → <b>KeyError</b>',desc:'Pediste <code>dic["x"]</code> y esa llave no existe. <strong>Hija de LookupError.</strong> A menudo evitable con <code>dic.get("x", default)</code> — recuerda la regla: no uses excepciones para flujo normal.'},
+  value:{tag:'Valor inválido',name:'ValueError',chain:'Exception → <b>ValueError</b>',desc:'El tipo es correcto pero el valor no sirve: <code>int("hola")</code>. <strong>Hija directa de Exception.</strong> La más común al validar entrada de usuario. Gemela en Java: <code>NumberFormatException</code> — el enemigo 01 del cine.'},
+  type:{tag:'Tipo equivocado',name:'TypeError',chain:'Exception → <b>TypeError</b>',desc:'Operación entre tipos incompatibles: <code>"3" + 4</code>. <strong>Hija directa de Exception.</strong> Distinta de ValueError: aquí el problema es el <em>tipo</em>, no el valor. Verla suele significar un bug, no un dato malo del usuario.'},
+  os:{tag:'Familia del sistema',name:'OSError',chain:'Exception → <b>OSError</b>',desc:'Errores del sistema operativo: archivos, permisos, red. Padre de FileNotFoundError y muchos más. En Java, su territorio es de <code>IOException</code>, que ahí SÍ es comprobada.'},
+  fnf:{tag:'Archivo ausente',name:'FileNotFoundError',chain:'Exception → OSError → <b>FileNotFoundError</b>',desc:'Intentaste abrir un archivo que no existe. <strong>Hija de OSError.</strong> En tu mapa, todo módulo que lea archivos debe contemplarla. En Java su pariente <code>IOException</code> es checked: el compilador te obliga a manejarla.'},
+};
+function treeRender(k){
+  const d=treeData[k];
+  $('tree-tag').textContent=d.tag;
+  $('tree-name').textContent=d.name;
+  $('tree-chain').innerHTML=d.chain;
+  $('tree-desc').innerHTML=d.desc;
+}
+document.querySelectorAll('#exc-tree .tree-node').forEach(n=>{
+  n.addEventListener('click',()=>{
+    document.querySelectorAll('#exc-tree .tree-node').forEach(x=>x.classList.remove('lit'));
+    n.classList.add('lit');
+    treeRender(n.dataset.x);
+  });
+});
+treeRender('base');
+
+// ─── W2: galería de excepciones comunes ──────────────────────
+const galData={
+  value:{name:'ValueError',when:'tipo correcto, valor imposible',
+    code:['<span class="cm"># el tipo es str, válido para int()…</span>','edad = <span class="kw">int</span>(<span class="str">"veintiocho"</span>)','<span class="err">ValueError: invalid literal for int()</span>'],
+    note:'Ocurre cuando una función recibe un argumento del <strong>tipo correcto</strong> pero con un <strong>valor que no puede procesar</strong>. El rey de la validación de formularios.',
+    java:'En Java: <code>NumberFormatException</code> al hacer <code>Integer.parseInt("veintiocho")</code>.'},
+  type:{name:'TypeError',when:'el tipo no encaja en la operación',
+    code:['<span class="cm"># sumar texto con número</span>','total = <span class="str">"3"</span> + <span class="kw">4</span>','<span class="err">TypeError: can only concatenate str (not "int")</span>'],
+    note:'La operación no tiene sentido entre <strong>esos tipos</strong>. A diferencia de ValueError, aquí ni siquiera el tipo es el correcto. Casi siempre delata un <em>bug</em> tuyo, no un dato del usuario.',
+    java:'En Java rara vez existe en runtime: el compilador atrapa los choques de tipos <em>antes</em> de ejecutar.'},
+  key:{name:'KeyError',when:'la llave no está en el diccionario',
+    code:['usuario = {<span class="str">"nombre"</span>: <span class="str">"Ana"</span>}','correo = usuario[<span class="str">"email"</span>]','<span class="err">KeyError: \'email\'</span>'],
+    note:'Pediste una <strong>llave que no existe</strong>. Evítala con <code>usuario.get("email")</code>, que devuelve <code>None</code> en vez de explotar — recuerda: no uses excepciones para casos esperados.',
+    java:'En Java un <code>HashMap.get()</code> de llave ausente devuelve <code>null</code> — y entonces el peligro se vuelve NullPointerException.'},
+  index:{name:'IndexError',when:'el índice se salió de la lista',
+    code:['equipo = [<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>]','tercero = equipo[<span class="kw">3</span>]  <span class="cm"># solo hay 0,1,2</span>','<span class="err">IndexError: list index out of range</span>'],
+    note:'Accediste a una <strong>posición que no existe</strong>. Clásico del "off-by-one": una lista de 3 va de 0 a 2, no a 3. Revisa siempre tus límites de ciclos.',
+    java:'En Java: <code>ArrayIndexOutOfBoundsException</code> — idéntico, sobre arreglos. El enemigo 02 del cine.'},
+  fnf:{name:'FileNotFoundError',when:'el archivo no está donde lo buscas',
+    code:['<span class="kw">with</span> <span class="kw">open</span>(<span class="str">"config.json"</span>) <span class="kw">as</span> f:','    datos = f.read()','<span class="err">FileNotFoundError: [Errno 2] No such file...</span>'],
+    note:'La ruta no existe o está mal escrita. <strong>Todo módulo que lea archivos debe contemplarla.</strong> A menudo es ruta relativa vs absoluta, o un archivo que el usuario no creó.',
+    java:'En Java vive bajo <code>IOException</code>, que es <strong>comprobada</strong>: el compilador te obliga a manejarla con try/catch o throws.'},
+  zero:{name:'ZeroDivisionError',when:'divisor igual a cero',
+    code:['<span class="cm"># promedio sin elementos</span>','promedio = total / <span class="kw">len</span>(notas)  <span class="cm"># notas vacía</span>','<span class="err">ZeroDivisionError: division by zero</span>'],
+    note:'Dividiste entre cero. En la práctica casi nunca escribes <code>/0</code> a mano: aparece cuando un <strong>divisor variable</strong> (un contador, un len()) resulta ser 0. Valida antes de dividir.',
+    java:'En Java solo con enteros: <code>ArithmeticException: / by zero</code>. Con <code>double</code> da <code>Infinity</code>, no excepción — ¡cuidado!'},
+  attr:{name:'AttributeError',when:'el objeto no tiene ese atributo/método',
+    code:['cliente = <span class="kw">None</span>','cliente.nombre  <span class="cm"># None no tiene .nombre</span>','<span class="err">AttributeError: \'NoneType\' object has no attribute</span>'],
+    note:'Llamaste un atributo o método que <strong>el objeto no posee</strong> — clásico cuando algo es <code>None</code> sin que lo esperaras. La forma pitónica de la temida NullPointerException.',
+    java:'En Java es <strong>NullPointerException</strong> — el enemigo 03 del cine, y el error más costoso de la historia del software.'},
+};
+function galRender(k){
+  const d=galData[k];
+  $('gal-name').textContent=d.name;
+  $('gal-when').textContent='cuándo: '+d.when;
+  $('gal-code').innerHTML=d.code.map(l=>'<span class="ln">'+l+'</span>').join('');
+  $('gal-note').innerHTML=d.note;
+  $('gal-java').innerHTML=d.java;
+}
+document.querySelectorAll('#gal-grid .gal-chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('#gal-grid .gal-chip').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    galRender(c.dataset.g);
+  });
+});
+galRender('value');
+
+// ─── W3b: anatomía try/except/else/finally ──────────────────
+const anaData={
+  try:{tag:'El bloque vigilado',name:'try',
+    desc:'El código que <strong>podría fallar</strong>. Mantenlo <strong>corto</strong>: solo lo arriesgado, no medio programa. Cuanto más código metas aquí, más difícil será saber qué línea lanzó el error.',
+    jv:'En Java: <code>try { ... }</code> — idéntica idea.'},
+  except:{tag:'El plan B',name:'except',
+    desc:'Se ejecuta <strong>solo si</strong> el try lanzó <em>ese</em> tipo. Puedes encadenar varios <code>except</code>, del más específico al más general. Aquí reparas, registras o relanzas — nunca <code>pass</code> vacío.',
+    jv:'En Java: <code>catch (FileNotFoundException e) { ... }</code>. Mismo papel, palabra distinta: <em>except</em> en Python, <em>catch</em> en Java.'},
+  except2:{tag:'Otro enemigo, otro plan',name:'except ... as e',
+    desc:'Un segundo <code>except</code> para un tipo distinto. El <code>as e</code> <strong>captura el objeto excepción</strong> para inspeccionar su mensaje. Sé específico: cada error, su respuesta.',
+    jv:'En Java: un segundo <code>catch (NumberFormatException e)</code>. El objeto <code>e</code> existe igual en ambos lenguajes.'},
+  else:{tag:'Si todo salió bien',name:'else',
+    desc:'Se ejecuta <strong>solo si el try NO falló</strong>. Sirve para separar el código arriesgado (en try) del que depende de su éxito. <em>Pocos lo usan; te distingue.</em>',
+    jv:'En Java <strong>no existe</strong> el <code>else</code> del try: ese código simplemente va al final del try. Una elegancia propia de Python.'},
+  finally:{tag:'Pase lo que pase',name:'finally',
+    desc:'Se ejecuta <strong>siempre</strong>: haya error o no, se haya atrapado o no. Es donde <strong>liberas recursos</strong>: cerrar archivos, conexiones, la taquilla. La red de seguridad que nunca se salta.',
+    jv:'En Java: <code>finally { ... }</code> — igualito. Y en ambos, lo ideal es no necesitarlo: usa <code>with</code> (Python) o <em>try-with-resources</em> (Java).'},
+};
+function anaRender(k){
+  const d=anaData[k];
+  $('ana-tag').textContent=d.tag;
+  $('ana-name').textContent=d.name;
+  $('ana-desc').innerHTML=d.desc;
+  $('ana-jv').innerHTML=d.jv;
+  document.querySelectorAll('#ana-code .ana-line').forEach(l=>l.classList.toggle('lit',l.dataset.a===k));
+}
+document.querySelectorAll('#ana-code .ana-line').forEach(l=>{
+  l.addEventListener('click',()=>anaRender(l.dataset.a));
+});
+anaRender('try');
+
+// ─── W3: checked vs unchecked — veredicto del compilador ─────
+const cuData={
+  io:{
+    code:['<span class="cm">// abrir un archivo del disco</span>','<span class="ty">FileReader</span> fr =','     <span class="kw">new</span> <span class="ty">FileReader</span>(<span class="str">"config.txt"</span>);','fr.read();','<span class="cm">// ↑ puede lanzar IOException</span>'],
+    ok:false,t:'No compila sin manejarla.',
+    d:'<code>IOException</code> es <strong>comprobada</strong>: hereda de Exception pero NO de RuntimeException. El compilador <strong>te obliga</strong> a rodearla con <code>try/catch</code> o a declarar <code>throws IOException</code>. Son fallos del entorno, predecibles: el archivo puede no estar.'},
+  npe:{
+    code:['<span class="ty">String</span> nombre = <span class="kw">null</span>;','<span class="ty">int</span> n = nombre.length();','<span class="cm">// ↑ NullPointerException</span>','<span class="cm">// el compilador no dijo nada</span>'],
+    ok:true,t:'Compila. Estalla en ejecución.',
+    d:'<code>NullPointerException</code> es <strong>no comprobada</strong> (hereda de RuntimeException). El compilador <strong>la deja pasar</strong> — es un bug, no un fallo del entorno. Vivirá hasta que un dato real la dispare. Gemela del <code>AttributeError</code> de Python.'},
+  aioobe:{
+    code:['<span class="ty">int</span>[] asientos = <span class="kw">new</span> <span class="ty">int</span>[<span class="str">50</span>];','asientos[<span class="str">99</span>] = <span class="str">1</span>;','<span class="cm">// ↑ ArrayIndexOutOfBounds</span>','<span class="cm">// compila perfecto</span>'],
+    ok:true,t:'Compila. Estalla en ejecución.',
+    d:'<code>ArrayIndexOutOfBoundsException</code> es <strong>no comprobada</strong>. El compilador no sabe qué índice usarás en tiempo de ejecución, así que no te avisa. Tú decides validar el rango. El enemigo 02 del cine — gemelo del <code>IndexError</code>.'},
+  nfe:{
+    code:['<span class="ty">String</span> dato = <span class="str">"dos"</span>;','<span class="ty">int</span> n = <span class="ty">Integer</span>.parseInt(dato);','<span class="cm">// ↑ NumberFormatException</span>','<span class="cm">// compila; falla con "dos"</span>'],
+    ok:true,t:'Compila. Estalla en ejecución.',
+    d:'<code>NumberFormatException</code> es <strong>no comprobada</strong> (subclase de RuntimeException, vía IllegalArgumentException). El enemigo 01 del cine, gemelo exacto del <code>ValueError</code> de Python. El compilador confía en que el texto será un número… y no siempre lo es.'},
+};
+function cuRender(k){
+  const d=cuData[k];
+  $('cu-code').innerHTML=d.code.map(l=>'<span class="ln">'+l+'</span>').join('');
+  const stamp=$('cu-stamp');
+  stamp.className='cu-stamp '+(d.ok?'no':'ok');
+  stamp.textContent=d.ok?'No comprobada':'Comprobada';
+  $('cu-vt').textContent=d.t;
+  $('cu-vd').innerHTML=d.d;
+}
+document.querySelectorAll('[data-cu]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-cu]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    cuRender(b.dataset.cu);
+  });
+});
+cuRender('io');
+
+// ─── W4: reglas de oro (acordeón) ────────────────────────────
+document.querySelectorAll('.rule-card').forEach(card=>{
+  card.addEventListener('click',()=>{card.classList.toggle('open');});
+});
+
+// ─── W5: mapa de excepciones por módulo ──────────────────────
+const mapRisks=document.querySelectorAll('.map-risk');
+const mapMsgs={
+  0:'Empieza a marcar. Cada riesgo que reconoces es un <code>try/except</code> que vas a escribir con intención, no a tientas.',
+  low:'Buen comienzo. Sigue: un módulo que crees "seguro" suele esconder el error que te tumba en la demo.',
+  mid:'Vas tomando forma. Nota cuántos son <em>no comprobados</em> — Python jamás te obligará a manejarlos. El recordatorio es este mapa.',
+  high:'Excelente. Ya piensas como quien diseña para el fallo, no contra él. Ahora hazlo con TUS módulos reales y tráelo a clase.'
+};
+function mapUpdate(){
+  const done=document.querySelectorAll('.map-risk.on').length;
+  $('map-count').textContent=done;
+  $('map-fill').style.width=(done/mapRisks.length*100)+'%';
+  let key='0';
+  if(done>=1&&done<=3) key='low';
+  else if(done>=4&&done<=7) key='mid';
+  else if(done>=8) key='high';
+  $('map-msg').innerHTML=mapMsgs[key];
+}
+mapRisks.forEach(r=>{
+  r.addEventListener('click',()=>{r.classList.toggle('on');mapUpdate();});
+});
+mapUpdate();
+</script>
+</body>
+</html>

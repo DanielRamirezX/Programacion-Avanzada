@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XXIII — SQL seguro: la puerta con candado — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ═══════════════ CSS DE WIDGETS · SESIÓN XXIII ═══════════════ */
+
+/* caso / puente práctica */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.caso-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.caso p{font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;line-height:1.6;color:var(--ink-soft);margin-bottom:1rem;}
+.caso p:last-child{margin-bottom:0;}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W1: demo de inyección animada (atk-) */
+.atk-input{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1.4rem;}
+.atk-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+.atk-field{flex:1;min-width:200px;font-family:'JetBrains Mono',monospace;font-size:.82rem;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);color:var(--ink);}
+.atk-field.danger{border-color:var(--blood);color:var(--blood);background:rgba(160,36,24,.05);}
+.atk-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.atk-col{background:var(--ink);overflow:hidden;display:flex;flex-direction:column;}
+.atk-head{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.7rem 1.1rem;letter-spacing:.08em;display:flex;justify-content:space-between;align-items:center;color:var(--paper);}
+.atk-head.bad{background:var(--blood-dark);}
+.atk-head.good{background:var(--olive);}
+.atk-head .tagx{font-size:.58rem;opacity:.85;}
+.atk-sql{padding:1.1rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:rgba(239,230,210,.9);min-height:118px;word-break:break-word;}
+.atk-sql .kw{color:#D4956A;font-style:italic;}
+.atk-sql .str{color:#C9A961;}
+.atk-sql .ph{color:#A6C2D6;font-weight:700;}
+.atk-sql .inj{background:var(--blood);color:#fff;padding:.05rem .2rem;border-radius:2px;font-weight:700;}
+.atk-sql .safe{color:#9FBF9C;}
+.atk-result{padding:.9rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.6;border-top:1px solid rgba(239,230,210,.12);min-height:74px;}
+.atk-result.breached{color:#E08A82;}
+.atk-result.held{color:#9FBF9C;}
+.atk-result .big{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;display:block;margin-top:.3rem;}
+
+/* W2: tabs python/java parametrizado (pj-) */
+.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
+.pj-head .badge{font-size:.6rem;color:var(--ochre);}
+.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:300px;}
+.pj-line{white-space:pre;display:block;padding:0 .3rem;border-radius:2px;}
+.pj-line .kw{color:var(--blood);font-style:italic;}
+.pj-line .cls{color:var(--ink);font-weight:700;}
+.pj-line .str{color:var(--ochre);}
+.pj-line .self{color:var(--olive);font-weight:700;}
+.pj-line .ty{color:#3E6E86;}
+.pj-line .ph{color:#7a5dab;font-weight:700;}
+.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.pj-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W3: anatomía del ataque paso a paso (an-) */
+.an-stage{background:var(--ink);padding:1.6rem;min-height:230px;display:flex;flex-direction:column;gap:1rem;}
+.an-line{font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.7;color:rgba(239,230,210,.55);transition:all .3s;padding:.4rem .7rem;border-left:2px solid transparent;}
+.an-line.cur{color:#fff;border-left-color:var(--blood);background:rgba(160,36,24,.18);}
+.an-line .inj{color:#E08A82;font-weight:700;}
+.an-line .str{color:#C9A961;}
+.an-line .safe{color:#9FBF9C;}
+.an-desc{margin-top:1.3rem;padding:1.2rem 1.5rem;background:var(--paper);border-left:3px solid var(--blood);display:flex;gap:1rem;align-items:flex-start;min-height:5rem;}
+.an-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.2rem;color:var(--blood);line-height:1;flex-shrink:0;}
+.an-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.45;color:var(--ink-soft);}
+.an-txt strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W4: ORM vs SQL directo (orm-) */
+.orm-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.orm-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.orm-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.74rem;padding:.65rem 1.1rem;letter-spacing:.08em;}
+.orm-body{padding:1.1rem;font-family:'JetBrains Mono',monospace;font-size:.73rem;line-height:1.85;min-height:170px;}
+.orm-body .ln{white-space:pre;display:block;color:var(--ink-soft);}
+.orm-body .kw{color:var(--blood);font-style:italic;}
+.orm-body .cls{color:var(--ink);font-weight:700;}
+.orm-body .str{color:#8a6420;}
+.orm-body .ph{color:#7a5dab;font-weight:700;}
+.orm-body .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.orm-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.orm-note strong{color:var(--olive);font-style:normal;font-weight:600;}
+
+/* W5: NO/SÍ (ns-) */
+.ns-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
+.ns-card{border:1px solid var(--line);padding:1.5rem;background:var(--paper);}
+.ns-card.no{border-top:3px solid var(--blood);}
+.ns-card.si{border-top:3px solid var(--olive);}
+.ns-flag{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;}
+.ns-card.no .ns-flag{color:var(--blood);}
+.ns-card.si .ns-flag{color:var(--olive);}
+.ns-code{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;background:var(--ink);color:rgba(239,230,210,.9);padding:1rem;overflow-x:auto;}
+.ns-code .kw{color:#D4956A;font-style:italic;}
+.ns-code .str{color:#C9A961;}
+.ns-code .ph{color:#A6C2D6;font-weight:700;}
+.ns-code .bad{color:#E08A82;font-weight:700;}
+.ns-why{font-size:.95rem;color:var(--ink-soft);line-height:1.5;margin-top:1rem;}
+.ns-why strong{color:var(--ink);}
+
+/* checklist (chk-) */
+.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.chk-item:hover{border-color:var(--olive);}
+.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
+.chk-item.done .chk-box::after{content:'✓';}
+.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.chk-item.done .chk-txt{color:var(--ink);}
+.chk-txt strong{color:var(--ink);}
+
+/* tarjetas de requerimiento práctica */
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .atk-cols,.pj-stage,.orm-stage,.ns-grid,.req-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-22.html" class="back">Sesión 22</a>
+  <span class="session-label">Sesión 23 · 05.08.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">WHERE id = ?</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">' OR 1=1 --</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">cursor.execute(sql, (dato,))</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">PreparedStatement ps</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">VALUES (%s, %s)</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XXIII · Bloque III · Bases de datos · Ref. Temario 7.4 · 7.4.1 · 7.4.2 · Python · Java</div>
+    <h1>La puerta con<br><em>candado.</em></h1>
+    <p class="hero-sub">Tu base de datos es la bóveda del proyecto. Hoy aprendes a abrirla con <em>llave</em> — placeholders y sentencias parametrizadas — y a reconocer al que llega a forzar la cerradura con un simple <em>' OR 1=1 --</em>.</p>
+  </div>
+</section>
+
+<!-- I: el problema -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · El dato que viene de fuera</p>
+    <p class="lead">Toda entrada de usuario es<br>culpable hasta <em>demostrar lo contrario.</em></p>
+    <p class="subtle">Ya conectas a la base de datos y sabes hacer <strong>SELECT</strong> e <strong>INSERT</strong>. Pero hay una diferencia abismal entre una consulta que funciona en tu compu con datos de prueba y una que sobrevive a un usuario malicioso. Esa diferencia se llama <strong>SQL injection</strong>, y es el ataque número uno contra aplicaciones desde hace más de dos décadas. La regla de hoy es una sola, y no admite excepciones: <strong>nunca pegues lo que el usuario escribió directamente dentro del texto de tu SQL.</strong></p>
+    <p class="subtle" style="margin-top:1.2rem">Lo bueno: defenderse es <em>más fácil</em> que atacar. Una sola técnica — las <strong>sentencias parametrizadas</strong> — cierra la puerta por completo. La vemos hoy en Python (placeholders <span class="inlinecode">?</span> / <span class="inlinecode">%s</span>) y en Java (<span class="inlinecode">PreparedStatement</span>), y la dejamos instalada en la capa de datos de tu proyecto.</p>
+  </div>
+</section>
+
+<!-- II: demo de inyección -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La demostración — fórzala tú mismo</p>
+    <p class="lead">El mismo login.<br>Una versión <em>cae</em>; la otra <em>aguanta.</em></p>
+    <p class="subtle">Imagina un login que busca al usuario en la BD. A la izquierda, la consulta se arma <strong>concatenando</strong> lo que se teclea. A la derecha, la misma consulta usa un <strong>placeholder</strong>. Escribe un usuario normal, luego pulsa el ataque clásico y mira qué pasa en cada lado:</p>
+    <div class="widget" data-tag="Demo de SQL injection">
+      <div class="atk-input">
+        <span class="atk-label">usuario&gt;</span>
+        <input class="atk-field" id="atk-field" value="ana" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="atk-cols">
+        <div class="atk-col">
+          <div class="atk-head bad">Concatenado <span class="tagx">f-string · ✗ vulnerable</span></div>
+          <div class="atk-sql" id="atk-sql-bad"></div>
+          <div class="atk-result" id="atk-res-bad"></div>
+        </div>
+        <div class="atk-col">
+          <div class="atk-head good">Parametrizado <span class="tagx">placeholder ? · ✓ seguro</span></div>
+          <div class="atk-sql" id="atk-sql-good"></div>
+          <div class="atk-result" id="atk-res-good"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="atk-normal">Usuario normal: "ana"</button>
+        <button class="btn" id="atk-inject">☠ Inyectar: ' OR 1=1 --</button>
+        <button class="btn" id="atk-drop">☠☠ Inyectar: '; DROP TABLE ...</button>
+      </div>
+      <div class="pj-note" id="atk-note" style="border-left-color:var(--blood)">Pulsa un botón de ataque y compara las dos columnas. La izquierda <strong>arma una frase distinta</strong> con lo que escribiste; la derecha <strong>siempre busca el texto literal</strong>, ataque incluido.</div>
+    </div>
+  </div>
+</section>
+
+<!-- III: anatomía del ataque -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Anatomía del ataque — paso a paso</p>
+    <p class="lead">Entender al atacante<br>es la mitad de la <em>defensa.</em></p>
+    <p class="subtle">¿Por qué <span class="inlinecode">' OR 1=1 --</span> abre la puerta? No es magia: es gramática. Recorre las cuatro etapas y verás cómo una comilla rompe tu frase y la convierte en <em>otra</em>:</p>
+    <div class="widget" data-tag="Cómo se rompe la frase">
+      <div class="an-stage" id="an-stage"></div>
+      <div class="an-desc">
+        <div class="an-num" id="an-num">·</div>
+        <div class="an-txt" id="an-txt">Pulsa <strong>Siguiente</strong> para ver, línea por línea, cómo el atacante convierte tu consulta en una puerta abierta.</div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="an-reset">⟲ Reset</button>
+        <button class="btn" id="an-prev">◀ Atrás</button>
+        <button class="btn on" id="an-next">Siguiente ▶</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: parametrizado python ↔ java -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · La defensa — Python ↔ Java</p>
+    <p class="lead">La llave es la misma idea<br>en los <em>dos</em> lenguajes.</p>
+    <p class="subtle">La sentencia parametrizada separa <strong>la consulta</strong> (la frase fija, con huecos) de <strong>los datos</strong> (lo que va en los huecos). El motor de la BD nunca confunde uno con otro — por eso un dato jamás se ejecuta como código. Recorre las operaciones de tu proyecto en Python (base del curso) y su gemelo en Java:</p>
+    <div class="widget" data-tag="Misma defensa · dos lenguajes">
+      <div class="pj-stage">
+        <div class="pj-col">
+          <div class="pj-head">Python <span class="badge">sqlite3 / psycopg2</span></div>
+          <div class="pj-body" id="py-body"></div>
+        </div>
+        <div class="pj-col">
+          <div class="pj-head">Java <span class="badge">JDBC · PreparedStatement</span></div>
+          <div class="pj-body" id="java-body"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-eq="select">SELECT seguro</button>
+        <button class="btn" data-eq="insert">INSERT seguro</button>
+        <button class="btn" data-eq="ph">El placeholder</button>
+        <button class="btn" data-eq="varios">Varios datos</button>
+      </div>
+      <div class="pj-note" id="pj-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- V: ORM vs SQL directo -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · ORM vs SQL directo</p>
+    <p class="lead">Dos caminos a la BD.<br>Los dos pueden ser <em>seguros</em> — si los usas bien.</p>
+    <p class="subtle">Hasta ahora escribiste SQL a mano. Existe otra vía: un <strong>ORM</strong> (Object-Relational Mapping) que traduce objetos de Python a filas de la tabla, sin que escribas SQL. En Python el más usado es <strong>SQLAlchemy</strong>. La buena noticia de seguridad: un ORM <strong>parametriza por ti</strong> — siempre. Compara la misma operación en los dos estilos:</p>
+    <div class="widget" data-tag="SQLAlchemy vs SQL a mano">
+      <div class="orm-stage">
+        <div class="orm-col">
+          <div class="orm-head">SQL directo · sqlite3</div>
+          <div class="orm-body" id="orm-sql"></div>
+        </div>
+        <div class="orm-col">
+          <div class="orm-head">ORM · SQLAlchemy</div>
+          <div class="orm-body" id="orm-orm"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-orm="select">Leer (SELECT)</button>
+        <button class="btn" data-orm="insert">Insertar (INSERT)</button>
+        <button class="btn" data-orm="model">El modelo</button>
+      </div>
+      <div class="orm-note" id="orm-note"></div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">¿Cuál elegir para tu proyecto? Para esta materia, <strong>escribir SQL directo y parametrizado</strong> te hace entender lo que pasa por debajo — y eso es lo que evaluaré. El ORM es la herramienta profesional para proyectos grandes; conviene que sepas que existe y por qué su parametrización automática es una de sus mayores ventajas de seguridad. <em>Si la IA te genera un ORM, tú debes poder explicar qué SQL produce.</em></p>
+  </div>
+</section>
+
+<!-- VI: NO / SÍ -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · La regla de oro — NO / SÍ</p>
+    <p class="lead">Si tu dato toca el SQL con un <em>+</em> o un f-string,<br>ya perdiste.</p>
+    <p class="subtle">Esta es la frontera entre código que se rompe y código que aguanta. Memorízala: el dato del usuario <strong>nunca</strong> entra al texto de la consulta — entra <strong>aparte</strong>, como argumento.</p>
+    <div class="ns-grid">
+      <div class="ns-card no">
+        <div class="ns-flag">✗ Nunca · vulnerable</div>
+        <div class="ns-code"><span class="kw">sql</span> = <span class="bad">f"SELECT * FROM huesped WHERE id = {id}"</span>
+cursor.execute(sql)
+<span class="kw"># el dato se vuelve parte de la frase</span>
+<span class="kw"># → un ' lo rompe y reescribe todo</span></div>
+        <div class="ns-why">Concatenar o interpolar (<strong>f-string</strong>, <strong>+</strong>, <strong>%</strong>, <strong>.format()</strong>) mezcla datos con código. Una comilla del atacante cambia el significado de la consulta. <strong>Esto reprueba la entrega.</strong></div>
+      </div>
+      <div class="ns-card si">
+        <div class="ns-flag">✓ Siempre · seguro</div>
+        <div class="ns-code"><span class="kw">sql</span> = <span class="str">"SELECT * FROM huesped WHERE id = </span><span class="ph">?</span><span class="str">"</span>
+cursor.execute(sql, (id,))
+<span class="kw"># la frase es fija; el dato va aparte</span>
+<span class="kw"># → la BD lo trata como texto, jamás código</span></div>
+        <div class="ns-why">El <strong>placeholder</strong> (<span class="inlinecode">?</span> en sqlite, <span class="inlinecode">%s</span> en psycopg2/MySQL) deja un hueco. El valor viaja en la <strong>tupla</strong> de parámetros, separado. La BD lo escapa por ti, siempre, sin que pienses en ello.</div>
+      </div>
+    </div>
+    <div class="caso" style="border-left-color:var(--blood);margin-top:1.8rem">
+      <div class="caso-tag" style="color:var(--blood)">Nota de seguridad · del Maestro en Seguridad de la Información</div>
+      <p style="color:var(--ink-soft)">Detalle que cuesta vidas en producción: la tupla de un solo elemento <strong>lleva coma</strong> — <span class="inlinecode">(id,)</span>, no <span class="inlinecode">(id)</span>. Sin la coma, Python no ve una tupla y la llamada falla. Y nunca, jamás, uses el operador <span class="inlinecode">%</span> de formateo de cadenas para "meter" el dato: <span class="inlinecode">%s</span> dentro de las comillas del SQL es un <em>placeholder del driver</em>, no un formateo de Python. Son cosas distintas que se parecen — y confundirlas abre el agujero.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VII: puente a la práctica -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Puente a la Práctica institucional 6</p>
+    <p class="lead">El hotel no es un ejercicio.<br>Es una bóveda con datos de <em>personas reales.</em></p>
+    <p class="subtle">Tu Práctica 6 — el sistema del hotel — toca la base de datos en cada operación: registrar un huésped, buscar una reservación, listar habitaciones. Cada una de esas consultas recibe datos de fuera. El requisito no es opcional: <strong>todo SELECT e INSERT contra la BD del hotel debe usar PreparedStatement</strong> (o el placeholder equivalente), para evitar inyección SQL y proteger la integridad de los datos.</p>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Requerimiento A</div>
+        <div class="req-t">Registrar huésped</div>
+        <div class="req-d">INSERT del huésped con <em>todos</em> sus datos vía PreparedStatement. Nombre con apóstrofo (O'Brien) incluido — sin romper nada.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento B</div>
+        <div class="req-t">Buscar reservación</div>
+        <div class="req-d">SELECT por folio o por nombre, parametrizado. El folio que teclea el recepcionista jamás entra concatenado.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento C</div>
+        <div class="req-t">Integridad de datos</div>
+        <div class="req-d">Ninguna entrada del usuario puede alterar, borrar o exponer filas que no le corresponden. La parametrización lo garantiza.</div>
+      </div>
+    </div>
+    <div class="caso">
+      <div class="caso-tag">El caso · cómo se ve en Java</div>
+      <p>En la capa de datos del hotel, una búsqueda de reservación se ve así: <strong>preparas</strong> la frase con un <span class="inlinecode">?</span>, <strong>asignas</strong> el folio con <span class="inlinecode">setInt(1, folio)</span>, y <strong>ejecutas</strong>. El recepcionista puede teclear lo que sea en el cuadro de búsqueda — el motor solo buscará ese folio literal, nunca ejecutará lo que venga disfrazado de comando.</p>
+      <p>La defensa del proyecto será exactamente esta demostración: tú, en clase, mostrando que tu SELECT/INSERT resisten una entrada maliciosa. <strong>Si la IA te ayudó a escribir la capa de datos, tú la defiendes línea por línea.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- VIII: checklist -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · Antes de subir tu capa de datos</p>
+    <p class="lead">Revisa cada consulta<br>como si un atacante la <em>estuviera leyendo.</em></p>
+    <p class="subtle">Marca lo que ya cumple tu código. Si algo queda sin marcar, ahí está tu siguiente tarea — y tu siguiente vulnerabilidad:</p>
+    <div class="widget" data-tag="Checklist de capa de datos segura">
+      <div class="chk-progress">Consultas blindadas: <span id="chk-count">0</span> de 8
+        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+      </div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Ningún SELECT arma la consulta con <strong>f-string, + o .format()</strong> — todos usan placeholders</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Todo INSERT pasa los valores en la <strong>tupla / parámetros</strong>, no dentro del texto SQL</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Probé una entrada con <strong>comilla simple</strong> (un nombre como O'Brien) y NO se rompe</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Probé el payload <strong>' OR 1=1 --</strong> y el SELECT NO devuelve filas de más</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Las tuplas de <strong>un solo valor llevan coma</strong>: <code>(dato,)</code></div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">En Java uso <strong>PreparedStatement</strong> con <code>setString</code>/<code>setInt</code>, nunca <code>Statement</code> con concatenación</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Cierro conexiones y cursores (<strong>with</strong> en Python, try-with-resources en Java)</div></div>
+      <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedo <strong>explicar línea por línea</strong> mi capa de datos en la defensa del proyecto</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">IX · Para la próxima clase</p>
+    <p class="lead">Una capa de datos segura<br>no se nota. Y eso es <em>exactamente</em> el punto.</p>
+    <p class="subtle">Hoy cerraste la puerta de lectura e inserción. Faltan las operaciones que <em>modifican</em> y <em>borran</em> — y ahí entra otro concepto que define a un sistema profesional: las <strong>transacciones</strong>. Eso lo armamos en el Sprint 3.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance del proyecto · capa de datos segura</div>
+      <ol>
+        <li><strong>Implementa SELECT e INSERT parametrizados</strong> en la capa de datos de tu proyecto. Cero concatenación: solo placeholders (<code>?</code> / <code>%s</code>) en Python o <code>PreparedStatement</code> en Java.</li>
+        <li><strong>Prepara tu demostración:</strong> ten lista una entrada normal y un payload de ataque (<code>' OR 1=1 --</code>) para mostrar en clase que tu consulta resiste. Esa demo es tu <strong>participación evaluada</strong>.</li>
+        <li>Pasa el <strong>checklist de la sección VIII</strong> sobre tu propio código — las 8 casillas marcadas.</li>
+        <li><strong>Deja preparados</strong> UPDATE y DELETE (también parametrizados) y empieza a leer sobre <strong>transacciones</strong> (<code>commit</code> / <code>rollback</code>): son la columna del Sprint 3.</li>
+        <li>Sube la capa de datos a tu repo con un commit claro: <em>"capa de datos: SELECT/INSERT parametrizados"</em>. Tu portafolio también es tu defensa.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="pj-line">'+html+'</span>';
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+// ─── W1: demo de inyección ──────────────────────────────────
+const atkField=$('atk-field');
+function atkRender(){
+  const raw=atkField.value;
+  const u=esc(raw);
+  // columna mala: concatena el texto crudo dentro de la frase
+  $('atk-sql-bad').innerHTML='<span class="kw">SELECT</span> * <span class="kw">FROM</span> usuario<br><span class="kw">WHERE</span> nombre = <span class="str">\''+'<span class="inj">'+u+'</span>'+'\'</span>';
+  // columna buena: el texto siempre es un literal en el hueco del placeholder
+  $('atk-sql-good').innerHTML='<span class="kw">SELECT</span> * <span class="kw">FROM</span> usuario<br><span class="kw">WHERE</span> nombre = <span class="ph">?</span><br><span class="safe">// param[1] = "'+u+'"</span>';
+  // analizar si la entrada es un ataque
+  const low=raw.toLowerCase();
+  const isInject=/('|--|\bor\b\s+1\s*=\s*1|;|drop\s+table)/i.test(raw) && (low.includes("'")||low.includes('--')||low.includes(';')||/or\s+1\s*=\s*1/.test(low));
+  if(isInject){
+    $('atk-res-bad').className='atk-result breached';
+    if(low.includes('drop')){
+      $('atk-res-bad').innerHTML='> Tabla "usuario" ELIMINADA.<span class="big">La comilla cerró el texto y el <strong>;</strong> empezó un comando nuevo. Sabotaje total.</span>';
+    }else{
+      $('atk-res-bad').innerHTML='> 1.842 filas devueltas (TODAS).<span class="big">El <strong>OR 1=1</strong> siempre es verdadero; el <strong>--</strong> comentó el resto. Login sin contraseña.</span>';
+    }
+    $('atk-res-good').className='atk-result held';
+    $('atk-res-good').innerHTML='> 0 filas.<span class="big">Buscó un usuario llamado <em>literalmente</em> así. No existe nadie con ese nombre. Puerta cerrada.</span>';
+  }else{
+    $('atk-res-bad').className='atk-result';
+    $('atk-res-bad').style.color='rgba(239,230,210,.7)';
+    $('atk-res-bad').innerHTML='> 1 fila: '+(u||'(vacío)')+'.<span class="big">Con datos normales, funciona. Por eso el bug pasa desapercibido… hasta el ataque.</span>';
+    $('atk-res-good').className='atk-result held';
+    $('atk-res-good').innerHTML='> 1 fila: '+(u||'(vacío)')+'.<span class="big">Mismo resultado correcto — y blindado de regalo.</span>';
+  }
+}
+atkField.addEventListener('input',atkRender);
+$('atk-normal').addEventListener('click',()=>{atkField.value='ana';atkField.classList.remove('danger');atkRender();$('atk-note').innerHTML='Entrada legítima: las <strong>dos</strong> consultas devuelven lo mismo y correcto. El problema es invisible con datos buenos — solo aparece cuando llega alguien con malas intenciones.';});
+$('atk-inject').addEventListener('click',()=>{atkField.value="' OR 1=1 --";atkField.classList.add('danger');atkRender();$('atk-note').innerHTML='El ataque clásico. A la izquierda, la comilla cierra el texto y <strong>OR 1=1</strong> vuelve la condición siempre verdadera: devuelve toda la tabla. A la derecha, ese texto es solo un nombre raro que <strong>no existe</strong>. La parametrización lo neutraliza sin que hagas nada extra.';});
+$('atk-drop').addEventListener('click',()=>{atkField.value="'; DROP TABLE usuario; --";atkField.classList.add('danger');atkRender();$('atk-note').innerHTML='El peor caso. El <strong>;</strong> termina tu consulta y empieza otra: <strong>DROP TABLE</strong>. En la versión concatenada, el atacante ejecuta comandos arbitrarios. En la parametrizada, todo eso es <em>un solo string de búsqueda</em> — nunca código. Esto es lo que protege la integridad de los datos del hotel.';});
+atkRender();
+
+// ─── W3: anatomía del ataque ────────────────────────────────
+const anLines=[
+  '<span class="safe">sql = "SELECT * FROM usuario WHERE nombre = \'" + entrada + "\'"</span>',
+  'entrada = <span class="inj">\' OR 1=1 --</span>',
+  'sql = "...WHERE nombre = \'<span class="inj">\' OR 1=1 --</span>\'"',
+  '<span class="inj">→ WHERE nombre = \'\' OR 1=1</span>   <span class="safe">// el resto, comentado</span>',
+];
+const anSteps=[
+  {line:0,num:1,txt:'<strong>La frase frágil.</strong> El programador arma el SQL pegando la entrada del usuario entre comillas. Con datos normales funciona — y por eso nadie revisa.'},
+  {line:1,num:2,txt:'<strong>La carga del atacante.</strong> En vez de un nombre, teclea <em>una comilla</em> seguida de <em>OR 1=1</em> y dos guiones. Cada pieza tiene un propósito.'},
+  {line:2,num:3,txt:'<strong>La inyección.</strong> Esa comilla del atacante <em>cierra antes de tiempo</em> el texto que esperaba tu programa. A partir de ahí, lo que escribió ya no es un dato: es <strong>parte de la consulta</strong>.'},
+  {line:3,num:4,txt:'<strong>La puerta abierta.</strong> Queda <em>nombre = \'\' OR 1=1</em> — siempre verdadero — y el <strong>--</strong> comenta lo que sobra (la comilla final, la contraseña). La BD devuelve todo. Con un placeholder, nada de esto ocurre: ese texto entero sería el nombre buscado.'},
+];
+let anIdx=-1;
+function anRender(){
+  $('an-stage').innerHTML=anLines.map((h,i)=>'<div class="an-line'+(anIdx>=0&&i===anSteps[anIdx].line?' cur':'')+'">'+h+'</div>').join('');
+  if(anIdx>=0){
+    $('an-num').textContent=anSteps[anIdx].num;
+    $('an-txt').innerHTML=anSteps[anIdx].txt;
+  }else{
+    $('an-num').textContent='·';
+    $('an-txt').innerHTML='Pulsa <strong>Siguiente</strong> para ver, línea por línea, cómo el atacante convierte tu consulta en una puerta abierta.';
+  }
+}
+$('an-next').addEventListener('click',()=>{if(anIdx<anSteps.length-1){anIdx++;anRender();}});
+$('an-prev').addEventListener('click',()=>{if(anIdx>-1){anIdx--;anRender();}});
+$('an-reset').addEventListener('click',()=>{anIdx=-1;anRender();});
+anRender();
+
+// ─── W4: parametrizado Python ↔ Java ────────────────────────
+const eqData={
+  select:{
+    py:[
+      '<span class="cm"># frase fija + hueco (?) + dato aparte</span>',
+      'sql = <span class="str">"SELECT * FROM huesped "</span> \\',
+      '      <span class="str">"WHERE folio = <span class="ph">?</span>"</span>',
+      'cur.execute(sql, (folio,))',
+      'fila = cur.fetchone()',
+    ],
+    java:[
+      '<span class="ty">String</span> sql = <span class="str">"SELECT * FROM huesped "</span>',
+      '           + <span class="str">"WHERE folio = <span class="ph">?</span>"</span>;',
+      '<span class="ty">PreparedStatement</span> ps = con.prepareStatement(sql);',
+      'ps.setInt(1, folio);',
+      '<span class="ty">ResultSet</span> rs = ps.executeQuery();',
+    ],
+    note:'El <strong>SELECT seguro</strong>: la consulta tiene un hueco (<code>?</code>) y el dato viaja por separado — en la <strong>tupla</strong> de Python o con <strong>setInt</strong> en Java. El motor nunca interpreta el folio como código. <em>Nota la coma en <code>(folio,)</code>.</em>'
+  },
+  insert:{
+    py:[
+      'sql = <span class="str">"INSERT INTO huesped "</span> \\',
+      '      <span class="str">"(nombre, correo) "</span> \\',
+      '      <span class="str">"VALUES (<span class="ph">?</span>, <span class="ph">?</span>)"</span>',
+      'cur.execute(sql, (nombre, correo))',
+      'con.commit()',
+    ],
+    java:[
+      '<span class="ty">String</span> sql = <span class="str">"INSERT INTO huesped "</span>',
+      '   + <span class="str">"(nombre, correo) VALUES (<span class="ph">?</span>, <span class="ph">?</span>)"</span>;',
+      '<span class="ty">PreparedStatement</span> ps = con.prepareStatement(sql);',
+      'ps.setString(1, nombre);',
+      'ps.setString(2, correo);',
+      'ps.executeUpdate();',
+    ],
+    note:'El <strong>INSERT seguro</strong>: un placeholder por columna. Aunque el nombre sea <code>O\'Brien</code> (¡con apóstrofo!), entra sin romper nada — la BD lo escapa por ti. No olvides el <strong>commit()</strong> en Python para que el cambio persista.'
+  },
+  ph:{
+    py:[
+      '<span class="cm"># sqlite3 usa  ?</span>',
+      'cur.execute(<span class="str">"... WHERE id = <span class="ph">?</span>"</span>, (id,))',
+      '',
+      '<span class="cm"># psycopg2 / MySQL usan  %s</span>',
+      'cur.execute(<span class="str">"... WHERE id = <span class="ph">%s</span>"</span>, (id,))',
+      '<span class="cm"># OJO: %s NO es formateo de Python</span>',
+    ],
+    java:[
+      '<span class="cm">// JDBC siempre usa  ?  (posicional)</span>',
+      'ps = con.prepareStatement(',
+      '   <span class="str">"... WHERE id = <span class="ph">?</span>"</span>);',
+      'ps.setInt(1, id);  <span class="cm">// 1 = primer ?</span>',
+      '<span class="cm">// los índices empiezan en 1, no en 0</span>',
+    ],
+    note:'El símbolo cambia según el driver — <code>?</code> en sqlite y JDBC, <code>%s</code> en psycopg2/MySQL — pero la idea es idéntica: <strong>un hueco, un dato aparte</strong>. Cuidado: ese <code>%s</code> es del <em>driver</em>, no el <code>%</code> de formateo de cadenas. Confundirlos abre el agujero.'
+  },
+  varios:{
+    py:[
+      '<span class="cm"># una tupla con todos los datos, en orden</span>',
+      'sql = <span class="str">"SELECT * FROM reservacion "</span> \\',
+      '  <span class="str">"WHERE fecha = <span class="ph">?</span> AND estado = <span class="ph">?</span>"</span>',
+      'cur.execute(sql, (fecha, estado))',
+      '<span class="cm"># 2 huecos → 2 elementos. Mismo orden.</span>',
+    ],
+    java:[
+      'ps = con.prepareStatement(<span class="str">"SELECT * "</span>',
+      ' + <span class="str">"FROM reservacion WHERE fecha = <span class="ph">?</span> "</span>',
+      ' + <span class="str">"AND estado = <span class="ph">?</span>"</span>);',
+      'ps.setString(1, fecha);',
+      'ps.setString(2, estado);',
+    ],
+    note:'Con <strong>varios datos</strong>, cada placeholder se llena en orden: la posición del <code>?</code> corresponde a la posición en la tupla (Python) o al índice de <code>setX</code> (Java, empezando en 1). <strong>Tantos huecos como datos</strong> — ni uno más, ni uno menos.'
+  }
+};
+function eqRender(key){
+  const d=eqData[key];
+  $('py-body').innerHTML=d.py.map(L).join('');
+  $('java-body').innerHTML=d.java.map(L).join('');
+  $('pj-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-eq]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-eq]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    eqRender(b.dataset.eq);
+  });
+});
+eqRender('select');
+
+// ─── W5: ORM vs SQL directo ─────────────────────────────────
+const ormData={
+  select:{
+    sql:[
+      '<span class="cm"># tú escribes el SQL, parametrizado</span>',
+      'sql = <span class="str">"SELECT * FROM huesped "</span> \\',
+      '   <span class="str">"WHERE ciudad = <span class="ph">?</span>"</span>',
+      'cur.execute(sql, (ciudad,))',
+      'filas = cur.fetchall()',
+    ],
+    orm:[
+      '<span class="cm"># el ORM arma el SQL por ti</span>',
+      'huespedes = session.query(<span class="cls">Huesped</span>) \\',
+      '   .filter(<span class="cls">Huesped</span>.ciudad == ciudad) \\',
+      '   .all()',
+      '<span class="cm"># SQLAlchemy parametriza solo</span>',
+    ],
+    note:'<strong>Misma lectura, dos estilos.</strong> El SQL directo te muestra exactamente qué corre. El ORM te devuelve <em>objetos</em> Huesped, sin que escribas SELECT — y por debajo usa un placeholder. Los dos son seguros aquí.'
+  },
+  insert:{
+    sql:[
+      'sql = <span class="str">"INSERT INTO huesped "</span> \\',
+      '  <span class="str">"(nombre) VALUES (<span class="ph">?</span>)"</span>',
+      'cur.execute(sql, (nombre,))',
+      'con.commit()',
+    ],
+    orm:[
+      'h = <span class="cls">Huesped</span>(nombre=nombre)',
+      'session.add(h)',
+      'session.commit()',
+      '<span class="cm"># insertas un OBJETO, no una fila</span>',
+    ],
+    note:'<strong>Insertar un objeto.</strong> Con el ORM creas un <code>Huesped</code> de Python y lo agregas a la sesión; SQLAlchemy genera el INSERT parametrizado. Mismo <code>commit()</code> al final. La parametrización es <em>automática e ineludible</em> — esa es su gran ventaja de seguridad.'
+  },
+  model:{
+    sql:[
+      '<span class="cm"># el SQL directo no necesita "modelo":</span>',
+      '<span class="cm"># trabajas con tuplas y diccionarios</span>',
+      'fila = cur.fetchone()',
+      'nombre = fila[<span class="str">"nombre"</span>]',
+    ],
+    orm:[
+      '<span class="kw">class</span> <span class="cls">Huesped</span>(Base):',
+      '    __tablename__ = <span class="str">"huesped"</span>',
+      '    id = Column(Integer, primary_key=<span class="kw">True</span>)',
+      '    nombre = Column(String)',
+      '    correo = Column(String)',
+    ],
+    note:'<strong>El modelo es el corazón del ORM.</strong> Defines una <em>clase</em> que mapea a la tabla — usando toda la POO que ya dominas (sesiones 2–8). Cada fila se vuelve un objeto. Por eso se llama <em>Object-Relational Mapping</em>: tiende un puente entre tus objetos y las tablas.'
+  }
+};
+function ormRender(key){
+  const d=ormData[key];
+  $('orm-sql').innerHTML=d.sql.map(h=>'<span class="ln">'+h+'</span>').join('');
+  $('orm-orm').innerHTML=d.orm.map(h=>'<span class="ln">'+h+'</span>').join('');
+  $('orm-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-orm]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-orm]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    ormRender(b.dataset.orm);
+  });
+});
+ormRender('select');
+
+// ─── checklist ──────────────────────────────────────────────
+const chkItems=document.querySelectorAll('.chk-item');
+function chkUpdate(){
+  const done=document.querySelectorAll('.chk-item.done').length;
+  $('chk-count').textContent=done;
+  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+}
+chkItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+});
+chkUpdate();
+</script>
+</body>
+</html>

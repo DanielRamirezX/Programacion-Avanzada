@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XXII — La memoria que perdura — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+/* ─ NAV / PROGRESS (universal) ─ */
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+/* ─ LAYOUT (universal) ─ */
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ─ HERO (universal) ─ */
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+/* ─ TYPE (universal) ─ */
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+/* ─ WIDGET SHELL (universal) ─ */
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ─ CIERRE / TAREA (universal) ─ */
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ FOOTER (universal) ─ */
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS DE LA SESIÓN 22 ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W0: por qué persistir — toggle RAM vs disco */
+.ram-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
+.ram-card{background:var(--paper);border:1px solid var(--line);padding:1.6rem;display:flex;flex-direction:column;gap:.6rem;transition:all .4s;}
+.ram-card.off{opacity:.32;filter:grayscale(.6);}
+.ram-h{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);}
+.ram-card .ram-state{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.45rem;color:var(--ink);line-height:1.2;}
+.ram-mem{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);line-height:1.8;background:var(--paper-deep);border:1px solid var(--line);padding:.7rem .9rem;min-height:6.5rem;}
+.ram-mem .gone{color:rgba(42,29,20,.3);text-decoration:line-through;}
+.ram-mem .kept{color:var(--olive);font-weight:700;}
+.ram-note{font-size:.92rem;color:var(--ink-soft);line-height:1.45;font-style:italic;}
+
+/* W1: anatomía del string de conexión */
+.cs-bar{background:var(--ink);padding:1.4rem 1.2rem;overflow-x:auto;text-align:center;}
+.cs-str{font-family:'JetBrains Mono',monospace;font-size:1rem;white-space:nowrap;line-height:2;}
+.cs-tok{cursor:pointer;padding:.18rem .15rem;border-radius:2px;transition:all .2s;color:rgba(239,230,210,.55);}
+.cs-tok:hover{color:#C9A961;}
+.cs-tok.lit{background:var(--blood);color:var(--paper);}
+.cs-sep{color:rgba(239,230,210,.3);}
+.cs-panel{margin-top:1.4rem;background:var(--paper);border-left:3px solid var(--blood);padding:1.4rem 1.6rem;min-height:6.5rem;}
+.cs-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.4rem;}
+.cs-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);margin-bottom:.4rem;}
+.cs-desc{font-size:.98rem;color:var(--ink-soft);line-height:1.5;}
+.cs-desc strong{color:var(--ink);}
+.cs-desc code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W2: flujo connect → cursor → execute → fetch → close */
+.fl-track{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem;}
+.fl-step{flex:1;min-width:96px;background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--line);padding:.9rem .6rem;text-align:center;transition:all .35s;opacity:.4;}
+.fl-step.done{opacity:1;border-top-color:var(--olive);}
+.fl-step.cur{opacity:1;border-top-color:var(--blood);background:rgba(160,36,24,.06);box-shadow:0 0 0 2px rgba(160,36,24,.12);}
+.fl-n{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.18em;color:var(--blood);}
+.fl-name{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--ink);margin-top:.3rem;font-weight:500;}
+.fl-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.3rem;align-items:stretch;}
+.fl-code{background:var(--ink);padding:1.3rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.95;color:var(--paper);min-height:230px;overflow-x:auto;}
+.fl-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;}
+.fl-code .ln.hl{background:rgba(232,176,74,.22);}
+.fl-code .kw{color:#D4956A;font-style:italic;}
+.fl-code .ty{color:#A6C2D6;}
+.fl-code .self{color:#8EAF8B;font-weight:700;}
+.fl-code .str{color:#C9A961;}
+.fl-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.fl-code .out{color:#9FBF9C;}
+.fl-side{background:var(--paper);border:1px solid var(--line);padding:1.4rem;display:flex;flex-direction:column;gap:.7rem;justify-content:center;}
+.fl-icon{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.4rem;color:var(--ochre);line-height:1;}
+.fl-side-t{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);line-height:1.1;}
+.fl-side-d{font-size:.96rem;color:var(--ink-soft);line-height:1.5;font-style:italic;}
+.fl-side-d strong{color:var(--ink);font-style:normal;font-weight:600;}
+.fl-side-d code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W3: tabs de drivers sqlite3 / psycopg2 / JDBC */
+.dr-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.dr-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.dr-tab:hover{border-color:var(--blood);color:var(--blood);}
+.dr-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.dr-tab .lang{font-size:.58rem;color:var(--ochre);display:block;margin-top:.15rem;letter-spacing:.1em;}
+.dr-tab.on .lang{color:#C9A961;}
+.dr-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.85;color:var(--paper);min-height:280px;overflow-x:auto;}
+.dr-code .ln{white-space:pre;display:block;}
+.dr-code .kw{color:#D4956A;font-style:italic;}
+.dr-code .ty{color:#A6C2D6;}
+.dr-code .self{color:#8EAF8B;font-weight:700;}
+.dr-code .str{color:#C9A961;}
+.dr-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.dr-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.dr-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.dr-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: patrón Repository — objeto ↔ fila */
+.rp-stage{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2rem;align-items:center;}
+.rp-obj{background:var(--paper);border:2px solid var(--olive);font-family:'JetBrains Mono',monospace;font-size:.74rem;}
+.rp-obj-h{background:var(--olive);color:var(--paper);text-align:center;font-weight:700;padding:.45rem;letter-spacing:.05em;}
+.rp-attr{padding:.5rem .9rem;border-bottom:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.rp-attr:last-child{border-bottom:none;}
+.rp-attr:hover{background:rgba(93,102,56,.08);}
+.rp-attr.lit{background:rgba(160,36,24,.12);color:var(--blood);font-weight:700;}
+.rp-arrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2rem;color:var(--blood);text-align:center;}
+.rp-table{background:var(--paper);border:1px solid var(--ink);overflow:hidden;}
+.rp-table-h{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;padding:.45rem .6rem;display:flex;justify-content:space-between;}
+.rp-table-h .badge{color:#C9A961;}
+.rp-row{display:flex;font-family:'JetBrains Mono',monospace;font-size:.7rem;}
+.rp-row.head .rp-cell{background:var(--paper-deep);font-weight:700;color:var(--ink);}
+.rp-cell{flex:1;padding:.5rem .6rem;border-bottom:1px solid var(--line);border-right:1px solid var(--line);color:var(--ink-soft);transition:all .2s;overflow:hidden;text-overflow:ellipsis;}
+.rp-cell:last-child{border-right:none;}
+.rp-cell.lit{background:rgba(160,36,24,.14);color:var(--blood);font-weight:700;}
+.rp-panel{margin-top:1.4rem;padding:1.1rem 1.4rem;background:var(--paper);border-left:3px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);min-height:4rem;}
+.rp-panel strong{color:var(--ink);font-style:normal;font-weight:600;}
+.rp-panel code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.rp-repo{margin-top:1.6rem;background:var(--ink);padding:1.3rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.9;color:var(--paper);overflow-x:auto;}
+.rp-repo .ln{white-space:pre;display:block;}
+.rp-repo .kw{color:#D4956A;font-style:italic;}
+.rp-repo .ty{color:#A6C2D6;}
+.rp-repo .self{color:#8EAF8B;font-weight:700;}
+.rp-repo .str{color:#C9A961;}
+.rp-repo .cm{color:rgba(239,230,210,.45);font-style:italic;}
+
+/* W5: consola simulada del primer SELECT */
+.cli-toolbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.cli-screen{background:var(--ink);border:1px solid var(--ink);min-height:280px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.75;padding:1.3rem 1.4rem;overflow-x:auto;}
+.cli-line{white-space:pre;display:block;opacity:0;transform:translateY(4px);transition:all .25s;}
+.cli-line.show{opacity:1;transform:none;}
+.cli-prompt{color:var(--blood);font-weight:700;}
+.cli-cmd{color:rgba(239,230,210,.92);}
+.cli-out{color:#9FBF9C;}
+.cli-dim{color:rgba(239,230,210,.45);font-style:italic;}
+.cli-err{color:#E08A82;}
+.cli-kw{color:#D4956A;font-style:italic;}
+.cli-str{color:#C9A961;}
+
+/* puente a la práctica institucional */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+.caso-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+
+/* reglas IA */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+@media(max-width:860px){
+  .ram-stage,.fl-stage,.rp-stage,.req-grid{grid-template-columns:1fr;}
+  .rp-arrow{transform:rotate(90deg);}
+  .cs-str{font-size:.78rem;white-space:normal;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-21.html" class="back">Sesión 21</a>
+  <span class="session-label">Sesión 22 · 31.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">sqlite3.connect("hotel.db")</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">SELECT * FROM habitaciones;</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">cursor.fetchall()</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">postgresql://user:•••@host:5432/db</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">conn.commit() · conn.close()</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XXII · Bloque III · Bases de datos · Ref. Temario 7.1 · 7.2 · 7.3 · Python · Java</div>
+    <h1>La memoria<br>que <em>perdura.</em></h1>
+    <p class="hero-sub">Tus objetos viven en la RAM: brillan un instante y mueren cuando cierras el programa. Hoy le das a tu aplicación una <em>memoria que sobrevive al apagón</em> — la conectas a una base de datos y lees el primer dato desde código.</p>
+  </div>
+</section>
+
+<!-- I: por qué persistir -->
+<section>
+  <div class="wrap">
+    <p class="marker">I · Por qué importa una base de datos</p>
+    <p class="lead">Sin persistencia, tu programa<br>tiene <em>amnesia</em> al cerrarse.</p>
+    <p class="subtle">Todo lo que construiste hasta ahora — tus clases, tus objetos, tus listas — vive en la <strong>memoria volátil (RAM)</strong>. Es rápida, pero se borra en cuanto el proceso termina. Una base de datos es la <strong>memoria que perdura</strong>: guarda en disco y, además, resuelve tres problemas que un archivo suelto no puede. Pulsa el interruptor:</p>
+    <div class="widget" data-tag="¿Qué pasa al apagar?">
+      <div class="ram-stage">
+        <div class="ram-card off" id="ram-vol">
+          <div class="ram-h">Solo en memoria (RAM)</div>
+          <div class="ram-state" id="ram-vol-state">Programa encendido</div>
+          <div class="ram-mem" id="ram-vol-mem"></div>
+          <div class="ram-note">Veloz, pero <strong style="color:var(--blood)">efímera</strong>: cierras el programa y todo se evapora.</div>
+        </div>
+        <div class="ram-card off" id="ram-db">
+          <div class="ram-h">En base de datos (disco)</div>
+          <div class="ram-state" id="ram-db-state">Programa encendido</div>
+          <div class="ram-mem" id="ram-db-mem"></div>
+          <div class="ram-note">Más lenta de tocar, pero <strong style="color:var(--olive)">perdura</strong>: vuelves a encender y los datos siguen ahí.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" id="ram-on">⏻ Encender programa</button>
+        <button class="btn" id="ram-off">✕ Cerrar programa</button>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">Una base de datos profesional no solo guarda — aporta <strong>tres garantías</strong> que tu proyecto integrador va a necesitar:</p>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Garantía 01</div>
+        <div class="req-t">Persistencia</div>
+        <div class="req-d">Los datos sobreviven al cierre del programa, al reinicio del equipo y al paso del tiempo. Viven en <em>disco</em>, no en RAM.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Garantía 02</div>
+        <div class="req-t">Integridad</div>
+        <div class="req-d">Reglas que impiden datos basura: tipos, claves, campos obligatorios. La BD <em>rechaza</em> lo que rompería tu modelo.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Garantía 03</div>
+        <div class="req-t">Concurrencia</div>
+        <div class="req-d">Muchos usuarios leyendo y escribiendo a la vez sin pisarse. La BD coordina los accesos por ti.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- II: anatomía del string de conexión -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La cadena de conexión — su anatomía</p>
+    <p class="lead">Antes de hablar con la BD,<br>hay que saber su <em>dirección.</em></p>
+    <p class="subtle">El <strong>string de conexión</strong> (o <em>connection string</em>) es la dirección postal de tu base de datos: le dice al driver con qué motor hablar, en qué máquina vive, en qué puerto escucha y con qué credenciales entrar. Aquí una cadena de PostgreSQL — <strong>toca cada parte</strong> para ver qué significa:</p>
+    <div class="widget" data-tag="Toca cada parte">
+      <div class="cs-bar">
+        <div class="cs-str">
+          <span class="cs-tok lit" data-cs="driver">postgresql</span><span class="cs-sep">://</span><span class="cs-tok" data-cs="user">carlos</span><span class="cs-sep">:</span><span class="cs-tok" data-cs="pass">••••••</span><span class="cs-sep">@</span><span class="cs-tok" data-cs="host">db.unitec.mx</span><span class="cs-sep">:</span><span class="cs-tok" data-cs="port">5432</span><span class="cs-sep">/</span><span class="cs-tok" data-cs="base">estancia_lujo</span>
+        </div>
+      </div>
+      <div class="cs-panel">
+        <div class="cs-tag" id="cs-tag">Driver</div>
+        <div class="cs-title" id="cs-title">El motor</div>
+        <div class="cs-desc" id="cs-desc">Indica qué <strong>sistema gestor</strong> (SGBD) usas: <code>postgresql</code>, <code>mysql</code>, <code>sqlite</code>… Determina qué driver toma la conexión.</div>
+      </div>
+      <div class="dr-note" style="margin-top:1.4rem"><strong>¿Y SQLite?</strong> Su cadena es la más simple de todas: <code>sqlite:///hotel.db</code> o incluso solo el nombre del archivo <code>"hotel.db"</code>. No hay host, ni puerto, ni usuario — porque <em>no hay servidor</em>: la base de datos es un archivo en tu disco. Por eso es perfecta para empezar.</div>
+    </div>
+  </div>
+</section>
+
+<!-- III: el flujo connect → cursor → execute → fetch → close -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · El flujo de toda consulta</p>
+    <p class="lead">Cinco pasos, siempre los mismos:<br>conectar, preguntar, <em>cerrar.</em></p>
+    <p class="subtle">Hablar con cualquier base de datos relacional desde código sigue <strong>siempre la misma coreografía</strong>. Cámbiate el motor y el lenguaje: el ritmo no cambia. Recórrelo paso a paso — abre y cierra la conexión como quien abre y cierra una puerta:</p>
+    <div class="widget" data-tag="Connect → Cursor → Execute → Fetch → Close">
+      <div class="fl-track" id="fl-track">
+        <div class="fl-step" data-fl="0"><div class="fl-n">Paso 1</div><div class="fl-name">connect</div></div>
+        <div class="fl-step" data-fl="1"><div class="fl-n">Paso 2</div><div class="fl-name">cursor</div></div>
+        <div class="fl-step" data-fl="2"><div class="fl-n">Paso 3</div><div class="fl-name">execute</div></div>
+        <div class="fl-step" data-fl="3"><div class="fl-n">Paso 4</div><div class="fl-name">fetch</div></div>
+        <div class="fl-step" data-fl="4"><div class="fl-n">Paso 5</div><div class="fl-name">close</div></div>
+      </div>
+      <div class="fl-stage">
+        <div class="fl-code" id="fl-code"></div>
+        <div class="fl-side">
+          <div class="fl-icon" id="fl-icon">①</div>
+          <div class="fl-side-t" id="fl-side-t"></div>
+          <div class="fl-side-d" id="fl-side-d"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="fl-reset">⟲ Reset</button>
+        <button class="btn" id="fl-prev">◀ Atrás</button>
+        <button class="btn on" id="fl-next">Siguiente ▶</button>
+        <button class="btn" id="fl-play">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: tabs de drivers -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Los drivers — un puente por cada motor</p>
+    <p class="lead">El driver es el <em>traductor</em><br>entre tu código y la base.</p>
+    <p class="subtle">Un <strong>driver</strong> (o conector) es la librería que sabe hablar el idioma de un motor concreto. Tu código pide "conéctame", el driver lo convierte en el protocolo que la BD entiende. Mismo flujo de la sección anterior, tres drivers distintos — compara:</p>
+    <div class="widget" data-tag="Mismo flujo · tres drivers">
+      <div class="dr-tabs">
+        <button class="dr-tab on" data-dr="sqlite">sqlite3<span class="lang">Python · stdlib</span></button>
+        <button class="dr-tab" data-dr="psyco">psycopg2<span class="lang">Python · PostgreSQL</span></button>
+        <button class="dr-tab" data-dr="jdbc">JDBC<span class="lang">Java · universal</span></button>
+      </div>
+      <div class="dr-code" id="dr-code"></div>
+      <div class="dr-note" id="dr-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- V: patrón Repository -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El patrón Repository — objeto ↔ fila</p>
+    <p class="lead">Cada objeto de tu modelo<br>es una <em>fila</em> en una tabla.</p>
+    <p class="subtle">Aquí está el puente entre tu POO y la base de datos: una <strong>instancia</strong> de tu clase corresponde a una <strong>fila</strong>; cada <strong>atributo</strong>, a una <strong>columna</strong>. Toca un atributo del objeto y mira a qué columna se mapea:</p>
+    <div class="widget" data-tag="Mapeo objeto → tabla">
+      <div class="rp-stage">
+        <div class="rp-obj">
+          <div class="rp-obj-h">Habitacion (objeto)</div>
+          <div class="rp-attr lit" data-rp="numero">numero = 101</div>
+          <div class="rp-attr" data-rp="tipo">tipo = "Suite"</div>
+          <div class="rp-attr" data-rp="precio">precio = 2400.0</div>
+          <div class="rp-attr" data-rp="disponible">disponible = True</div>
+        </div>
+        <div class="rp-arrow">⇄</div>
+        <div class="rp-table">
+          <div class="rp-table-h">tabla habitaciones <span class="badge">1 fila</span></div>
+          <div class="rp-row head">
+            <div class="rp-cell" data-rpc="numero">numero</div>
+            <div class="rp-cell" data-rpc="tipo">tipo</div>
+            <div class="rp-cell" data-rpc="precio">precio</div>
+            <div class="rp-cell" data-rpc="disponible">disp.</div>
+          </div>
+          <div class="rp-row">
+            <div class="rp-cell lit" data-rpc="numero">101</div>
+            <div class="rp-cell" data-rpc="tipo">Suite</div>
+            <div class="rp-cell" data-rpc="precio">2400.0</div>
+            <div class="rp-cell" data-rpc="disponible">1</div>
+          </div>
+        </div>
+      </div>
+      <div class="rp-panel" id="rp-panel"><strong>numero</strong> → columna <code>numero</code>. El atributo del objeto en RAM y la columna en disco guardan el mismo dato. Toca los demás para ver el mapeo completo.</div>
+    </div>
+    <p class="subtle" style="margin-top:2.5rem">El <strong>patrón Repository</strong> aísla todo ese trasiego de SQL en <em>una sola clase</em>. Tu lógica de negocio nunca toca un <code class="inlinecode">SELECT</code>: le pide al repositorio "dame las habitaciones" y recibe <strong>objetos</strong>, no filas crudas. Así la BD se vuelve un detalle reemplazable:</p>
+    <div class="widget" data-tag="HabitacionRepository · separar datos de negocio">
+      <div class="rp-repo" id="rp-repo"></div>
+      <div class="dr-note" style="margin-top:1.2rem"><strong>La ganancia:</strong> si mañana migras de SQLite a PostgreSQL, <em>solo cambias el repositorio</em>. Tus clases <code>Habitacion</code> y <code>Reservacion</code> ni se enteran. Eso es separar la <strong>lógica de datos</strong> de la <strong>lógica de negocio</strong> — la misma idea de encapsulamiento que ya dominas, ahora aplicada a la capa de persistencia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: la consola del primer SELECT -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Tu primer SELECT desde código</p>
+    <p class="lead">El momento de la verdad:<br>el dato <em>regresa</em> a tu programa.</p>
+    <p class="subtle">Esto es lo que harás hoy en clase: conectar Python a un archivo SQLite y ejecutar tu primera consulta. Pulsa <strong style="color:var(--blood)">▶ Ejecutar</strong> y observa la sesión completa en la consola — del <code class="inlinecode">connect</code> al resultado impreso:</p>
+    <div class="widget" data-tag="Consola · python primer_select.py">
+      <div class="cli-toolbar">
+        <button class="btn on" id="cli-run">▶ Ejecutar</button>
+        <button class="btn" id="cli-clear">⟲ Limpiar</button>
+      </div>
+      <div class="cli-screen" id="cli-screen"></div>
+      <div class="dr-note" style="margin-top:1.2rem"><strong>Fíjate en el resultado:</strong> <code>fetchall()</code> te devuelve una <em>lista de tuplas</em> — cada tupla es una fila. El siguiente paso (y el corazón del patrón Repository) es convertir cada tupla en un <strong>objeto Habitacion</strong>. La BD habla en filas; tu programa piensa en objetos; el repositorio traduce entre ambos mundos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: puente a la práctica -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Puente a la Práctica institucional 6</p>
+    <p class="lead">Un hotel de lujo<br>necesita <em>recordar</em> sus reservaciones.</p>
+    <div class="caso">
+      <div class="caso-tag">Practicario MCT158 · Práctica 6 de 6 · Conexión a bases de datos</div>
+      <p style="margin-bottom:1rem;">El hotel <strong>"Estancia de lujo"</strong> quiere modernizar su sistema de <strong>reservaciones</strong>. Hoy todo se anota en libretas: se pierden datos, se duplican reservas y nadie sabe qué habitaciones están libres. Te contratan para construir el sistema con una <strong>base de datos real</strong> detrás.</p>
+      <p>El sistema manejará dos tablas: <strong>habitaciones</strong> (número, tipo, precio, disponibilidad) y <strong>reservaciones</strong> (huésped, habitación, fechas de entrada y salida). Tu trabajo de esta unidad: <strong>configurar el driver</strong>, escribir la <strong>cadena de conexión</strong>, crear las tablas y dejar operativas las <strong>primeras consultas</strong> desde código.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Hito 01</div>
+        <div class="req-t">Configurar el driver</div>
+        <div class="req-d">Elegir el motor (SQLite para empezar), instalar/importar el driver y abrir la conexión sin errores.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Hito 02</div>
+        <div class="req-t">Cadena de conexión</div>
+        <div class="req-d">Definir la cadena correcta y crear las tablas <em>habitaciones</em> y <em>reservaciones</em> con sus tipos.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Hito 03</div>
+        <div class="req-t">Primeras consultas</div>
+        <div class="req-d">Insertar habitaciones y consultar las disponibles con un <em>SELECT</em>, todo desde código.</div>
+      </div>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">Reglas de la IA para esta unidad</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿qué diferencia hay entre <code class="inlinecode">fetchone</code> y <code class="inlinecode">fetchall</code> en sqlite3?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu cadena de conexión</em> o el esquema de tus tablas y sugiera mejoras</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te ayude a <em>leer un error</em> de conexión: <code class="inlinecode">OperationalError: unable to open database file</code></span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "hazme todo el sistema de reservaciones con base de datos" — <em>si la IA lo hizo, tú lo defiendes: en la revisión te pediré explicar cada consulta.</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Para la próxima clase</p>
+    <p class="lead">Deja a tu aplicación una memoria<br>que <em>sobreviva al apagón.</em></p>
+    <p class="subtle">Esta sesión cierra dos cabos: las <strong>excepciones propias</strong> que diseñaste antes ahora protegen tu capa de datos (¿qué lanzas si la conexión falla?), y la <strong>primera conexión a BD</strong> arranca la última práctica. Ambas cosas se entregan juntas en la <strong>Tarea 4</strong>.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Tarea 4 (1 pt · entrega 07/08/26)</div>
+      <ol>
+        <li><strong>Integra tu módulo de excepciones propias</strong> al proyecto: que envuelva los errores de conexión y de consulta con mensajes claros (p. ej. <code>ConexionBDError</code>).</li>
+        <li><strong>Deja operativa la primera conexión</strong>: conecta tu proyecto a un archivo SQLite y crea al menos la tabla <code>habitaciones</code>.</li>
+        <li><strong>Ejecuta tu primer SELECT desde código</strong> y demuestra que el dato regresa — imprime las filas o conviértelas en objetos.</li>
+        <li><strong>Cierra siempre la conexión</strong> (<code>conn.close()</code>) y maneja el caso de error con tus excepciones — nada de <code>except: pass</code>.</li>
+        <li><strong>Prepara SQL seguro</strong>: investiga las <em>consultas parametrizadas</em> (<code>execute(sql, params)</code>) — la próxima clase atacamos la inyección SQL.</li>
+        <li><strong>Sube todo a GitHub</strong>: código + un README que documente la cadena de conexión y cómo correr el proyecto. La Tarea 4 se evalúa desde tu repo.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="ln">'+html+'</span>';
+const Lh=(html,hl)=>'<span class="ln'+(hl?' hl':'')+'">'+html+'</span>';
+
+// ─── W0: RAM vs disco ───────────────────────────────────────
+const ramOnMem='reservas = [\n  Habitacion(101, "Suite"),\n  Habitacion(102, "Doble"),\n]';
+function ramSet(on){
+  $('ram-vol').classList.toggle('off',!on);
+  $('ram-db').classList.toggle('off',false);
+  if(on){
+    $('ram-vol-state').textContent='Programa encendido';
+    $('ram-vol-mem').innerHTML=ramOnMem.replace(/\n/g,'<br>');
+    $('ram-db-state').textContent='Programa encendido';
+    $('ram-db-mem').innerHTML='<span class="kept">hotel.db</span><br>2 filas en habitaciones<br><span class="kept">en disco ✓</span>';
+    $('ram-on').classList.add('on');$('ram-off').classList.remove('on');
+  }else{
+    $('ram-vol-state').innerHTML='Programa cerrado';
+    $('ram-vol-mem').innerHTML='<span class="gone">reservas = [ ... ]</span><br><br>— RAM liberada —<br>todo se perdió';
+    $('ram-db-state').innerHTML='Programa cerrado';
+    $('ram-db-mem').innerHTML='<span class="kept">hotel.db</span><br>2 filas en habitaciones<br><span class="kept">intacto en disco ✓</span>';
+    $('ram-off').classList.add('on');$('ram-on').classList.remove('on');
+  }
+}
+$('ram-on').addEventListener('click',()=>ramSet(true));
+$('ram-off').addEventListener('click',()=>ramSet(false));
+ramSet(true);
+
+// ─── W1: anatomía del string de conexión ───────────────────
+const csData={
+  driver:{tag:'Driver / esquema',title:'El motor',desc:'Indica qué <strong>sistema gestor</strong> (SGBD) usas: <code>postgresql</code>, <code>mysql</code>, <code>sqlite</code>… Determina qué driver toma la conexión y qué dialecto de SQL hablarás.'},
+  user:{tag:'Usuario',title:'Quién entra',desc:'El <strong>usuario</strong> de la base de datos con el que te autenticas. Igual que iniciar sesión: la BD comprueba que ese usuario tiene permiso. Nunca uses el superusuario en producción.'},
+  pass:{tag:'Contraseña',title:'El secreto',desc:'La <strong>contraseña</strong> del usuario. Aquí va enmascarada porque <strong>jamás</strong> se escribe a mano en el código: va en variables de entorno o en un archivo de configuración fuera del repositorio.'},
+  host:{tag:'Host',title:'En qué máquina',desc:'La <strong>dirección del servidor</strong> donde corre la BD: un dominio, una IP, o <code>localhost</code> si está en tu propia computadora. Es el "a dónde" de la conexión.'},
+  port:{tag:'Puerto',title:'Por qué puerta',desc:'El <strong>puerto</strong> en el que el motor escucha. PostgreSQL usa <code>5432</code>, MySQL <code>3306</code>. Como el número de departamento dentro del edificio (el host).'},
+  base:{tag:'Base de datos',title:'Cuál base',desc:'El <strong>nombre de la base de datos</strong> concreta a la que te conectas. Un mismo servidor puede alojar muchas; aquí eliges <code>estancia_lujo</code>, la del hotel.'},
+};
+function csRender(k){
+  const d=csData[k];
+  $('cs-tag').textContent=d.tag;
+  $('cs-title').textContent=d.title;
+  $('cs-desc').innerHTML=d.desc;
+}
+document.querySelectorAll('[data-cs]').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('[data-cs]').forEach(x=>x.classList.remove('lit'));
+    el.classList.add('lit');
+    csRender(el.dataset.cs);
+  });
+});
+csRender('driver');
+
+// ─── W2: flujo connect→cursor→execute→fetch→close ──────────
+const flSteps=[
+  {icon:'①',t:'connect',d:'Abres la <strong>conexión</strong> con el motor usando la cadena. SQLite solo necesita el nombre del archivo. Es la puerta: si no abre, nada más sucede.',
+   code:[['<span class="kw">import</span> sqlite3',2],['',0],['conn = sqlite3.<span class="self">connect</span>(<span class="str">"hotel.db"</span>)',2],['',0],['<span class="cm"># aún no preguntamos nada…</span>',0],['',0],['',0]]},
+  {icon:'②',t:'cursor',d:'Pides un <strong>cursor</strong>: el objeto que recorre los resultados, como el cursor que avanza por un texto. Es quien <em>ejecuta</em> el SQL y guarda el lugar.',
+   code:[['<span class="kw">import</span> sqlite3',0],['',0],['conn = sqlite3.<span class="self">connect</span>(<span class="str">"hotel.db"</span>)',0],['cur = conn.<span class="self">cursor</span>()',2],['',0],['<span class="cm"># el cursor listo para trabajar</span>',0],['',0]]},
+  {icon:'③',t:'execute',d:'Le das al cursor tu <strong>consulta SQL</strong> con <code>execute</code>. Aquí mandas el <code>SELECT</code> al motor; todavía no recibes los datos, solo los pediste.',
+   code:[['<span class="kw">import</span> sqlite3',0],['',0],['conn = sqlite3.<span class="self">connect</span>(<span class="str">"hotel.db"</span>)',0],['cur = conn.<span class="self">cursor</span>()',0],['cur.<span class="self">execute</span>(<span class="str">"SELECT * FROM habitaciones"</span>)',2],['',0],['<span class="cm"># consulta enviada, falta recogerla</span>',0]]},
+  {icon:'④',t:'fetch',d:'<strong>Recoges</strong> el resultado: <code>fetchall()</code> trae todas las filas como lista de tuplas, <code>fetchone()</code> trae solo la primera. El dato por fin llega a tu programa.',
+   code:[['<span class="kw">import</span> sqlite3',0],['',0],['conn = sqlite3.<span class="self">connect</span>(<span class="str">"hotel.db"</span>)',0],['cur = conn.<span class="self">cursor</span>()',0],['cur.<span class="self">execute</span>(<span class="str">"SELECT * FROM habitaciones"</span>)',0],['filas = cur.<span class="self">fetchall</span>()  <span class="cm"># [(101,...), (102,...)]</span>',2],['',0]]},
+  {icon:'⑤',t:'close',d:'<strong>Cierras</strong> la conexión. Liberas el archivo y los recursos. Olvidarlo deja la BD bloqueada — por eso muchos usan <code>with</code> para que se cierre solo.',
+   code:[['<span class="kw">import</span> sqlite3',0],['',0],['conn = sqlite3.<span class="self">connect</span>(<span class="str">"hotel.db"</span>)',0],['cur = conn.<span class="self">cursor</span>()',0],['cur.<span class="self">execute</span>(<span class="str">"SELECT * FROM habitaciones"</span>)',0],['filas = cur.<span class="self">fetchall</span>()',0],['conn.<span class="self">close</span>()  <span class="cm"># puerta cerrada ✓</span>',2]]},
+];
+let flIdx=0,flTimer=null;
+function flRender(){
+  const s=flSteps[flIdx];
+  $('fl-code').innerHTML=s.code.map(([h,hl])=>Lh(h,hl)).join('');
+  $('fl-icon').textContent=s.icon;
+  $('fl-side-t').textContent=s.t+'()';
+  $('fl-side-d').innerHTML=s.d;
+  document.querySelectorAll('#fl-track .fl-step').forEach((st,i)=>{
+    st.classList.toggle('done',i<flIdx);
+    st.classList.toggle('cur',i===flIdx);
+  });
+}
+function flStop(){if(flTimer){clearInterval(flTimer);flTimer=null;$('fl-play').textContent='▶ Play';}}
+$('fl-next').addEventListener('click',()=>{flStop();if(flIdx<flSteps.length-1){flIdx++;flRender();}});
+$('fl-prev').addEventListener('click',()=>{flStop();if(flIdx>0){flIdx--;flRender();}});
+$('fl-reset').addEventListener('click',()=>{flStop();flIdx=0;flRender();});
+document.querySelectorAll('#fl-track .fl-step').forEach(st=>{
+  st.addEventListener('click',()=>{flStop();flIdx=+st.dataset.fl;flRender();});
+});
+$('fl-play').addEventListener('click',()=>{
+  if(flTimer){flStop();return;}
+  if(flIdx>=flSteps.length-1) flIdx=0;
+  flRender();
+  $('fl-play').textContent='❚❚ Pausa';
+  flTimer=setInterval(()=>{
+    if(flIdx<flSteps.length-1){flIdx++;flRender();}
+    else flStop();
+  },1700);
+});
+flRender();
+
+// ─── W3: tabs de drivers ────────────────────────────────────
+const drData={
+  sqlite:{
+    code:[
+      '<span class="kw">import</span> sqlite3',
+      '',
+      '<span class="cm"># SQLite vive en un archivo: sin servidor</span>',
+      'conn = sqlite3.<span class="self">connect</span>(<span class="str">"hotel.db"</span>)',
+      'cur  = conn.<span class="self">cursor</span>()',
+      '',
+      'cur.<span class="self">execute</span>(<span class="str">"SELECT * FROM habitaciones"</span>)',
+      '<span class="kw">for</span> fila <span class="kw">in</span> cur.<span class="self">fetchall</span>():',
+      '    <span class="self">print</span>(fila)',
+      '',
+      'conn.<span class="self">close</span>()',
+    ],
+    note:'<strong>sqlite3</strong> viene <em>incluido en Python</em> — no instalas nada. La "base" es un solo archivo (<code>hotel.db</code>). Es donde empezarás hoy y donde harás la Práctica 6: cero configuración, máximo aprendizaje.'
+  },
+  psyco:{
+    code:[
+      '<span class="kw">import</span> psycopg2',
+      '',
+      '<span class="cm"># PostgreSQL sí es un servidor: host, puerto…</span>',
+      'conn = psycopg2.<span class="self">connect</span>(',
+      '    host=<span class="str">"db.unitec.mx"</span>, port=<span class="ty">5432</span>,',
+      '    dbname=<span class="str">"estancia_lujo"</span>,',
+      '    user=<span class="str">"carlos"</span>, password=<span class="str">"•••"</span>)',
+      'cur = conn.<span class="self">cursor</span>()',
+      '',
+      'cur.<span class="self">execute</span>(<span class="str">"SELECT * FROM habitaciones"</span>)',
+      '<span class="self">print</span>(cur.<span class="self">fetchall</span>())',
+      'conn.<span class="self">close</span>()',
+    ],
+    note:'<strong>psycopg2</strong> conecta Python a <strong>PostgreSQL</strong> (se instala con <code>pip install psycopg2</code>). Fíjate: <em>el mismo flujo</em> connect→cursor→execute→fetch→close. Solo cambió la cadena, porque ahora hay un servidor de verdad detrás.'
+  },
+  jdbc:{
+    code:[
+      '<span class="kw">import</span> java.sql.*;',
+      '',
+      '<span class="ty">String</span> url = <span class="str">"jdbc:sqlite:hotel.db"</span>;',
+      '<span class="kw">try</span> (<span class="ty">Connection</span> conn = DriverManager.getConnection(url);',
+      '     <span class="ty">Statement</span> st = conn.createStatement();',
+      '     <span class="ty">ResultSet</span> rs = st.executeQuery(',
+      '         <span class="str">"SELECT * FROM habitaciones"</span>)) {',
+      '    <span class="kw">while</span> (rs.next()) {',
+      '        System.out.println(rs.getInt(<span class="str">"numero"</span>));',
+      '    }',
+      '}  <span class="cm">// try-with-resources cierra solo</span>',
+    ],
+    note:'<strong>JDBC</strong> es la API <em>universal</em> de Java para bases de datos: cambias el driver en la URL y el resto del código sigue igual. El <code>Statement</code> es el cursor; el <code>ResultSet</code>, el fetch. Misma coreografía que en Python — otro idioma, mismo baile.'
+  }
+};
+function drRender(k){
+  const d=drData[k];
+  $('dr-code').innerHTML=d.code.map(L).join('');
+  $('dr-note').innerHTML=d.note;
+}
+document.querySelectorAll('[data-dr]').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('[data-dr]').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    drRender(t.dataset.dr);
+  });
+});
+drRender('sqlite');
+
+// ─── W4: mapeo objeto ↔ fila ────────────────────────────────
+const rpData={
+  numero:'<strong>numero</strong> → columna <code>numero</code> (tipo <code>INTEGER</code>). Suele ser la <em>clave primaria</em>: identifica de forma única a cada fila, como el <code>id</code> de un objeto.',
+  tipo:'<strong>tipo</strong> → columna <code>tipo</code> (tipo <code>TEXT</code>). Una cadena de Python se guarda como texto en la tabla. Mismo dato, dos hogares: RAM y disco.',
+  precio:'<strong>precio</strong> → columna <code>precio</code> (tipo <code>REAL</code>). Los <code>float</code> de Python se mapean a números reales. La <em>integridad</em> de la BD impide meter texto en esta columna.',
+  disponible:'<strong>disponible</strong> → columna <code>disp.</code> (tipo <code>INTEGER</code>). ¡Ojo! SQLite no tiene booleano: el <code>True</code> de Python se guarda como <code>1</code> y <code>False</code> como <code>0</code>. El repositorio traduce de vuelta.',
+};
+function rpLight(k){
+  document.querySelectorAll('.rp-attr,.rp-cell').forEach(x=>x.classList.remove('lit'));
+  document.querySelectorAll('[data-rp="'+k+'"]').forEach(x=>x.classList.add('lit'));
+  document.querySelectorAll('[data-rpc="'+k+'"]').forEach(x=>x.classList.add('lit'));
+  $('rp-panel').innerHTML=rpData[k];
+}
+document.querySelectorAll('[data-rp]').forEach(el=>{
+  el.addEventListener('click',()=>rpLight(el.dataset.rp));
+});
+rpLight('numero');
+
+// ─── W4b: clase HabitacionRepository ───────────────────────
+const rpRepo=[
+  '<span class="kw">class</span> <span class="ty">HabitacionRepository</span>:',
+  '    <span class="cm"># aísla TODO el SQL en un solo lugar</span>',
+  '    <span class="kw">def</span> <span class="self">__init__</span>(self, conn):',
+  '        self.conn = conn',
+  '',
+  '    <span class="kw">def</span> <span class="self">disponibles</span>(self):',
+  '        cur = self.conn.cursor()',
+  '        cur.execute(<span class="str">"SELECT * FROM habitaciones "</span>',
+  '                    <span class="str">"WHERE disponible = 1"</span>)',
+  '        <span class="cm"># fila (tupla) → objeto del modelo</span>',
+  '        <span class="kw">return</span> [<span class="ty">Habitacion</span>(*fila) <span class="kw">for</span> fila <span class="kw">in</span> cur.fetchall()]',
+];
+$('rp-repo').innerHTML=rpRepo.map(L).join('');
+
+// ─── W5: consola del primer SELECT ──────────────────────────
+const cliLines=[
+  '<span class="cli-prompt">$</span> <span class="cli-cmd">python primer_select.py</span>',
+  '<span class="cli-dim"># conectando a hotel.db…</span>',
+  '<span class="cli-out">conexión abierta ✓  (sqlite3)</span>',
+  '<span class="cli-dim"># ejecutando: SELECT * FROM habitaciones</span>',
+  '<span class="cli-out">(101, &#x27;Suite&#x27;, 2400.0, 1)</span>',
+  '<span class="cli-out">(102, &#x27;Doble&#x27;, 1200.0, 1)</span>',
+  '<span class="cli-out">(103, &#x27;Sencilla&#x27;, 800.0, 0)</span>',
+  '<span class="cli-dim"># 3 filas recuperadas con fetchall()</span>',
+  '<span class="cli-out">conexión cerrada ✓</span>',
+  '<span class="cli-prompt">$</span> <span class="cli-cmd">_</span>',
+];
+let cliTimer=null;
+function cliClear(){
+  if(cliTimer){clearTimeout(cliTimer);cliTimer=null;}
+  $('cli-screen').innerHTML='<span class="cli-line show cli-dim">Pulsa ▶ Ejecutar para correr el script.</span>';
+  $('cli-run').classList.add('on');
+}
+function cliRun(){
+  if(cliTimer){clearTimeout(cliTimer);cliTimer=null;}
+  $('cli-screen').innerHTML=cliLines.map(h=>'<span class="cli-line">'+h+'</span>').join('');
+  const lines=$('cli-screen').querySelectorAll('.cli-line');
+  let i=0;
+  (function step(){
+    if(i<lines.length){
+      lines[i].classList.add('show');
+      i++;
+      cliTimer=setTimeout(step,360);
+    }else{cliTimer=null;}
+  })();
+}
+$('cli-run').addEventListener('click',cliRun);
+$('cli-clear').addEventListener('click',cliClear);
+cliClear();
+</script>
+</body>
+</html>

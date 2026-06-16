@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XIV — El examen parcial — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ═══════════════ CSS DE WIDGETS DE LA SESIÓN ═══════════════ */
+
+/* aviso solemne (banda de examen) */
+.ex-banner{background:var(--ink);border-left:3px solid var(--blood);padding:1.6rem 1.9rem;margin-top:2rem;display:flex;gap:1.3rem;align-items:flex-start;}
+.ex-banner .seal{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.6rem;color:var(--blood);line-height:1;flex-shrink:0;}
+.ex-banner-t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:rgba(239,230,210,.88);}
+.ex-banner-t strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* W1: explorador del temario */
+.tm-stage{display:grid;grid-template-columns:.95fr 1.25fr;gap:1.5rem;align-items:stretch;}
+.tm-list{display:flex;flex-direction:column;gap:.7rem;}
+.tm-item{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:1rem 1.2rem;cursor:pointer;transition:all .22s;display:flex;align-items:baseline;gap:.9rem;}
+.tm-item:hover{border-left-color:var(--blood);}
+.tm-item.on{border-left-color:var(--blood);background:rgba(160,36,24,.06);}
+.tm-num{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--blood);font-weight:700;flex-shrink:0;}
+.tm-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);line-height:1.15;}
+.tm-item.on .tm-name{font-weight:600;}
+.tm-panel{background:var(--ink);padding:1.7rem;display:flex;flex-direction:column;gap:.9rem;min-height:300px;}
+.tm-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.tm-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--paper);line-height:1.05;}
+.tm-sub{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(239,230,210,.45);margin-top:.4rem;}
+.tm-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.tm-chip{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:.32rem .6rem;background:rgba(239,230,210,.07);border:1px solid rgba(239,230,210,.18);color:rgba(239,230,210,.8);}
+.tm-expect{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.5;color:rgba(239,230,210,.88);margin-top:auto;border-top:1px solid rgba(239,230,210,.15);padding-top:.9rem;}
+.tm-expect strong{color:#C9A961;font-style:normal;font-weight:600;}
+.tm-expect::before{content:'Sabrás hacer → ';font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);display:block;margin-bottom:.4rem;}
+
+/* W2: reglas del examen */
+.rg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.rg-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.rg-ico{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.rg-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.4rem;}
+.rg-d{font-size:.94rem;color:var(--ink-soft);line-height:1.45;}
+.rg-d strong{color:var(--ink);}
+.rg-d em{color:var(--blood);font-style:italic;}
+.noia{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.noia-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.noia-row{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.noia-row .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.noia-row .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.noia-row em{color:var(--ink);font-style:italic;}
+
+/* W3: formato (tabs teoría / práctica / consola) */
+.fm-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.fm-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.fm-tab:hover{border-color:var(--blood);color:var(--blood);}
+.fm-tab.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.fm-tab.console{border-style:dashed;}
+.fm-tab.console.on{background:var(--olive);border-color:var(--olive);}
+.fm-body{min-height:320px;}
+.fm-theory{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.fm-q{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:1.1rem 1.3rem;}
+.fm-q-tipo{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);margin-bottom:.45rem;}
+.fm-q-txt{font-family:'Cormorant Garamond',serif;font-size:1.16rem;color:var(--ink);line-height:1.35;}
+.fm-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.85;color:var(--paper);overflow-x:auto;}
+.fm-code .ln{white-space:pre;display:block;}
+.fm-code .kw{color:#D4956A;font-style:italic;}
+.fm-code .ty{color:#A6C2D6;}
+.fm-code .self{color:#8EAF8B;font-weight:700;}
+.fm-code .str{color:#C9A961;}
+.fm-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.fm-code .out{color:#9FBF9C;}
+.fm-code .cls{color:#EFE6D2;font-weight:700;}
+.fm-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.fm-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.fm-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: ejemplo paso a paso del problema práctico */
+.dz-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.dz-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:280px;overflow-x:auto;}
+.dz-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;}
+.dz-code .ln.hl{background:rgba(232,176,74,.22);}
+.dz-code .kw{color:#D4956A;font-style:italic;}
+.dz-code .ty{color:#A6C2D6;}
+.dz-code .self{color:#8EAF8B;font-weight:700;}
+.dz-code .str{color:#C9A961;}
+.dz-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.dz-note{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;justify-content:center;gap:.6rem;}
+.dz-step{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);}
+.dz-note-t{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);line-height:1.1;}
+.dz-note-d{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);}
+.dz-note-d strong{color:var(--ink);font-style:normal;font-weight:600;}
+.dz-note-d code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W5: autodiagnóstico */
+.ad-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.ad-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.ad-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
+.ad-group{margin-top:1.4rem;}
+.ad-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.ad-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.ad-item:hover{border-color:var(--olive);}
+.ad-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
+.ad-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.ad-item.done .ad-box{background:var(--olive);border-color:var(--olive);}
+.ad-item.done .ad-box::after{content:'✓';}
+.ad-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.ad-item.done .ad-txt{color:var(--ink);}
+.ad-txt strong{color:var(--ink);}
+.ad-verdict{margin-top:1.5rem;padding:1.2rem 1.5rem;background:var(--ink);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:rgba(239,230,210,.88);min-height:4rem;display:flex;align-items:center;}
+.ad-verdict strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* tabla peso evaluación */
+.ev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.ev-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.4rem;text-align:center;}
+.ev-pct{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--blood);line-height:1;}
+.ev-card.dim .ev-pct{color:var(--ink-soft);}
+.ev-name{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-top:.5rem;}
+.ev-card.live{border-top-color:var(--blood);background:rgba(160,36,24,.05);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .tm-stage,.dz-stage,.fm-theory{grid-template-columns:1fr;}
+  .rg-grid,.ev-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-13.html" class="back">Sesión 13</a>
+  <span class="session-label">Sesión 14 · Examen Parcial · 03.07.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Cuenta:</div>
+  <div class="hero-float" style="top:29%;right:11%;--r:3deg;animation-delay:-3s">for i in range(n):</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">if saldo &gt;= monto:</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">notas = [8.5, 9.0, 7.2]</div>
+  <div class="hero-float" style="top:51%;left:42%;--r:1deg;animation-delay:-4.5s">def __init__(self, ...)</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XIV · Examen Parcial · Ref. Temario Evaluación · Temas 1 – 4 · Python</div>
+    <h1>El examen<br><em>parcial.</em></h1>
+    <p class="hero-sub">Hoy se cierra el primer bloque. No es una emboscada: es la oportunidad de demostrar — con tu propia mano — todo lo que ya <em>sabes hacer</em>. Llegaste preparado. Respira, lee con calma y confía en tu práctica.</p>
+  </div>
+</section>
+
+<!-- I: qué se evalúa hoy -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · Qué se evalúa hoy</p>
+    <p class="lead">No es un examen sorpresa.<br>Es todo lo que <em>ya practicaste</em>, junto.</p>
+    <p class="subtle">El parcial cubre los <strong>Temas 1 a 4</strong> del curso: <strong>programación orientada a objetos</strong>, <strong>identificadores y tipos de datos</strong>, <strong>sentencias de control y repetición</strong>, y <strong>arrays</strong>. Nada nuevo, nada escondido — exactamente lo que vimos clase a clase. El objetivo de la sesión es claro: <em>evaluar tu dominio de los fundamentos</em> antes de abrir el Bloque II.</p>
+    <div class="ex-banner">
+      <div class="seal">§</div>
+      <div class="ex-banner-t">El examen es <strong>individual</strong>, <strong>escrito</strong> y <strong>sin asistencia de IA</strong>. Tiene dos partes: una de <strong>teoría</strong> (conceptos) y un <strong>problema práctico</strong> de código en Python. Esta infografía no es el examen — es tu <strong>mapa de repaso</strong>: úsala los minutos previos para ordenar lo que ya tienes en la cabeza.</div>
+    </div>
+  </div>
+</section>
+
+<!-- II: explorador del temario -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El temario que entra — Temas 1 a 4</p>
+    <p class="lead">Cuatro temas.<br>Toca cada uno y mira <em>qué se espera de ti.</em></p>
+    <p class="subtle">Cada tema tiene sus subtemas y, sobre todo, una <strong>competencia concreta</strong>: lo que debes ser capaz de <em>hacer</em>, no solo recitar. Recórrelos — y sé honesto contigo sobre cuál necesitas repasar más:</p>
+    <div class="widget" data-tag="Explora los 4 temas">
+      <div class="tm-stage">
+        <div class="tm-list">
+          <div class="tm-item on" data-tm="poo"><span class="tm-num">T1</span><span class="tm-name">Programación orientada a objetos</span></div>
+          <div class="tm-item" data-tm="tipos"><span class="tm-num">T2</span><span class="tm-name">Identificadores y tipos de datos</span></div>
+          <div class="tm-item" data-tm="control"><span class="tm-num">T3</span><span class="tm-name">Sentencias de control y repetición</span></div>
+          <div class="tm-item" data-tm="arrays"><span class="tm-num">T4</span><span class="tm-name">Arrays (arreglos / listas)</span></div>
+        </div>
+        <div class="tm-panel">
+          <div class="tm-tag" id="tm-tag">Tema 1 de 4</div>
+          <div class="tm-title" id="tm-title">Programación orientada a objetos</div>
+          <div class="tm-sub" id="tm-sub">Subtemas que pueden aparecer</div>
+          <div class="tm-chips" id="tm-chips"></div>
+          <div class="tm-expect" id="tm-expect"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: reglas del examen -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Las reglas — claras desde antes</p>
+    <p class="lead">Reglas justas, las mismas para todos.<br>Conocerlas te quita <em>presión.</em></p>
+    <p class="subtle">Un examen ordenado se rinde mejor. Esto es lo que necesitas saber para llegar tranquilo y administrar bien tu tiempo:</p>
+    <div class="rg-grid">
+      <div class="rg-card">
+        <div class="rg-ico">Modalidad</div>
+        <div class="rg-t">Individual y escrito</div>
+        <div class="rg-d">Trabajo <strong>tuyo, a mano</strong>. Sin equipo, sin consultar al de al lado. Tu código lo escribes tú, con lápiz o pluma.</div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">Recursos</div>
+        <div class="rg-t">Sin IA · sin internet</div>
+        <div class="rg-d">Nada de ChatGPT, copilotos ni búsquedas. <em>Esto evalúa lo que sabes tú</em>, no lo que sabe una máquina.</div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">Qué llevar</div>
+        <div class="rg-t">Lo esencial</div>
+        <div class="rg-d">Identificación, <strong>pluma y lápiz</strong>, y la cabeza descansada. Apaga y guarda el celular antes de empezar.</div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">Tiempo</div>
+        <div class="rg-t">Administra los minutos</div>
+        <div class="rg-d">Lee <strong>todo el examen primero</strong>. Empieza por lo que dominas. No te atores: <em>marca y avanza</em>, regresa al final.</div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">El código</div>
+        <div class="rg-t">Sintaxis Python razonable</div>
+        <div class="rg-d">No se castiga un punto y coma olvidado: se evalúa la <strong>lógica</strong>, la <strong>estructura de la clase</strong> y que el flujo sea correcto.</div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">Honestidad</div>
+        <div class="rg-t">Integridad académica</div>
+        <div class="rg-d">Copiar invalida el examen. <em>Tu firma vale más que una calificación prestada</em> — y aquí defiendes tu propio aprendizaje.</div>
+      </div>
+    </div>
+    <div class="noia">
+      <div class="noia-tag">Por qué hoy SÍ es sin IA</div>
+      <div class="noia-row"><span class="ok">✓</span><span>Durante el curso la IA fue tu tutora: <em>pídele que te explique, que revise lo tuyo, que te lea un error.</em></span></div>
+      <div class="noia-row"><span class="ok">✓</span><span>Toda esa práctica acompañada tenía <em>un propósito</em>: que hoy lo sepas hacer <strong>sin andaderas</strong>.</span></div>
+      <div class="noia-row"><span class="no">✗</span><span>Hoy no hay copiloto. <em>Si la IA lo hacía por ti, hoy te darías cuenta — y para eso fue toda la práctica: para que no la necesites.</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: formato del examen -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · El formato — dos partes</p>
+    <p class="lead">Primero la teoría.<br>Después, <em>escribes código.</em></p>
+    <p class="subtle">Para que nada te sorprenda, este es el <strong>tipo</strong> de reactivos que verás — no el examen real, sino su forma. Cambia de pestaña entre <em>Teoría</em> y <em>Problema práctico</em>, y pulsa <strong style="color:var(--olive)">▶ Consola</strong> para ver qué debería imprimir una solución correcta:</p>
+    <div class="widget" data-tag="Así se ve · no es el examen">
+      <div class="fm-tabs">
+        <button class="fm-tab on" data-fm="teoria">Parte A · Teoría</button>
+        <button class="fm-tab" data-fm="practica">Parte B · Problema</button>
+        <button class="fm-tab console" data-fm="consola">▶ Consola esperada</button>
+      </div>
+      <div class="fm-body" id="fm-body"></div>
+      <div class="fm-note" id="fm-note"></div>
+    </div>
+  </div>
+</section>
+
+<!-- V: cómo atacar el problema práctico -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El problema práctico — el plan de ataque</p>
+    <p class="lead">Una clase no se escribe de un tirón.<br>Se construye por <em>pisos.</em></p>
+    <p class="subtle">El problema te pedirá diseñar y codificar <strong>una clase con atributos, métodos y un poco de control de flujo o arrays</strong>. Aquí el orden mental que evita el bloqueo en hoja en blanco — recórrelo paso a paso sobre un ejemplo (un registro de calificaciones):</p>
+    <div class="widget" data-tag="Cinco pasos · de la idea al código">
+      <div class="dz-stage">
+        <div class="dz-code" id="dz-code"></div>
+        <div class="dz-note">
+          <div class="dz-step" id="dz-step">Paso 1 de 5</div>
+          <div class="dz-note-t" id="dz-note-t"></div>
+          <div class="dz-note-d" id="dz-note-d"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" data-dz="0">1 · Clase + atributos</button>
+        <button class="btn" data-dz="1">2 · Constructor</button>
+        <button class="btn" data-dz="2">3 · Método con array</button>
+        <button class="btn" data-dz="3">4 · Control de flujo</button>
+        <button class="btn" data-dz="4">5 · Probarla</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: autodiagnóstico -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Autodiagnóstico — ¿estás listo?</p>
+    <p class="lead">Marca lo que <em>puedes</em> hacer.<br>Lo que falte, repásalo antes de entrar.</p>
+    <p class="subtle">Sé honesto: cada casilla es algo que el examen puede pedirte. No es "lo entiendo" — es "puedo <strong>explicarlo</strong> o <strong>escribirlo</strong> yo solo, en una hoja". Marca solo lo que de verdad dominas:</p>
+    <div class="widget" data-tag="Checklist de repaso">
+      <div class="ad-progress">Listo: <span id="ad-count">0</span> de 12 competencias
+        <div class="ad-bar"><div class="ad-fill" id="ad-fill"></div></div>
+      </div>
+      <div class="ad-group">
+        <div class="ad-group-t">Tema 1 · POO · Tema 2 · Tipos</div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Explico la diferencia entre <strong>clase</strong> y <strong>objeto</strong>, y sé qué es <code>self</code></div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Escribo un <strong>constructor</strong> <code>__init__</code> que recibe parámetros y crea atributos</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Defino un <strong>método</strong> que usa los atributos del objeto y devuelve un valor</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Distingo <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code> y elijo el tipo correcto</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Nombro <strong>identificadores</strong> válidos y legibles (sin palabras reservadas)</div></div>
+      </div>
+      <div class="ad-group">
+        <div class="ad-group-t">Tema 3 · Control y repetición</div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Escribo un <code>if / elif / else</code> con condiciones correctas</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Recorro con un <code>for</code> usando <code>range()</code> o iterando una lista</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Uso un <code>while</code> con su condición de salida — y sé evitar el ciclo infinito</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Combino ciclo + condición para <strong>contar, acumular o filtrar</strong></div></div>
+      </div>
+      <div class="ad-group">
+        <div class="ad-group-t">Tema 4 · Arrays / listas</div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Creo una lista, <strong>recorro</strong> sus elementos y accedo por índice</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Calculo <strong>suma, promedio, máximo o mínimo</strong> recorriendo una lista</div></div>
+        <div class="ad-item"><div class="ad-box"></div><div class="ad-txt">Guardo una lista <strong>como atributo</strong> de una clase y la modifico con métodos</div></div>
+      </div>
+      <div class="ad-verdict" id="ad-verdict">Empieza a marcar las casillas. Te diré dónde estás parado.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: peso en la evaluación -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Cuánto pesa — y por qué</p>
+    <p class="lead">Vale <em>20%</em> de tu calificación final.<br>Importante, pero <em>no</em> definitivo.</p>
+    <p class="subtle">El parcial es una de varias evaluaciones. Tu nota final se construye por partes: este examen cierra el primer bloque, pero las prácticas, el proyecto integrador y el examen final siguen contando. <strong>Haz tu mejor examen hoy</strong> — y mañana sigues construyendo:</p>
+    <div class="ev-grid">
+      <div class="ev-card live">
+        <div class="ev-pct">20%</div>
+        <div class="ev-name">Examen Parcial · hoy</div>
+      </div>
+      <div class="ev-card dim">
+        <div class="ev-pct">+</div>
+        <div class="ev-name">Prácticas y proyecto integrador</div>
+      </div>
+      <div class="ev-card dim">
+        <div class="ev-pct">+</div>
+        <div class="ev-name">Examen final · Bloque II</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">Si hoy te va de maravilla, celébralo. Si algún reactivo se te complica, <em>no se acaba aquí</em>: lo que aprendas de tus errores te hará más fuerte para la segunda mitad del curso, donde llega la herencia y el proyecto crece. Un parcial es una foto, no la película completa.</p>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Después del examen</p>
+    <p class="lead">Entregas, respiras<br>y empieza el <em>siguiente capítulo.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">Examen Parcial</div>
+      <ol>
+        <li><strong>Hoy:</strong> presenta el examen con calma. Lee todo primero, ataca lo que dominas, administra tu tiempo y <strong>revisa antes de entregar</strong>.</li>
+        <li><strong>Al salir:</strong> descansa de verdad. Cerraste el Bloque I — fundamentos de POO, tipos, control y arrays. Date crédito por llegar hasta aquí.</li>
+        <li><strong>Repaso honesto (opcional):</strong> anota qué reactivo se te complicó. Esos temas son tu base para todo lo que viene; no los dejes a medias.</li>
+        <li><strong>El próximo miércoles</strong> arranca el <strong>Bloque II: Herencia</strong> — las clases dejan de vivir solas y empiezan a heredar unas de otras. Es donde la POO se vuelve poderosa.</li>
+        <li><strong>Lleva tu proyecto integrador en mente:</strong> todo lo que evaluamos hoy es el cimiento sobre el que seguirás construyéndolo este semestre.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+const L=html=>'<span class="ln">'+html+'</span>';
+
+// ─── W1: explorador del temario ─────────────────────────────
+const tmData={
+  poo:{tag:'Tema 1 de 4',title:'Programación orientada a objetos',
+    chips:['clase','objeto','self','atributos','métodos','encapsulamiento','constructor'],
+    expect:'Diseñar una <strong>clase</strong> con sus atributos y métodos, crear <strong>objetos</strong> a partir de ella y explicar para qué sirve cada parte. Saber qué representa <strong>self</strong>.'},
+  tipos:{tag:'Tema 2 de 4',title:'Identificadores y tipos de datos',
+    chips:['int','float','str','bool','variables','conversión de tipos','nombres válidos'],
+    expect:'Elegir el <strong>tipo correcto</strong> para cada dato, nombrar <strong>identificadores</strong> legibles y válidos, y predecir el resultado de operaciones entre tipos.'},
+  control:{tag:'Tema 3 de 4',title:'Sentencias de control y repetición',
+    chips:['if / elif / else','for','while','range()','break','continue','condiciones'],
+    expect:'Escribir <strong>decisiones</strong> con <strong>if/elif/else</strong> y <strong>repeticiones</strong> con for/while, y trazar a mano qué imprime un ciclo paso a paso.'},
+  arrays:{tag:'Tema 4 de 4',title:'Arrays (arreglos / listas)',
+    chips:['lista','índice','recorrer','append','suma / promedio','máximo / mínimo','lista como atributo'],
+    expect:'Crear y <strong>recorrer</strong> una lista, acceder por <strong>índice</strong>, y combinar ciclo + lista para <strong>sumar, promediar o filtrar</strong> datos.'},
+};
+function tmRender(k){
+  const d=tmData[k];
+  $('tm-tag').textContent=d.tag;
+  $('tm-title').textContent=d.title;
+  $('tm-chips').innerHTML=d.chips.map(c=>'<span class="tm-chip">'+c+'</span>').join('');
+  $('tm-expect').innerHTML=d.expect;
+}
+document.querySelectorAll('.tm-item').forEach(it=>{
+  it.addEventListener('click',()=>{
+    document.querySelectorAll('.tm-item').forEach(x=>x.classList.remove('on'));
+    it.classList.add('on');
+    tmRender(it.dataset.tm);
+  });
+});
+tmRender('poo');
+
+// ─── W3: formato del examen (teoría / práctica / consola) ───
+const fmData={
+  teoria:{
+    html:'<div class="fm-theory">'+
+      '<div class="fm-q"><div class="fm-q-tipo">Opción múltiple</div><div class="fm-q-txt">¿Cuál de estas líneas crea un <em>objeto</em> de la clase <code style="font-family:JetBrains Mono;font-size:.8rem">Alumno</code>?</div></div>'+
+      '<div class="fm-q"><div class="fm-q-tipo">Verdadero / Falso</div><div class="fm-q-txt">Un <em>while</em> sin condición de salida puede provocar un ciclo infinito.</div></div>'+
+      '<div class="fm-q"><div class="fm-q-tipo">Respuesta corta</div><div class="fm-q-txt">¿Qué tipo de dato usarías para guardar el <em>promedio</em> de calificaciones y por qué?</div></div>'+
+      '<div class="fm-q"><div class="fm-q-tipo">Traza a mano</div><div class="fm-q-txt">¿Qué <em>imprime</em> este <code style="font-family:JetBrains Mono;font-size:.8rem">for</code> que recorre la lista <code style="font-family:JetBrains Mono;font-size:.8rem">[3, 6, 9]</code>?</div></div>'+
+      '<div class="fm-q"><div class="fm-q-tipo">Define</div><div class="fm-q-txt">Explica con tus palabras qué representa <em>self</em> dentro de un método.</div></div>'+
+      '<div class="fm-q"><div class="fm-q-tipo">Identifica</div><div class="fm-q-txt">¿Cuáles de estos son <em>identificadores válidos</em> en Python? <code style="font-family:JetBrains Mono;font-size:.8rem">2edad, _saldo, for, totalVentas</code></div></div>'+
+      '</div>',
+    note:'La teoría mide que <strong>entiendes los conceptos</strong>, no que los memorizaste. Si puedes explicar <em>por qué</em>, no solo <em>qué</em>, vas bien. Responde con frases cortas y precisas.'
+  },
+  practica:{
+    html:'<div class="fm-code" id="fm-code-host">'+[
+      '<span class="cm"># PROBLEMA (ejemplo del TIPO — no es el examen real)</span>',
+      '<span class="cm"># Diseña una clase Producto con:</span>',
+      '<span class="cm">#   - atributos: nombre (str) y precio (float)</span>',
+      '<span class="cm">#   - un método con_iva() que devuelva el precio * 1.16</span>',
+      '<span class="cm">#   - una clase Tienda que guarde una LISTA de productos</span>',
+      '<span class="cm">#     y un método total() que SUME todos los precios.</span>',
+      '<span class="cm">#   Usa un ciclo para recorrer la lista y un if para</span>',
+      '<span class="cm">#   marcar como "caro" todo producto de mas de $500.</span>',
+      '',
+      '<span class="cm"># Se evalua: estructura de la clase, uso correcto de</span>',
+      '<span class="cm"># self, el ciclo, el if y el recorrido de la lista.</span>',
+    ].map(L).join('')+'</div>',
+    note:'El problema práctico junta los <strong>cuatro temas</strong> en un solo reto: una <code>clase</code> (T1), <code>tipos</code> bien elegidos (T2), un <code>if</code> y un ciclo (T3) y una <code>lista</code> recorrida (T4). En la sección siguiente verás <em>cómo construirla por pasos</em>.'
+  },
+  consola:{
+    html:'<div class="fm-code">'+[
+      '<span class="cm">$ python tienda.py</span>',
+      '',
+      '<span class="out">Manzana       $ 12.00  ->  $ 13.92 con IVA</span>',
+      '<span class="out">Laptop      $ 9800.00  ->  $11368.00 con IVA  (caro)</span>',
+      '<span class="out">Cuaderno      $ 45.00  ->  $ 52.20 con IVA</span>',
+      '<span class="out">─────────────────────────────</span>',
+      '<span class="out">Total sin IVA: $9857.00</span>',
+    ].map(L).join('')+'</div>',
+    note:'Una solución correcta produce una salida <strong>como esta</strong>: cada producto con su precio + IVA, el "caro" marcado por el <code>if</code>, y el <code>total()</code> acumulado por el ciclo. Si tu código mental imprime esto, dominas el problema.'
+  }
+};
+function fmRender(k){
+  $('fm-body').innerHTML=fmData[k].html;
+  $('fm-note').innerHTML=fmData[k].note;
+}
+document.querySelectorAll('.fm-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.fm-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    fmRender(t.dataset.fm);
+  });
+});
+fmRender('teoria');
+
+// ─── W4: ejemplo paso a paso (registro de calificaciones) ───
+const dzSteps=[
+  {t:'Declara la clase y nombra sus datos',
+   d:'Empieza por el <strong>molde</strong>. ¿Qué <em>es</em> el objeto y qué guarda? Aquí: un <code>nombre</code> (str) y una lista de <code>notas</code> (Tema 4). Aún sin lógica — solo la estructura.',
+   code:[
+     ['<span class="kw">class</span> <span class="cls">Alumno</span>:',1],
+     ['    <span class="cm"># nombre: str</span>',1],
+     ['    <span class="cm"># notas:  list[float]</span>',1],
+     ['',0],['',0],['',0],['',0],['',0],
+   ]},
+  {t:'Escribe el constructor',
+   d:'El <code>__init__</code> recibe los datos y los guarda en <code>self</code>. <strong>self.notas = []</strong> nace como lista vacía: el alumno empieza sin calificaciones.',
+   code:[
+     ['<span class="kw">class</span> <span class="cls">Alumno</span>:',0],
+     ['    <span class="kw">def</span> __init__(<span class="self">self</span>, nombre):',1],
+     ['        <span class="self">self</span>.nombre = nombre',1],
+     ['        <span class="self">self</span>.notas = []',1],
+     ['',0],['',0],['',0],['',0],
+   ]},
+  {t:'Un método que usa la lista',
+   d:'<strong>agregar()</strong> añade una nota con <code>append</code>. Y <strong>promedio()</strong> <em>recorre</em> la lista acumulando — el patrón estrella del Tema 4: ciclo que suma.',
+   code:[
+     ['    <span class="kw">def</span> agregar(<span class="self">self</span>, nota):',1],
+     ['        <span class="self">self</span>.notas.append(nota)',1],
+     ['',0],
+     ['    <span class="kw">def</span> promedio(<span class="self">self</span>):',0],
+     ['        suma = 0',1],
+     ['        <span class="kw">for</span> n <span class="kw">in</span> <span class="self">self</span>.notas:',1],
+     ['            suma += n',1],
+     ['        <span class="kw">return</span> suma / <span class="kw">len</span>(<span class="self">self</span>.notas)',1],
+   ]},
+  {t:'Agrega control de flujo',
+   d:'Un método que <em>decide</em>: <strong>esta_aprobado()</strong> usa un <code>if</code> sobre el promedio. Cuidado con el caso <em>lista vacía</em> — un buen examen premia que lo contemples.',
+   code:[
+     ['    <span class="kw">def</span> esta_aprobado(<span class="self">self</span>):',0],
+     ['        <span class="kw">if</span> <span class="kw">len</span>(<span class="self">self</span>.notas) == 0:',1],
+     ['            <span class="kw">return</span> <span class="kw">False</span>',1],
+     ['        <span class="kw">if</span> <span class="self">self</span>.promedio() &gt;= 6:',1],
+     ['            <span class="kw">return</span> <span class="kw">True</span>',1],
+     ['        <span class="kw">return</span> <span class="kw">False</span>',1],
+     ['',0],['',0],
+   ]},
+  {t:'Pruébala — crea objetos y úsalos',
+   d:'Sin un <strong>main</strong> de prueba no sabes si funciona. Crea el objeto, llama sus métodos e imprime. <em>Esto es lo que te da puntos: una clase que de verdad corre.</em>',
+   code:[
+     ['ana = <span class="cls">Alumno</span>(<span class="str">"Ana"</span>)',1],
+     ['ana.agregar(8.5)',1],
+     ['ana.agregar(9.0)',1],
+     ['ana.agregar(7.0)',1],
+     ['',0],
+     ['<span class="kw">print</span>(ana.promedio())     <span class="cm"># 8.16...</span>',1],
+     ['<span class="kw">print</span>(ana.esta_aprobado()) <span class="cm"># True</span>',1],
+     ['',0],
+   ]},
+];
+function dzRender(i){
+  const s=dzSteps[i];
+  $('dz-code').innerHTML=s.code.map(([html,hl])=>'<span class="ln'+(hl?' hl':'')+'">'+html+'</span>').join('');
+  $('dz-step').textContent='Paso '+(i+1)+' de '+dzSteps.length;
+  $('dz-note-t').textContent=s.t;
+  $('dz-note-d').innerHTML=s.d;
+}
+document.querySelectorAll('[data-dz]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-dz]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    dzRender(parseInt(b.dataset.dz,10));
+  });
+});
+dzRender(0);
+
+// ─── W5: autodiagnóstico ────────────────────────────────────
+const adItems=document.querySelectorAll('.ad-item');
+function adUpdate(){
+  const done=document.querySelectorAll('.ad-item.done').length;
+  const total=adItems.length;
+  $('ad-count').textContent=done;
+  $('ad-fill').style.width=(done/total*100)+'%';
+  let v;
+  if(done===0) v='Empieza a marcar las casillas. Te diré dónde estás parado.';
+  else if(done<=4) v='<strong>Vas arrancando.</strong> Repasa los temas sin marcar: vuelve a tus apuntes y reescribe un ejemplo de cada uno a mano.';
+  else if(done<=8) v='<strong>Buen avance.</strong> Concéntrate en lo que falta — sobre todo ciclos y listas, que son el corazón del problema práctico.';
+  else if(done<total) v='<strong>Casi listo.</strong> Solo te quedan '+(total-done)+'. Dale un último repaso y entra con confianza.';
+  else v='<strong>12 de 12.</strong> Dominas los cuatro temas. Respira, lee con calma y haz tu mejor examen. Confía en tu práctica.';
+  $('ad-verdict').innerHTML=v;
+}
+adItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');adUpdate();});
+});
+adUpdate();
+</script>
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XXVII — El examen final — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ═══════════════════════════════════════════════════════════════
+   CSS DE WIDGETS DE LA SESIÓN 27 · EXAMEN FINAL
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W1: explorador del temario completo (tm-) */
+.tm-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.tm-map{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;}
+.tm-cell{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:.85rem 1rem;cursor:pointer;transition:all .2s;}
+.tm-cell:hover{border-left-color:var(--blood);transform:translateX(2px);}
+.tm-cell.on{border-color:var(--blood);border-left-color:var(--blood);background:rgba(160,36,24,.06);}
+.tm-cell.api{border-left-color:var(--olive);}
+.tm-cell.api.on{border-color:var(--olive);border-left-color:var(--olive);background:rgba(93,102,56,.08);}
+.tm-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.25rem;}
+.tm-cell.api .tm-num{color:var(--olive);}
+.tm-name{font-family:'Cormorant Garamond',serif;font-size:1.18rem;color:var(--ink);line-height:1.15;}
+.tm-panel{background:var(--ink);padding:1.7rem;min-height:300px;display:flex;flex-direction:column;gap:.9rem;}
+.tm-ptag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ochre);}
+.tm-ptitle{font-family:'Cormorant Garamond',serif;font-size:1.75rem;color:var(--paper);line-height:1.05;}
+.tm-block{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:#C9A961;margin-top:.4rem;}
+.tm-rep{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.tm-rep strong{color:#C9A961;font-style:normal;font-weight:600;}
+.tm-exp{margin-top:auto;padding-top:.9rem;border-top:1px solid rgba(239,230,210,.15);font-size:.92rem;line-height:1.5;color:rgba(239,230,210,.7);}
+.tm-exp code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* W2: reglas del examen (rg-) */
+.rg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:.5rem;}
+.rg-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.rg-ico{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.rg-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.35rem;line-height:1.1;}
+.rg-d{font-size:.94rem;color:var(--ink-soft);line-height:1.45;}
+.rg-d strong{color:var(--ink);}
+.rg-ia{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.4rem;}
+.rg-ia-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.rg-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.rg-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.rg-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.rg-rule em{color:var(--ink);font-style:italic;}
+
+/* W3: formato del examen + ejemplo de caso (fm-) */
+.fm-parts{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem;}
+.fm-part{background:var(--paper);border:1px solid var(--line);padding:1.5rem;}
+.fm-part.teoria{border-left:3px solid var(--ochre);}
+.fm-part.caso{border-left:3px solid var(--blood);}
+.fm-ptag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.5rem;}
+.fm-part.teoria .fm-ptag{color:var(--ochre);}
+.fm-part.caso .fm-ptag{color:var(--blood);}
+.fm-pt{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);margin-bottom:.5rem;}
+.fm-part ul{margin-left:1.1rem;color:var(--ink-soft);font-size:.95rem;line-height:1.5;}
+.fm-part li{padding:.12rem 0;}
+.fm-caso-box{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:1.5rem;margin-top:1.8rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.55;color:var(--ink-soft);}
+.fm-caso-box strong{color:var(--ink);font-style:normal;font-weight:600;}
+.fm-caso-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.8rem;font-style:normal;}
+.fm-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1.8rem;margin-bottom:1.2rem;}
+.fm-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.fm-tab:hover{border-color:var(--blood);color:var(--blood);}
+.fm-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.fm-tab.console{border-style:dashed;}
+.fm-tab.console.on{background:var(--olive);border-color:var(--olive);}
+.fm-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--paper);min-height:320px;overflow-x:auto;}
+.fm-code .ln{white-space:pre;display:block;}
+.fm-code .kw{color:#D4956A;font-style:italic;}
+.fm-code .ty{color:#A6C2D6;}
+.fm-code .self{color:#8EAF8B;font-weight:700;}
+.fm-code .str{color:#C9A961;}
+.fm-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.fm-code .dec{color:#E8B04A;}
+.fm-code .out{color:#9FBF9C;}
+.fm-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.fm-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.fm-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: autodiagnóstico por tema (ad-) */
+.ad-progress{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);margin-bottom:.4rem;}
+.ad-bar{height:8px;background:var(--paper);border:1px solid var(--line);margin-bottom:1.6rem;overflow:hidden;}
+.ad-fill{height:100%;background:var(--olive);width:0;transition:width .45s cubic-bezier(.16,1,.3,1);}
+.ad-row{display:grid;grid-template-columns:1.4fr auto;gap:1rem;align-items:center;background:var(--paper);border:1px solid var(--line);padding:.85rem 1.1rem;margin-bottom:.55rem;}
+.ad-q{font-size:.98rem;color:var(--ink-soft);line-height:1.35;}
+.ad-q strong{color:var(--ink);}
+.ad-levels{display:flex;gap:.4rem;flex-shrink:0;}
+.ad-lv{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;padding:.4rem .6rem;background:var(--paper-deep);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .15s;}
+.ad-lv:hover{border-color:var(--blood);}
+.ad-lv.sel-no{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.ad-lv.sel-mas{background:var(--ochre);color:var(--paper);border-color:var(--ochre);}
+.ad-lv.sel-si{background:var(--olive);color:var(--paper);border-color:var(--olive);}
+.ad-verdict{margin-top:1.5rem;padding:1.3rem 1.5rem;background:var(--ink);min-height:4.5rem;display:flex;gap:1rem;align-items:flex-start;}
+.ad-vnum{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.4rem;color:var(--ochre);line-height:1;flex-shrink:0;}
+.ad-vtxt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.88);}
+.ad-vtxt strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* W5: peso + Demo Day (pw-) */
+.pw-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
+.pw-weight{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--blood);padding:1.8rem;display:flex;flex-direction:column;justify-content:center;}
+.pw-big{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,9vw,5rem);font-weight:600;color:var(--blood);line-height:1;}
+.pw-lbl{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-top:.4rem;}
+.pw-meter{height:12px;background:var(--paper-deep);border:1px solid var(--line);margin-top:1.4rem;display:flex;overflow:hidden;}
+.pw-seg{height:100%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--paper);}
+.pw-seg.exam{background:var(--blood);}
+.pw-seg.rest{background:rgba(42,29,20,.18);color:var(--ink-soft);}
+.pw-meta{font-size:.88rem;color:var(--ink-soft);margin-top:.9rem;font-style:italic;}
+.pw-demo{background:var(--ink);padding:1.8rem;display:flex;flex-direction:column;gap:.7rem;justify-content:center;}
+.pw-demo-tag{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.pw-demo-t{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--paper);line-height:1.05;}
+.pw-demo-d{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.82);}
+.pw-demo-d strong{color:#C9A961;font-style:normal;font-weight:600;}
+
+/* W3b: tarjetas de teoría flip (fc-) */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
+.fc-card{position:relative;min-height:150px;cursor:pointer;perspective:1000px;}
+.fc-side{position:absolute;inset:0;backface-visibility:hidden;transition:transform .5s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;justify-content:center;padding:1.4rem;border:1px solid var(--line);}
+.fc-front{background:var(--paper);font-family:'Cormorant Garamond',serif;font-size:1.18rem;line-height:1.35;color:var(--ink);border-left:3px solid var(--blood);}
+.fc-front strong{color:var(--blood);}
+.fc-back{background:var(--ink);color:rgba(239,230,210,.9);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;transform:rotateY(180deg);border-left:3px solid var(--ochre);}
+.fc-back strong{color:#C9A961;font-style:normal;font-weight:600;}
+.fc-back em{color:#E8B04A;}
+.fc-back code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+.fc-card.flip .fc-front{transform:rotateY(180deg);}
+.fc-card.flip .fc-back{transform:rotateY(360deg);}
+.fc-k{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ochre);margin-bottom:.6rem;}
+.fc-front .fc-k{color:var(--blood);}
+.fc-hint{margin-top:1.3rem;padding:.9rem 1.2rem;background:var(--paper);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--ink-soft);}
+.fc-hint strong{color:var(--olive);font-style:normal;font-weight:600;}
+
+/* tarjetas serenidad / qué llevar */
+.calm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.calm-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--olive);padding:1.4rem;}
+.calm-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.calm-d{font-size:.93rem;color:var(--ink-soft);line-height:1.45;}
+.calm-d strong{color:var(--ink);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .tm-stage,.rg-grid,.fm-parts,.pw-grid,.calm-grid{grid-template-columns:1fr;}
+  .tm-map{grid-template-columns:1fr 1fr;}
+  .ad-row{grid-template-columns:1fr;}
+  .ad-levels{justify-content:flex-start;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-26.html" class="back">Sesión 26</a>
+  <span class="session-label">Sesión 27 · Examen Final · 19.08.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:13%;left:9%;--r:-4deg">class Cuenta:</div>
+  <div class="hero-float" style="top:27%;right:10%;--r:3deg;animation-delay:-3s">try / except / raise</div>
+  <div class="hero-float" style="bottom:33%;left:12%;--r:2deg;animation-delay:-6s">cursor.execute("INSERT …")</div>
+  <div class="hero-float" style="bottom:17%;right:13%;--r:-3deg;animation-delay:-9s">@app.post("/usuarios")</div>
+  <div class="hero-float" style="top:51%;left:41%;--r:1deg;animation-delay:-4.5s">return {"id": nuevo.id}</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XXVII · Examen Final · Ref. Temario Evaluación · Temas 1 – 7 + API REST · Python · FastAPI</div>
+    <h1>El examen<br><em>final.</em></h1>
+    <p class="hero-sub">No es una trampa ni un misterio: es la foto de todo lo que aprendiste. Hoy demuestras que sabes <em>diseñar una clase, guardar en una base de datos y publicar un endpoint</em> — tú solo, con tus propias manos.</p>
+  </div>
+</section>
+
+<!-- I: qué se evalúa -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · Qué se evalúa hoy</p>
+    <p class="lead">No se evalúa que memorices.<br>Se evalúa que <em>sepas construir.</em></p>
+    <p class="subtle">El examen final cubre <strong>todo el curso</strong>: desde la primera clase de POO hasta el último endpoint con FastAPI. Es <strong>individual, escrito y sin IA</strong>. Tiene dos partes — teoría sobre los 7 temas y <em>un caso integrador</em> donde diseñas una clase, escribes una operación de base de datos y defines un endpoint de API REST en Python. Respira: si llegaste hasta aquí trabajando, ya lo tienes casi todo. Hoy es ordenar lo que ya sabes.</p>
+    <p class="subtle" style="margin-top:1.4rem">Piénsalo así: durante el semestre cada tema fue una pieza suelta — una clase aquí, un ciclo allá, una consulta a la base de datos, un endpoint. El objetivo del examen no es que recuerdes cada pieza por separado, sino que demuestres que sabes <strong>ensamblarlas en un sistema que funciona</strong>. Esa es la habilidad que define a un programador avanzado, y es exactamente lo que tu proyecto integrador ya te entrenó a hacer.</p>
+  </div>
+</section>
+
+<!-- II: explorador del temario -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El temario que entra — explóralo</p>
+    <p class="lead">Siete temas y la API REST.<br>Toca cada bloque y mira <em>qué repasar.</em></p>
+    <p class="subtle">Cada celda es uno de los temas que pueden aparecer en la teoría. Haz clic para ver <strong>qué se espera que domines</strong> y qué repasar esta noche. No hay temas escondidos: lo que ves es lo que entra.</p>
+    <div class="widget" data-tag="Explora el temario completo">
+      <div class="tm-stage">
+        <div class="tm-map" id="tm-map">
+          <div class="tm-cell on" data-t="poo"><div class="tm-num">Tema 01</div><div class="tm-name">POO y objetos</div></div>
+          <div class="tm-cell" data-t="tipos"><div class="tm-num">Tema 02</div><div class="tm-name">Identificadores y tipos</div></div>
+          <div class="tm-cell" data-t="flujo"><div class="tm-num">Tema 03</div><div class="tm-name">Control de flujo</div></div>
+          <div class="tm-cell" data-t="arrays"><div class="tm-num">Tema 04</div><div class="tm-name">Arrays y colecciones</div></div>
+          <div class="tm-cell" data-t="herencia"><div class="tm-num">Tema 05</div><div class="tm-name">Herencia y polimorfismo</div></div>
+          <div class="tm-cell" data-t="exc"><div class="tm-num">Tema 06</div><div class="tm-name">Excepciones</div></div>
+          <div class="tm-cell" data-t="bd"><div class="tm-num">Tema 07</div><div class="tm-name">Conexión a bases de datos</div></div>
+          <div class="tm-cell api" data-t="api"><div class="tm-num">Integrador</div><div class="tm-name">API REST · FastAPI</div></div>
+        </div>
+        <div class="tm-panel">
+          <div class="tm-ptag" id="tm-ptag">Tema 01</div>
+          <div class="tm-ptitle" id="tm-ptitle">POO y objetos</div>
+          <div class="tm-block" id="tm-block">Unidad 1</div>
+          <div class="tm-rep" id="tm-rep"></div>
+          <div class="tm-exp" id="tm-exp"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: reglas del examen -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Las reglas — claras desde ya</p>
+    <p class="lead">Sin sorpresas el día del examen.<br>Estas son <em>las reglas.</em></p>
+    <p class="subtle">Lee esto hoy, no mañana. Un examen se gana también en la logística: llegar a tiempo, traer lo permitido y saber exactamente qué <em>no</em> está permitido.</p>
+    <div class="widget" data-tag="Reglas del examen final">
+      <div class="rg-grid">
+        <div class="rg-card">
+          <div class="rg-ico">Modalidad</div>
+          <div class="rg-t">Individual</div>
+          <div class="rg-d">Cada quien con su propio examen. <strong>Nada de compartir</strong> respuestas, código ni pantallas. Tu trabajo es tuyo.</div>
+        </div>
+        <div class="rg-card">
+          <div class="rg-ico">Formato</div>
+          <div class="rg-t">Escrito</div>
+          <div class="rg-d">Se responde a mano o en el formato indicado. El código del caso integrador lo <strong>escribes tú</strong>, no lo ejecutas: importa que la sintaxis y la lógica sean correctas.</div>
+        </div>
+        <div class="rg-card">
+          <div class="rg-ico">Herramientas</div>
+          <div class="rg-t">Sin IA</div>
+          <div class="rg-d"><strong>Sin ChatGPT, sin Copilot, sin asistentes.</strong> Tampoco apuntes ni celular, salvo que se indique lo contrario. Solo tú y lo que aprendiste.</div>
+        </div>
+        <div class="rg-card">
+          <div class="rg-ico">Tiempo y puntaje</div>
+          <div class="rg-t">Administra</div>
+          <div class="rg-d">Lee todo primero. Reparte el tiempo: teoría rápida, caso integrador con calma. <strong>Vale el 30%</strong> de la calificación final.</div>
+        </div>
+      </div>
+      <div class="rg-ia">
+        <div class="rg-ia-tag">La IA durante el semestre vs. hoy</div>
+        <div class="rg-rule"><span class="ok">✓</span><span>Todo el curso usaste IA para <em>aprender</em>: que te explicara un error, que revisara tu diseño, que te enseñara un método nuevo.</span></div>
+        <div class="rg-rule"><span class="ok">✓</span><span>Eso te hizo mejor — <em>si entendías lo que te explicaba.</em> Hoy se cobra ese entendimiento.</span></div>
+        <div class="rg-rule"><span class="no">✗</span><span>Hoy <em>no hay IA.</em> Y está bien: el examen mide lo que quedó <strong>en ti</strong>, no lo que sabe la máquina. Si la IA lo hizo todo por ti, hoy se nota; si te enseñó, hoy lo demuestras.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: formato y caso integrador -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · El formato — teoría + caso integrador</p>
+    <p class="lead">Dos partes.<br>La segunda es <em>el corazón.</em></p>
+    <p class="subtle">La teoría confirma que conoces los conceptos. El <strong>caso integrador</strong> confirma que sabes unirlos: una clase bien diseñada, una operación de base de datos correcta y un endpoint de API REST. Tres piezas que ya practicaste por separado — el examen pide que las <em>conectes.</em></p>
+    <div class="widget" data-tag="Estructura del examen">
+      <div class="fm-parts">
+        <div class="fm-part teoria">
+          <div class="fm-ptag">Parte 1 · ~40%</div>
+          <div class="fm-pt">Teoría</div>
+          <ul>
+            <li>Preguntas sobre los 7 temas</li>
+            <li>Conceptos: encapsulamiento, herencia, polimorfismo</li>
+            <li>Leer código y decir qué hace o qué falla</li>
+            <li>Diferenciar tipos, flujo y manejo de errores</li>
+          </ul>
+        </div>
+        <div class="fm-part caso">
+          <div class="fm-ptag">Parte 2 · ~60%</div>
+          <div class="fm-pt">Caso integrador</div>
+          <ul>
+            <li>Diseñar <strong>una clase</strong> en Python</li>
+            <li>Escribir <strong>una operación de BD</strong> (insert / select)</li>
+            <li>Definir <strong>un endpoint</strong> de API REST</li>
+            <li>Que las tres piezas <em>encajen</em> entre sí</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="fm-caso-box">
+        <div class="fm-caso-tag">Ejemplo del TIPO de caso · no es el examen real</div>
+        Una <strong>clínica veterinaria</strong> necesita registrar a sus mascotas. Diseña la clase <strong>Mascota</strong> (nombre, especie, edad), escribe la operación que <strong>guarda una mascota</strong> en la base de datos, y define el <strong>endpoint</strong> que recibe una mascota nueva por POST y la registra. El caso real del examen usará <em>otro dominio</em> — pero la forma será exactamente esta.
+      </div>
+
+      <p class="subtle" style="margin-top:1.8rem">Así se vería resuelto ese ejemplo, pieza por pieza. Recorre las pestañas: la <strong>clase</strong>, la <strong>operación de BD</strong>, el <strong>endpoint</strong> y la <strong style="color:var(--olive)">▶ respuesta</strong> que devuelve la API.</p>
+      <div class="fm-tabs">
+        <button class="fm-tab on" data-fm="clase">1 · La clase</button>
+        <button class="fm-tab" data-fm="bd">2 · Operación de BD</button>
+        <button class="fm-tab" data-fm="api">3 · El endpoint</button>
+        <button class="fm-tab console" data-fm="resp">▶ Respuesta</button>
+      </div>
+      <div class="fm-code" id="fm-code"></div>
+      <div class="fm-note" id="fm-note"></div>
+    </div>
+
+    <p class="lead" style="margin-top:3.5rem;font-size:clamp(1.4rem,2.8vw,2rem)">¿Y la teoría? Practícala <em>respondiéndola.</em><br>Voltea cada tarjeta cuando ya tengas tu respuesta.</p>
+    <p class="subtle">Cinco preguntas del estilo de la parte teórica. Piensa tu respuesta <em>en voz alta</em>, y luego toca la tarjeta para confirmar. Si fallas más de una, ese tema necesita repaso esta noche.</p>
+    <div class="widget" data-tag="Tarjetas de teoría · piénsalo, luego voltea">
+      <div class="fc-grid" id="fc-grid">
+        <div class="fc-card" data-fc>
+          <div class="fc-side fc-front"><span class="fc-k">Tema 01 · POO</span>¿Cuál es la diferencia entre una <strong>clase</strong> y un <strong>objeto</strong>?</div>
+          <div class="fc-side fc-back">La clase es el <strong>molde</strong> (la definición); el objeto es una <strong>instancia</strong> concreta creada a partir de ese molde. <em>Receta</em> vs. <em>pastel.</em></div>
+        </div>
+        <div class="fc-card" data-fc>
+          <div class="fc-side fc-front"><span class="fc-k">Tema 05 · Polimorfismo</span>¿Qué significa <strong>sobrescribir</strong> un método?</div>
+          <div class="fc-side fc-back">Que una clase hija <strong>redefine</strong> un método heredado del padre con su propio comportamiento. Mismo nombre, distinta acción: eso es <em>polimorfismo.</em></div>
+        </div>
+        <div class="fc-card" data-fc>
+          <div class="fc-side fc-front"><span class="fc-k">Tema 06 · Excepciones</span>¿Para qué sirve la palabra clave <strong>raise</strong>?</div>
+          <div class="fc-side fc-back">Para <strong>lanzar tú mismo</strong> una excepción cuando detectas una condición inválida (p. ej. edad negativa). Quien llama la atrapa con <em>try/except.</em></div>
+        </div>
+        <div class="fc-card" data-fc>
+          <div class="fc-side fc-front"><span class="fc-k">Tema 07 · Bases de datos</span>¿Por qué se usan parámetros <strong>?</strong> en vez de concatenar el valor en el SQL?</div>
+          <div class="fc-side fc-back">Por <strong>seguridad</strong>: evita la inyección de SQL y maneja bien los tipos. El driver pone los valores por ti, de forma segura.</div>
+        </div>
+        <div class="fc-card" data-fc>
+          <div class="fc-side fc-front"><span class="fc-k">Integrador · API REST</span>¿Qué hace <strong>@app.post("/mascotas")</strong>?</div>
+          <div class="fc-side fc-back">Registra la función de abajo como el <strong>endpoint</strong> que responde a las peticiones <strong>POST</strong> a la ruta <code>/mascotas</code> — típicamente, para <em>crear</em> un recurso.</div>
+        </div>
+      </div>
+      <div class="fc-hint" id="fc-hint">Tocaste <strong>0</strong> de 5 tarjetas. Voltéalas todas: si alguna te sorprende, ahí está tu repaso.</div>
+    </div>
+
+    <p class="lead" style="margin-top:3.5rem;font-size:clamp(1.4rem,2.8vw,2rem)">Los errores que más cuestan puntos<br>casi nunca son <em>de lógica.</em></p>
+    <p class="subtle">Son descuidos. En cada examen se repiten los mismos cuatro — y son fáciles de evitar si los tienes presentes mientras escribes el caso integrador:</p>
+    <div class="rg-grid" style="margin-top:1.5rem">
+      <div class="rg-card">
+        <div class="rg-ico">Error frecuente · 01</div>
+        <div class="rg-t">Olvidar el commit</div>
+        <div class="rg-d">Escribes el <span class="inlinecode">INSERT</span> perfecto… y no llamas a <span class="inlinecode">commit()</span>. <strong>Nada se guarda.</strong> Sin commit, la operación de BD está incompleta.</div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">Error frecuente · 02</div>
+        <div class="rg-t">Confundir self con this</div>
+        <div class="rg-d">En Python es <span class="inlinecode">self</span>, primer parámetro de cada método. Y va en <span class="inlinecode">__init__</span>, no en <code>this</code>. <strong>Java es otro idioma.</strong></div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">Error frecuente · 03</div>
+        <div class="rg-t">El decorador del endpoint</div>
+        <div class="rg-d">Un endpoint sin <span class="inlinecode">@app.post(...)</span> arriba de la función no es endpoint: es una función suelta. <strong>El decorador es la ruta.</strong></div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-ico">Error frecuente · 04</div>
+        <div class="rg-t">No devolver nada</div>
+        <div class="rg-d">Una API que no hace <span class="inlinecode">return</span> no responde. Devuelve un <strong>dict</strong> (se vuelve JSON solo) con lo que el cliente necesita confirmar.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: autodiagnóstico -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Autodiagnóstico — ¿qué te falta repasar?</p>
+    <p class="lead">Sé honesto contigo.<br>Aquí nadie te juzga — <em>solo tú.</em></p>
+    <p class="subtle">Para cada tema, marca tu nivel real: <strong style="color:var(--blood)">NO</strong> (no lo domino), <strong style="color:var(--ochre)">+/−</strong> (más o menos) o <strong style="color:var(--olive)">SÍ</strong> (lo domino). La barra te dice qué tan listo estás y el veredicto te dice <em>por dónde empezar a repasar.</em></p>
+    <div class="widget" data-tag="Tu radar de repaso">
+      <div class="ad-progress">Listo para el examen: <span id="ad-pct">0</span>% · <span id="ad-done">0</span> de 8 temas evaluados</div>
+      <div class="ad-bar"><div class="ad-fill" id="ad-fill"></div></div>
+      <div id="ad-list">
+        <div class="ad-row" data-ad="poo"><div class="ad-q"><strong>POO:</strong> ¿puedo diseñar una clase con atributos privados, constructor y métodos?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+        <div class="ad-row" data-ad="tipos"><div class="ad-q"><strong>Tipos:</strong> ¿distingo <span class="inlinecode">int</span>, <span class="inlinecode">str</span>, <span class="inlinecode">float</span>, <span class="inlinecode">bool</span> y sé nombrar identificadores?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+        <div class="ad-row" data-ad="flujo"><div class="ad-q"><strong>Flujo:</strong> ¿escribo <span class="inlinecode">if/elif/else</span> y ciclos <span class="inlinecode">for</span>/<span class="inlinecode">while</span> sin dudar?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+        <div class="ad-row" data-ad="arrays"><div class="ad-q"><strong>Arrays:</strong> ¿recorro una lista, la filtro y acumulo un total?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+        <div class="ad-row" data-ad="herencia"><div class="ad-q"><strong>Herencia:</strong> ¿uso <span class="inlinecode">super()</span> y sé qué es sobrescribir un método (polimorfismo)?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+        <div class="ad-row" data-ad="exc"><div class="ad-q"><strong>Excepciones:</strong> ¿manejo <span class="inlinecode">try/except</span> y sé cuándo hacer <span class="inlinecode">raise</span>?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+        <div class="ad-row" data-ad="bd"><div class="ad-q"><strong>Base de datos:</strong> ¿conecto, ejecuto un <span class="inlinecode">INSERT</span>/<span class="inlinecode">SELECT</span> y hago <span class="inlinecode">commit</span>?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+        <div class="ad-row" data-ad="api"><div class="ad-q"><strong>API REST:</strong> ¿defino un endpoint <span class="inlinecode">@app.post</span> que reciba datos y responda JSON?</div><div class="ad-levels"><span class="ad-lv" data-lv="no">No</span><span class="ad-lv" data-lv="mas">+/−</span><span class="ad-lv" data-lv="si">Sí</span></div></div>
+      </div>
+      <div class="ad-verdict">
+        <div class="ad-vnum" id="ad-vnum">·</div>
+        <div class="ad-vtxt" id="ad-vtxt">Marca tu nivel en cada tema. Te diré <strong>por dónde empezar</strong> a repasar esta noche.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: cómo llegar entero -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Cómo llegar entero al examen</p>
+    <p class="lead">El examen no se gana solo estudiando.<br>Se gana llegando <em>con cabeza fría.</em></p>
+    <p class="subtle">Tres consejos que valen tanto como un repaso extra. Los digo en serio:</p>
+    <div class="calm-grid">
+      <div class="calm-card">
+        <div class="calm-t">Duerme</div>
+        <div class="calm-d">Un cerebro descansado resuelve un caso integrador mejor que uno desvelado con diez horas de repaso. <strong>No te quemes la noche anterior.</strong></div>
+      </div>
+      <div class="calm-card">
+        <div class="calm-t">Repasa haciendo</div>
+        <div class="calm-d">No releas: <strong>escribe código a mano.</strong> Una clase, un INSERT, un endpoint. La memoria de los dedos vale en un examen escrito.</div>
+      </div>
+      <div class="calm-card">
+        <div class="calm-t">Lee el examen completo</div>
+        <div class="calm-d">Antes de escribir nada, <strong>lee todas las preguntas.</strong> Empieza por lo que dominas; deja para el final lo que te cueste. Nunca dejes una hoja en blanco.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2.5rem">Y un último recordatorio sobre el caso integrador: <strong>no necesita ser perfecto para sumar.</strong> Si no recuerdas la sintaxis exacta de un decorador, escribe la idea correcta y márcalo — un endpoint bien razonado con un detalle de sintaxis vale mucho más que una hoja en blanco. <em>Escribe primero lo que sí sabes;</em> el código que cuenta una historia coherente —objeto, guardado, respuesta— demuestra que entendiste el curso, aunque le falte un punto y coma.</p>
+  </div>
+</section>
+
+<!-- VII: peso + Demo Day -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Lo que está en juego — y lo que sigue</p>
+    <p class="lead">El examen pesa.<br>Pero el viernes <em>no termina aquí.</em></p>
+    <p class="subtle">Dos cosas a tener clarísimas hoy: cuánto vale este examen, y que <strong>el Demo Day es el viernes.</strong> Aprobar el examen no cierra el curso — tu proyecto integrador aún tiene que defenderse.</p>
+    <div class="widget" data-tag="Peso y calendario">
+      <div class="pw-grid">
+        <div class="pw-weight">
+          <div class="pw-big">30%</div>
+          <div class="pw-lbl">Examen final · de tu calificación</div>
+          <div class="pw-meter">
+            <div class="pw-seg exam" style="width:30%">30%</div>
+            <div class="pw-seg rest" style="width:70%">resto del curso</div>
+          </div>
+          <div class="pw-meta">Casi un tercio de todo. Suficiente para mover tu calificación — en cualquier dirección.</div>
+        </div>
+        <div class="pw-demo">
+          <div class="pw-demo-tag">Recordatorio · viernes</div>
+          <div class="pw-demo-t">Demo Day</div>
+          <div class="pw-demo-d">El examen es hoy; el <strong>Demo Day es el viernes</strong>. Ahí defiendes tu proyecto integrador en vivo. Termina el examen, respira… y vuelve a tu proyecto: <strong>aún falta el cierre más importante.</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VIII · Después del examen</p>
+    <p class="lead">Entregaste el examen.<br>Ahora, <em>al proyecto.</em></p>
+    <p class="subtle">El examen demuestra lo que sabes en abstracto. El Demo Day demuestra lo que sabes <strong>construir de verdad.</strong> Sal del examen y, sin perder el ritmo, dale los últimos toques a tu proyecto y prepara la defensa.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Examen Final → rumbo al Demo Day</div>
+      <ol>
+        <li><strong>Hoy:</strong> presenta el examen final con calma. Lee todo, empieza por lo que dominas, no dejes nada en blanco. <em>Vale el 30%.</em></li>
+        <li><strong>Saliendo:</strong> vuelve a tu <strong>proyecto integrador</strong>. Anota los últimos pendientes mientras los tienes frescos en la cabeza.</li>
+        <li>Dale los <strong>últimos toques</strong>: que la clase, la base de datos y los endpoints corran sin errores; limpia el código y el <code>README</code>.</li>
+        <li>Prepara la <strong>defensa del Demo Day</strong>: ensaya la demo en vivo y ten lista una respuesta a "explícame esta línea". Si lo construiste, lo defiendes.</li>
+        <li><strong>El viernes:</strong> Demo Day. Llega con tu proyecto funcionando y tu historia clara. Es el cierre del curso — hazlo brillar.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: explorador del temario ─────────────────────────────
+const tmData={
+  poo:{tag:'Tema 01',title:'POO y objetos',block:'Unidad 1 · base de todo',
+    rep:'Clase vs. objeto, atributos y métodos, el constructor <strong>__init__</strong>, encapsulamiento con atributos privados y getters/properties.',
+    exp:'Espera diseñar una clase desde cero. Repasa: <code>class</code>, <code>self</code>, <code>def __init__</code> y por qué los atributos van protegidos.'},
+  tipos:{tag:'Tema 02',title:'Identificadores y tipos',block:'Unidad 2 · los cimientos',
+    rep:'Tipos primitivos (<strong>int, float, str, bool</strong>), reglas para nombrar identificadores y conversión entre tipos (casting).',
+    exp:'Espera identificar el tipo de una expresión o corregir un nombre inválido. Repasa: <code>int("5")</code>, <code>str(3.14)</code>, mayúsculas y guiones bajos.'},
+  flujo:{tag:'Tema 03',title:'Control de flujo',block:'Unidad 3 · decisiones y repetición',
+    rep:'Condicionales <strong>if / elif / else</strong>, operadores lógicos, y ciclos <strong>for</strong> y <strong>while</strong> con sus condiciones de corte.',
+    exp:'Espera trazar qué imprime un fragmento o escribir un ciclo. Repasa: <code>range()</code>, <code>break</code>, <code>continue</code> y la indentación.'},
+  arrays:{tag:'Tema 04',title:'Arrays y colecciones',block:'Unidad 4 · datos en conjunto',
+    rep:'Listas en Python: crear, agregar con <strong>append</strong>, recorrer con for, indexar, y el patrón <em>recorrer-y-acumular</em>.',
+    exp:'Espera recorrer una lista de objetos y sumar o filtrar. Repasa: <code>len()</code>, <code>lista[i]</code>, list comprehensions sencillas.'},
+  herencia:{tag:'Tema 05',title:'Herencia y polimorfismo',block:'Unidad 5 · reutilizar y especializar',
+    rep:'Una clase hija que <strong>hereda</strong> de una padre, <strong>super()</strong> en el constructor, y <strong>sobrescribir</strong> un método (polimorfismo).',
+    exp:'Espera leer una jerarquía y decir qué método se ejecuta. Repasa: <code>class Hija(Padre)</code>, <code>super().__init__()</code> y override.'},
+  exc:{tag:'Tema 06',title:'Excepciones',block:'Unidad 6 · cuando algo falla',
+    rep:'Bloques <strong>try / except / finally</strong>, lanzar errores con <strong>raise</strong>, y por qué validar antes de fallar.',
+    exp:'Espera proteger un código frágil o decir qué excepción salta. Repasa: <code>try/except ValueError</code>, <code>raise</code>, mensajes claros.'},
+  bd:{tag:'Tema 07',title:'Conexión a bases de datos',block:'Unidad 7 · la persistencia',
+    rep:'Conectar con la BD, obtener un <strong>cursor</strong>, ejecutar <strong>INSERT/SELECT</strong>, hacer <strong>commit</strong> y cerrar la conexión.',
+    exp:'Espera escribir una operación de guardado o consulta. Repasa: <code>conn.cursor()</code>, <code>execute(...)</code>, parámetros con <code>?</code> y <code>commit()</code>.'},
+  api:{tag:'Integrador',title:'API REST · FastAPI',block:'Cierre · todo junto',
+    rep:'Definir un <strong>endpoint</strong> con <strong>@app.get / @app.post</strong>, recibir datos, llamar a la lógica/BD y devolver <strong>JSON</strong>.',
+    exp:'Espera escribir un endpoint que reciba un objeto y lo registre. Repasa: <code>@app.post("/ruta")</code>, parámetros, <code>return {...}</code> y códigos de estado.'},
+};
+function tmRender(k){
+  const d=tmData[k];
+  $('tm-ptag').textContent=d.tag;
+  $('tm-ptitle').textContent=d.title;
+  $('tm-block').textContent=d.block;
+  $('tm-rep').innerHTML=d.rep;
+  $('tm-exp').innerHTML=d.exp;
+}
+document.querySelectorAll('.tm-cell').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.tm-cell').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    tmRender(c.dataset.t);
+  });
+});
+tmRender('poo');
+
+// ─── W3: formato · caso integrador (clase → BD → endpoint) ──
+const fmData={
+  clase:{
+    code:[
+      '<span class="cm"># Pieza 1 · la clase: diseño orientado a objetos</span>',
+      '<span class="kw">class</span> <span class="ty">Mascota</span>:',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, nombre, especie, edad):',
+      '        <span class="self">self</span>._nombre = nombre',
+      '        <span class="self">self</span>._especie = especie',
+      '        <span class="self">self</span>._edad = edad',
+      '',
+      '    <span class="dec">@property</span>',
+      '    <span class="kw">def</span> nombre(<span class="self">self</span>):',
+      '        <span class="kw">return</span> <span class="self">self</span>._nombre',
+      '',
+      '    <span class="kw">def</span> es_cachorro(<span class="self">self</span>):',
+      '        <span class="kw">return</span> <span class="self">self</span>._edad &lt; <span class="str">1</span>',
+    ],
+    note:'<strong>Temas 1, 2 y 3 en acción.</strong> Atributos privados (<code>_nombre</code>), constructor con <code>__init__</code>, un <code>@property</code> de encapsulamiento y un método con lógica de decisión. Una clase pequeña pero <em>completa</em> — eso busca el examen.'
+  },
+  bd:{
+    code:[
+      '<span class="cm"># Pieza 2 · operación de base de datos: guardar (Tema 7)</span>',
+      '<span class="kw">import</span> sqlite3',
+      '',
+      '<span class="kw">def</span> guardar_mascota(mascota):',
+      '    conn = sqlite3.connect(<span class="str">"clinica.db"</span>)',
+      '    cursor = conn.cursor()',
+      '    cursor.execute(',
+      '        <span class="str">"INSERT INTO mascotas (nombre, especie, edad) VALUES (?, ?, ?)"</span>,',
+      '        (mascota.nombre, mascota._especie, mascota._edad)',
+      '    )',
+      '    conn.commit()        <span class="cm"># sin commit, no se guarda nada</span>',
+      '    nuevo_id = cursor.lastrowid',
+      '    conn.close()',
+      '    <span class="kw">return</span> nuevo_id',
+    ],
+    note:'<strong>Tema 7, paso a paso:</strong> conectar, cursor, <code>execute</code> con parámetros <code>?</code> (nunca concatenes strings — es inseguro), <code>commit()</code> y cerrar. Fíjate cómo recibe el <em>objeto</em> de la pieza 1: las piezas <strong>encajan.</strong>'
+  },
+  api:{
+    code:[
+      '<span class="cm"># Pieza 3 · el endpoint REST (integrador · FastAPI)</span>',
+      '<span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI',
+      '<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel',
+      '',
+      'app = FastAPI()',
+      '',
+      '<span class="kw">class</span> <span class="ty">MascotaIn</span>(<span class="ty">BaseModel</span>):',
+      '    nombre: <span class="ty">str</span>',
+      '    especie: <span class="ty">str</span>',
+      '    edad: <span class="ty">int</span>',
+      '',
+      '<span class="dec">@app.post</span>(<span class="str">"/mascotas"</span>)',
+      '<span class="kw">def</span> registrar(datos: <span class="ty">MascotaIn</span>):',
+      '    m = <span class="ty">Mascota</span>(datos.nombre, datos.especie, datos.edad)',
+      '    nuevo_id = guardar_mascota(m)',
+      '    <span class="kw">return</span> {<span class="str">"id"</span>: nuevo_id, <span class="str">"nombre"</span>: m.nombre}',
+    ],
+    note:'<strong>Todo se une aquí.</strong> El endpoint recibe JSON, crea el <em>objeto</em> de la pieza 1, llama a la <em>operación de BD</em> de la pieza 2 y devuelve JSON. <code>@app.post</code>, el modelo <code>BaseModel</code> y el <code>return</code> dict: esa es la forma que el examen espera.'
+  },
+  resp:{
+    code:[
+      '<span class="cm"># POST /mascotas</span>',
+      '<span class="cm"># body: {"nombre": "Firulais", "especie": "perro", "edad": 0}</span>',
+      '',
+      '<span class="out">HTTP/1.1 200 OK</span>',
+      '<span class="out">content-type: application/json</span>',
+      '',
+      '<span class="out">{</span>',
+      '<span class="out">  "id": 1,</span>',
+      '<span class="out">  "nombre": "Firulais"</span>',
+      '<span class="out">}</span>',
+    ],
+    note:'<strong>El sistema completo respondiendo.</strong> Una mascota entró por la API, se volvió objeto, se guardó en la BD y la respuesta confirma su <code>id</code>. Cuando puedas escribir estas tres piezas y explicar cada línea, el caso integrador es tuyo — y tu proyecto del Demo Day también.'
+  }
+};
+function fmRender(k){
+  const d=fmData[k];
+  $('fm-code').innerHTML=d.code.map(h=>'<span class="ln">'+h+'</span>').join('');
+  $('fm-note').innerHTML=d.note;
+}
+document.querySelectorAll('.fm-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.fm-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    fmRender(t.dataset.fm);
+  });
+});
+fmRender('clase');
+
+// ─── W4: autodiagnóstico por tema ───────────────────────────
+const adScore={no:0,mas:0.5,si:1};
+const adState={};
+const adTotal=document.querySelectorAll('.ad-row').length;
+function adUpdate(){
+  const done=Object.keys(adState).length;
+  let pts=0;
+  Object.values(adState).forEach(v=>pts+=adScore[v]);
+  const pct=Math.round(pts/adTotal*100);
+  $('ad-pct').textContent=pct;
+  $('ad-done').textContent=done;
+  $('ad-fill').style.width=pct+'%';
+  if(done===0){
+    $('ad-vnum').textContent='·';
+    $('ad-vtxt').innerHTML='Marca tu nivel en cada tema. Te diré <strong>por dónde empezar</strong> a repasar esta noche.';
+    return;
+  }
+  // tema más débil aún sin "sí"
+  const weak=Object.entries(adState).filter(([k,v])=>v!=='si').map(([k])=>k);
+  $('ad-vnum').textContent=pct+'%';
+  if(done<adTotal){
+    $('ad-vtxt').innerHTML='Vas evaluando. Te faltan <strong>'+(adTotal-done)+'</strong> temas por marcar — sé honesto, este radar solo sirve si dices la verdad.';
+  }else if(pct===100){
+    $('ad-vtxt').innerHTML='<strong>Dominas los 8 temas.</strong> No te confíes: repasa escribiendo una clase, un INSERT y un endpoint a mano, y duerme bien. Estás listo.';
+  }else if(weak.length){
+    const name=tmData[weak[0]] ? tmData[weak[0]].title : weak[0];
+    $('ad-vtxt').innerHTML='Tu prioridad de repaso es <strong>'+name+'</strong>'+(weak.length>1?' (y '+(weak.length-1)+' tema'+(weak.length-1>1?'s':'')+' más)':'')+'. Empieza por ahí esta noche: léelo y, sobre todo, <em>escribe código de ese tema.</em>';
+  }
+}
+document.querySelectorAll('.ad-row').forEach(row=>{
+  const key=row.dataset.ad;
+  row.querySelectorAll('.ad-lv').forEach(lv=>{
+    lv.addEventListener('click',()=>{
+      row.querySelectorAll('.ad-lv').forEach(x=>{x.classList.remove('sel-no','sel-mas','sel-si');});
+      lv.classList.add('sel-'+lv.dataset.lv);
+      adState[key]=lv.dataset.lv;
+      adUpdate();
+    });
+  });
+});
+adUpdate();
+
+// ─── W3b: tarjetas de teoría (flip) ─────────────────────────
+const fcSeen=new Set();
+const fcCards=document.querySelectorAll('.fc-card');
+fcCards.forEach((card,i)=>{
+  card.addEventListener('click',()=>{
+    card.classList.toggle('flip');
+    if(card.classList.contains('flip')) fcSeen.add(i);
+    const n=fcSeen.size,total=fcCards.length;
+    if(n<total){
+      $('fc-hint').innerHTML='Volteaste <strong>'+n+'</strong> de '+total+' tarjetas. Voltéalas todas: si alguna te sorprende, ahí está tu repaso.';
+    }else{
+      $('fc-hint').innerHTML='<strong>Las cinco volteadas.</strong> ¿Alguna te costó? Ese tema va primero esta noche. Si todas te salieron, tu teoría está sólida.';
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión XXVIII — Demo Day: el día que defiendes lo que construiste — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CSS DE WIDGETS · Sesión 28 · Demo Day (acento ochre)
+   prefijos: .dd- (banner), .tl- (timeline), .ru- (rúbrica),
+             .qa- (preguntas), .ck- (checklist), .ref- (reflexión)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Banner celebratorio del cierre */
+.dd-banner{background:var(--ink);border-left:3px solid var(--ochre);padding:1.8rem 2rem;margin-top:2rem;display:flex;flex-wrap:wrap;gap:1.5rem;align-items:center;justify-content:space-between;}
+.dd-banner-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;line-height:1.4;color:rgba(239,230,210,.9);max-width:540px;}
+.dd-banner-txt strong{color:#E0B450;font-style:normal;font-weight:600;}
+.dd-pillars{display:flex;gap:.6rem;flex-wrap:wrap;}
+.dd-pill{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:.5rem .8rem;border:1px solid var(--ochre);color:#E0B450;background:rgba(181,133,42,.08);}
+
+/* W1: línea de tiempo de la demo */
+.tl-stage{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;}
+.tl-rail{display:flex;flex-direction:column;gap:.5rem;}
+.tl-step{display:flex;align-items:center;gap:.8rem;cursor:pointer;padding:.55rem .7rem;border:1px solid var(--line);background:var(--paper);transition:all .2s;}
+.tl-step:hover{border-color:var(--ochre);}
+.tl-step.on{background:rgba(181,133,42,.1);border-color:var(--ochre);border-left:3px solid var(--ochre);}
+.tl-dot{width:1.7rem;height:1.7rem;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-soft);flex-shrink:0;transition:all .2s;}
+.tl-step.on .tl-dot{background:var(--ochre);border-color:var(--ochre);color:var(--paper);}
+.tl-step.done .tl-dot::after{content:'✓';}
+.tl-name{font-family:'Cormorant Garamond',serif;font-size:1.18rem;color:var(--ink);line-height:1.15;}
+.tl-mins{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ink-soft);}
+.tl-panel{background:var(--ink);padding:1.8rem;min-height:280px;display:flex;flex-direction:column;gap:.9rem;}
+.tl-ptag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
+.tl-ptitle{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--paper);line-height:1.05;}
+.tl-pdesc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.16rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.tl-pdesc strong{color:#E0B450;font-style:normal;font-weight:600;}
+.tl-pdesc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+.tl-say{margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.6;color:rgba(239,230,210,.7);border-left:2px solid var(--ochre);padding:.5rem .9rem;background:rgba(239,230,210,.05);}
+.tl-say b{color:#9FBF9C;font-weight:700;}
+.tl-meter{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ink-soft);margin-top:1.2rem;}
+.tl-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.tl-fill{height:100%;background:var(--ochre);width:0;transition:width .4s;}
+
+/* W2: rúbrica interactiva */
+.ru-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;}
+.ru-crit{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1rem .8rem;cursor:pointer;transition:all .2s;text-align:center;}
+.ru-crit:hover{border-color:var(--ochre);transform:translateY(-3px);}
+.ru-crit.on{background:rgba(181,133,42,.12);box-shadow:0 0 0 2px rgba(181,133,42,.25);}
+.ru-pts{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--ochre);}
+.ru-cn{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ink);line-height:1.1;margin-top:.3rem;}
+.ru-panel{background:var(--ink);padding:1.6rem 1.8rem;margin-top:1.2rem;min-height:170px;}
+.ru-ptitle{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--paper);margin-bottom:.7rem;}
+.ru-ptitle span{color:var(--ochre);font-family:'JetBrains Mono',monospace;font-size:.9rem;}
+.ru-row{display:flex;gap:.9rem;padding:.4rem 0;font-size:1rem;color:rgba(239,230,210,.85);align-items:baseline;}
+.ru-row .lv{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;width:5.5rem;}
+.ru-row .lv.top{color:#9FBF9C;}
+.ru-row .lv.mid{color:#E0B450;}
+.ru-row .lv.low{color:#E08A82;}
+.ru-row em{color:var(--paper);font-style:normal;}
+
+/* W3: banco de preguntas */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.qa-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--blood);padding:1.2rem 1.4rem;cursor:pointer;transition:all .25s;}
+.qa-card:hover{border-left-color:var(--ochre);}
+.qa-card.open{border-left-color:var(--ochre);background:rgba(181,133,42,.06);}
+.qa-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;color:var(--ink);line-height:1.35;display:flex;gap:.6rem;align-items:flex-start;}
+.qa-q::before{content:'¿';color:var(--blood);font-style:normal;}
+.qa-cat{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ochre);margin-bottom:.5rem;}
+.qa-a{max-height:0;overflow:hidden;transition:max-height .35s ease,margin .35s ease;font-size:.96rem;color:var(--ink-soft);line-height:1.5;}
+.qa-card.open .qa-a{max-height:240px;margin-top:.9rem;}
+.qa-a strong{color:var(--ink);}
+.qa-a .tip{display:block;margin-top:.6rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--olive);}
+
+/* W4: tips demo en vivo · NO/SÍ */
+.tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
+.tip-col{border:1px solid var(--line);padding:1.5rem;}
+.tip-col.no{border-top:3px solid var(--blood);background:rgba(160,36,24,.04);}
+.tip-col.si{border-top:3px solid var(--olive);background:rgba(93,102,56,.05);}
+.tip-h{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem;}
+.tip-col.no .tip-h{color:var(--blood);}
+.tip-col.si .tip-h{color:var(--olive);}
+.tip-li{display:flex;gap:.7rem;padding:.4rem 0;font-size:1rem;color:var(--ink-soft);align-items:baseline;line-height:1.4;}
+.tip-li .mk{font-weight:700;flex-shrink:0;}
+.tip-col.no .mk{color:var(--blood);}
+.tip-col.si .mk{color:var(--olive);}
+.tip-li strong{color:var(--ink);}
+
+/* W5: checklist entregable final */
+.ck-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.ck-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
+.ck-fill{height:100%;background:var(--ochre);width:0;transition:width .4s;}
+.ck-group{margin-top:1.4rem;}
+.ck-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
+.ck-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
+.ck-item:hover{border-color:var(--ochre);}
+.ck-item.done{background:rgba(181,133,42,.08);border-color:var(--ochre);}
+.ck-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
+.ck-item.done .ck-box{background:var(--ochre);border-color:var(--ochre);}
+.ck-item.done .ck-box::after{content:'✓';}
+.ck-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
+.ck-item.done .ck-txt{color:var(--ink);}
+.ck-txt strong{color:var(--ink);}
+.ck-txt code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--paper-deep);padding:.05rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+
+/* W4b: el viaje de una petición (animador paso a paso) */
+.fl-explain{padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.45;color:var(--ink-soft);margin-bottom:1.6rem;}
+.fl-explain strong{color:var(--ink);font-style:normal;font-weight:600;}
+.fl-scroll{overflow-x:auto;}
+.fl-track{position:relative;width:760px;margin:0 auto;display:flex;justify-content:space-between;gap:.4rem;padding:1.5rem 0;}
+.fl-node{flex:1;min-width:118px;background:var(--paper);border:2px solid var(--line);padding:1rem .7rem;text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;z-index:2;opacity:.45;}
+.fl-node.lit{opacity:1;border-color:var(--ochre);box-shadow:0 0 0 3px rgba(181,133,42,.18);transform:translateY(-4px);}
+.fl-node.passed{opacity:.85;border-color:var(--olive);}
+.fl-icon{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ochre);margin-bottom:.4rem;}
+.fl-nname{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);line-height:1.1;}
+.fl-pill{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--ink-soft);margin-top:.35rem;}
+.fl-wire{position:absolute;top:50%;left:5%;right:5%;height:2px;background:var(--line);z-index:1;}
+.fl-wire-fill{position:absolute;top:0;left:0;height:100%;background:var(--ochre);width:0;transition:width .5s ease;}
+.fl-desc{margin-top:1.4rem;padding:1.4rem 1.6rem;background:var(--ink);min-height:5.5rem;display:flex;gap:1.1rem;align-items:flex-start;}
+.fl-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.4rem;color:var(--ochre);line-height:1;flex-shrink:0;}
+.fl-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.16rem;line-height:1.45;color:rgba(239,230,210,.88);}
+.fl-txt strong{color:#E0B450;font-style:normal;font-weight:600;}
+.fl-txt code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* W6: reflexión · los 4 pilares */
+.ref-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.ref-pillars{display:flex;flex-direction:column;gap:.6rem;}
+.ref-p{background:var(--paper);border:1px solid var(--line);padding:1.1rem 1.3rem;cursor:pointer;transition:all .2s;border-left:3px solid var(--line);}
+.ref-p:hover{border-left-color:var(--ochre);}
+.ref-p.on{border-left-color:var(--ochre);background:rgba(181,133,42,.08);}
+.ref-pn{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);}
+.ref-pmeta{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--ink-soft);margin-top:.2rem;}
+.ref-panel{background:var(--ink);padding:1.8rem;min-height:240px;display:flex;flex-direction:column;gap:.9rem;}
+.ref-code{font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.85;color:var(--paper);background:rgba(239,230,210,.05);padding:.9rem 1.1rem;border-left:2px solid var(--ochre);overflow-x:auto;}
+.ref-code .kw{color:#D4956A;font-style:italic;}
+.ref-code .ty{color:#A6C2D6;}
+.ref-code .str{color:#C9A961;}
+.ref-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.ref-code .self{color:#8EAF8B;}
+.ref-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.16rem;line-height:1.5;color:rgba(239,230,210,.85);}
+.ref-desc strong{color:#E0B450;font-style:normal;font-weight:600;}
+
+@media(max-width:860px){
+  .tl-stage,.qa-grid,.tip-grid,.ref-stage{grid-template-columns:1fr;}
+  .ru-grid{grid-template-columns:1fr 1fr;}
+  .fl-node{min-width:128px;}
+  .dd-banner{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-27.html" class="back">Sesión 27</a>
+  <span class="session-label">Sesión 28 · Demo Day · 21.08.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">git tag v1.0 --release</div>
+  <div class="hero-float" style="top:30%;right:11%;--r:3deg;animation-delay:-3s">GET /api/predecir → 200 OK</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">class Proyecto(OOP, BD, API, IA)</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">SELECT * FROM resultados;</div>
+  <div class="hero-float" style="top:52%;left:42%;--r:1deg;animation-delay:-4.5s">/docs · Swagger UI</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión XXVIII · Demo Day · Cierre del curso · Ref. Temario Proyecto Integrador · Defensa · OOP · BD · API REST · IA</div>
+    <h1>Demo <em>Day.</em></h1>
+    <p class="hero-sub">El día que dejas de explicar lo que <em>vas</em> a construir y demuestras lo que <em>construiste</em>. Un proyecto full-stack vivo: clases, base de datos, una API que responde y un endpoint con IA. Hoy lo defiendes — <em>y se cierra el cuatrimestre.</em></p>
+  </div>
+</section>
+
+<!-- I: qué es el Demo Day -->
+<section>
+  <div class="wrap">
+    <p class="marker">I · El día llegó</p>
+    <p class="lead">No es una entrega más.<br>Es el día que <em>defiendes</em> lo que es tuyo.</p>
+    <p class="subtle">El Demo Day es la <strong>presentación final del proyecto integrador</strong>: una demostración en vivo seguida de una defensa oral con mis preguntas. Tu proyecto debe demostrar los cuatro paradigmas del curso trabajando juntos — <strong>arquitectura OOP</strong>, <strong>base de datos integrada</strong>, <strong>API REST funcional</strong> y <strong>al menos un endpoint con IA</strong>. No vienes a leer diapositivas: vienes a correr tu sistema y a responder por cada línea.</p>
+    <div class="dd-banner">
+      <div class="dd-banner-txt">Cuatro paradigmas, un solo proyecto. Hoy se ven trabajando <strong>al mismo tiempo</strong>: el objeto que guardas en la BD, que expones por la API, que la IA usa para decidir. <strong>Eso</strong> es lo que defiendes.</div>
+      <div class="dd-pillars">
+        <span class="dd-pill">OOP</span>
+        <span class="dd-pill">BD</span>
+        <span class="dd-pill">API REST</span>
+        <span class="dd-pill">IA</span>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">La defensa final del Demo Day vale el <strong>20% de tu calificación final</strong>. No es el código lo único que se evalúa hoy: es tu capacidad de <em>explicarlo, justificarlo y sostenerlo bajo preguntas</em>. Ese es el verdadero entregable de un ingeniero.</p>
+  </div>
+</section>
+
+<!-- II: línea de tiempo de la demo -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · La estructura de tu demo</p>
+    <p class="lead">Una buena demo cuenta una historia<br>en <em>seis movimientos.</em></p>
+    <p class="subtle">Tienes pocos minutos y muchos nervios. La diferencia entre una demo memorable y una caótica es el <strong>guion</strong>. Sigue este orden: cada paso construye sobre el anterior, de lo que resuelves a la IA que lo corona. Toca cada parada para ver qué mostrar, cuánto dura y qué decir:</p>
+    <div class="widget" data-tag="Guion de la demo · ~12 min">
+      <div class="tl-stage">
+        <div class="tl-rail" id="tl-rail">
+          <div class="tl-step on" data-t="problema"><div class="tl-dot">1</div><div><div class="tl-name">El problema</div><div class="tl-mins">~1.5 min · contexto</div></div></div>
+          <div class="tl-step" data-t="oop"><div class="tl-dot">2</div><div><div class="tl-name">Arquitectura OOP</div><div class="tl-mins">~2 min · diseño</div></div></div>
+          <div class="tl-step" data-t="bd"><div class="tl-dot">3</div><div><div class="tl-name">Base de datos</div><div class="tl-mins">~2 min · persistencia</div></div></div>
+          <div class="tl-step" data-t="api"><div class="tl-dot">4</div><div><div class="tl-name">API REST · Swagger</div><div class="tl-mins">~2.5 min · en vivo</div></div></div>
+          <div class="tl-step" data-t="ia"><div class="tl-dot">5</div><div><div class="tl-name">Endpoint de IA</div><div class="tl-mins">~2.5 min · el clímax</div></div></div>
+          <div class="tl-step" data-t="cierre"><div class="tl-dot">6</div><div><div class="tl-name">Cierre y reflexión</div><div class="tl-mins">~1.5 min · valor</div></div></div>
+        </div>
+        <div class="tl-panel">
+          <div class="tl-ptag" id="tl-ptag">Movimiento 1 de 6</div>
+          <div class="tl-ptitle" id="tl-ptitle">El problema</div>
+          <div class="tl-pdesc" id="tl-pdesc"></div>
+          <div class="tl-say" id="tl-say"></div>
+        </div>
+      </div>
+      <div class="tl-meter">Demo recorrida: <span id="tl-count">1</span> de 6 movimientos
+        <div class="tl-bar"><div class="tl-fill" id="tl-fill"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III: rúbrica interactiva -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · Cómo te voy a evaluar</p>
+    <p class="lead">Sin sorpresas.<br>Esto es <em>exactamente</em> lo que mido.</p>
+    <p class="subtle">La defensa se evalúa sobre cinco criterios. Conocerlos de antemano no es trampa — es profesionalismo: así sabes dónde poner tu energía. Toca cada criterio y mira qué separa una defensa sobresaliente de una apenas aprobada:</p>
+    <div class="widget" data-tag="Rúbrica de la defensa · 100 pts">
+      <div class="ru-grid" id="ru-grid">
+        <div class="ru-crit on" data-r="integracion"><div class="ru-pts">30</div><div class="ru-cn">Integración<br>técnica</div></div>
+        <div class="ru-crit" data-r="demo"><div class="ru-pts">25</div><div class="ru-cn">Demo en<br>vivo</div></div>
+        <div class="ru-crit" data-r="defensa"><div class="ru-pts">25</div><div class="ru-cn">Defensa<br>oral</div></div>
+        <div class="ru-crit" data-r="ia"><div class="ru-pts">10</div><div class="ru-cn">Uso de<br>IA</div></div>
+        <div class="ru-crit" data-r="comunicacion"><div class="ru-pts">10</div><div class="ru-cn">Comunicación</div></div>
+      </div>
+      <div class="ru-panel">
+        <div class="ru-ptitle" id="ru-ptitle"></div>
+        <div id="ru-rows"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: banco de preguntas -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · Las preguntas que voy a hacer</p>
+    <p class="lead">La defensa empieza<br>donde termina la <em>demo.</em></p>
+    <p class="subtle">Cuando bajes el telón, vienen las preguntas. No son trampas: buscan confirmar que <strong>entiendes lo que construiste</strong>. Aquí tienes el banco real — toca cada tarjeta para ver la pregunta completa y cómo prepararla. Si puedes responder estas seis, puedes responder casi cualquier cosa:</p>
+    <div class="widget" data-tag="Click → la pregunta y cómo prepararla">
+      <div class="qa-grid" id="qa-grid">
+        <div class="qa-card" data-q="q1">
+          <div class="qa-cat">Arquitectura · OOP</div>
+          <div class="qa-q">Por qué esta clase y no una función suelta? Qué encapsula?</div>
+          <div class="qa-a"><strong>Qué busco:</strong> que justifiques tu diseño, no que lo recites. Prepárate para señalar una clase concreta y explicar qué <em>responsabilidad única</em> tiene, qué atributos protege y por qué son privados.<span class="tip">prepárate: abre tu diagrama de clases y ten lista UNA decisión de diseño que defenderías.</span></div>
+        </div>
+        <div class="qa-card" data-q="q2">
+          <div class="qa-cat">Persistencia · BD</div>
+          <div class="qa-q">Qué pasa con tus datos cuando apagas el servidor?</div>
+          <div class="qa-a"><strong>Qué busco:</strong> que distingas estado en memoria de estado persistido. Muéstrame la tabla, una consulta <code>SELECT</code> real y explica cómo un objeto Python se vuelve fila y vuelve a ser objeto.<span class="tip">prepárate: ten un cliente de BD abierto con datos cargados, listo para consultar en vivo.</span></div>
+        </div>
+        <div class="qa-card" data-q="q3">
+          <div class="qa-cat">API REST</div>
+          <div class="qa-q">Qué código HTTP devuelve este endpoint si le mando datos inválidos?</div>
+          <div class="qa-a"><strong>Qué busco:</strong> que conozcas tu contrato. 200/201 en éxito, 400 en datos malos, 404 si no existe, 422 de validación. Demuéstralo desde Swagger mandando una petición que falle a propósito.<span class="tip">prepárate: ten en /docs una petición "buena" y una "mala" guardadas.</span></div>
+        </div>
+        <div class="qa-card" data-q="q4">
+          <div class="qa-cat">Inteligencia Artificial</div>
+          <div class="qa-q">Qué hace tu endpoint de IA exactamente, y qué NO hace?</div>
+          <div class="qa-a"><strong>Qué busco:</strong> honestidad técnica. Explica qué modelo o servicio usas, qué entra, qué sale y dónde están sus límites. Una IA con criterio sabe decir "esto lo decide el modelo, esto lo valido yo".<span class="tip">prepárate: ten una entrada de ejemplo y di explícitamente qué pasa si el modelo se equivoca.</span></div>
+        </div>
+        <div class="qa-card" data-q="q5">
+          <div class="qa-cat">Integración</div>
+          <div class="qa-q">Sigue el camino de UN dato: del clic del usuario a la respuesta.</div>
+          <div class="qa-a"><strong>Qué busco:</strong> que veas tu sistema como un todo. Petición → ruta de la API → objeto del dominio → consulta a la BD → (si aplica) IA → respuesta JSON. Si puedes narrar ese viaje, dominas la arquitectura.<span class="tip">prepárate: ensaya esta narración en voz alta una vez. Es la pregunta estrella.</span></div>
+        </div>
+        <div class="qa-card" data-q="q6">
+          <div class="qa-cat">Uso responsable de IA</div>
+          <div class="qa-q">Qué parte de este código escribió la IA, y la entiendes?</div>
+          <div class="qa-a"><strong>Qué busco:</strong> que defiendas tu código sin importar quién lo tecleó. Te pediré abrir un archivo al azar y explicar una función línea por línea. <strong>Si la IA lo hizo, tú lo defiendes.</strong><span class="tip">prepárate: si hay código que no entiendes, hoy es tarde para pedírselo a la IA — pídele que te lo explique ANTES.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: tips para la demo en vivo -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Que no se caiga la demo</p>
+    <p class="lead">Lo que puede fallar, <em>fallará</em><br>— a menos que tengas plan B.</p>
+    <p class="subtle">El demo en vivo es lo más impresionante y lo más frágil. El wifi se cae, la API se cuelga, la BD está vacía. Los profesionales no improvisan: <strong>preparan</strong>. Aquí lo que separa una demo sólida de un naufragio:</p>
+    <div class="tip-grid">
+      <div class="tip-col no">
+        <div class="tip-h">✗ Lo que hunde una demo</div>
+        <div class="tip-li"><span class="mk">✗</span><span>Empezar a <strong>instalar dependencias</strong> o correr migraciones frente a todos.</span></div>
+        <div class="tip-li"><span class="mk">✗</span><span>Una <strong>base de datos vacía</strong>: no hay nada que mostrar en los reportes.</span></div>
+        <div class="tip-li"><span class="mk">✗</span><span>Depender del <strong>wifi del campus</strong> para una API o un modelo en la nube.</span></div>
+        <div class="tip-li"><span class="mk">✗</span><span>Buscar a ciegas el endpoint correcto mientras el reloj corre.</span></div>
+        <div class="tip-li"><span class="mk">✗</span><span>Improvisar datos de prueba y que la <strong>IA reciba basura</strong> en vivo.</span></div>
+      </div>
+      <div class="tip-col si">
+        <div class="tip-h">✓ Plan B de profesional</div>
+        <div class="tip-li"><span class="mk">✓</span><span>Llega con <strong>todo corriendo</strong>: servidor levantado, <span class="inlinecode">/docs</span> ya abierto.</span></div>
+        <div class="tip-li"><span class="mk">✓</span><span>Carga <strong>datos de prueba (seed)</strong> realistas antes de empezar.</span></div>
+        <div class="tip-li"><span class="mk">✓</span><span>Ten un <strong>video corto o capturas</strong> de respaldo por si algo cae.</span></div>
+        <div class="tip-li"><span class="mk">✓</span><span>Prepara <strong>peticiones de ejemplo guardadas</strong> (buena y mala) en Swagger.</span></div>
+        <div class="tip-li"><span class="mk">✓</span><span>Prueba la demo completa <strong>una vez anoche</strong> en las mismas condiciones.</span></div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem"><strong>Regla de oro:</strong> si algo falla en vivo, <em>no te paralices</em>. Di "tengo un respaldo de esto", muéstralo y sigue. Saber recuperarte de un error suma más que una demo perfecta sin alma.</p>
+  </div>
+</section>
+
+<!-- VI: el viaje de una petición -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · Sigue el camino de un dato</p>
+    <p class="lead">"Sígueme un dato:<br>del clic a la <em>respuesta.</em>"</p>
+    <p class="subtle">Es mi pregunta estrella — la que más revela si dominas tu arquitectura. Una petición no toca un pilar: los <strong>atraviesa todos</strong>. Aquí está el viaje completo de un dato por tu sistema. Pulsa <strong style="color:var(--ochre)">▶ Animar</strong> o avanza paso a paso, y ensaya narrarlo en voz alta:</p>
+    <div class="widget" data-tag="El viaje de una petición · 6 paradas">
+      <div class="fl-explain" id="fl-explain">El cliente hace clic. Ese clic se vuelve una petición HTTP que recorre tu sistema entero y regresa convertida en respuesta. <strong>Cada parada es un pilar del curso.</strong></div>
+      <div class="fl-scroll">
+        <div class="fl-track" id="fl-track">
+          <div class="fl-wire"><div class="fl-wire-fill" id="fl-wire-fill"></div></div>
+          <div class="fl-node" data-f="0"><div class="fl-icon">cliente</div><div class="fl-nname">Clic</div><div class="fl-pill">web / app</div></div>
+          <div class="fl-node" data-f="1"><div class="fl-icon">API REST</div><div class="fl-nname">Ruta</div><div class="fl-pill">@app.post</div></div>
+          <div class="fl-node" data-f="2"><div class="fl-icon">OOP</div><div class="fl-nname">Objeto</div><div class="fl-pill">dominio</div></div>
+          <div class="fl-node" data-f="3"><div class="fl-icon">BD</div><div class="fl-nname">Persistir</div><div class="fl-pill">SQL</div></div>
+          <div class="fl-node" data-f="4"><div class="fl-icon">IA</div><div class="fl-nname">Inferir</div><div class="fl-pill">modelo</div></div>
+          <div class="fl-node" data-f="5"><div class="fl-icon">respuesta</div><div class="fl-nname">JSON</div><div class="fl-pill">200 OK</div></div>
+        </div>
+      </div>
+      <div class="fl-desc">
+        <div class="fl-num" id="fl-num">·</div>
+        <div class="fl-txt" id="fl-txt">Pulsa <strong>Animar</strong> o avanza paso a paso para recorrer el viaje completo de la petición.</div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="fl-reset">⟲ Reset</button>
+        <button class="btn" id="fl-prev">◀ Atrás</button>
+        <button class="btn on" id="fl-next">Siguiente ▶</button>
+        <button class="btn btn-olive" id="fl-play">▶ Animar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VII: checklist del entregable final -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · El entregable final</p>
+    <p class="lead">Antes de presentar,<br>todo debe estar <em>en su lugar.</em></p>
+    <p class="subtle">El Demo Day no es solo hablar: hay un entregable. Repo en GitHub, proyecto corriendo y documentación mínima. Marca tu progreso — si todo está en verde, llegas listo a defender:</p>
+    <div class="widget" data-tag="Checklist de cierre · proyecto integrador">
+      <div class="ck-progress">Listo para defender: <span id="ck-count">0</span> de 12 elementos
+        <div class="ck-bar"><div class="ck-fill" id="ck-fill"></div></div>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-t">El código · los 4 pilares</div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>OOP:</strong> clases con responsabilidad clara, atributos privados y métodos públicos como puerta de entrada</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>BD integrada:</strong> tus objetos se guardan y se leen de la base; no todo vive en memoria</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>API REST:</strong> endpoints con verbos correctos (<code>GET</code>/<code>POST</code>) y códigos HTTP coherentes</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>Endpoint de IA:</strong> al menos uno funcional, con entrada y salida claras</div></div>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-t">El repositorio · GitHub</div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>README</strong> con descripción, cómo instalar y cómo correr el proyecto</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>requirements.txt</strong> (o equivalente) — que cualquiera pueda levantarlo</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>.gitignore</strong> sin secretos ni claves de API subidas al repo</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>Commits con historia</strong> — se nota un proyecto trabajado por sprints</div></div>
+      </div>
+      <div class="ck-group">
+        <div class="ck-group-t">La demo · listo para presentar</div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>Datos de prueba (seed)</strong> cargados y realistas</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>Swagger / <code>/docs</code></strong> accesible y con peticiones de ejemplo listas</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>Plan B</strong> (video o capturas) por si algo falla en vivo</div></div>
+        <div class="ck-item"><div class="ck-box"></div><div class="ck-txt"><strong>Guion ensayado</strong> — los 6 movimientos de la sección II, una vez en voz alta</div></div>
+      </div>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">La IA en tu proyecto · el contrato del curso</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Usaste la IA para <em>explicarte</em> un error, sugerir un enfoque o revisar tu diseño — <em>y entiendes el resultado</em></span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Tu endpoint de IA tiene un propósito claro y sabes decir qué decide el modelo y qué validas tú</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Hay archivos enteros que no puedes explicar — <em>lo descubriré en la primera pregunta</em></span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Olvidar la regla que repetimos todo el curso: <strong>si la IA lo hizo, tú lo defiendes.</strong></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIII: reflexión / cierre del curso -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · Lo que te llevas del curso</p>
+    <p class="lead">Empezaste con un <em>print.</em><br>Terminas con un sistema <em>completo.</em></p>
+    <p class="subtle">Antes de las calificaciones, un momento de reflexión. Este proyecto no son cuatro temas sueltos: es la prueba de que sabes <strong>integrar</strong>. Toca cada pilar y mira cuánto camino recorriste — y cómo se conectan en tu Demo Day:</p>
+    <div class="widget" data-tag="Los 4 pilares · de dónde a dónde">
+      <div class="ref-stage">
+        <div class="ref-pillars" id="ref-pillars">
+          <div class="ref-p on" data-p="oop"><div class="ref-pn">OOP</div><div class="ref-pmeta">de variables sueltas → a objetos con responsabilidad</div></div>
+          <div class="ref-p" data-p="bd"><div class="ref-pn">Base de datos</div><div class="ref-pmeta">de listas en memoria → a datos que perduran</div></div>
+          <div class="ref-p" data-p="api"><div class="ref-pn">API REST</div><div class="ref-pmeta">de un script local → a un servicio que el mundo consume</div></div>
+          <div class="ref-p" data-p="ia"><div class="ref-pn">IA con criterio</div><div class="ref-pmeta">de copiar respuestas → a usarla como herramienta</div></div>
+        </div>
+        <div class="ref-panel">
+          <div class="ref-code" id="ref-code"></div>
+          <div class="ref-desc" id="ref-desc"></div>
+        </div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">La IA seguirá a tu lado toda tu carrera. La diferencia entre quien la usa con criterio y quien depende de ella es exactamente lo que el Demo Day mide: <em>¿puedes defender lo que entregas?</em> Si la respuesta es sí, este curso cumplió su misión.</p>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">IX · El cierre del cuatrimestre</p>
+    <p class="lead">Sube al frente.<br>Corre tu sistema. <em>Defiéndelo.</em></p>
+    <div class="tarea">
+      <div class="tarea-tag">DEMO DAY · Defensa final</div>
+      <ol>
+        <li><strong>Llega con todo corriendo:</strong> servidor levantado, <code>/docs</code> abierto, base de datos con datos de prueba.</li>
+        <li><strong>Presenta tu demo</strong> siguiendo los 6 movimientos: problema → OOP → BD → API/Swagger → endpoint de IA → cierre.</li>
+        <li><strong>Defiende bajo preguntas:</strong> responde por tu arquitectura, tus datos, tu contrato HTTP y tu IA. Explica cualquier archivo línea por línea.</li>
+        <li><strong>Cierra con la reflexión:</strong> qué resolviste, qué aprendiste de integrar los 4 pilares y cómo usaste la IA con criterio.</li>
+        <li>Esta defensa vale el <strong>20% de tu calificación final</strong>. Entrega de calificaciones y cierre del cuatrimestre al terminar las presentaciones.</li>
+        <li><strong>¡Felicidades!</strong> Empezaste escribiendo tu primer objeto y hoy defiendes un sistema full-stack con IA. Eso ya no es de alumno — es de ingeniero. Nos vemos del otro lado. 🎓</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: línea de tiempo de la demo ─────────────────────────
+const tlData={
+  problema:{n:1,title:'El problema',
+    desc:'Arranca con el <strong>porqué</strong>, no con el código. En 90 segundos: ¿qué dolor resuelve tu sistema y para quién? Sin contexto, lo demás no significa nada. Una frase clara vale más que tres minutos de detalles técnicos.',
+    say:'<b>Di:</b> "Mi proyecto resuelve ___ para ___. Hoy ese problema se hace así, y tiene este costo. Mi sistema lo cambia así."'},
+  oop:{n:2,title:'Arquitectura OOP',
+    desc:'Muestra tu <strong>diagrama de clases</strong> y señala 2 o 3 clases clave. Explica la <strong>responsabilidad</strong> de cada una y cómo se relacionan. No leas todas las clases: elige las que cuentan la historia del diseño.',
+    say:'<b>Di:</b> "Esta clase encapsula ___; estos atributos son privados porque ___; se relaciona con ___ por asociación."'},
+  bd:{n:3,title:'Base de datos',
+    desc:'Demuestra que tus datos <strong>perduran</strong>. Abre el cliente de BD, muestra una tabla con datos reales y corre un <code>SELECT</code> en vivo. Explica el puente: cómo un objeto Python se vuelve fila y vuelve a salir como objeto.',
+    say:'<b>Di:</b> "Cuando creo un objeto y lo guardo, esta fila aparece. Si apago el servidor y lo prendo, sigue aquí."'},
+  api:{n:4,title:'API REST · Swagger',
+    desc:'El corazón en vivo. Abre <code>/docs</code> y ejecuta una petición real: un <code>POST</code> que crea y un <code>GET</code> que consulta. Muestra el <strong>código HTTP</strong> de respuesta. Manda una petición mala a propósito y enseña el 400/422.',
+    say:'<b>Di:</b> "Este POST crea un recurso y devuelve 201. Si mando datos inválidos —miren— responde 422, no se rompe."'},
+  ia:{n:5,title:'Endpoint de IA',
+    desc:'El clímax. Ejecuta tu endpoint con IA con una entrada de ejemplo y muestra la salida. Sé <strong>honesto</strong> sobre qué decide el modelo y qué validas tú. Aquí es donde tu proyecto deja de ser un CRUD y se vuelve inteligente.',
+    say:'<b>Di:</b> "Le mando esto, la IA devuelve esto. El modelo decide ___; yo valido ___ por si se equivoca."'},
+  cierre:{n:6,title:'Cierre y reflexión',
+    desc:'Aterriza el <strong>valor</strong>. Recuerda el problema del inicio y cómo lo resolviste integrando los 4 pilares. Una frase de reflexión sobre el uso de IA con criterio. Cierra fuerte: la última impresión es la que queda.',
+    say:'<b>Di:</b> "Empecé con el problema ___ y lo resolví integrando OOP, BD, API e IA. Lo que más me llevo es ___."'}
+};
+const tlOrder=['problema','oop','bd','api','ia','cierre'];
+let tlSeen=new Set(['problema']);
+function tlRender(k){
+  const d=tlData[k];
+  $('tl-ptag').textContent='Movimiento '+d.n+' de 6';
+  $('tl-ptitle').textContent=d.title;
+  $('tl-pdesc').innerHTML=d.desc;
+  $('tl-say').innerHTML=d.say;
+  tlSeen.add(k);
+  $('tl-count').textContent=tlSeen.size;
+  $('tl-fill').style.width=(tlSeen.size/tlOrder.length*100)+'%';
+}
+document.querySelectorAll('.tl-step').forEach(s=>{
+  s.addEventListener('click',()=>{
+    document.querySelectorAll('.tl-step').forEach(x=>x.classList.remove('on'));
+    s.classList.add('on');
+    s.classList.add('done');
+    tlRender(s.dataset.t);
+  });
+});
+tlRender('problema');
+
+// ─── W2: rúbrica de la defensa ──────────────────────────────
+const ruData={
+  integracion:{title:'Integración técnica <span>· 30 pts</span>',rows:[
+    {lv:'top',l:'27–30',t:'Los 4 pilares funcionan <em>conectados</em>: el objeto se persiste, se expone por la API y la IA lo usa.'},
+    {lv:'mid',l:'18–26',t:'Los 4 pilares están, pero algunos viven aislados o uno está a medias.'},
+    {lv:'low',l:'0–17',t:'Falta un pilar completo o el sistema no corre como un todo.'}]},
+  demo:{title:'Demo en vivo <span>· 25 pts</span>',rows:[
+    {lv:'top',l:'22–25',t:'Demo fluida, con datos reales, recuperándote con gracia de cualquier imprevisto.'},
+    {lv:'mid',l:'14–21',t:'La demo funciona pero con tropiezos, o dependiste de un solo intento sin plan B.'},
+    {lv:'low',l:'0–13',t:'La demo no corre o se cae sin respaldo que mostrar.'}]},
+  defensa:{title:'Defensa oral <span>· 25 pts</span>',rows:[
+    {lv:'top',l:'22–25',t:'Respondes con seguridad, explicas cualquier archivo línea por línea, justificas tus decisiones.'},
+    {lv:'mid',l:'14–21',t:'Respondes lo esencial pero dudas en el detalle o en el porqué de tu diseño.'},
+    {lv:'low',l:'0–13',t:'No puedes explicar partes de tu propio código.'}]},
+  ia:{title:'Uso de IA con criterio <span>· 10 pts</span>',rows:[
+    {lv:'top',l:'9–10',t:'Sabes qué hizo la IA, lo entiendes y distingues lo que decide el modelo de lo que validas tú.'},
+    {lv:'mid',l:'5–8',t:'Usaste IA con cierto criterio pero hay zonas que no dominas del todo.'},
+    {lv:'low',l:'0–4',t:'Código que no puedes defender. Si la IA lo hizo, tú lo defiendes.'}]},
+  comunicacion:{title:'Comunicación <span>· 10 pts</span>',rows:[
+    {lv:'top',l:'9–10',t:'Cuentas una historia clara, dentro del tiempo, con la atención de la sala.'},
+    {lv:'mid',l:'5–8',t:'Se entiende, pero te excedes en tiempo o te pierdes en detalles.'},
+    {lv:'low',l:'0–4',t:'Difícil de seguir, sin hilo conductor.'}]}
+};
+function ruRender(k){
+  const d=ruData[k];
+  $('ru-ptitle').innerHTML=d.title;
+  $('ru-rows').innerHTML=d.rows.map(r=>'<div class="ru-row"><span class="lv '+r.lv+'">'+r.l+'</span><em>'+r.t+'</em></div>').join('');
+}
+document.querySelectorAll('.ru-crit').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.ru-crit').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    ruRender(c.dataset.r);
+  });
+});
+ruRender('integracion');
+
+// ─── W3: banco de preguntas (acordeón) ──────────────────────
+document.querySelectorAll('.qa-card').forEach(card=>{
+  card.addEventListener('click',()=>{card.classList.toggle('open');});
+});
+
+// ─── W5: checklist entregable ───────────────────────────────
+const ckItems=document.querySelectorAll('.ck-item');
+function ckUpdate(){
+  const done=document.querySelectorAll('.ck-item.done').length;
+  $('ck-count').textContent=done;
+  $('ck-fill').style.width=(done/ckItems.length*100)+'%';
+}
+ckItems.forEach(it=>{
+  it.addEventListener('click',()=>{it.classList.toggle('done');ckUpdate();});
+});
+ckUpdate();
+
+// ─── W4b: el viaje de una petición ──────────────────────────
+const flSteps=[
+  {n:1,txt:'El <strong>cliente</strong> (una web, una app móvil) hace clic. Ese gesto se vuelve una <strong>petición HTTP</strong> con un verbo y un cuerpo: <code>POST /pedidos</code> con datos en JSON. Tu sistema aún no sabe nada — todo empieza aquí.'},
+  {n:2,txt:'La petición llega a tu <strong>API REST</strong>. La ruta correcta la captura —<code>@app.post("/pedidos")</code>— y FastAPI <strong>valida la entrada</strong> contra tu esquema. Si los datos son inválidos, aquí mismo responde 422 sin tocar nada más.'},
+  {n:3,txt:'Los datos validados se convierten en un <strong>objeto de tu dominio</strong>: un <code>Pedido</code> con sus reglas. Aquí vive tu <strong>OOP</strong> — el objeto protege su estado y aplica su lógica (calcular total, aplicar descuento). Datos crudos se vuelven comportamiento.'},
+  {n:4,txt:'El objeto necesita <strong>perdurar</strong>. El repositorio lo traduce a un <code>INSERT</code> y lo guarda en la <strong>base de datos</strong>. Ahora existe más allá de esta petición: si apagas el servidor, el dato sigue ahí. Persistencia, el tercer pilar.'},
+  {n:5,txt:'Si el endpoint lo pide, entra la <strong>IA</strong>: el modelo recibe el dato y devuelve una predicción o clasificación. Tú <strong>validas su salida</strong> — la IA sugiere, tu código decide. El cuarto pilar, usado con criterio.'},
+  {n:6,txt:'Todo regresa convertido en una <strong>respuesta JSON</strong> con su código <code>201 Created</code> o <code>200 OK</code>. El cliente recibe el resultado y cierra el ciclo. <strong>Una petición atravesó los cuatro pilares</strong> — y tú puedes narrar cada parada. Eso es dominar tu arquitectura.'}
+];
+const flNodes=document.querySelectorAll('.fl-node');
+let flIdx=-1,flTimer=null;
+function flRender(){
+  flNodes.forEach((nd,i)=>{
+    nd.classList.toggle('lit',i===flIdx);
+    nd.classList.toggle('passed',i<flIdx);
+  });
+  $('fl-wire-fill').style.width=(flIdx<0?0:(flIdx/(flSteps.length-1)*100))+'%';
+  if(flIdx>=0){
+    $('fl-num').textContent=flSteps[flIdx].n;
+    $('fl-txt').innerHTML=flSteps[flIdx].txt;
+  }else{
+    $('fl-num').textContent='·';
+    $('fl-txt').innerHTML='Pulsa <strong>Animar</strong> o avanza paso a paso para recorrer el viaje completo de la petición.';
+  }
+}
+function flStop(){if(flTimer){clearInterval(flTimer);flTimer=null;$('fl-play').textContent='▶ Animar';}}
+flNodes.forEach(nd=>{nd.addEventListener('click',()=>{flStop();flIdx=parseInt(nd.dataset.f,10);flRender();});});
+$('fl-next').addEventListener('click',()=>{flStop();if(flIdx<flSteps.length-1){flIdx++;flRender();}});
+$('fl-prev').addEventListener('click',()=>{flStop();if(flIdx>-1){flIdx--;flRender();}});
+$('fl-reset').addEventListener('click',()=>{flStop();flIdx=-1;flRender();});
+$('fl-play').addEventListener('click',()=>{
+  if(flTimer){flStop();return;}
+  if(flIdx>=flSteps.length-1){flIdx=-1;flRender();}
+  $('fl-play').textContent='❚❚ Pausa';
+  flTimer=setInterval(()=>{
+    if(flIdx<flSteps.length-1){flIdx++;flRender();}
+    else flStop();
+  },1700);
+});
+flRender();
+
+// ─── W6: reflexión · los 4 pilares ──────────────────────────
+const refData={
+  oop:{
+    code:['<span class="cm"># Sesión 2-5: el corazón del curso</span>',
+      '<span class="kw">class</span> <span class="ty">Pedido</span>:',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, cliente, total):',
+      '        <span class="self">self</span>._total = total  <span class="cm"># encapsulado</span>',
+      '    <span class="kw">def</span> aplicar_descuento(<span class="self">self</span>, pct):',
+      '        <span class="self">self</span>._total *= (1 - pct)'],
+    desc:'Empezaste con <strong>variables sueltas</strong> y terminaste modelando el mundo con objetos que <strong>protegen su estado</strong> y exponen comportamiento. Esto es la base sobre la que se apoya todo lo demás del proyecto.'},
+  bd:{
+    code:['<span class="cm"># de la lista en RAM a la fila que perdura</span>',
+      'cursor.execute(',
+      '    <span class="str">"INSERT INTO pedidos (cliente, total)"</span>',
+      '    <span class="str">"VALUES (?, ?)"</span>, (p.cliente, p.total))',
+      'conn.commit()  <span class="cm"># ahora sí, perdura</span>'],
+    desc:'Tus objetos dejaron de morir al cerrar el programa. Aprendiste a <strong>traducir un objeto a una fila</strong> y de vuelta — la persistencia que separa un juguete de un sistema real.'},
+  api:{
+    code:['<span class="cm"># tu sistema, abierto al mundo</span>',
+      '<span class="kw">@app</span>.post(<span class="str">"/pedidos"</span>)',
+      '<span class="kw">def</span> crear(p: <span class="ty">PedidoIn</span>):',
+      '    nuevo = repo.guardar(p)',
+      '    <span class="kw">return</span> nuevo  <span class="cm"># 201 Created</span>'],
+    desc:'Tu código dejó de correr solo en tu máquina. Con una <strong>API REST</strong> cualquier cliente —una web, una app, otro servicio— puede consumir lo que construiste. Esto es ingeniería de software de verdad.'},
+  ia:{
+    code:['<span class="cm"># el pilar que corona el proyecto</span>',
+      '<span class="kw">@app</span>.post(<span class="str">"/predecir"</span>)',
+      '<span class="kw">def</span> predecir(datos: <span class="ty">EntradaIA</span>):',
+      '    pred = modelo.predict(datos)',
+      '    <span class="kw">return</span> {<span class="str">"resultado"</span>: pred}'],
+    desc:'Integraste IA <strong>con criterio</strong>: no como una caja mágica, sino como una herramienta con entradas, salidas y límites que conoces. Y sobre todo: <strong>código que puedes defender, lo haya tecleado quien lo haya tecleado.</strong>'}
+};
+function refRender(k){
+  const d=refData[k];
+  $('ref-code').innerHTML=d.code.map(l=>'<div>'+l+'</div>').join('');
+  $('ref-desc').innerHTML=d.desc;
+}
+document.querySelectorAll('.ref-p').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.ref-p').forEach(x=>x.classList.remove('on'));
+    p.classList.add('on');
+    refRender(p.dataset.p);
+  });
+});
+refRender('oop');
+</script>
+</body>
+</html>

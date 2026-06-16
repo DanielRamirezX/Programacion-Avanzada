@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión IX — El cruce de caminos — Programación Avanzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EFE6D2;--paper-deep:#E6DBC2;--ink:#2A1D14;--ink-soft:#4A3A2C;--blood:#A02418;--blood-dark:#6E1810;--ochre:#B5852A;--olive:#5D6638;--line:rgba(42,29,20,.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
+
+.course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+.course-nav a:hover{color:var(--blood);}
+.course-nav a.back::before{content:'← ';color:var(--blood);}
+.course-nav a.next::after{content:' →';color:var(--blood);}
+.course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
+
+section{position:relative;padding:5rem 2rem;}
+.wrap{max-width:1080px;margin:0 auto;}
+.wrap-n{max-width:720px;margin:0 auto;}
+.marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+.marker::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
+.hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;width:100%;}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
+.hero h1 em{font-style:italic;color:var(--blood);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+
+.lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.lead em{font-style:italic;color:var(--blood);}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle strong{color:var(--ink);}
+.inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
+
+.widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
+.widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
+.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
+.w-prompt em{color:var(--blood);font-style:italic;}
+.w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.btn:hover{border-color:var(--blood);color:var(--blood);}
+.btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* ═══════════════════════════════════════════════════════════════
+   WIDGETS DE LA SESIÓN IX — Control de flujo (if / elif / else)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* W1: animador del flujo if / elif / else (la calificación que cae) */
+.fl-stage{display:grid;grid-template-columns:1.05fr .95fr;gap:1.5rem;align-items:start;}
+.fl-track{background:var(--ink);padding:1.6rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.95;min-height:300px;position:relative;overflow:hidden;}
+.fl-drop{position:absolute;top:.6rem;left:50%;transform:translateX(-50%);background:var(--ochre);color:var(--ink);font-weight:700;padding:.25rem .7rem;border-radius:3px;font-size:.78rem;letter-spacing:.05em;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:top .55s cubic-bezier(.5,.05,.5,.95);z-index:3;}
+.fl-branch{display:block;padding:.18rem .5rem;border-radius:3px;color:rgba(239,230,210,.55);transition:all .35s;border-left:2px solid transparent;}
+.fl-branch .kw{color:#D4956A;font-style:italic;}
+.fl-branch .num{color:#C9A961;}
+.fl-branch .ret{color:#9FBF9C;}
+.fl-branch.tested{color:rgba(239,230,210,.92);border-left-color:var(--ochre);background:rgba(181,133,42,.12);}
+.fl-branch.failed{color:rgba(224,138,130,.7);border-left-color:rgba(160,36,24,.5);}
+.fl-branch.taken{color:#fff;border-left-color:var(--olive);background:rgba(93,102,56,.28);box-shadow:inset 0 0 0 1px rgba(93,102,56,.5);}
+.fl-side{background:var(--paper);border:1px solid var(--line);padding:1.5rem;min-height:300px;display:flex;flex-direction:column;gap:.9rem;}
+.fl-grade{font-family:'Cormorant Garamond',serif;font-size:2.6rem;color:var(--blood);line-height:1;}
+.fl-step{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5;color:var(--ink-soft);}
+.fl-step strong{color:var(--ink);font-style:normal;font-weight:600;}
+.fl-result{margin-top:auto;padding:1rem 1.2rem;background:var(--paper-deep);border-left:3px solid var(--olive);font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--olive);opacity:0;transition:opacity .4s;}
+.fl-result.show{opacity:1;}
+
+/* W2: toggle if-anidado → guard clauses */
+.gc-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:start;}
+.gc-col{background:var(--ink);overflow:hidden;border:1px solid var(--line);}
+.gc-head{background:rgba(239,230,210,.06);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.65rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(239,230,210,.12);}
+.gc-head .badge{font-size:.6rem;}
+.gc-head .badge.bad{color:#E08A82;}
+.gc-head .badge.good{color:#9FBF9C;}
+.gc-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;overflow-x:auto;min-height:300px;color:var(--paper);}
+.gc-ln{white-space:pre;display:block;border-radius:2px;padding:0 .2rem;transition:background .4s;}
+.gc-ln.deep{background:rgba(160,36,24,.14);}
+.gc-ln.flat{background:rgba(93,102,56,.16);}
+.gc-ln .kw{color:#D4956A;font-style:italic;}
+.gc-ln .str{color:#C9A961;}
+.gc-ln .num{color:#C9A961;}
+.gc-ln .cm{color:rgba(239,230,210,.42);font-style:italic;}
+.gc-ln .ret{color:#9FBF9C;}
+.gc-ln .fn{color:#A6C2D6;}
+.gc-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-top:1.4rem;}
+.gc-metric{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1rem 1.1rem;text-align:center;}
+.gc-metric .mv{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--blood);line-height:1;transition:color .3s;}
+.gc-metric.better .mv{color:var(--olive);}
+.gc-metric .ml{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);margin-top:.4rem;}
+.gc-note{margin-top:1.3rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.gc-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+
+/* W3: comparativa 4 lenguajes */
+.cmp-body{background:var(--ink);padding:1.5rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.95;min-height:230px;overflow-x:auto;}
+.cmp-ln{white-space:pre;display:block;color:var(--paper);}
+.cmp-ln .kw{color:#D4956A;font-style:italic;}
+.cmp-ln .str{color:#C9A961;}
+.cmp-ln .num{color:#C9A961;}
+.cmp-ln .cm{color:rgba(239,230,210,.42);font-style:italic;}
+.cmp-ln .fn{color:#A6C2D6;}
+.cmp-tip{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
+.cmp-tip strong{color:var(--ink);font-style:normal;font-weight:600;}
+.cmp-tip code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .35rem;border:1px solid var(--line);color:var(--blood);}
+
+/* W4: clasificador de calificación (Práctica 2) */
+.clf-stage{display:grid;grid-template-columns:1fr 1.05fr;gap:1.5rem;align-items:stretch;}
+.clf-left{display:flex;flex-direction:column;gap:1rem;}
+.clf-dial{background:var(--paper);border:1px solid var(--line);padding:1.6rem;text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;}
+.clf-num{font-family:'Cormorant Garamond',serif;font-size:5rem;line-height:.9;color:var(--blood);transition:color .35s;}
+.clf-num.aprob{color:var(--olive);}
+.clf-cap{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-top:.6rem;}
+.clf-btns{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;}
+.clf-panel{background:var(--ink);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;justify-content:center;}
+.clf-nivel{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ochre);}
+.clf-titulo{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--paper);line-height:1.05;}
+.clf-estado{display:inline-block;align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .7rem;border-radius:3px;}
+.clf-estado.ok{background:rgba(93,102,56,.3);color:#9FBF9C;border:1px solid var(--olive);}
+.clf-estado.no{background:rgba(160,36,24,.25);color:#E08A82;border:1px solid var(--blood);}
+.clf-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;line-height:1.5;color:rgba(239,230,210,.88);}
+.clf-msg strong{color:#C9A961;font-style:normal;font-weight:600;}
+.clf-code{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(239,230,210,.6);background:rgba(239,230,210,.06);border-left:2px solid var(--ochre);padding:.6rem .9rem;line-height:1.6;}
+.clf-code b{color:#D4956A;font-weight:400;}
+
+/* W5: reglas IA-revisor ✓/✗ */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);font-style:italic;}
+
+/* registro acepto/rechazo (entregable de participación) */
+.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.rev-card{background:var(--paper);border:1px solid var(--line);padding:1.4rem;cursor:pointer;transition:all .25s;border-left:3px solid var(--line);}
+.rev-card:hover{border-left-color:var(--ink-soft);}
+.rev-card.acepto{border-left-color:var(--olive);background:rgba(93,102,56,.07);}
+.rev-card.rechazo{border-left-color:var(--blood);background:rgba(160,36,24,.05);}
+.rev-sug{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;color:var(--ink);line-height:1.4;}
+.rev-meta{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);margin-top:.5rem;}
+.rev-verdict{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;margin-top:.9rem;display:flex;gap:.5rem;}
+.rev-verdict button{flex:1;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;padding:.45rem;background:var(--paper-deep);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;text-transform:uppercase;transition:all .2s;}
+.rev-verdict button:hover{border-color:var(--ink-soft);}
+.rev-card.acepto .vb-ok{background:var(--olive);color:var(--paper);border-color:var(--olive);}
+.rev-card.rechazo .vb-no{background:var(--blood);color:var(--paper);border-color:var(--blood);}
+.rev-tally{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink-soft);margin-top:1.2rem;text-align:center;}
+.rev-tally strong{color:var(--ink);}
+
+/* caso / práctica 2 */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.caso-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.caso p{margin-bottom:1rem;color:var(--ink-soft);}
+.caso p:last-child{margin-bottom:0;}
+.caso strong{color:var(--ink);}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+
+/* columnas NO / SÍ buenas prácticas */
+.np-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
+.np-card{background:var(--paper);border:1px solid var(--line);padding:1.5rem;}
+.np-card.no{border-top:3px solid var(--blood);}
+.np-card.si{border-top:3px solid var(--olive);}
+.np-h{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.8rem;}
+.np-card.no .np-h{color:var(--blood);}
+.np-card.si .np-h{color:var(--olive);}
+.np-card ul{margin-left:1.1rem;color:var(--ink-soft);font-size:.96rem;line-height:1.55;}
+.np-card li{padding:.2rem 0;}
+.np-card li strong{color:var(--ink);}
+
+.cierre{background:var(--paper-deep);}
+.tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
+.tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.tarea ol,.tarea ul{margin-left:1.3rem;color:var(--ink-soft);}
+.tarea li{padding:.4rem 0;font-size:1.05rem;}
+.tarea li strong{color:var(--ink);}
+.tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
+
+footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
+.foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:860px){
+  section{padding:3.5rem 1.2rem;}
+  .fl-stage,.gc-stage,.clf-stage,.rev-grid,.req-grid,.np-grid{grid-template-columns:1fr;}
+  .gc-metrics{grid-template-columns:1fr 1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav class="course-nav">
+  <a href="sesion-08.html" class="back">Sesión 08</a>
+  <span class="session-label">Sesión 09 · 17.06.2026</span>
+  <a href="../index.html" class="next">Curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">if nota &gt;= 90:</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">elif nota &gt;= 70:</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">else: return "reprobado"</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">if (n &gt;= 80) { ... } else if</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">if cond { /* Go, sin paréntesis */ }</div>
+  <div class="hero-inner">
+    <div class="hero-label">Sesión IX · Bloque I · Control de flujo · Ref. Temario 3.1 · 3.2 · Python · Java · JS · Go</div>
+    <h1>El cruce<br>de <em>caminos.</em></h1>
+    <p class="hero-sub">Hasta hoy tu código corría en línea recta. A partir de hoy <em>decide</em>: toma un camino u otro según lo que encuentre. Esa bifurcación — el <em>if</em> — es la primera vez que tu programa piensa.</p>
+  </div>
+</section>
+
+<!-- I: la bifurcación -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">I · La primera decisión</p>
+    <p class="lead">Un programa sin condiciones<br>solo sabe <em>obedecer.</em> Con ellas, empieza a <em>elegir.</em></p>
+    <p class="subtle">Una sentencia de control evalúa una pregunta de sí o no — una <strong>condición booleana</strong> — y según la respuesta, ejecuta un bloque u otro. Es el cruce de caminos del temario 3.1: <span class="inlinecode">if</span> abre el primer camino, <span class="inlinecode">elif</span> añade desvíos intermedios, y <span class="inlinecode">else</span> es el camino que queda cuando ninguno se cumple. Hoy lo aprendemos en <strong>Python</strong> — el lenguaje base del curso — y miramos de reojo cómo lo dicen Java, JavaScript y Go.</p>
+  </div>
+</section>
+
+<!-- II: animador del flujo -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El flujo, paso a paso</p>
+    <p class="lead">El <span style="color:var(--ink)">if</span> no prueba todo:<br>se detiene en el <em>primer</em> camino que se cumple.</p>
+    <p class="subtle">Esta es la regla que más se malentiende: Python evalúa las ramas <strong>en orden, de arriba abajo</strong>, y en cuanto una es <em>verdadera</em> ejecuta su bloque y <strong>abandona la cadena completa</strong> — ni siquiera mira las de abajo. Suelta una calificación y observa qué rama toma y cuáles ni se prueban:</p>
+    <div class="widget" data-tag="Suelta una nota">
+      <div class="fl-stage">
+        <div class="fl-track" id="fl-track">
+          <div class="fl-drop" id="fl-drop">—</div>
+          <span class="fl-branch" id="fl-b0" style="margin-top:2.6rem"><span class="kw">if</span> nota &gt;= <span class="num">90</span>: <span class="ret">return "Excelente"</span></span>
+          <span class="fl-branch" id="fl-b1"><span class="kw">elif</span> nota &gt;= <span class="num">70</span>: <span class="ret">return "Bueno"</span></span>
+          <span class="fl-branch" id="fl-b2"><span class="kw">elif</span> nota &gt;= <span class="num">60</span>: <span class="ret">return "Regular"</span></span>
+          <span class="fl-branch" id="fl-b3"><span class="kw">else</span>: <span class="ret">return "Reprobado"</span></span>
+        </div>
+        <div class="fl-side">
+          <div class="fl-grade" id="fl-grade">·</div>
+          <div class="fl-step" id="fl-step">Pulsa una calificación abajo. La nota caerá y se irá probando contra cada rama, en orden.</div>
+          <div class="fl-result" id="fl-result"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" data-grade="95">95</button>
+        <button class="btn" data-grade="80">80</button>
+        <button class="btn" data-grade="62">62</button>
+        <button class="btn" data-grade="40">40</button>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:2rem">¿Notaste el orden? Si pusieras <span class="inlinecode">nota &gt;= 60</span> arriba del todo, <em>todas</em> las notas aprobatorias caerían ahí y nunca llegarías a "Excelente". <strong>En una cadena if/elif el orden no es estético: es lógica.</strong> De lo más restrictivo a lo más general.</p>
+  </div>
+</section>
+
+<!-- III: comparativa 4 lenguajes -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · La misma decisión · cuatro lenguajes</p>
+    <p class="lead">La idea es universal.<br>La <em>sintaxis</em> cambia de acento según el lenguaje.</p>
+    <p class="subtle">Una vez que entiendes <em>qué</em> es un condicional, cambiar de lenguaje es cambiar de puntuación. Aquí el mismo clasificador de calificación en los cuatro lenguajes del curso. Fíjate en tres cosas: <strong>cómo se marca el bloque</strong>, <strong>cómo se dice "si no, si"</strong>, y <strong>los paréntesis</strong>:</p>
+    <div class="widget" data-tag="Mismo condicional · 4 sintaxis">
+      <div class="cmp-body" id="cmp-body"></div>
+      <div class="w-controls">
+        <button class="btn on" data-lang="py">Python</button>
+        <button class="btn" data-lang="java">Java</button>
+        <button class="btn" data-lang="js">JavaScript</button>
+        <button class="btn" data-lang="go">Go</button>
+      </div>
+      <div class="cmp-tip" id="cmp-tip"></div>
+    </div>
+  </div>
+</section>
+
+<!-- IV: if anidados → guard clauses -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · De la pirámide a la línea recta</p>
+    <p class="lead">El <em>if</em> anidado es fácil de escribir<br>y un infierno de <em>leer.</em></p>
+    <p class="subtle">Cuando metes condiciones dentro de condiciones, el código se va recorriendo a la derecha — la temida "pirámide de la perdición". Las <strong>guard clauses</strong> (cláusulas de guarda) le dan la vuelta: validas lo que <em>no</em> debe pasar al inicio, sales temprano con <span class="inlinecode">return</span>, y el camino feliz queda al final, sin sangría. Pulsa el botón y mira cómo el mismo código se aplana:</p>
+    <div class="widget" data-tag="Pulsa para refactorizar">
+      <div class="gc-stage">
+        <div class="gc-col">
+          <div class="gc-head"><span id="gc-h-left">Ahora · if anidado</span><span class="badge bad" id="gc-badge-left">profundidad 4</span></div>
+          <div class="gc-body" id="gc-left"></div>
+        </div>
+        <div class="gc-col">
+          <div class="gc-head"><span id="gc-h-right">Después · guard clauses</span><span class="badge good" id="gc-badge-right">profundidad 1</span></div>
+          <div class="gc-body" id="gc-right"></div>
+        </div>
+      </div>
+      <div class="gc-metrics">
+        <div class="gc-metric" id="gc-m-depth"><div class="mv" id="gc-v-depth">4</div><div class="ml">Anidamiento máx.</div></div>
+        <div class="gc-metric" id="gc-m-cc"><div class="mv" id="gc-v-cc">4</div><div class="ml">Complejidad ciclomática</div></div>
+        <div class="gc-metric" id="gc-m-read"><div class="mv" id="gc-v-read">Baja</div><div class="ml">Legibilidad</div></div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" id="gc-toggle">▶ Refactorizar a guard clauses</button>
+      </div>
+      <div class="gc-note" id="gc-note"></div>
+    </div>
+    <div class="np-grid">
+      <div class="np-card no">
+        <div class="np-h">✗ Lo que produce pirámides</div>
+        <ul>
+          <li><strong>if dentro de if dentro de if</strong> para validar precondiciones.</li>
+          <li>Un <strong>else</strong> gigante al final que nadie alcanza a leer.</li>
+          <li>Mezclar validación (¿es válido?) con la lógica real en el mismo bloque.</li>
+        </ul>
+      </div>
+      <div class="np-card si">
+        <div class="np-h">✓ Lo que aplana el código</div>
+        <ul>
+          <li><strong>Early return:</strong> sal en cuanto sepas la respuesta. No esperes al final.</li>
+          <li><strong>Guard clauses:</strong> "si falta el dato, regreso ya" — al inicio.</li>
+          <li>El <strong>camino feliz</strong> al final, alineado a la izquierda, sin sangría.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: clasificador interactivo (puente Práctica 2) -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · El clasificador en vivo — puente a la Práctica 2</p>
+    <p class="lead">Una nota entra.<br>Un <em>nivel</em> y un <em>mensaje</em> salen.</p>
+    <p class="subtle">Este es exactamente el corazón de la <strong>Práctica institucional 2</strong>: a partir de la nota final, evaluar <em>aprobado/reprobado</em>, clasificar en niveles y mostrar un mensaje motivacional. Pulsa cada calificación y observa cómo una cadena <span class="inlinecode">if/elif/else</span> bien ordenada resuelve los tres requerimientos de un golpe:</p>
+    <div class="widget" data-tag="Clasifica una nota">
+      <div class="clf-stage">
+        <div class="clf-left">
+          <div class="clf-dial">
+            <div class="clf-num" id="clf-num">95</div>
+            <div class="clf-cap">nota final ingresada</div>
+          </div>
+          <div class="clf-btns">
+            <button class="btn on" data-nota="95">95</button>
+            <button class="btn" data-nota="80">80</button>
+            <button class="btn" data-nota="65">65</button>
+            <button class="btn" data-nota="40">40</button>
+          </div>
+        </div>
+        <div class="clf-panel">
+          <div class="clf-nivel" id="clf-nivel">Nivel</div>
+          <div class="clf-titulo" id="clf-titulo">—</div>
+          <span class="clf-estado ok" id="clf-estado">—</span>
+          <div class="clf-msg" id="clf-msg">Pulsa una calificación para ver su clasificación y mensaje.</div>
+          <div class="clf-code" id="clf-code"></div>
+        </div>
+      </div>
+    </div>
+    <div class="caso">
+      <div class="caso-tag">Practicario MCT158 · Práctica 2 de 6 · Sentencias de control y repetición</div>
+      <p>Se requiere un sistema para <strong>clasificar y dar retroalimentación del desempeño académico</strong> de los estudiantes. Con base en la <strong>nota final</strong>, el sistema debe evaluar si el alumno <strong>aprobó o reprobó</strong>, clasificarlo en un <strong>nivel de desempeño</strong> (excelente, bueno, regular o reprobado) y mostrar un <strong>mensaje motivacional</strong> acorde a su resultado.</p>
+      <p>Tu primer reto no es programar: es <strong>diseñar</strong>. La práctica pide una <strong>historia de usuario</strong>, un <strong>diagrama de clases</strong> y un <strong>diagrama de actividades</strong> — justo la notación de las sesiones 7 y 8 — antes de escribir la primera línea.</p>
+      <div class="req-grid">
+        <div class="req-card">
+          <div class="req-num">Requerimiento 01</div>
+          <div class="req-t">Aprobado / reprobado</div>
+          <div class="req-d">Evaluar la nota final contra el umbral mínimo y emitir el veredicto.</div>
+        </div>
+        <div class="req-card">
+          <div class="req-num">Requerimiento 02</div>
+          <div class="req-t">Niveles de desempeño</div>
+          <div class="req-d">Clasificar en <em>excelente, bueno, regular o reprobado</em> con una cadena if/elif/else.</div>
+        </div>
+        <div class="req-card">
+          <div class="req-num">Requerimiento 03</div>
+          <div class="req-t">Mensaje motivacional</div>
+          <div class="req-d">Mostrar un texto distinto según el nivel — la retroalimentación al alumno.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: la IA como revisor de código -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · La IA como revisor — no como autor</p>
+    <p class="lead">Hoy la IA no escribe tu código.<br>Hoy lo <em>audita.</em> Y tú decides a quién creerle.</p>
+    <p class="subtle">La actividad de la clase: pega tu código de condiciones en una IA y pídele que lo <strong>revise</strong>. Te dará sugerencias — algunas excelentes, otras innecesarias o incluso equivocadas. Tu trabajo profesional es <strong>decidir cuáles aceptas y cuáles rechazas, y por qué</strong>. Eso es lo que entregas hoy. Practica el criterio: pulsa Acepto / Rechazo en cada sugerencia simulada:</p>
+    <div class="widget" data-tag="Acepto / Rechazo · justifica">
+      <div class="rev-grid" id="rev-grid">
+        <div class="rev-card" data-id="r1">
+          <div class="rev-sug">Tus <em>elif</em> van de menor a mayor; reordénalos de mayor a menor o "Bueno" se comerá a "Excelente".</div>
+          <div class="rev-meta">IA · sobre el orden de las ramas</div>
+          <div class="rev-verdict"><button class="vb-ok" data-v="acepto">✓ Acepto</button><button class="vb-no" data-v="rechazo">✗ Rechazo</button></div>
+        </div>
+        <div class="rev-card" data-id="r2">
+          <div class="rev-sug">Reemplaza el <em>if anidado</em> por guard clauses con early return para bajar la complejidad.</div>
+          <div class="rev-meta">IA · sobre la estructura</div>
+          <div class="rev-verdict"><button class="vb-ok" data-v="acepto">✓ Acepto</button><button class="vb-no" data-v="rechazo">✗ Rechazo</button></div>
+        </div>
+        <div class="rev-card" data-id="r3">
+          <div class="rev-sug">Convierte toda la cadena a un <em>match/case</em> de Python 3.10 para que se vea más moderno.</div>
+          <div class="rev-meta">IA · sobre el estilo</div>
+          <div class="rev-verdict"><button class="vb-ok" data-v="acepto">✓ Acepto</button><button class="vb-no" data-v="rechazo">✗ Rechazo</button></div>
+        </div>
+        <div class="rev-card" data-id="r4">
+          <div class="rev-sug">Quita el <em>else</em> final: si ninguna rama se cumple, deja que la función no devuelva nada.</div>
+          <div class="rev-meta">IA · sobre el caso por defecto</div>
+          <div class="rev-verdict"><button class="vb-ok" data-v="acepto">✓ Acepto</button><button class="vb-no" data-v="rechazo">✗ Rechazo</button></div>
+        </div>
+      </div>
+      <div class="rev-tally" id="rev-tally">Llevas <strong>0</strong> sugerencias revisadas. Cada decisión la <strong>defiendes con una razón</strong> en tu entrega.</div>
+      <div class="ia-rules">
+        <div class="ia-rules-tag">Reglas de la IA para esta sesión</div>
+        <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise</em>: "¿el orden de mis elif es correcto? ¿hay un caso que no cubro?"</span></div>
+        <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>explique un riesgo</em>: "¿por qué un if anidado profundo es difícil de mantener?"</span></div>
+        <div class="ia-rule"><span class="no">✗</span><span>Aceptar un cambio "porque la IA lo dijo" sin entenderlo — <em>match/case puede ser peor que un if claro; tú juzgas.</em></span></div>
+        <div class="ia-rule"><span class="no">✗</span><span>Pedirle "escríbeme el clasificador completo" — <em>si la IA lo hizo, tú lo defiendes en la revisión.</em></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre">
+  <div class="wrap-n">
+    <p class="marker">VII · Para la próxima clase</p>
+    <p class="lead">Un buen condicional no es el que <em>funciona.</em><br>Es el que cualquiera <em>entiende</em> al primer vistazo.</p>
+    <div class="tarea">
+      <div class="tarea-tag">Avance del proyecto + Práctica 2</div>
+      <ol>
+        <li><strong>Refactoriza las condiciones de tu proyecto integrador</strong> a guard clauses: identifica un <code>if</code> anidado y aplánalo con early returns.</li>
+        <li>Pasa ese código por una <strong>IA como revisor</strong> y <strong>documenta</strong> qué sugerencias <em>aceptas</em> y cuáles <em>rechazas</em> — con una razón por cada una. <strong>Eso es tu participación de hoy.</strong></li>
+        <li>Verifica el <strong>orden de tus ramas</strong>: de la más restrictiva a la más general, y un <code>else</code> que cubra el caso por defecto.</li>
+        <li><strong>Opcional · Práctica 2:</strong> empieza la <strong>historia de usuario</strong> del clasificador de desempeño ("Como docente, quiero…") y el <strong>diagrama de actividades</strong> del flujo nota → nivel → mensaje.</li>
+        <li>Sube tu refactor y tu bitácora de la IA a tu repo de GitHub — la coherencia con tu diagrama es lo primero que revisaré.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-meta">Programación Avanzada · MCT158 · Carlos D. Vaca Ramírez · Unitec Atizapán 2026-3</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
+const $=id=>document.getElementById(id);
+
+// ─── W1: animador del flujo if / elif / else ────────────────
+const flBranches=['fl-b0','fl-b1','fl-b2','fl-b3'];
+// cada rama: umbral a probar (null = else), texto del resultado, posición vertical del drop al posarse (%)
+const flDefs=[
+  {test:n=>n>=90, label:'Excelente', stop:14},
+  {test:n=>n>=70, label:'Bueno',     stop:32},
+  {test:n=>n>=60, label:'Regular',   stop:50},
+  {test:()=>true, label:'Reprobado', stop:68},
+];
+let flTimer=[];
+function flClear(){
+  flTimer.forEach(t=>clearTimeout(t));flTimer=[];
+  flBranches.forEach(id=>$(id).classList.remove('tested','failed','taken'));
+  $('fl-result').classList.remove('show');
+}
+function flRun(nota){
+  flClear();
+  $('fl-grade').textContent=nota;
+  $('fl-drop').textContent=nota;
+  $('fl-drop').style.top='.6rem';
+  $('fl-step').innerHTML='La nota <strong>'+nota+'</strong> entra a la cadena. Se prueba cada rama en orden…';
+  let delay=350;
+  let chosen=-1;
+  for(let i=0;i<flDefs.length;i++){
+    const ok=flDefs[i].test(nota);
+    const idx=i;
+    flTimer.push(setTimeout(()=>{
+      $('fl-drop').style.top=(8+idx*16)+'%';
+      const el=$(flBranches[idx]);
+      if(ok){
+        el.classList.add('taken');
+        $('fl-step').innerHTML='<strong>Rama '+(idx+1)+'</strong> se cumple → se ejecuta su bloque y la cadena <strong>termina aquí</strong>. Las de abajo ni se prueban.';
+      }else{
+        el.classList.add('tested');
+        setTimeout(()=>{el.classList.remove('tested');el.classList.add('failed');},420);
+      }
+    },delay));
+    delay+=750;
+    if(ok){chosen=i;break;}
+  }
+  flTimer.push(setTimeout(()=>{
+    $('fl-drop').style.top=(8+chosen*16)+'%';
+    $('fl-result').textContent='return "'+flDefs[chosen].label+'"';
+    $('fl-result').classList.add('show');
+  },delay+150));
+}
+document.querySelectorAll('[data-grade]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-grade]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    flRun(parseInt(b.dataset.grade,10));
+  });
+});
+
+// ─── W2: comparativa 4 lenguajes ────────────────────────────
+const CL=h=>'<span class="cmp-ln">'+h+'</span>';
+const cmpData={
+  py:{code:[
+      '<span class="kw">def</span> <span class="fn">nivel</span>(nota):',
+      '    <span class="kw">if</span> nota &gt;= <span class="num">90</span>:',
+      '        <span class="kw">return</span> <span class="str">"Excelente"</span>',
+      '    <span class="kw">elif</span> nota &gt;= <span class="num">70</span>:',
+      '        <span class="kw">return</span> <span class="str">"Bueno"</span>',
+      '    <span class="kw">else</span>:',
+      '        <span class="kw">return</span> <span class="str">"Reprobado"</span>',
+    ],
+    tip:'<strong>Python:</strong> el bloque se marca con <strong>indentación</strong> (sin llaves) y usa la palabra propia <code>elif</code>. Las condiciones <strong>no necesitan paréntesis</strong>. Es el lenguaje base del curso — domínalo aquí primero.'},
+  java:{code:[
+      '<span class="kw">String</span> <span class="fn">nivel</span>(<span class="kw">double</span> nota) {',
+      '    <span class="kw">if</span> (nota &gt;= <span class="num">90</span>) {',
+      '        <span class="kw">return</span> <span class="str">"Excelente"</span>;',
+      '    } <span class="kw">else if</span> (nota &gt;= <span class="num">70</span>) {',
+      '        <span class="kw">return</span> <span class="str">"Bueno"</span>;',
+      '    } <span class="kw">else</span> {',
+      '        <span class="kw">return</span> <span class="str">"Reprobado"</span>;',
+      '    }',
+      '}',
+    ],
+    tip:'<strong>Java:</strong> bloque con <strong>llaves <code>{ }</code></strong>, condición entre <strong>paréntesis obligatorios</strong> y cada sentencia con <code>;</code>. No hay <code>elif</code>: se escribe <code>else if</code> en dos palabras. Es la sintaxis de tu practicario.'},
+  js:{code:[
+      '<span class="kw">function</span> <span class="fn">nivel</span>(nota) {',
+      '  <span class="kw">if</span> (nota &gt;= <span class="num">90</span>) {',
+      '    <span class="kw">return</span> <span class="str">"Excelente"</span>;',
+      '  } <span class="kw">else if</span> (nota &gt;= <span class="num">70</span>) {',
+      '    <span class="kw">return</span> <span class="str">"Bueno"</span>;',
+      '  } <span class="kw">else</span> {',
+      '    <span class="kw">return</span> <span class="str">"Reprobado"</span>;',
+      '  }',
+      '}',
+    ],
+    tip:'<strong>JavaScript:</strong> casi idéntico a Java en la forma — <strong>llaves y paréntesis</strong>, <code>else if</code> en dos palabras. La diferencia vive en el tipado y en cómo evalúa la "verdad" (los <em>truthy/falsy</em>), tema para más adelante.'},
+  go:{code:[
+      '<span class="kw">func</span> <span class="fn">nivel</span>(nota <span class="kw">int</span>) <span class="kw">string</span> {',
+      '    <span class="kw">if</span> nota &gt;= <span class="num">90</span> {',
+      '        <span class="kw">return</span> <span class="str">"Excelente"</span>',
+      '    } <span class="kw">else if</span> nota &gt;= <span class="num">70</span> {',
+      '        <span class="kw">return</span> <span class="str">"Bueno"</span>',
+      '    }',
+      '    <span class="cm">// if con inicializador:</span>',
+      '    <span class="kw">if</span> r := nota / <span class="num">10</span>; r &lt; <span class="num">6</span> {',
+      '        <span class="kw">return</span> <span class="str">"Reprobado"</span>',
+      '    }',
+      '    <span class="kw">return</span> <span class="str">"Regular"</span>',
+      '}',
+    ],
+    tip:'<strong>Go:</strong> usa <strong>llaves pero SIN paréntesis</strong> alrededor de la condición. Su sello propio es el <strong>if con inicializador</strong>: <code>if x := f(); x &lt; 6 {…}</code> declara y prueba una variable en la misma línea, viva solo dentro del if.'},
+};
+function cmpRender(k){
+  $('cmp-body').innerHTML=cmpData[k].code.map(CL).join('');
+  $('cmp-tip').innerHTML=cmpData[k].tip;
+}
+document.querySelectorAll('[data-lang]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-lang]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    cmpRender(b.dataset.lang);
+  });
+});
+cmpRender('py');
+
+// ─── W3: toggle if-anidado → guard clauses ──────────────────
+const GL=(html,cls)=>'<span class="gc-ln'+(cls?' '+cls:'')+'">'+html+'</span>';
+const gcNested=[
+  ['<span class="kw">def</span> <span class="fn">evaluar</span>(alumno):',''],
+  ['    <span class="kw">if</span> alumno <span class="kw">is not</span> <span class="kw">None</span>:','deep'],
+  ['        <span class="kw">if</span> alumno.inscrito:','deep'],
+  ['            <span class="kw">if</span> alumno.nota <span class="kw">is not</span> <span class="kw">None</span>:','deep'],
+  ['                <span class="kw">if</span> alumno.nota &gt;= <span class="num">60</span>:','deep'],
+  ['                    <span class="ret">return</span> <span class="str">"Aprobado"</span>',''],
+  ['                <span class="kw">else</span>:',''],
+  ['                    <span class="ret">return</span> <span class="str">"Reprobado"</span>',''],
+  ['            <span class="kw">else</span>:',''],
+  ['                <span class="ret">return</span> <span class="str">"Sin nota"</span>',''],
+  ['        <span class="kw">else</span>:',''],
+  ['            <span class="ret">return</span> <span class="str">"No inscrito"</span>',''],
+  ['    <span class="kw">else</span>:',''],
+  ['        <span class="ret">return</span> <span class="str">"Alumno inexistente"</span>',''],
+];
+const gcGuard=[
+  ['<span class="kw">def</span> <span class="fn">evaluar</span>(alumno):',''],
+  ['    <span class="cm"># guard clauses: lo que NO debe pasar, primero</span>',''],
+  ['    <span class="kw">if</span> alumno <span class="kw">is</span> <span class="kw">None</span>:','flat'],
+  ['        <span class="ret">return</span> <span class="str">"Alumno inexistente"</span>',''],
+  ['    <span class="kw">if</span> <span class="kw">not</span> alumno.inscrito:','flat'],
+  ['        <span class="ret">return</span> <span class="str">"No inscrito"</span>',''],
+  ['    <span class="kw">if</span> alumno.nota <span class="kw">is</span> <span class="kw">None</span>:','flat'],
+  ['        <span class="ret">return</span> <span class="str">"Sin nota"</span>',''],
+  ['',''],
+  ['    <span class="cm"># el camino feliz, sin sangría extra</span>',''],
+  ['    <span class="kw">if</span> alumno.nota &gt;= <span class="num">60</span>:','flat'],
+  ['        <span class="ret">return</span> <span class="str">"Aprobado"</span>',''],
+  ['    <span class="ret">return</span> <span class="str">"Reprobado"</span>',''],
+];
+let gcOn=false;
+function gcRender(){
+  if(!gcOn){
+    $('gc-left').innerHTML=gcNested.map(([h,c])=>GL(h,c)).join('');
+    $('gc-right').innerHTML='<span class="gc-ln" style="color:rgba(239,230,210,.4)">// pulsa el botón ▶</span>';
+    $('gc-v-depth').textContent='4';$('gc-v-cc').textContent='5';$('gc-v-read').textContent='Baja';
+    $('gc-m-depth').classList.remove('better');$('gc-m-cc').classList.remove('better');$('gc-m-read').classList.remove('better');
+    $('gc-note').innerHTML='<strong>El antes.</strong> Cuatro niveles de sangría, un <em>else</em> por cada <em>if</em>. Para saber qué devuelve "Reprobado" tienes que rastrear cuatro condiciones anidadas. Funciona — pero nadie quiere mantenerlo.';
+  }else{
+    $('gc-right').innerHTML=gcGuard.map(([h,c])=>GL(h,c)).join('');
+    $('gc-left').innerHTML='<span class="gc-ln" style="color:rgba(239,230,210,.4)">// versión anterior (colapsada)</span>';
+    $('gc-v-depth').textContent='1';$('gc-v-cc').textContent='5';$('gc-v-read').textContent='Alta';
+    $('gc-m-depth').classList.add('better');$('gc-m-read').classList.add('better');
+    $('gc-note').innerHTML='<strong>El después.</strong> Mismo comportamiento, misma cantidad de caminos — pero la <em>profundidad</em> cayó de 4 a 1. Cada guard responde una pregunta y sale. El "camino feliz" (Aprobado) vive al final, alineado a la izquierda, fácil de encontrar.';
+  }
+}
+$('gc-toggle').addEventListener('click',()=>{
+  gcOn=!gcOn;
+  const btn=$('gc-toggle');
+  btn.textContent=gcOn?'⟲ Volver al if anidado':'▶ Refactorizar a guard clauses';
+  btn.classList.toggle('on',!gcOn);
+  $('gc-h-left').textContent=gcOn?'Antes · if anidado (colapsado)':'Ahora · if anidado';
+  $('gc-badge-left').textContent=gcOn?'profundidad 4':'profundidad 4';
+  $('gc-h-right').textContent='Después · guard clauses';
+  gcRender();
+});
+gcRender();
+
+// ─── W4: clasificador (Práctica 2) ──────────────────────────
+const clfData={
+  '95':{nivel:'Nivel 4 · Tope',titulo:'Excelente',estado:'ok',et:'Aprobado',
+    msg:'<strong>¡Excelente trabajo!</strong> Tu dominio del tema es notable. Mantén ese estándar.',
+    cond:'nota &gt;= <b>90</b>'},
+  '80':{nivel:'Nivel 3',titulo:'Bueno',estado:'ok',et:'Aprobado',
+    msg:'<strong>Buen desempeño.</strong> Vas por muy buen camino; un empujón más y llegas a la cima.',
+    cond:'nota &gt;= <b>70</b>'},
+  '65':{nivel:'Nivel 2',titulo:'Regular',estado:'ok',et:'Aprobado',
+    msg:'<strong>Aprobaste, pero hay margen.</strong> Refuerza los temas flojos: el siguiente nivel está cerca.',
+    cond:'nota &gt;= <b>60</b>'},
+  '40':{nivel:'Nivel 1',titulo:'Reprobado',estado:'no',et:'Reprobado',
+    msg:'<strong>No alcanzaste el mínimo.</strong> No te rindas: identifica qué falló y vuelve con un plan.',
+    cond:'<b>else</b> (&lt; 60)'},
+};
+function clfRender(n){
+  const d=clfData[n];
+  $('clf-num').textContent=n;
+  $('clf-num').classList.toggle('aprob',d.estado==='ok');
+  $('clf-nivel').textContent=d.nivel;
+  $('clf-titulo').textContent=d.titulo;
+  const est=$('clf-estado');
+  est.textContent=d.et;est.className='clf-estado '+d.estado;
+  $('clf-msg').innerHTML=d.msg;
+  $('clf-code').innerHTML='rama tomada: <b>if</b> '+d.cond+' → <b>return</b> "'+d.titulo+'"';
+}
+document.querySelectorAll('[data-nota]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-nota]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    clfRender(b.dataset.nota);
+  });
+});
+clfRender('95');
+
+// ─── W5: reglas IA-revisor (acepto/rechazo) ─────────────────
+const revState={};
+function revTally(){
+  const total=document.querySelectorAll('#rev-grid .rev-card').length;
+  const done=Object.keys(revState).length;
+  const ac=Object.values(revState).filter(v=>v==='acepto').length;
+  const re=Object.values(revState).filter(v=>v==='rechazo').length;
+  if(done===0){
+    $('rev-tally').innerHTML='Llevas <strong>0</strong> sugerencias revisadas. Cada decisión la <strong>defiendes con una razón</strong> en tu entrega.';
+  }else if(done<total){
+    $('rev-tally').innerHTML='Revisadas <strong>'+done+' de '+total+'</strong> · '+ac+' aceptadas, '+re+' rechazadas. Sigue — y anota el <strong>porqué</strong> de cada una.';
+  }else{
+    $('rev-tally').innerHTML='<strong>Las '+total+' revisadas:</strong> '+ac+' aceptadas, '+re+' rechazadas. Tip: r3 (match/case) y r4 (quitar el else) suelen <em>rechazarse</em> — un if claro le gana al "se ve moderno", y sin else dejas un caso sin cubrir.';
+  }
+}
+document.querySelectorAll('#rev-grid .rev-card').forEach(card=>{
+  card.querySelectorAll('.rev-verdict button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const v=btn.dataset.v;
+      revState[card.dataset.id]=v;
+      card.classList.remove('acepto','rechazo');
+      card.classList.add(v);
+      revTally();
+    });
+  });
+});
+revTally();
+</script>
+</body>
+</html>

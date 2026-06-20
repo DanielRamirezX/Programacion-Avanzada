@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión X — Muchos caminos, una palabra — Programación Avanzada</title>
+<title>Sesión X — Hablar con lo que puede fallar — Programación Avanzada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -35,23 +35,26 @@ section{position:relative;padding:5rem 2rem;}
 .hero-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(42,29,20,.5);margin-bottom:1.5rem;}
 .hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.8rem,7.5vw,6.5rem);line-height:.98;letter-spacing:-.03em;color:var(--ink);}
 .hero h1 em{font-style:italic;color:var(--blood);}
-.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:720px;}
 
 .lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
 .lead em{font-style:italic;color:var(--blood);}
-.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
+.subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:720px;}
 .subtle strong{color:var(--ink);}
 .inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
 
 .widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
 .widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
-.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
-.w-prompt em{color:var(--blood);font-style:italic;}
 .w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
 .btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
 .btn:hover{border-color:var(--blood);color:var(--blood);}
 .btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
-.btn-olive.on{background:var(--olive);border-color:var(--olive);}
+
+/* analogía — tarjeta recurrente */
+.analogy{margin-top:1.4rem;padding:1.1rem 1.4rem 1.1rem 1.5rem;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:var(--ink-soft);}
+.analogy::before{content:'⚜ Analogía';display:block;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:.5rem;}
+.analogy strong{color:var(--ink);font-style:normal;font-weight:600;}
+.analogy code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
 
 .cierre{background:var(--paper-deep);}
 .tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
@@ -67,86 +70,107 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
+/* bloque de código oscuro genérico */
+.codeblock{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.9;color:var(--paper);overflow-x:auto;}
+.codeblock .ln{white-space:pre;display:block;}
+.codeblock .kw{color:#D4956A;font-style:italic;}
+.codeblock .ty{color:#A6C2D6;}
+.codeblock .str{color:#C9A961;}
+.codeblock .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.codeblock .fn{color:#9FBF9C;}
+.codeblock .nm{color:#E8B04A;}
+
 /* ═══════════════════════════════════════════════════════════════
-   CSS DE WIDGETS · Sesión 10 (prefijos: mx-, sp-, sw-, dz-, rv-)
+   WIDGETS · Sesión 10 (tc- tw- cl- cv- cu- xx-)
    ═══════════════════════════════════════════════════════════════ */
 
-/* W1: mx- · tabs de cuatro lenguajes */
-.mx-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
-.mx-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .95rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.45rem;}
-.mx-tab:hover{border-color:var(--blood);color:var(--blood);}
-.mx-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
-.mx-tab .lg{font-size:.6rem;color:var(--ochre);letter-spacing:.1em;}
-.mx-tab.on .lg{color:#C9A961;}
-.mx-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--paper);min-height:300px;overflow-x:auto;}
-.mx-code .ln{white-space:pre;display:block;}
-.mx-code .kw{color:#D4956A;font-style:italic;}
-.mx-code .ty{color:#A6C2D6;}
-.mx-code .self{color:#8EAF8B;font-weight:700;}
-.mx-code .str{color:#C9A961;}
-.mx-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.mx-code .out{color:#9FBF9C;}
-.mx-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
-.mx-note strong{color:var(--ink);font-style:normal;font-weight:600;}
-.mx-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+/* W1: tc- · animador del flujo try/catch/finally */
+.tc-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:start;}
+.tc-code{background:var(--ink);padding:1.3rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.5;color:var(--paper);}
+.tc-line{white-space:pre;display:block;padding:.18rem .55rem;border-radius:3px;border-left:3px solid transparent;transition:all .3s;opacity:.5;}
+.tc-line .kw{color:#D4956A;font-style:italic;}
+.tc-line .str{color:#C9A961;}
+.tc-line .ty{color:#A6C2D6;}
+.tc-line .fn{color:#9FBF9C;}
+.tc-line .cm{color:rgba(239,230,210,.4);font-style:italic;}
+.tc-line.struct{opacity:.85;}
+.tc-line.done{opacity:1;background:rgba(93,102,56,.22);border-left-color:var(--olive);}
+.tc-line.skip{opacity:.32;text-decoration:line-through;text-decoration-color:rgba(160,36,24,.55);}
+.tc-line.fail{opacity:1;background:rgba(160,36,24,.28);border-left-color:var(--blood);}
+.tc-line.catch{opacity:1;background:rgba(181,133,42,.26);border-left-color:var(--ochre);}
+.tc-line.cur{box-shadow:0 0 0 2px rgba(239,230,210,.55) inset;}
+.tc-panel{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:1.5rem;min-height:280px;display:flex;flex-direction:column;}
+.tc-scenarios{display:flex;gap:.4rem;margin-bottom:1.1rem;}
+.tc-step{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.6rem;color:var(--ochre);line-height:1;margin-bottom:.5rem;}
+.tc-txt{font-family:'Cormorant Garamond',serif;font-size:1.2rem;line-height:1.5;color:var(--ink-soft);flex:1;}
+.tc-txt b{color:var(--ink);}
+.tc-txt code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.tc-count{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(42,29,20,.4);margin-top:1rem;}
 
-/* W2: sp- · explorador de structural pattern matching */
-.sp-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
-.sp-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.95;color:var(--paper);min-height:260px;}
-.sp-line{white-space:pre;display:block;padding:0 .35rem;border-radius:2px;cursor:pointer;transition:background .2s;}
-.sp-line:hover{background:rgba(232,176,74,.12);}
-.sp-line.lit{background:rgba(232,176,74,.22);}
-.sp-line.dim{cursor:default;}
-.sp-line.dim:hover{background:none;}
-.sp-line .kw{color:#D4956A;font-style:italic;}
-.sp-line .str{color:#C9A961;}
-.sp-line .self{color:#8EAF8B;font-weight:700;}
-.sp-line .ty{color:#A6C2D6;}
-.sp-line .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.sp-line .cap{color:#E8B04A;font-weight:700;}
-.sp-panel{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:1.6rem;min-height:260px;display:flex;flex-direction:column;gap:.8rem;}
-.sp-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);}
-.sp-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);line-height:1.05;}
-.sp-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.5;color:var(--ink-soft);}
-.sp-desc strong{color:var(--ink);font-style:normal;font-weight:600;}
-.sp-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
-.sp-match{margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--olive);background:rgba(93,102,56,.1);border:1px solid rgba(93,102,56,.3);padding:.6rem .8rem;line-height:1.6;}
-.sp-match b{color:var(--ink);}
+/* explorador de clases (java.sql y mongo) cl- */
+.cl-stage{display:grid;grid-template-columns:.85fr 1.15fr;gap:1.3rem;align-items:start;}
+.cl-list{display:flex;flex-direction:column;gap:.4rem;}
+.cl-chip{font-family:'JetBrains Mono',monospace;font-size:.74rem;text-align:left;padding:.6rem .8rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.5rem;}
+.cl-chip:hover{border-color:var(--blood);color:var(--blood);}
+.cl-chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.cl-chip .pkg{font-size:.58rem;color:var(--ochre);letter-spacing:.05em;}
+.cl-detail{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--blood);padding:1.5rem;min-height:340px;}
+.cl-name{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--blood);font-weight:700;margin-bottom:.2rem;}
+.cl-pkg{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(42,29,20,.45);margin-bottom:1rem;}
+.cl-role{font-family:'Cormorant Garamond',serif;font-size:1.45rem;line-height:1.2;color:var(--ink);margin-bottom:.9rem;}
+.cl-ana{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);border-left:2px solid var(--ochre);padding-left:.9rem;margin-bottom:1.1rem;}
+.cl-ana b{color:var(--ink);font-style:normal;}
+.cl-code{background:var(--ink);padding:1rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.7;color:var(--paper);white-space:pre;overflow-x:auto;}
+.cl-code .kw{color:#D4956A;font-style:italic;}.cl-code .ty{color:#A6C2D6;}.cl-code .str{color:#C9A961;}.cl-code .cm{color:rgba(239,230,210,.4);font-style:italic;}.cl-code .fn{color:#9FBF9C;}.cl-code .nm{color:#E8B04A;}
 
-/* W3: rv- · evaluador paso a paso de match */
-.rv-subject{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--ink);color:var(--paper);padding:.8rem 1.1rem;margin-bottom:1.2rem;}
-.rv-subject .cap{color:#E8B04A;font-weight:700;}
-.rv-subject .lbl{color:rgba(239,230,210,.5);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;margin-right:.6rem;}
-.rv-cases{display:flex;flex-direction:column;gap:.45rem;}
-.rv-case{display:flex;align-items:center;gap:1rem;background:var(--paper);border:1px solid var(--line);padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;transition:all .3s;opacity:.55;}
-.rv-case .kw{color:var(--blood);font-style:italic;}
-.rv-case .str{color:var(--ochre);}
-.rv-case.cur{opacity:1;border-color:var(--ochre);background:rgba(181,133,42,.08);box-shadow:0 0 0 2px rgba(181,133,42,.15);}
-.rv-case.miss{opacity:.4;text-decoration:line-through;text-decoration-color:rgba(160,36,24,.5);}
-.rv-case.hit{opacity:1;border-color:var(--olive);background:rgba(93,102,56,.12);}
-.rv-verdict{flex-shrink:0;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(42,29,20,.35);min-width:5.5rem;text-align:right;}
-.rv-case.miss .rv-verdict{color:var(--blood);}
-.rv-case.hit .rv-verdict{color:var(--olive);font-weight:700;}
-.rv-case.cur .rv-verdict{color:var(--ochre);font-weight:700;}
-.rv-out{margin-top:1.3rem;padding:1.1rem 1.4rem;background:var(--ink);min-height:4.6rem;display:flex;gap:1rem;align-items:flex-start;}
-.rv-step{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.2rem;color:var(--ochre);line-height:1;flex-shrink:0;}
-.rv-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.45;color:rgba(239,230,210,.88);}
-.rv-txt strong{color:#C9A961;font-style:normal;font-weight:600;}
-.rv-txt code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;}
+/* W: cv- · animador de conversión de tipos */
+.cv-stage{position:relative;background:var(--paper);border:1px solid var(--line);padding:2rem 1.4rem 1.6rem;min-height:200px;}
+.cv-row{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;}
+.cv-box{border:1px solid var(--line);padding:1.1rem 1rem;text-align:center;background:var(--paper-deep);transition:all .4s;}
+.cv-box-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.45);margin-bottom:.6rem;}
+.cv-box-type{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;letter-spacing:.05em;margin-bottom:.3rem;}
+.cv-cell .cv-box-type{color:var(--olive);}
+.cv-var .cv-box-type{color:var(--blood);}
+.cv-box-val{font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--ink);min-height:1.6rem;}
+.cv-var.warn{border-color:var(--ochre);box-shadow:0 0 0 2px rgba(181,133,42,.2);}
+.cv-var.err{border-color:var(--blood);box-shadow:0 0 0 2px rgba(160,36,24,.2);}
+.cv-var.ok{border-color:var(--olive);box-shadow:0 0 0 2px rgba(93,102,56,.18);}
+.cv-mid{text-align:center;min-width:120px;}
+.cv-method{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--blood);background:var(--paper-deep);border:1px solid var(--line);padding:.4rem .5rem;margin-bottom:.4rem;}
+.cv-arrow{font-size:1.4rem;color:var(--ochre);}
+.cv-token{position:absolute;top:50%;left:16%;transform:translate(-50%,-50%);font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;padding:.4rem .7rem;border-radius:4px;background:var(--olive);color:var(--paper);box-shadow:0 4px 14px rgba(42,29,20,.35);transition:left 1.1s cubic-bezier(.65,0,.35,1),background .4s;z-index:5;pointer-events:none;opacity:0;}
+.cv-token.show{opacity:1;}
+.cv-token.go{left:84%;}
+.cv-token[data-st="ok"]{background:var(--olive);}
+.cv-token[data-st="warn"]{background:var(--ochre);}
+.cv-token[data-st="err"]{background:var(--blood);}
+.cv-note{margin-top:1.3rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);min-height:3.4rem;}
+.cv-note b{color:var(--ink);}
+.cv-note code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.cv-picks{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1.2rem;}
+.cv-pick{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.cv-pick:hover{border-color:var(--blood);color:var(--blood);}
+.cv-pick.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
 
-/* W4: dz- · decisor switch vs if-else */
-.dz-stage{background:var(--paper);border:1px solid var(--line);padding:1.8rem;min-height:230px;display:flex;flex-direction:column;justify-content:center;}
-.dz-q{font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1.3;color:var(--ink);text-align:center;margin-bottom:1.6rem;}
-.dz-q::before{content:'¿';color:var(--blood);}
-.dz-choices{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
-.dz-choice{font-family:'JetBrains Mono',monospace;font-size:.78rem;padding:.85rem 1.6rem;background:var(--paper-deep);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.06em;}
-.dz-choice:hover{border-color:var(--blood);color:var(--blood);transform:translateY(-2px);}
-.dz-prog{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(42,29,20,.4);text-align:center;margin-bottom:1.2rem;}
-.dz-result{text-align:center;}
-.dz-verdict{font-family:'Cormorant Garamond',serif;font-size:2.3rem;color:var(--blood);margin-bottom:.8rem;line-height:1.05;}
-.dz-verdict.match-rec{color:var(--olive);}
-.dz-why{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;line-height:1.5;color:var(--ink-soft);max-width:520px;margin:0 auto;}
-.dz-why code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+/* W: cu- · cursor del ResultSet */
+.cu-stage{display:grid;grid-template-columns:1.2fr 1fr;gap:1.4rem;align-items:start;}
+.cu-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.78rem;}
+.cu-table th{background:var(--ink);color:var(--paper);padding:.5rem .7rem;text-align:left;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;}
+.cu-table td{border:1px solid var(--line);padding:.55rem .7rem;background:var(--paper);color:var(--ink-soft);transition:all .3s;}
+.cu-cursor{width:1.4rem;text-align:center;color:var(--blood);font-weight:700;}
+.cu-row.on td{background:rgba(181,133,42,.18);color:var(--ink);border-color:var(--ochre);}
+.cu-row.read td{background:rgba(93,102,56,.1);}
+.cu-side{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:1.4rem;min-height:240px;display:flex;flex-direction:column;}
+.cu-code{background:var(--ink);padding:.9rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.6;color:var(--paper);margin-bottom:1rem;}
+.cu-code .ln{display:block;white-space:pre;padding:0 .3rem;border-radius:2px;transition:background .3s;}
+.cu-code .ln.lit{background:rgba(181,133,42,.3);}
+.cu-code .kw{color:#D4956A;font-style:italic;}.cu-code .fn{color:#9FBF9C;}.cu-code .ty{color:#A6C2D6;}.cu-code .str{color:#C9A961;}
+.cu-out{font-family:'Cormorant Garamond',serif;font-size:1.18rem;line-height:1.5;color:var(--ink-soft);flex:1;}
+.cu-out b{color:var(--ink);}
+.cu-out .tf{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;padding:.1rem .4rem;border-radius:3px;}
+.cu-out .tf.t{background:rgba(93,102,56,.2);color:var(--olive);}
+.cu-out .tf.f{background:rgba(160,36,24,.18);color:var(--blood);}
+.cu-out code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blood);}
 
 /* tabla comparativa */
 .cmp-table{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
@@ -156,24 +180,6 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .cmp-table td strong{color:var(--ink);}
 .cmp-table code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blood);}
 .cmp-table tr td:first-child{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ink);font-style:italic;}
-
-/* W5: checklist sprint review */
-.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
-.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
-.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
-.chk-group{margin-top:1.4rem;}
-.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
-.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
-.chk-item:hover{border-color:var(--olive);}
-.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
-.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
-.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
-.chk-item.done .chk-box::after{content:'✓';}
-.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
-.chk-item.done .chk-txt{color:var(--ink);}
-.chk-txt strong{color:var(--ink);}
-.chk-final{margin-top:1.4rem;padding:1rem 1.3rem;background:rgba(93,102,56,.08);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;color:var(--ink-soft);}
-.chk-final strong{color:var(--olive);font-style:normal;font-weight:600;}
 
 /* columnas NO/SI */
 .ns-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
@@ -190,11 +196,62 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .ns-why{margin-top:1rem;font-size:.92rem;color:var(--ink-soft);font-style:italic;line-height:1.45;}
 .ns-why strong{color:var(--ink);font-style:normal;}
 
+/* ═══════════════════════════════════════════════════════════════
+   WIDGETS · Gestores de dependencias (Secciones I–IV): dr- po- xl-
+   ═══════════════════════════════════════════════════════════════ */
+/* dr- · resolución de una dependencia */
+.dr-flow{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;}
+.dr-node{flex:1 1 130px;background:var(--paper);border:1px solid var(--line);padding:.85rem .6rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink-soft);transition:all .35s;}
+.dr-node small{display:block;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(42,29,20,.4);margin-top:.3rem;}
+.dr-node.act{border-color:var(--blood);background:var(--ink);color:var(--paper);box-shadow:0 6px 16px rgba(42,29,20,.25);}
+.dr-node.act small{color:rgba(239,230,210,.55);}
+.dr-arrow{color:var(--ochre);font-size:1.1rem;flex:0 0 auto;}
+.dr-deps{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.3rem;min-height:2.8rem;}
+.dr-chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.45rem .7rem;border:1px solid var(--line);background:var(--paper);color:rgba(42,29,20,.45);transition:all .4s;}
+.dr-chip .tag{display:block;font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;margin-top:.15rem;color:rgba(42,29,20,.4);}
+.dr-chip.found{border-color:var(--ochre);color:var(--ink);background:rgba(181,133,42,.12);}
+.dr-chip.found .tag{color:var(--ochre);}
+.dr-chip.cached{border-color:var(--olive);color:var(--ink);background:rgba(93,102,56,.14);}
+.dr-chip.cached .tag{color:var(--olive);}
+.dr-narr{margin-top:1.3rem;font-family:'Cormorant Garamond',serif;font-size:1.2rem;line-height:1.5;color:var(--ink-soft);min-height:3rem;}
+.dr-narr b{color:var(--ink);}
+.dr-narr code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+/* po- · anatomía del pom.xml */
+.po-stage{display:grid;grid-template-columns:1.05fr .95fr;gap:1.4rem;align-items:start;}
+.po-code{background:var(--ink);padding:1.2rem .9rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.5;color:var(--paper);overflow-x:auto;}
+.po-block{display:block;white-space:pre;padding:.12rem .4rem;margin:.05rem 0;border-left:3px solid transparent;border-radius:3px;cursor:pointer;transition:background .2s;}
+.po-block:hover{background:rgba(232,176,74,.12);}
+.po-block.lit{background:rgba(232,176,74,.2);border-left-color:var(--ochre);}
+.po-code .tag{color:#A6C2D6;}
+.po-code .cm{color:rgba(239,230,210,.4);font-style:italic;}
+.po-panel{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--blood);padding:1.5rem;min-height:320px;}
+.po-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.4rem;}
+.po-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);line-height:1.1;margin-bottom:.7rem;}
+.po-desc{font-family:'Cormorant Garamond',serif;font-size:1.14rem;line-height:1.5;color:var(--ink-soft);}
+.po-desc strong{color:var(--ink);}
+.po-desc code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.po-ana{margin-top:1.1rem;border-left:2px solid var(--ochre);padding-left:.9rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.45;color:var(--ink-soft);}
+/* xl- · gestores por lenguaje */
+.xl-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.xl-tab{font-family:'JetBrains Mono',monospace;font-size:.76rem;padding:.55rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+.xl-tab:hover{border-color:var(--blood);color:var(--blood);}
+.xl-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.xl-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:1.6rem;}
+.xl-lang{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--ink);line-height:1;}
+.xl-grid{display:grid;grid-template-columns:auto 1fr;gap:.55rem 1.2rem;margin-top:1.1rem;font-size:.98rem;}
+.xl-k{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);padding-top:.2rem;}
+.xl-v{color:var(--ink-soft);}
+.xl-v code{font-family:'JetBrains Mono',monospace;font-size:.76rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.xl-note{margin-top:1.1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);}
+
 @media(max-width:860px){
   section{padding:3.5rem 1.2rem;}
-  .sp-stage,.ns-grid{grid-template-columns:1fr;}
+  .tc-stage,.cl-stage,.cu-stage,.ns-grid,.po-stage{grid-template-columns:1fr;}
   .cmp-table{font-size:.82rem;}
   .cmp-table th,.cmp-table td{padding:.5rem .6rem;}
+  .cv-box-val{font-size:1.2rem;}
+  .xl-grid{grid-template-columns:1fr;gap:.2rem 0;}
+  .xl-k{padding-top:.6rem;}
 }
 </style>
 </head>
@@ -202,267 +259,398 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 <div class="progress" id="prog"></div>
 <nav class="course-nav">
   <a href="sesion-09.html" class="back">Sesión 09</a>
-  <span class="session-label">Sesión 10 · Sprint 1 · 19.06.2026</span>
+  <span class="session-label">Sesión 10 · 19.06.2026</span>
   <a href="../index.html" class="next">Curso</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">match comando:</div>
-  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">case ["mover", x, y]:</div>
-  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">switch (dia) { case 1: ... }</div>
-  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">case Punto(x=0, y=0):</div>
-  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">case _:  # el comodín</div>
+  <div class="hero-float" style="top:12%;left:7%;--r:-4deg">&lt;dependency&gt; mongodb-driver-sync &lt;/dependency&gt;</div>
+  <div class="hero-float" style="top:26%;right:8%;--r:3deg;animation-delay:-3s">catch (SQLException e) { ... }</div>
+  <div class="hero-float" style="bottom:30%;left:11%;--r:2deg;animation-delay:-6s">rs.getInt("edad");</div>
+  <div class="hero-float" style="bottom:15%;right:12%;--r:-3deg;animation-delay:-9s">new Document("nombre", "Ana")</div>
+  <div class="hero-float" style="top:52%;left:39%;--r:1deg;animation-delay:-4.5s">finally { conn.close(); }</div>
+  <div class="hero-float" style="top:14%;right:34%;--r:2deg;animation-delay:-7.5s">mvn package</div>
   <div class="hero-inner">
-    <div class="hero-label">Sesión X · Bloque I · Control de flujo · Sprint 1 Review · Ref. Temario 3.3 · Python · Java · Go</div>
-    <h1>Muchos caminos,<br>una <em>palabra.</em></h1>
-    <p class="hero-sub">Diez <span style="font-style:normal">if-elif-else</span> apilados son una escalera incómoda. Hoy aprendes a decir lo mismo con una sola estructura — y a reconocer cuándo <em>match</em> deja de ser un switch y se vuelve algo mucho más poderoso.</p>
+    <div class="hero-label">Sesión X · Gestores de dependencias · Maven · Manejo de excepciones · Persistencia: java.sql y MongoDB</div>
+    <h1>Hablar con lo que<br>puede <em>fallar.</em></h1>
+    <p class="hero-sub">Un programa serio no vive solo: usa librerías que otros escribieron — y para hablar con una base de datos necesita una de ellas. Hoy aprendes a <em>traer esas librerías</em> sin descargarlas a mano (los gestores de dependencias, con Maven al frente) y a <em>sostener tu código</em> cuando el mundo exterior falla: <em>try / catch</em>, mientras guardas datos que sobreviven al apagón — en tu disco y en la nube.</p>
   </div>
 </section>
 
-<!-- I: el problema -->
-<section>
-  <div class="wrap-n">
-    <p class="marker">I · La escalera de elif</p>
-    <p class="lead">Cuando comparas <em>una</em> cosa<br>contra <em>muchos</em> valores, el if-else se cansa.</p>
-    <p class="subtle">Imagina traducir un código de error a su mensaje, o un día de la semana a su nombre. Con <strong>if-elif-else</strong> repites la misma variable y el mismo operador una y otra vez: <span class="inlinecode">if dia == 1 ... elif dia == 2 ...</span>. Funciona, pero el ojo se pierde y un olvido se cuela fácil. Casi todos los lenguajes inventaron una estructura para <strong>el caso "una variable, muchos valores"</strong>: el <em>switch</em>. Python llegó tarde y, en vez de copiarlo, trajo algo más ambicioso en la versión 3.10: <strong>match/case</strong> con coincidencia estructural.</p>
-    <p class="subtle" style="margin-top:1.4rem">Hoy hacemos tres cosas: ver el mismo problema en <strong>cuatro formas</strong>, entender cuándo conviene cada una, y cerrar con el <strong>Sprint 1 Review</strong> — la primera vez que tu proyecto se defiende en público.</p>
-  </div>
-</section>
-
-<!-- II: mismo problema, cuatro formas -->
+<!-- I: el problema de las dependencias -->
 <section>
   <div class="wrap">
-    <p class="marker">II · Un problema, cuatro formas</p>
-    <p class="lead">El mismo enrutador de comandos,<br>escrito en <em>cuatro</em> idiomas.</p>
-    <p class="subtle">Un mini-intérprete recibe un comando de texto (<span class="inlinecode">"norte"</span>, <span class="inlinecode">"sur"</span>, <span class="inlinecode">"salir"</span>) y decide qué hacer. Es el caso clásico de selección múltiple. Pulsa cada pestaña y compara: <strong>misma lógica, distinta gramática</strong>. Python es tu base; los demás te dan perspectiva.</p>
-    <div class="widget" data-tag="Mismo enrutador · 4 lenguajes">
-      <div class="mx-tabs">
-        <button class="mx-tab on" data-mx="ifelse">if-elif-else <span class="lg">Python</span></button>
-        <button class="mx-tab" data-mx="match">match/case <span class="lg">Python 3.10+</span></button>
-        <button class="mx-tab" data-mx="java">switch <span class="lg">Java</span></button>
-        <button class="mx-tab" data-mx="go">switch <span class="lg">Go</span></button>
-      </div>
-      <div class="mx-code" id="mx-code"></div>
-      <div class="mx-note" id="mx-note"></div>
-    </div>
-  </div>
-</section>
-
-<!-- III: anatomía del fallthrough -->
-<section>
-  <div class="wrap">
-    <p class="marker">III · El detalle que rompe todo · break y fallthrough</p>
-    <p class="lead">La diferencia más cara<br>entre lenguajes vive en <em>una</em> palabra.</p>
-    <p class="subtle">En Java y C, un <span class="inlinecode">switch</span> que olvida el <span class="inlinecode">break</span> sigue ejecutando los casos siguientes — es el famoso <em>fallthrough</em>, fuente eterna de bugs. Python y Go lo arreglaron, cada uno a su manera. Mira el contraste:</p>
+    <p class="marker">I · El problema · tu programa necesita código que no escribiste</p>
+    <p class="lead">Nadie construye solo.<br>Todo proyecto serio <em>usa librerías de otros.</em></p>
+    <p class="subtle">Para hablar con SQLite hace falta un <span class="inlinecode">.jar</span>; para MongoDB, <strong>tres</strong>. En el laboratorio los bajamos a mano y los pusimos en el <em>classpath</em> <span style="font-style:italic">(el classpath es, sencillamente, la lista de carpetas y <span class="inlinecode">.jar</span> donde Java busca las clases que usas; si una librería no está ahí, tu código no compila)</span>. Funcionó… pero imagina un proyecto real con <strong>decenas</strong> de librerías, donde cada una necesita <em>otras</em>, y cada cual en una versión compatible. Cazar todo eso a mano no escala — el problema es tan clásico que tiene nombre propio: el <em>"JAR hell"</em>, el infierno de los <span class="inlinecode">.jar</span>.</p>
     <div class="ns-grid">
       <div class="ns-col no">
-        <div class="ns-h">✗ Java · olvidaste el break</div>
-        <div class="ns-code"><span class="kw">switch</span> (dia) {
-  <span class="kw">case</span> <span class="str">6</span>:
-    msg = <span class="str">"sábado"</span>;
-    <span class="cm">// sin break ↓</span>
-  <span class="kw">case</span> <span class="str">7</span>:
-    msg = <span class="str">"domingo"</span>;
-    <span class="kw">break</span>;
-}</div>
-        <div class="ns-why">Con <code style="font-family:'JetBrains Mono',monospace">dia = 6</code> esperabas <strong>"sábado"</strong>… pero el código <em>cae</em> al caso 7 y termina en <strong>"domingo"</strong>. El compilador no se queja. Un bug silencioso.</div>
+        <div class="ns-h">✗ A mano · sin gestor de dependencias</div>
+        <div class="ns-code"><span class="cm">// 1. Buscar cada .jar en internet</span>
+<span class="cm">// 2. ¿Qué versiones? ¿son compatibles?</span>
+<span class="cm">// 3. ...y las que CADA jar necesita</span>
+<span class="cm">//    (las transitivas), también a mano</span>
+<span class="cm">// 4. Copiarlos a una carpeta /lib</span>
+<span class="cm">// 5. Decirle a Java dónde está cada uno</span>
+<span class="cm">//    (eso es el classpath, escrito a mano):</span>
+javac -cp <span class="str">".;lib/sync.jar;lib/core.jar;lib/bson.jar"</span> ...</div>
+        <div class="ns-why">Frágil y repetitivo. Si cambias de equipo, repites todo. Una versión mal elegida y nada compila. <strong>No escala.</strong></div>
       </div>
       <div class="ns-col si">
-        <div class="ns-h">✓ Go · sin break, salida automática</div>
-        <div class="ns-code"><span class="kw">switch</span> dia {
-<span class="kw">case</span> <span class="str">6</span>:
-    msg = <span class="str">"sábado"</span>
-    <span class="cm">// rompe solo, automático</span>
-<span class="kw">case</span> <span class="str">7</span>:
-    msg = <span class="str">"domingo"</span>
-}
-<span class="cm">// fallthrough es OPT-IN</span></div>
-        <div class="ns-why">Go invirtió la regla: <strong>cada caso rompe solo</strong>. Si de verdad quieres caer al siguiente, lo pides explícito con la palabra <code style="font-family:'JetBrains Mono',monospace">fallthrough</code>. Lo peligroso ahora es lo intencional.</div>
+        <div class="ns-h">✓ Con un gestor · declaras y él resuelve</div>
+        <div class="ns-code"><span class="cm">&lt;!-- En el pom.xml declaras solo el QUÉ --&gt;</span>
+&lt;dependency&gt;
+  &lt;groupId&gt;<span class="str">org.mongodb</span>&lt;/groupId&gt;
+  &lt;artifactId&gt;<span class="str">mongodb-driver-sync</span>&lt;/artifactId&gt;
+  &lt;version&gt;<span class="str">5.8.0</span>&lt;/version&gt;
+&lt;/dependency&gt;
+<span class="cm">// Él trae esa Y sus transitivas.</span></div>
+        <div class="ns-why">Declaras el <strong>qué</strong>, no el <strong>cómo</strong>. El gestor resuelve versiones, trae las dependencias <em>de tus dependencias</em> y las cachea. Reproducible en cualquier equipo.</div>
       </div>
     </div>
-    <p class="subtle" style="margin-top:2rem">Python no tiene este problema porque <strong>no hay <span class="inlinecode">break</span> ni fallthrough</strong>: el primer <span class="inlinecode">case</span> que coincide gana, ejecuta su bloque y <em>match</em> termina. Limpio por diseño.</p>
+    <p class="subtle" style="margin-top:1.8rem">Eso es un <strong>gestor de dependencias</strong>: un programa que lee una lista de lo que tu proyecto necesita, lo descarga de un <strong>repositorio público</strong> (con todo lo que arrastra consigo) y lo deja listo para usar. <strong>Todo lenguaje moderno tiene el suyo</strong> — porque nadie reescribe lo que ya existe, y administrar ese préstamo a mano es imposible a escala.</p>
+    <div class="analogy">Cocinar un plato no significa criar las gallinas ni moler el trigo: usas ingredientes que otros produjeron. Un gestor de dependencias es el <strong>servicio de entrega</strong> al que le pasas tu lista de la compra; él va al supermercado, trae cada ingrediente <em>y los ingredientes que ese ingrediente necesita</em>, y los guarda en tu despensa para la próxima vez.</div>
   </div>
 </section>
 
-<!-- IV: cómo evalúa match (animador) -->
+<!-- II: Maven -->
 <section>
   <div class="wrap">
-    <p class="marker">IV · Cómo piensa el match · paso a paso</p>
-    <p class="lead">match no compara todo a la vez.<br>Prueba caso por caso, <em>de arriba hacia abajo.</em></p>
-    <p class="subtle">El orden importa: gana el <strong>primer</strong> patrón que coincide. Por eso el comodín <span class="inlinecode">case _</span> siempre va al final — si lo pones arriba, se traga todo. Avanza paso a paso y mira cómo el intérprete recorre los casos con el comando <span class="inlinecode">"correr al norte"</span>:</p>
-    <div class="widget" data-tag="El intérprete, en cámara lenta">
-      <div class="rv-subject"><span class="lbl">match</span> comando = <span class="cap">"correr al norte"</span></div>
-      <div class="rv-cases" id="rv-cases">
-        <div class="rv-case" data-i="0"><span><span class="kw">case</span> <span class="str">"salir"</span>:</span><span class="rv-verdict">—</span></div>
-        <div class="rv-case" data-i="1"><span><span class="kw">case</span> <span class="str">"norte"</span> | <span class="str">"sur"</span>:</span><span class="rv-verdict">—</span></div>
-        <div class="rv-case" data-i="2"><span><span class="kw">case</span> s <span class="kw">if</span> <span class="str">"norte"</span> <span class="kw">in</span> s:</span><span class="rv-verdict">—</span></div>
-        <div class="rv-case" data-i="3"><span><span class="kw">case</span> _:</span><span class="rv-verdict">—</span></div>
+    <p class="marker">II · Maven · el bibliotecario del mundo Java</p>
+    <p class="lead">Maven no solo trae librerías.<br>También sabe <em>construir</em> tu proyecto.</p>
+    <p class="subtle"><strong>Apache Maven</strong> es el gestor de dependencias y herramienta de construcción más usado en Java. Nació hacia <strong>2004</strong> en la Apache Software Foundation: su creador, Jason van Zyl, estaba harto de mantener guiones de compilación casi idénticos y de descargar JARs a mano. Su idea fue <em>"convención sobre configuración"</em>: si sigues una estructura estándar, casi no configuras nada. El nombre <span class="inlinecode">Maven</span> viene del yidish y significa <em>"acumulador de conocimiento"</em> — la herramienta que sabe cómo construir tu proyecto y de dónde traer cada pieza.</p>
+    <div class="analogy">La misma idea de la sección anterior, ahora con libros: Maven es un <strong>bibliotecario</strong> con un catálogo mundial. Le entregas una ficha (tu <code>pom.xml</code>) que dice qué necesitas; él lo busca en la <strong>biblioteca central</strong> (Maven Central, el supermercado de antes) y guarda una copia en tu <strong>despensa</strong> (<code>~/.m2</code>) para no volver a ir por ella.</p>
+    <p class="subtle" style="margin-top:1.8rem">Dos lugares que debes conocer. <strong>Maven Central</strong> es el repositorio público por defecto (lo navegas en <span class="inlinecode">central.sonatype.com</span>); ahí viven millones de librerías, listas para que cualquiera las declare. Y <strong><span class="inlinecode">~/.m2/repository</span></strong> es tu repositorio <em>local</em>: la caché en tu propio equipo donde Maven guarda lo que ya bajó, para no repetir la descarga. Mira cómo resuelve una sola dependencia:</p>
+    <div class="widget" data-tag="Cómo Maven resuelve una dependencia">
+      <div class="dr-flow">
+        <div class="dr-node" id="dr-pom">pom.xml<small>tú declaras</small></div>
+        <div class="dr-arrow">→</div>
+        <div class="dr-node" id="dr-maven">Maven<small>resuelve</small></div>
+        <div class="dr-arrow">→</div>
+        <div class="dr-node" id="dr-central">Maven Central ☁<small>repo público</small></div>
+        <div class="dr-arrow">→</div>
+        <div class="dr-node" id="dr-cache">~/.m2<small>caché local</small></div>
       </div>
-      <div class="rv-out">
-        <div class="rv-step" id="rv-step">·</div>
-        <div class="rv-txt" id="rv-txt">Pulsa <strong>Siguiente</strong> o <strong>Play</strong> para ver al intérprete probar cada caso en orden.</div>
-      </div>
+      <div class="dr-deps" id="dr-deps"></div>
+      <div class="dr-narr" id="dr-narr">Pulsa <b>Siguiente</b> para ver a Maven traer una librería… y todo lo que esa librería arrastra consigo.</div>
       <div class="w-controls">
-        <button class="btn" id="rv-reset">⟲ Reset</button>
-        <button class="btn" id="rv-prev">◀ Atrás</button>
-        <button class="btn on" id="rv-next">Siguiente ▶</button>
-        <button class="btn" id="rv-play">▶ Play</button>
+        <button class="btn" id="dr-reset">⟲ Reset</button>
+        <button class="btn" id="dr-prev">◀ Atrás</button>
+        <button class="btn on" id="dr-next">Siguiente ▶</button>
+        <button class="btn" id="dr-play">▶ Play</button>
       </div>
     </div>
-    <p class="subtle" style="margin-top:1.6rem">Fíjate en el caso 3: <span class="inlinecode">case s if "norte" in s</span> usa una <strong>guarda</strong> (un <span class="inlinecode">if</span> extra) y <em>captura</em> el valor en la variable <span class="inlinecode">s</span>. Eso ya no es un switch — es coincidencia de patrones. Lo vemos en la siguiente sección.</p>
+    <p class="subtle" style="margin-top:1.6rem">Y además construye: con un solo comando, <span class="inlinecode">mvn package</span> hace lo que tú harías a mano en varios pasos — revisa el proyecto, lo compila, corre tus pruebas y arma el <span class="inlinecode">.jar</span> final. Esos pasos son un <strong>ciclo de vida</strong> de <em>fases en orden</em> (<em>validate → compile → test → package</em>), y pedir la última dispara sola todas las anteriores.</p>
   </div>
 </section>
 
-<!-- V: structural pattern matching -->
+<!-- III: anatomía del pom.xml -->
 <section>
   <div class="wrap">
-    <p class="marker">V · La joya de Python · structural pattern matching</p>
-    <p class="lead">match no solo compara valores.<br>Compara <em>la forma</em> de los datos.</p>
-    <p class="subtle">Aquí Python deja atrás al switch clásico de Java y Go. Un patrón puede <strong>desarmar</strong> una lista, un diccionario o un objeto, verificar su estructura y <em>capturar</em> sus partes en variables — todo en la misma línea. Toca cada <span class="inlinecode">case</span> para entender qué patrón usa:</p>
-    <div class="widget" data-tag="Toca cada patrón">
-      <div class="sp-stage">
-        <div class="sp-code">
-          <span class="sp-line dim"><span class="kw">match</span> evento:</span>
-          <span class="sp-line" data-sp="literal">    <span class="kw">case</span> <span class="str">"ping"</span>:</span>
-          <span class="sp-line dim">        responder()</span>
-          <span class="sp-line" data-sp="secuencia">    <span class="kw">case</span> [<span class="cap">"mover"</span>, <span class="cap">x</span>, <span class="cap">y</span>]:</span>
-          <span class="sp-line dim">        mover_a(x, y)</span>
-          <span class="sp-line" data-sp="estrella">    <span class="kw">case</span> [<span class="str">"sumar"</span>, *<span class="cap">nums</span>]:</span>
-          <span class="sp-line dim">        total(nums)</span>
-          <span class="sp-line" data-sp="mapeo">    <span class="kw">case</span> {<span class="str">"tipo"</span>: <span class="cap">t</span>, <span class="str">"id"</span>: <span class="cap">n</span>}:</span>
-          <span class="sp-line dim">        procesar(t, n)</span>
-          <span class="sp-line" data-sp="clase">    <span class="kw">case</span> <span class="ty">Punto</span>(<span class="cap">x</span>=<span class="cap">px</span>, <span class="cap">y</span>=<span class="cap">py</span>):</span>
-          <span class="sp-line dim">        dibujar(px, py)</span>
-          <span class="sp-line" data-sp="comodin">    <span class="kw">case</span> _:</span>
-          <span class="sp-line dim">        ignorar()</span>
-        </div>
-        <div class="sp-panel">
-          <div class="sp-tag" id="sp-tag">Toca un case</div>
-          <div class="sp-title" id="sp-title">Cinco patrones</div>
-          <div class="sp-desc" id="sp-desc">Cada <code>case</code> de la izquierda usa un tipo distinto de patrón. Tócalos en orden para ver cómo Python desarma listas, diccionarios y objetos — capturando sus partes sobre la marcha.</div>
-          <div class="sp-match" id="sp-match">Las variables en <b style="color:var(--ochre)">ámbar</b> son <b>capturas</b>: si el patrón coincide, Python las llena por ti.</div>
+    <p class="marker">III · Anatomía del pom.xml · cada parte, explicada</p>
+    <p class="lead">El <em>pom.xml</em> responde tres preguntas:<br>qué eres, de qué dependes y cómo te construyes.</p>
+    <p class="subtle">El <span class="inlinecode">pom.xml</span> (<em>Project Object Model</em>) es el archivo central de un proyecto Maven. Es un documento <strong>XML</strong> — una forma de anotar datos con etiquetas que se abren y se cierran (<span class="inlinecode">&lt;etiqueta&gt;valor&lt;/etiqueta&gt;</span>, igual que el HTML de una página web) y que pueden anidarse unas dentro de otras. Describe <strong>qué</strong> es tu proyecto (sus coordenadas), <strong>de qué</strong> depende (sus dependencias) y <strong>cómo</strong> se construye (su build). Toca cada parte para ver qué significa:</p>
+    <div class="widget" data-tag="pom.xml · toca cada parte">
+      <div class="po-stage">
+        <div class="po-code" id="po-code"></div>
+        <div class="po-panel">
+          <div class="po-tag" id="po-tag">Toca una parte</div>
+          <div class="po-title" id="po-title">El esqueleto de un proyecto</div>
+          <div class="po-desc" id="po-desc">Cada bloque del archivo de la izquierda cumple un papel. Tócalos en orden — de la cabecera al build — y arma una imagen completa de cómo Maven entiende tu proyecto.</div>
+          <div class="po-ana" id="po-ana"></div>
         </div>
       </div>
     </div>
-    <p class="subtle" style="margin-top:1.6rem">Esto es lo que ni Java ni Go tenían cuando Python lo lanzó (Java lo está incorporando apenas, con <em>record patterns</em>). Para un proyecto que procesa comandos, mensajes JSON o eventos, <strong>match</strong> reemplaza decenas de <span class="inlinecode">if isinstance(...)</span> por algo que se lee como la estructura del dato.</p>
+    <p class="subtle" style="margin-top:1.6rem">Hay más piezas opcionales que verás en proyectos grandes: <span class="inlinecode">&lt;parent&gt;</span> (heredar configuración de otro POM), <span class="inlinecode">&lt;dependencyManagement&gt;</span> (fijar versiones en un solo lugar) y <span class="inlinecode">&lt;repositories&gt;</span> (añadir repositorios además de Maven Central). Pero con las partes de arriba ya lees y escribes el 90% de los <span class="inlinecode">pom.xml</span> reales.</p>
   </div>
 </section>
 
-<!-- VI: ¿switch o if-else? -->
+<!-- IV: un concepto, muchos nombres -->
 <section>
   <div class="wrap">
-    <p class="marker">VI · La decisión honesta · ¿switch o if-else?</p>
-    <p class="lead">match es elegante,<br>pero no siempre es la <em>respuesta.</em></p>
-    <p class="subtle">Un buen programador no usa la herramienta más nueva: usa la <strong>correcta</strong>. Responde tres preguntas sobre tu caso y deja que el decisor te recomiende. No hay trampa — la lógica es la misma que aplicarás en tu proyecto:</p>
-    <div class="widget" data-tag="Responde y decide">
-      <div class="dz-prog" id="dz-prog">Pregunta 1 de 3</div>
-      <div class="dz-stage" id="dz-stage"></div>
-      <div class="w-controls" style="justify-content:center">
-        <button class="btn" id="dz-reset">⟲ Empezar de nuevo</button>
-      </div>
+    <p class="marker">IV · Un concepto, muchos nombres · gestores en cada lenguaje</p>
+    <p class="lead">Maven es de Java.<br>Pero <em>todos</em> los lenguajes tienen su versión.</p>
+    <p class="subtle">El problema es universal, así que cada ecosistema construyó su propio gestor. Cambian los nombres y los archivos, pero la idea es idéntica: <strong>declaras lo que necesitas, un repositorio público lo sirve, una caché local lo guarda</strong>. Pulsa cada lenguaje:</p>
+    <div class="widget" data-tag="El mismo concepto en 5 lenguajes">
+      <div class="xl-tabs" id="xl-tabs"></div>
+      <div class="xl-card" id="xl-card"></div>
     </div>
     <table class="cmp-table">
       <thead>
-        <tr><th>Cuándo</th><th>Python</th><th>Java</th><th>Go</th></tr>
+        <tr><th>Lenguaje</th><th>Gestor</th><th>Archivo manifiesto</th><th>Repositorio público</th></tr>
       </thead>
       <tbody>
-        <tr><td>Una variable vs muchos valores fijos</td><td><code>match</code> (o dict)</td><td><code>switch</code></td><td><code>switch</code></td></tr>
-        <tr><td>Condiciones con rangos / operadores</td><td><code>if-elif</code></td><td><code>if-else</code></td><td><code>switch</code> sin condición</td></tr>
-        <tr><td>Desarmar listas / dicts / objetos</td><td><strong><code>match</code></strong> ★</td><td>verboso</td><td>no nativo</td></tr>
-        <tr><td>Dos o tres ramas simples</td><td><code>if-else</code></td><td><code>if-else</code></td><td><code>if-else</code></td></tr>
-        <tr><td>Riesgo de fallthrough</td><td>ninguno</td><td>alto (usa <code>break</code>)</td><td>opt-in</td></tr>
+        <tr><td>Java</td><td>Maven / Gradle</td><td><code>pom.xml</code></td><td>Maven Central</td></tr>
+        <tr><td>C++</td><td>Conan / vcpkg <em>(ninguno oficial)</em></td><td><code>conanfile.txt</code> / <code>vcpkg.json</code></td><td>Conan Center / vcpkg <em>(fragmentado)</em></td></tr>
+        <tr><td>C#</td><td>NuGet</td><td><code>.csproj</code></td><td>nuget.org</td></tr>
+        <tr><td>Python</td><td>pip (+ Poetry, uv)</td><td><code>requirements.txt</code> / <code>pyproject.toml</code></td><td>PyPI</td></tr>
+        <tr><td>Go</td><td>Go modules</td><td><code>go.mod</code> + <code>go.sum</code></td><td>proxy.golang.org <em>(sin registro central)</em></td></tr>
       </tbody>
     </table>
+    <p class="subtle" style="margin-top:1.6rem">Dos casos curiosos: <strong>C++</strong> pasó décadas <em>sin</em> un gestor oficial (cada librería y la configuración del compilador, a mano), y <strong>Go</strong> no tiene un repositorio central — el nombre de cada dependencia <em>es su URL</em> (<span class="inlinecode">github.com/usuario/repo</span>). Aprender uno te prepara para entenderlos todos.</p>
   </div>
 </section>
 
-<!-- VII: taller -->
+<!-- V: el salto al mundo exterior -->
+<section>
+  <div class="wrap-n">
+    <p class="marker">V · El salto fuera de la memoria</p>
+    <p class="lead">Tus objetos vivían en RAM.<br>Al apagar, <em>desaparecían.</em></p>
+    <p class="subtle">Ya sabes <strong>traer</strong> cualquier librería sin descargarla a mano. La primera que usarás así —el <em>driver</em> de la base de datos— resuelve un problema aún más viejo que el de las dependencias. Porque todo lo que construiste en el Bloque I — clases, atributos, bucles, decisiones — vivía dentro del programa. Mientras corría, mandabas tú: una lista tenía lo que pusiste, un <span class="inlinecode">if</span> elegía lo que decías. Pero al cerrar el programa, <strong>todo se borraba</strong>. Hoy das el salto que separa un ejercicio de un proyecto real: <strong>persistir datos</strong> — guardarlos en una base de datos para que sobrevivan al apagón.</p>
+    <p class="subtle" style="margin-top:1.2rem">Y aquí cambia una regla profunda. Una variable en memoria <strong>nunca falla</strong>. Una base de datos sí: el archivo puede estar bloqueado, la red caerse, la contraseña ser incorrecta, el dato venir con el tipo equivocado. Por primera vez tu código depende de algo que <strong>no controlas</strong>. Para eso existe el manejo de excepciones — el tema central de hoy.</p>
+    <div class="analogy">Programar en memoria es cocinar en tu propia cocina: todo está donde lo dejaste. Hablar con una base de datos es <strong>pedir a domicilio</strong>: depende del restaurante, del repartidor y del tráfico. A veces llega tarde, a veces no llega. No puedes evitar que falle — pero sí puedes tener un <strong>plan B</strong> para cuando falle.</p>
+  </div>
+</section>
+
+<!-- II: anatomía del try/catch -->
 <section>
   <div class="wrap">
-    <p class="marker">VII · Taller en clase · reescribe las calificaciones</p>
-    <p class="lead">Esa cadena de elif del proyecto<br>tiene su <em>gemelo</em> en match.</p>
-    <p class="subtle">Recuerda el clasificador de calificaciones que escribimos con <strong>if-elif</strong>. Hoy lo reescribes con <strong>match</strong> usando guardas — porque las calificaciones son rangos, no valores exactos. Compara y luego hazlo con tu propio caso:</p>
+    <p class="marker">VI · La red de seguridad · try / catch / finally</p>
+    <p class="lead">El <em>try</em> es el salto.<br>El <em>catch</em> es la red que te atrapa.</p>
+    <p class="subtle">Cuando una línea dentro de un <span class="inlinecode">try</span> falla, no se rompe el programa: se <strong>lanza una excepción</strong> y el control <strong>salta</strong> al <span class="inlinecode">catch</span>, que la atrapa. Esto rompe el flujo lineal que conoces — no se ejecuta línea por línea hasta el final, sino que <em>salta</em>. Avanza paso a paso con los dos escenarios y míralo:</p>
+    <div class="analogy">Un trapecista salta sin miedo porque debajo hay una <strong>red</strong>. El <code>try</code> es el salto arriesgado; el <code>catch</code> es la red que lo recoge si cae. Sin red (sin try/catch), una sola caída <strong>termina la función</strong>. El <code>finally</code> es el utilero que recoge el equipo <strong>siempre</strong> — caiga o no caiga el trapecista.</p>
+    <div class="widget" data-tag="El flujo, en cámara lenta">
+      <div class="tc-scenarios">
+        <button class="btn on" id="tc-ok">✓ Todo sale bien</button>
+        <button class="btn" id="tc-fail">✗ Algo falla</button>
+      </div>
+      <div class="tc-stage">
+        <div class="tc-code" id="tc-code"></div>
+        <div class="tc-panel">
+          <div class="tc-step" id="tc-step">·</div>
+          <div class="tc-txt" id="tc-txt">Pulsa <b>Siguiente</b> para ver cómo el programa recorre el bloque línea por línea — y qué pasa cuando algo se rompe.</div>
+          <div class="tc-count" id="tc-count"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="tc-reset">⟲ Reset</button>
+        <button class="btn" id="tc-prev">◀ Atrás</button>
+        <button class="btn on" id="tc-next">Siguiente ▶</button>
+        <button class="btn" id="tc-play">▶ Play</button>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Tres ideas que cambian todo: <strong>(1)</strong> la línea que falla <em>corta</em> el resto del <span class="inlinecode">try</span> — lo de abajo no se ejecuta. <strong>(2)</strong> El <span class="inlinecode">catch</span> solo corre <em>si</em> hubo error. <strong>(3)</strong> El <span class="inlinecode">finally</span> corre <em>siempre</em> — por eso es el lugar para cerrar conexiones.</p>
+  </div>
+</section>
+
+<!-- III: try-with-resources -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · La llave que se cierra sola · try-with-resources</p>
+    <p class="lead">Abrir una conexión es fácil.<br>Lo difícil es <em>acordarse de cerrarla.</em></p>
+    <p class="subtle">Una conexión a base de datos es un recurso <strong>caro y limitado</strong>: si la abres y olvidas cerrarla, se queda "colgada" y, tras muchas, la base se satura. Java tiene una forma de cerrar sola: declarar el recurso entre paréntesis del <span class="inlinecode">try (...)</span>. Al salir del bloque — con éxito o con error — Java llama a <span class="inlinecode">close()</span> por ti.</p>
     <div class="ns-grid">
       <div class="ns-col no">
-        <div class="ns-h">Antes · cadena de if-elif</div>
-        <div class="ns-code"><span class="kw">def</span> letra(c):
-    <span class="kw">if</span> c >= <span class="str">90</span>:
-        <span class="kw">return</span> <span class="str">"A"</span>
-    <span class="kw">elif</span> c >= <span class="str">80</span>:
-        <span class="kw">return</span> <span class="str">"B"</span>
-    <span class="kw">elif</span> c >= <span class="str">70</span>:
-        <span class="kw">return</span> <span class="str">"C"</span>
-    <span class="kw">else</span>:
-        <span class="kw">return</span> <span class="str">"Reprobado"</span></div>
-        <div class="ns-why">Funciona perfecto. Para <strong>rangos</strong>, el if-elif sigue siendo natural — no todo necesita match.</div>
+        <div class="ns-h">✗ A mano · frágil</div>
+        <div class="ns-code"><span class="kw">Connection</span> c = null;
+<span class="kw">try</span> {
+  c = DriverManager
+        .getConnection(url);
+  <span class="cm">// ... usar c ...</span>
+} <span class="kw">catch</span> (SQLException e) {
+  <span class="cm">// manejar error</span>
+} <span class="kw">finally</span> {
+  <span class="cm">// hay que acordarse...</span>
+  <span class="kw">if</span> (c != null) c.close();
+}</div>
+        <div class="ns-why">Funciona, pero <strong>tú</strong> cargas con cerrar: el <code>finally</code>, el <code>if (c != null)</code>, y <code>close()</code> también puede fallar. Mucho ritual para no olvidarse.</div>
       </div>
       <div class="ns-col si">
-        <div class="ns-h">Con match · guardas por rango</div>
-        <div class="ns-code"><span class="kw">def</span> letra(c):
-    <span class="kw">match</span> c:
-        <span class="kw">case</span> n <span class="kw">if</span> n >= <span class="str">90</span>:
-            <span class="kw">return</span> <span class="str">"A"</span>
-        <span class="kw">case</span> n <span class="kw">if</span> n >= <span class="str">80</span>:
-            <span class="kw">return</span> <span class="str">"B"</span>
-        <span class="kw">case</span> n <span class="kw">if</span> n >= <span class="str">70</span>:
-            <span class="kw">return</span> <span class="str">"C"</span>
-        <span class="kw">case</span> _:
-            <span class="kw">return</span> <span class="str">"Reprobado"</span></div>
-        <div class="ns-why">Mismo resultado, leído como una tabla. <strong>La guarda</strong> (<code style="font-family:'JetBrains Mono',monospace">if n >= 90</code>) es lo que permite rangos dentro de match. El <code style="font-family:'JetBrains Mono',monospace">case _</code> reemplaza al <code style="font-family:'JetBrains Mono',monospace">else</code>.</div>
+        <div class="ns-h">✓ try-with-resources · seguro</div>
+        <div class="ns-code"><span class="kw">try</span> (<span class="kw">Connection</span> c =
+       DriverManager
+         .getConnection(url)) {
+  <span class="cm">// ... usar c ...</span>
+} <span class="kw">catch</span> (SQLException e) {
+  <span class="cm">// manejar error</span>
+}
+<span class="cm">// c.close() se llama SOLO,</span>
+<span class="cm">// pase lo que pase</span></div>
+        <div class="ns-why">El recurso va <strong>dentro del paréntesis</strong>. Java garantiza <code>close()</code> al salir. Sin <code>finally</code>, sin <code>if</code>, sin olvidos. Es la forma que usarás siempre.</div>
       </div>
     </div>
-    <p class="subtle" style="margin-top:1.8rem"><strong>Tu turno (10 min):</strong> toma una de las cadenas <span class="inlinecode">if-elif</span> de tu proyecto integrador — la validación de un dato, el menú de opciones, el cálculo de una categoría — y decide honestamente: ¿gana en claridad si la reescribes con <strong>match</strong>, o el <strong>if-elif</strong> ya estaba bien? Justifica tu decisión: <em>eso</em> es lo que evalúo, no la moda.</p>
+    <div class="analogy">Es como un <strong>grifo con sensor</strong>: abre cuando pones las manos y se cierra solo al quitarlas. No dependes de tu memoria para no inundar el baño. El recurso (agua, conexión) se libera <strong>siempre</strong>, aunque salgas corriendo.</div>
   </div>
 </section>
 
-<!-- VIII: SPRINT 1 REVIEW -->
+<!-- IV: java.sql.* tour -->
 <section>
   <div class="wrap">
-    <p class="marker">VIII · Sprint 1 Review · tu proyecto se defiende hoy</p>
-    <p class="lead">El primer sprint termina.<br>No con un entregable: con una <em>demostración.</em></p>
-    <p class="subtle">Cerramos el Bloque I. Tu proyecto integrador ya debería tener cuerpo: <strong>clases base, encapsulamiento y control de flujo</strong>. En el Sprint Review lo presentas en vivo — corto, claro y defendible. Marca lo que ya tienes listo; el contador te dice qué tan cerca estás de poder demostrar hoy:</p>
-    <div class="widget" data-tag="Checklist del Sprint 1 Review">
-      <div class="chk-progress">Listo para demostrar: <span id="chk-count">0</span> de 10 puntos
-        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+    <p class="marker">VIII · El equipo de java.sql · siete clases que trabajan juntas</p>
+    <p class="lead">Conectarse a una base en Java<br>es coordinar a <em>siete</em> personajes.</p>
+    <p class="subtle">El paquete <span class="inlinecode">java.sql</span> reparte el trabajo en clases con un rol claro cada una. No las memorices: entiende <strong>qué hace cada una</strong> y cómo se pasan el testigo. Toca cada nombre para ver su papel, su analogía y cómo se usa:</p>
+    <div class="widget" data-tag="java.sql · toca cada clase">
+      <div class="cl-stage">
+        <div class="cl-list" id="sql-list"></div>
+        <div class="cl-detail" id="sql-detail"></div>
       </div>
-      <div class="chk-group">
-        <div class="chk-group-t">Estructura · lo que construiste (Bloque I)</div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Al menos dos clases base</strong> del dominio, con atributos y métodos coherentes con el caso</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Encapsulamiento aplicado</strong> — atributos privados con sus getters/setters o <code>@property</code>, no atributos públicos sueltos</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Validaciones</strong> en los puntos de entrada: un constructor o setter que rechaza datos inválidos</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Control de flujo real</strong> — al menos una decisión múltiple (if-elif o <code>match</code>) que dirige el comportamiento</div></div>
-      </div>
-      <div class="chk-group">
-        <div class="chk-group-t">Evidencia · lo que se ve correr</div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Un main / bloque de prueba</strong> que instancia objetos y ejecuta el flujo principal sin errores</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Salida en consola</strong> que demuestra que las clases y validaciones funcionan</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Repositorio en GitHub</strong> actualizado, con commits que cuentan el avance del sprint</div></div>
-      </div>
-      <div class="chk-group">
-        <div class="chk-group-t">Presentación · los 5 minutos de defensa</div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedes <strong>explicar tu diseño</strong>: por qué esas clases, por qué esos atributos son privados</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedes <strong>defender tu código línea por línea</strong> — si lo escribiste con ayuda de IA, lo entiendes y lo justificas</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Tienes claro <strong>qué sigue en el Bloque II</strong>: dónde entrará la herencia en tu proyecto</div></div>
-      </div>
-      <div class="chk-final" id="chk-final"><strong>Recuerda:</strong> un Sprint Review no es un examen de perfección. Es mostrar avance honesto y saber explicarlo. Marca tus puntos y ve qué te falta para llegar listo a la mesa.</div>
     </div>
+    <p class="subtle" style="margin-top:1.6rem">El flujo siempre es el mismo: <strong>DriverManager</strong> abre una <strong>Connection</strong> → de ella creas un <strong>PreparedStatement</strong> → lo ejecutas y recibes un <strong>ResultSet</strong> → si algo falla, salta una <strong>SQLException</strong>. Las cuatro etapas que ya viste en el laboratorio.</p>
+  </div>
+</section>
+
+<!-- V: conversión de tipos -->
+<section>
+  <div class="wrap">
+    <p class="marker">IX · La aduana de los tipos · de SQL a Java</p>
+    <p class="lead">La base habla un idioma.<br>Java habla <em>otro.</em> Hay que traducir.</p>
+    <p class="subtle">Una celda de la base guarda un valor con <strong>su</strong> tipo SQL (<span class="inlinecode">INTEGER</span>, <span class="inlinecode">TEXT</span>, <span class="inlinecode">REAL</span>…). Para usarlo en Java necesitas convertirlo a un tipo Java (<span class="inlinecode">int</span>, <span class="inlinecode">String</span>, <span class="inlinecode">double</span>…). Eso hacen los métodos <span class="inlinecode">getInt</span>, <span class="inlinecode">getString</span>, <span class="inlinecode">getDouble</span>: son <strong>traductores</strong>. Elige cada caso y mira al valor cruzar la frontera:</p>
+    <div class="analogy">Es como cruzar una <strong>aduana cambiando de moneda</strong>. El valor entra con la moneda de la base (tipo SQL) y debe salir con la moneda de Java (tipo Java). Si pides el cambio correcto, sale limpio. Si pides convertir un texto como si fuera número, la conversión <strong>falla</strong> — como cambiar billetes de un país que no existe.</p>
+    <div class="widget" data-tag="Conversión de tipos · elige y observa">
+      <div class="cv-stage">
+        <div class="cv-token" id="cv-token">20</div>
+        <div class="cv-row">
+          <div class="cv-box cv-cell">
+            <div class="cv-box-tag">Celda en la base · SQL</div>
+            <div class="cv-box-type" id="cv-cell-type">INTEGER</div>
+            <div class="cv-box-val" id="cv-cell-val">20</div>
+          </div>
+          <div class="cv-mid">
+            <div class="cv-method" id="cv-method">getInt("edad")</div>
+            <div class="cv-arrow">→</div>
+          </div>
+          <div class="cv-box cv-var" id="cv-var">
+            <div class="cv-box-tag">Variable · Java</div>
+            <div class="cv-box-type" id="cv-var-type">?</div>
+            <div class="cv-box-val" id="cv-var-val"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cv-note" id="cv-note">Elige una conversión abajo para ver el valor cruzar de la base a una variable Java.</div>
+      <div class="cv-picks" id="cv-picks"></div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">El caso traicionero es el <strong>NULL</strong>: en SQL significa "sin valor", pero <span class="inlinecode">getInt</span> de un NULL devuelve <strong>0</strong> — y un 0 parece un dato real. Por eso, tras leer, preguntas <span class="inlinecode">rs.wasNull()</span>: "¿esa celda estaba de verdad vacía?". Confundir <em>cero</em> con <em>vacío</em> es uno de los errores más comunes al leer una base.</p>
+  </div>
+</section>
+
+<!-- VI: ResultSet cursor + bucles -->
+<section>
+  <div class="wrap">
+    <p class="marker">X · El cursor del ResultSet · tu bucle while reaparece</p>
+    <p class="lead">Un SELECT no te da los datos de golpe.<br>Te da un <em>dedo</em> que recorre filas.</p>
+    <p class="subtle">El <span class="inlinecode">ResultSet</span> no es una lista cargada en memoria: es un <strong>cursor</strong> que empieza <em>antes</em> de la primera fila. Cada <span class="inlinecode">rs.next()</span> avanza una fila y devuelve <span class="inlinecode">true</span>; cuando ya no hay más, devuelve <span class="inlinecode">false</span>. Por eso se lee con un <span class="inlinecode">while</span> — el mismo bucle que ya dominas. Pulsa <span class="inlinecode">rs.next()</span> y observa:</p>
+    <div class="widget" data-tag="ResultSet · paso a paso">
+      <div class="cu-stage">
+        <div>
+          <table class="cu-table" id="cu-table">
+            <thead><tr><th></th><th>id</th><th>nombre</th><th>edad</th></tr></thead>
+            <tbody id="cu-body"></tbody>
+          </table>
+        </div>
+        <div class="cu-side">
+          <div class="cu-code">
+            <span class="ln" id="cu-l1"><span class="kw">while</span> (rs.<span class="fn">next</span>()) {</span>
+            <span class="ln" id="cu-l2">  <span class="ty">int</span> id = rs.<span class="fn">getInt</span>(<span class="str">"id"</span>);</span>
+            <span class="ln" id="cu-l3">  <span class="ty">String</span> n = rs.<span class="fn">getString</span>(<span class="str">"nombre"</span>);</span>
+            <span class="ln" id="cu-l4">  <span class="fn">print</span>(id + <span class="str">" "</span> + n);</span>
+            <span class="ln" id="cu-l5">}</span>
+          </div>
+          <div class="cu-out" id="cu-out">El cursor está <b>antes de la primera fila</b>. Aún no has leído nada. Pulsa <code>rs.next()</code>.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="cu-reset">⟲ Reset</button>
+        <button class="btn on" id="cu-next">rs.next() ▶</button>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Fíjate en el cierre: cuando <span class="inlinecode">rs.next()</span> devuelve <strong>false</strong>, el <span class="inlinecode">while</span> termina solo. Es exactamente el patrón de bucle controlado por condición que viste con menús y validaciones — ahora aplicado a una base de datos real.</p>
+  </div>
+</section>
+
+<!-- VII: a la nube -->
+<section>
+  <div class="wrap">
+    <p class="marker">XI · El salto a la nube · MongoDB Atlas</p>
+    <p class="lead">La misma idea, otro mundo:<br>la base ya no es un archivo. Es un <em>servidor.</em></p>
+    <p class="subtle">SQLite era un archivo en tu disco. <strong>MongoDB Atlas</strong> es una base en internet: viven los datos en un servidor remoto al que llegas por red, con usuario y contraseña. Y cambia el modelo: en vez de <strong>tablas con filas</strong>, hay <strong>colecciones con documentos</strong> — fichas flexibles tipo JSON. El paquete cambia, pero el espíritu (abrir, operar, atrapar errores, cerrar) es el mismo. Toca cada clase del driver:</p>
+    <div class="analogy">SQLite es un <strong>cuaderno en tu cajón</strong>: siempre está, es tuyo, nadie más lo toca. Atlas es un <strong>cuaderno en una bóveda al otro lado de la ciudad</strong>: necesitas la llave (usuario y contraseña), que el camino esté abierto (tu IP autorizada) y que haya señal — pero pueden consultarlo desde muchos lugares a la vez.</p>
+    <div class="widget" data-tag="MongoDB · toca cada clase">
+      <div class="cl-stage">
+        <div class="cl-list" id="mongo-list"></div>
+        <div class="cl-detail" id="mongo-detail"></div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.6rem">Un detalle clave: crear el <span class="inlinecode">MongoClient</span> <strong>no</strong> conecta todavía — es como guardar un contacto en el teléfono. La conexión real (y el posible error de red) ocurre en la <em>primera operación</em>. Por eso se hace un <span class="inlinecode">ping</span> al inicio: para fallar pronto y con un mensaje claro.</p>
+  </div>
+</section>
+
+<!-- VIII: checked vs unchecked -->
+<section>
+  <div class="wrap">
+    <p class="marker">XII · Dos clases de excepción · ¿el compilador te obliga?</p>
+    <p class="lead">Algunas excepciones te las exige el compilador.<br>Otras, <em>confían en ti.</em></p>
+    <p class="subtle">Aquí está la diferencia más sutil entre los dos mundos. <span class="inlinecode">SQLException</span> es <strong>checked</strong>: el compilador <em>no te deja compilar</em> si no la manejas o la declaras. <span class="inlinecode">MongoException</span> es <strong>unchecked</strong> (hereda de <span class="inlinecode">RuntimeException</span>): el compilador <em>no dice nada</em>… pero si la ignoras, un fallo de red tumba el programa igual.</p>
+    <div class="ns-grid">
+      <div class="ns-col no">
+        <div class="ns-h">SQLException · CHECKED · te obliga</div>
+        <div class="ns-code"><span class="cm">// Esto NO compila:</span>
+conn.prepareStatement(sql);
+<span class="cm">// ⛔ "unreported exception</span>
+<span class="cm">//    SQLException; must be caught"</span>
+
+<span class="cm">// El compilador EXIGE manejarla:</span>
+<span class="kw">try</span> { conn.prepareStatement(sql); }
+<span class="kw">catch</span> (SQLException e) { ... }</div>
+        <div class="ns-why">Es un <strong>trámite con firma obligatoria</strong>: no avanzas sin atenderlo. Java te fuerza a pensar en el error <em>antes</em> de ejecutar.</div>
+      </div>
+      <div class="ns-col si">
+        <div class="ns-h">MongoException · UNCHECKED · confía</div>
+        <div class="ns-code"><span class="cm">// Esto SÍ compila:</span>
+col.insertOne(doc);
+<span class="cm">// ✓ el compilador no se queja</span>
+
+<span class="cm">// ...pero si la red falla y no</span>
+<span class="cm">// hay catch, el programa se cae.</span>
+<span class="kw">try</span> { col.insertOne(doc); }
+<span class="kw">catch</span> (MongoException e) { ... }</div>
+        <div class="ns-why">Es una <strong>advertencia verbal</strong>: nadie te firma nada, pero ignorarla duele igual. La responsabilidad es <em>tuya</em>, no del compilador.</div>
+      </div>
+    </div>
+    <div class="analogy">Una excepción <strong>checked</strong> es el cinturón de seguridad que <em>pita</em> hasta que te lo pones. Una <strong>unchecked</strong> es saber que conducir cansado es peligroso: nadie te obliga a descansar, pero el riesgo es real. Buen programador: maneja las dos, te obligue o no el compilador.</div>
+  </div>
+</section>
+
+<!-- IX: comparativa -->
+<section>
+  <div class="wrap">
+    <p class="marker">XIII · Dos mundos, una disciplina</p>
+    <p class="lead">Local o nube, SQL o NoSQL:<br>siempre <em>abres, operas, atrapas y cierras.</em></p>
+    <p class="subtle">Cambian las clases y el modelo de datos, pero el ritual es idéntico. Esta tabla resume lo que viste hoy — y lo que llevarás a tu proyecto:</p>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Aspecto</th><th>SQLite · java.sql</th><th>MongoDB Atlas · driver</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Dónde vive</td><td>Archivo local <code>escuela.db</code></td><td>Servidor remoto (clúster)</td></tr>
+        <tr><td>Acceso</td><td>Sin usuario ni clave</td><td>Usuario + contraseña + IP autorizada</td></tr>
+        <tr><td>Modelo</td><td>Tablas y filas (SQL)</td><td>Colecciones y documentos (NoSQL)</td></tr>
+        <tr><td>Abrir conexión</td><td><code>DriverManager.getConnection</code></td><td><code>MongoClients.create</code></td></tr>
+        <tr><td>Unidad de datos</td><td><code>ResultSet</code> (filas)</td><td><code>Document</code> (JSON)</td></tr>
+        <tr><td>Leer un tipo</td><td><code>rs.getInt("edad")</code></td><td><code>doc.getInteger("edad")</code></td></tr>
+        <tr><td>Si falta / es NULL</td><td><code>getInt</code> da 0 → <code>wasNull()</code></td><td>devuelve <code>null</code> o tipo distinto</td></tr>
+        <tr><td>Excepción</td><td><code>SQLException</code> (checked)</td><td><code>MongoException</code> (unchecked)</td></tr>
+        <tr><td>Cierre seguro</td><td colspan="2" style="text-align:center"><strong>try-with-resources</strong> — igual en ambos</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
 <!-- CIERRE -->
 <section class="cierre">
   <div class="wrap-n">
-    <p class="marker">IX · Para la próxima clase</p>
-    <p class="lead">Cierra el control de flujo.<br>El Bloque II abre con <em>herencia.</em></p>
+    <p class="marker">XIV · Para la próxima clase</p>
+    <p class="lead">Ya sabes guardar datos.<br>La próxima: cómo <em>otros programas</em> te los piden.</p>
+    <p class="subtle">Hoy tu programa aprendió a hablar con una base de datos y a sostenerse cuando algo falla. En la <strong>Sesión 11</strong> daremos el siguiente paso: <strong>API y REST</strong> — cómo tu programa expone sus datos para que otras aplicaciones (una web, un celular) los pidan por internet. Ahí cobrará sentido por qué insistimos hoy en el manejo de errores y de tipos.</p>
     <div class="tarea">
-      <div class="tarea-tag">Sprint 1 Review</div>
+      <div class="tarea-tag">Tarea · aplica try/catch y persistencia</div>
       <ol>
-        <li><strong>Presenta tu avance hoy en clase:</strong> clases base + encapsulamiento + control de flujo, corriendo y defendido. Es insumo de tu participación.</li>
-        <li><strong>Aplica lo de hoy donde aporte:</strong> revisa tus cadenas de <code>if-elif</code> y reescribe con <code>match</code> solo las que ganen en claridad — justifica cada decisión.</li>
-        <li><strong>Deja el flujo limpio:</strong> sin <code>break</code> olvidados (si tocas Java), sin comodines mal ubicados, con un <code>case _</code> / <code>else</code> que cubra lo inesperado.</li>
-        <li><strong>Sube todo a GitHub</strong> con commits claros del sprint. Tu repo es la foto oficial del avance.</li>
-        <li><strong>Prepara el terreno para herencia:</strong> identifica en tu proyecto dos clases que compartan atributos o métodos — ahí nacerá una clase padre en el Bloque II.</li>
+        <li><strong>Elige una base:</strong> SQLite (local, recomendada para empezar) o MongoDB Atlas (nube). Conéctate desde tu proyecto integrador.</li>
+        <li><strong>Guarda y recupera</strong> al menos una de tus clases del dominio: inserta objetos y vuelve a leerlos en una tabla/colección.</li>
+        <li><strong>Envuelve toda operación de base en <code>try/catch</code></strong> y usa <code>try-with-resources</code> para cerrar la conexión. Nada de conexiones abiertas sin red.</li>
+        <li><strong>Maneja los tipos con cuidado:</strong> lee cada columna/campo con su tipo correcto y contempla el caso <code>NULL</code> / campo ausente.</li>
+        <li><strong>Provoca un error a propósito</strong> (una clave duplicada, una contraseña mal) y demuestra que tu <code>catch</code> lo atrapa sin que el programa se caiga. <em>Eso</em> es lo que evalúo.</li>
+        <li><strong>Sube todo a GitHub</strong> con commits claros. No subas contraseñas: usa una variable de entorno.</li>
       </ol>
     </div>
   </div>
@@ -477,238 +665,335 @@ window.addEventListener('scroll',()=>{const h=document.documentElement;document.
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
 const $=id=>document.getElementById(id);
-const L=html=>'<span class="ln">'+html+'</span>';
 
-// ─── W1: tabs cuatro lenguajes ──────────────────────────────
-const mxData={
-  ifelse:{
-    code:[
-      '<span class="cm"># Python · lo de siempre</span>',
-      '<span class="kw">def</span> enrutar(cmd):',
-      '    <span class="kw">if</span> cmd == <span class="str">"norte"</span>:',
-      '        avanzar(<span class="str">"N"</span>)',
-      '    <span class="kw">elif</span> cmd == <span class="str">"sur"</span>:',
-      '        avanzar(<span class="str">"S"</span>)',
-      '    <span class="kw">elif</span> cmd == <span class="str">"salir"</span>:',
-      '        terminar()',
-      '    <span class="kw">else</span>:',
-      '        print(<span class="str">"comando desconocido"</span>)',
-    ],
-    note:'La forma que ya conoces. Nota cómo <strong>repites <code>cmd ==</code> en cada rama</strong>. Para 3 casos es tolerable; para 15 se vuelve ruido. Cada estructura de abajo ataca exactamente esa repetición.'
-  },
-  match:{
-    code:[
-      '<span class="cm"># Python 3.10+ · match/case</span>',
-      '<span class="kw">def</span> enrutar(cmd):',
-      '    <span class="kw">match</span> cmd:',
-      '        <span class="kw">case</span> <span class="str">"norte"</span>:',
-      '            avanzar(<span class="str">"N"</span>)',
-      '        <span class="kw">case</span> <span class="str">"sur"</span>:',
-      '            avanzar(<span class="str">"S"</span>)',
-      '        <span class="kw">case</span> <span class="str">"salir"</span>:',
-      '            terminar()',
-      '        <span class="kw">case</span> _:  <span class="cm"># el comodín = else</span>',
-      '            print(<span class="str">"comando desconocido"</span>)',
-    ],
-    note:'La variable <code>cmd</code> se nombra <strong>una sola vez</strong>, arriba. No hay <code>break</code>: el primer <code>case</code> que coincide gana y match termina. El <code>case _</code> es el comodín, equivalente al <code>else</code>. <em>Requiere Python 3.10 o superior.</em>'
-  },
-  java:{
-    code:[
-      '<span class="cm">// Java · switch clásico</span>',
-      '<span class="kw">switch</span> (cmd) {',
-      '    <span class="kw">case</span> <span class="str">"norte"</span>:',
-      '        avanzar(<span class="str">"N"</span>);',
-      '        <span class="kw">break</span>;  <span class="cm">// ¡no lo olvides!</span>',
-      '    <span class="kw">case</span> <span class="str">"sur"</span>:',
-      '        avanzar(<span class="str">"S"</span>);',
-      '        <span class="kw">break</span>;',
-      '    <span class="kw">case</span> <span class="str">"salir"</span>:',
-      '        terminar();',
-      '        <span class="kw">break</span>;',
-      '    <span class="kw">default</span>:',
-      '        System.out.println(<span class="str">"desconocido"</span>);',
-      '}',
-    ],
-    note:'El <code>switch</code> de toda la vida. El peligro vive en el <strong><code>break</code></strong>: si lo olvidas, el código <em>cae</em> al siguiente caso (fallthrough). El <code>default</code> es el comodín. <em>Java moderno tiene <code>switch -></code> con flechas que evita el break — investígalo.</em>'
-  },
-  go:{
-    code:[
-      '<span class="cm">// Go · switch sin break</span>',
-      '<span class="kw">switch</span> cmd {',
-      '<span class="kw">case</span> <span class="str">"norte"</span>:',
-      '    avanzar(<span class="str">"N"</span>)',
-      '<span class="kw">case</span> <span class="str">"sur"</span>:',
-      '    avanzar(<span class="str">"S"</span>)',
-      '<span class="kw">case</span> <span class="str">"salir"</span>:',
-      '    terminar()',
-      '<span class="kw">default</span>:',
-      '    fmt.Println(<span class="str">"desconocido"</span>)',
-      '}',
-    ],
-    note:'Go aprendió de los errores de C: <strong>cada caso rompe solo</strong>, sin <code>break</code>. Más limpio que Java. Si de verdad quieres caer al siguiente caso, lo pides explícito con <code>fallthrough</code>. Lo peligroso ahora es lo intencional, no lo olvidado.'
-  }
-};
-function mxRender(k){
-  const d=mxData[k];
-  $('mx-code').innerHTML=d.code.map(L).join('');
-  $('mx-note').innerHTML=d.note;
-}
-document.querySelectorAll('[data-mx]').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('[data-mx]').forEach(x=>x.classList.remove('on'));
-    t.classList.add('on');
-    mxRender(t.dataset.mx);
-  });
-});
-mxRender('ifelse');
-
-// ─── W2: structural pattern matching explorer ───────────────
-const spData={
-  literal:{tag:'Patrón literal',title:'Valor exacto',
-    desc:'El patrón más simple: coincide si el valor es <strong>igual a un literal</strong>. Es el caso que también haría un switch normal. <code>"ping"</code> solo coincide con la cadena "ping".',
-    match:'<b>evento = "ping"</b> → coincide ✓ · cualquier otra cosa pasa de largo.'},
-  secuencia:{tag:'Patrón de secuencia',title:'Lista con forma fija',
-    desc:'Coincide si <code>evento</code> es una <strong>lista/tupla de exactamente 3 elementos</strong> cuyo primero sea "mover". Los otros dos se <em>capturan</em> en <code>x</code> y <code>y</code>.',
-    match:'<b>evento = ["mover", 10, 5]</b> → coincide, con <b style="color:var(--ochre)">x=10</b>, <b style="color:var(--ochre)">y=5</b>.'},
-  estrella:{tag:'Patrón con *',title:'Resto variable',
-    desc:'El <code>*nums</code> captura <strong>todos los elementos restantes</strong> en una lista, sin importar cuántos. Ideal para comandos con argumentos de longitud variable.',
-    match:'<b>evento = ["sumar", 2, 4, 8]</b> → coincide, con <b style="color:var(--ochre)">nums=[2, 4, 8]</b>.'},
-  mapeo:{tag:'Patrón de mapeo',title:'Diccionario por llaves',
-    desc:'Coincide si <code>evento</code> es un <strong>dict que contiene esas llaves</strong>. Los valores se capturan en <code>t</code> y <code>n</code>. Puede haber más llaves: solo exige las que nombras.',
-    match:'<b>evento = {"tipo": "user", "id": 42}</b> → coincide, con <b style="color:var(--ochre)">t="user"</b>, <b style="color:var(--ochre)">n=42</b>.'},
-  clase:{tag:'Patrón de clase',title:'Objeto desarmado',
-    desc:'Coincide si <code>evento</code> es una <strong>instancia de <code>Punto</code></strong> y extrae sus atributos <code>x</code> e <code>y</code> en <code>px</code> y <code>py</code>. Reemplaza el viejo <code>isinstance() + acceso a atributos</code>.',
-    match:'<b>evento = Punto(3, 7)</b> → coincide, con <b style="color:var(--ochre)">px=3</b>, <b style="color:var(--ochre)">py=7</b>.'},
-  comodin:{tag:'Comodín',title:'case _ · el último recurso',
-    desc:'El guion bajo <strong>coincide con todo</strong> lo que no encajó arriba. Por eso va <em>al final</em>: si lo pones primero, se traga todos los casos. Es el <code>else</code>/<code>default</code> de match.',
-    match:'Siempre coincide. Úsalo para el caso inesperado — o para un error explícito.'}
-};
-const spLines=document.querySelectorAll('.sp-line[data-sp]');
-function spRender(k){
-  spLines.forEach(l=>l.classList.toggle('lit',l.dataset.sp===k));
-  const d=spData[k];
-  $('sp-tag').textContent=d.tag;
-  $('sp-title').textContent=d.title;
-  $('sp-desc').innerHTML=d.desc;
-  $('sp-match').innerHTML=d.match;
-}
-spLines.forEach(l=>l.addEventListener('click',()=>spRender(l.dataset.sp)));
-
-// ─── W3: evaluador paso a paso de match ─────────────────────
-const rvSteps=[
-  {state:['cur','','',''],step:1,txt:'Empezamos por arriba. ¿<code>"correr al norte"</code> es igual a <strong>"salir"</strong>? Comparamos el caso 1.'},
-  {state:['miss','cur','',''],step:2,txt:'No coincide con "salir". Bajamos. ¿Es exactamente <strong>"norte" o "sur"</strong>? El patrón <code>|</code> prueba ambos.'},
-  {state:['miss','miss','cur',''],step:3,txt:'Tampoco — la cadena no es exactamente "norte". Bajamos. El caso 3 captura en <code>s</code> y aplica la guarda: ¿<strong>"norte" está dentro de s</strong>?'},
-  {state:['miss','miss','hit',''],step:'✓',txt:'<strong>¡Coincide!</strong> "norte" sí está contenido en "correr al norte". La guarda se cumple, <code>s</code> queda con el valor completo y <strong>match termina aquí</strong>: el caso 4 ni se prueba.'},
+// ─── W1: animador try/catch/finally ─────────────────────────
+const tcLines=[
+  '<span class="kw">try</span> {',                                                       //0
+  '  conn = DriverManager.<span class="fn">getConnection</span>(url);',                  //1
+  '  ps = conn.<span class="fn">prepareStatement</span>(sql);',                          //2
+  '  ps.<span class="fn">executeUpdate</span>();',                                       //3
+  '  System.out.<span class="fn">println</span>(<span class="str">"Guardado ✓"</span>);', //4
+  '} <span class="kw">catch</span> (<span class="ty">SQLException</span> e) {',            //5
+  '  System.out.<span class="fn">println</span>(<span class="str">"Error: "</span> + e.<span class="fn">getMessage</span>());', //6
+  '} <span class="kw">finally</span> {',                                                  //7
+  '  conn.<span class="fn">close</span>();',                                             //8
+  '}'                                                                                    //9
 ];
-const rvCases=document.querySelectorAll('.rv-case');
-let rvIdx=-1,rvTimer=null;
-function rvApply(state){
-  rvCases.forEach((c,i)=>{
-    c.classList.remove('cur','miss','hit');
-    const s=state[i];
-    if(s){c.classList.add(s);
-      c.querySelector('.rv-verdict').textContent = s==='cur'?'probando…':s==='miss'?'no':'coincide';
-    } else {
-      c.querySelector('.rv-verdict').textContent='—';
-    }
-  });
+const tcStruct=[0,5,7,9];
+const tcOk=[
+  {l:1,m:'done',t:'<b>getConnection()</b> abre la línea con la base. Vamos bien.'},
+  {l:2,m:'done',t:'Se prepara la orden con sus huecos <code>?</code>. Vamos bien.'},
+  {l:3,m:'done',t:'<b>executeUpdate()</b> se ejecuta y la base acepta. Sin errores.'},
+  {l:4,m:'done',t:'Se imprime <b>"Guardado ✓"</b>. El <code>try</code> llegó hasta el final.'},
+  {l:6,m:'skip',t:'No hubo excepción, así que el <code>catch</code> se <b>salta entero</b>. La red no hizo falta.'},
+  {l:8,m:'done',t:'<code>finally</code> corre <b>siempre</b>: la conexión se cierra, haya error o no.'}
+];
+const tcFail=[
+  {l:1,m:'done',t:'<b>getConnection()</b> abre la línea. De momento, todo bien.'},
+  {l:2,m:'done',t:'Se prepara la orden. Todo bien… aún.'},
+  {l:3,m:'fail',t:'💥 <b>executeUpdate()</b> falla (p. ej. una clave duplicada) y <b>lanza</b> una <code>SQLException</code>.'},
+  {l:4,m:'skip',t:'El resto del <code>try</code> se <b>abandona</b>: la línea "Guardado" <b>nunca</b> se ejecuta.'},
+  {l:6,m:'catch',t:'El control <b>salta</b> al <code>catch</code>: atrapa la excepción e imprime el error. <b>El programa NO se cae.</b>'},
+  {l:8,m:'done',t:'<code>finally</code> corre igual que en el éxito: la conexión se cierra. Pase lo que pase.'}
+];
+let tcSeq=tcOk, tcIdx=-1, tcTimer=null;
+function tcBuild(){
+  $('tc-code').innerHTML=tcLines.map((h,i)=>
+    '<span class="tc-line'+(tcStruct.includes(i)?' struct':'')+'" data-i="'+i+'">'+h+'</span>').join('');
 }
-function rvRender(){
-  if(rvIdx<0){
-    rvCases.forEach(c=>{c.classList.remove('cur','miss','hit');c.querySelector('.rv-verdict').textContent='—';});
-    $('rv-step').textContent='·';
-    $('rv-txt').innerHTML='Pulsa <strong>Siguiente</strong> o <strong>Play</strong> para ver al intérprete probar cada caso en orden.';
+function tcRender(){
+  const lines=document.querySelectorAll('.tc-line');
+  lines.forEach((el,i)=>{el.className='tc-line'+(tcStruct.includes(i)?' struct':'');});
+  if(tcIdx<0){
+    $('tc-step').textContent='·';
+    $('tc-txt').innerHTML='Pulsa <b>Siguiente</b> para ver cómo el programa recorre el bloque línea por línea — y qué pasa cuando algo se rompe.';
+    $('tc-count').textContent='';
     return;
   }
-  const s=rvSteps[rvIdx];
-  rvApply(s.state);
-  $('rv-step').textContent=s.step;
-  $('rv-txt').innerHTML=s.txt;
+  for(let k=0;k<=tcIdx;k++){
+    const s=tcSeq[k];
+    lines[s.l].classList.add(s.m);
+  }
+  lines[tcSeq[tcIdx].l].classList.add('cur');
+  $('tc-step').textContent=(tcIdx===tcSeq.length-1)? (tcSeq===tcFail?'!':'✓') : (tcIdx+1);
+  $('tc-txt').innerHTML=tcSeq[tcIdx].t;
+  $('tc-count').textContent='Paso '+(tcIdx+1)+' de '+tcSeq.length;
 }
-function rvStop(){if(rvTimer){clearInterval(rvTimer);rvTimer=null;$('rv-play').textContent='▶ Play';}}
-$('rv-next').addEventListener('click',()=>{rvStop();if(rvIdx<rvSteps.length-1){rvIdx++;rvRender();}});
-$('rv-prev').addEventListener('click',()=>{rvStop();if(rvIdx>-1){rvIdx--;rvRender();}});
-$('rv-reset').addEventListener('click',()=>{rvStop();rvIdx=-1;rvRender();});
-$('rv-play').addEventListener('click',()=>{
-  if(rvTimer){rvStop();return;}
-  if(rvIdx>=rvSteps.length-1){rvIdx=-1;rvRender();}
-  $('rv-play').textContent='❚❚ Pausa';
-  rvTimer=setInterval(()=>{
-    if(rvIdx<rvSteps.length-1){rvIdx++;rvRender();}
-    else rvStop();
-  },1600);
+function tcStop(){if(tcTimer){clearInterval(tcTimer);tcTimer=null;$('tc-play').textContent='▶ Play';}}
+function tcSetSeq(seq,btn){
+  tcStop();tcSeq=seq;tcIdx=-1;tcRender();
+  $('tc-ok').classList.toggle('on',btn==='ok');
+  $('tc-fail').classList.toggle('on',btn==='fail');
+}
+$('tc-ok').addEventListener('click',()=>tcSetSeq(tcOk,'ok'));
+$('tc-fail').addEventListener('click',()=>tcSetSeq(tcFail,'fail'));
+$('tc-next').addEventListener('click',()=>{tcStop();if(tcIdx<tcSeq.length-1){tcIdx++;tcRender();}});
+$('tc-prev').addEventListener('click',()=>{tcStop();if(tcIdx>-1){tcIdx--;tcRender();}});
+$('tc-reset').addEventListener('click',()=>{tcStop();tcIdx=-1;tcRender();});
+$('tc-play').addEventListener('click',()=>{
+  if(tcTimer){tcStop();return;}
+  if(tcIdx>=tcSeq.length-1){tcIdx=-1;tcRender();}
+  $('tc-play').textContent='❚❚ Pausa';
+  tcTimer=setInterval(()=>{if(tcIdx<tcSeq.length-1){tcIdx++;tcRender();}else tcStop();},1500);
 });
-rvRender();
+tcBuild();tcRender();
 
-// ─── W4: decisor switch vs if-else ──────────────────────────
-const dzQs=[
-  {q:'Comparas UNA sola variable contra varios valores concretos',
-   a:'Sí, una variable',b:'No, son condiciones distintas',
-   ya:'switch',yb:'ifelse'},
-  {q:'Necesitas rangos, operadores (>, <) o varias variables a la vez',
-   a:'Sí, hay rangos/operadores',b:'No, son valores exactos',
-   ya:'ifelse',yb:'switchpure'},
-  {q:'El dato es una estructura (lista, dict, objeto) que quieres desarmar',
-   a:'Sí, quiero desarmarlo',b:'No, es un valor simple',
-   ya:'match',yb:'switchplain'},
+// ─── W2: exploradores de clases (java.sql y mongo) ──────────
+const sqlClasses=[
+  {n:'DriverManager',p:'java.sql',role:'Abre la conexión a partir de una URL.',
+   ana:'La <b>central telefónica</b>: le das la dirección de la base y te conecta la llamada.',
+   code:'<span class="ty">Connection</span> c =\n  DriverManager.<span class="fn">getConnection</span>(url);'},
+  {n:'Connection',p:'java.sql',role:'La línea abierta con la base de datos.',
+   ana:'La <b>llamada en curso</b>: mientras esté abierta puedes hablar; al colgar (<code>close</code>) se libera.',
+   code:'<span class="kw">try</span> (<span class="ty">Connection</span> c = ...) {\n  <span class="cm">// usar c</span>\n} <span class="cm">// se cierra sola</span>'},
+  {n:'Statement',p:'java.sql',role:'Envía SQL fijo, sin datos externos.',
+   ana:'Un <b>mensajero con una frase ya escrita</b>. Útil para tus propias órdenes, como crear una tabla.',
+   code:'<span class="ty">Statement</span> st = c.<span class="fn">createStatement</span>();\nst.<span class="fn">execute</span>(<span class="str">"CREATE TABLE ..."</span>);'},
+  {n:'PreparedStatement',p:'java.sql',role:'SQL con huecos ? que rellenas por tipo.',
+   ana:'Un <b>formulario con espacios en blanco</b>: la estructura está fija y tú solo rellenas los huecos. Imposible "colar" una orden falsa (evita inyección SQL).',
+   code:'<span class="ty">PreparedStatement</span> ps =\n  c.<span class="fn">prepareStatement</span>(\n    <span class="str">"INSERT ... VALUES (?, ?)"</span>);\nps.<span class="fn">setString</span>(<span class="nm">1</span>, nombre);\nps.<span class="fn">setInt</span>(<span class="nm">2</span>, edad);'},
+  {n:'ResultSet',p:'java.sql',role:'La tabla de respuestas de un SELECT.',
+   ana:'Una hoja de resultados con un <b>dedo (cursor)</b> que señala una fila a la vez. <code>next()</code> mueve el dedo.',
+   code:'<span class="ty">ResultSet</span> rs = ps.<span class="fn">executeQuery</span>();\n<span class="kw">while</span> (rs.<span class="fn">next</span>()) {\n  rs.<span class="fn">getInt</span>(<span class="str">"id"</span>);\n}'},
+  {n:'SQLException',p:'java.sql',role:'El error que lanza cualquier operación SQL.',
+   ana:'La <b>carta de queja</b> de la base: trae el mensaje, un código estándar (SQLState) y el código del fabricante.',
+   code:'<span class="kw">catch</span> (<span class="ty">SQLException</span> e) {\n  e.<span class="fn">getMessage</span>();\n  e.<span class="fn">getSQLState</span>();\n  e.<span class="fn">getErrorCode</span>();\n}'},
+  {n:'Types',p:'java.sql',role:'Constantes con los tipos SQL.',
+   ana:'El <b>diccionario de tipos</b>: cuando guardas un <code>NULL</code> hay que decir "NULL de qué tipo".',
+   code:'ps.<span class="fn">setNull</span>(<span class="nm">3</span>, Types.VARCHAR);'}
 ];
-const dzVerdicts={
-  ifelse:{cls:'',v:'Usa if-elif-else',
-    why:'Tu decisión depende de <strong>condiciones</strong> (rangos, operadores), no de un solo valor. El <code>match</code> no te daría claridad extra aquí — el if-elif es la herramienta honesta.'},
-  switchpure:{cls:'match-rec',v:'match / switch limpio',
-    why:'Una variable contra valores exactos: el caso de libro para <code>match</code> en Python (o <code>switch</code> en Java/Go). Nombras la variable una vez y listas los casos como una tabla.'},
-  match:{cls:'match-rec',v:'match · structural',
-    why:'Aquí Python brilla: <code>match</code> puede <strong>desarmar y capturar</strong> la estructura en la misma línea. Ningún switch clásico hace esto. Es exactamente para lo que se diseñó.'},
-  switchplain:{cls:'match-rec',v:'match / switch simple',
-    why:'Valor simple contra muchas opciones, sin rangos: <code>match</code> en Python o <code>switch</code> en Java/Go. Limpio y legible. Reserva el if-elif para cuando aparezcan condiciones.'},
-};
-let dzStep=0;
-function dzRenderQ(){
-  const q=dzQs[dzStep];
-  $('dz-prog').textContent='Pregunta '+(dzStep+1)+' de 3';
-  $('dz-stage').innerHTML=
-    '<div class="dz-q">'+q.q+'</div>'+
-    '<div class="dz-choices">'+
-      '<button class="dz-choice" data-go="'+q.ya+'">'+q.a+'</button>'+
-      '<button class="dz-choice" data-go="'+q.yb+'">'+q.b+'</button>'+
-    '</div>';
-  $('dz-stage').querySelectorAll('.dz-choice').forEach(btn=>{
-    btn.addEventListener('click',()=>dzAnswer(btn.dataset.go));
-  });
+const mongoClasses=[
+  {n:'MongoClients',p:'com.mongodb.client',role:'Fábrica que crea el cliente.',
+   ana:'El <b>taller</b> que arma tu teléfono ya configurado y listo para llamar.',
+   code:'<span class="ty">MongoClient</span> cli =\n  MongoClients.<span class="fn">create</span>(settings);'},
+  {n:'MongoClient',p:'com.mongodb.client',role:'El cliente/conexión al clúster.',
+   ana:'Un <b>contacto guardado en el teléfono</b>: guardarlo NO llama. La llamada real ocurre en la primera operación.',
+   code:'<span class="kw">try</span> (<span class="ty">MongoClient</span> cli = ...) {\n  <span class="cm">// se cierra solo</span>\n}'},
+  {n:'ConnectionString',p:'com.mongodb',role:'Envuelve la URI de Atlas.',
+   ana:'La <b>dirección completa con las llaves</b> de la casa: host, usuario y contraseña en un solo texto.',
+   code:'<span class="kw">new</span> <span class="ty">ConnectionString</span>(\n  <span class="str">"mongodb+srv://user:pass@..."</span>);'},
+  {n:'MongoClientSettings',p:'com.mongodb',role:'Junta toda la configuración.',
+   ana:'La <b>maleta lista para el viaje</b>: dirección + reglas de la API en un solo objeto.',
+   code:'MongoClientSettings.<span class="fn">builder</span>()\n  .<span class="fn">applyConnectionString</span>(cs)\n  .<span class="fn">serverApi</span>(api).<span class="fn">build</span>();'},
+  {n:'ServerApi',p:'com.mongodb',role:'Fija la versión estable del API.',
+   ana:'Un <b>contrato</b>: "háblame siempre en la versión 1", aunque el servidor evolucione.',
+   code:'ServerApi.<span class="fn">builder</span>()\n  .<span class="fn">version</span>(ServerApiVersion.V1)\n  .<span class="fn">build</span>();'},
+  {n:'MongoDatabase',p:'com.mongodb.client',role:'Una base dentro del clúster.',
+   ana:'Un <b>archivero completo</b> con muchos cajones dentro.',
+   code:'<span class="ty">MongoDatabase</span> db =\n  cli.<span class="fn">getDatabase</span>(<span class="str">"escuela"</span>);'},
+  {n:'MongoCollection',p:'com.mongodb.client',role:'Un grupo de documentos.',
+   ana:'Un <b>cajón de fichas</b>. Aquí insertas, buscas y borras.',
+   code:'<span class="ty">MongoCollection</span>&lt;<span class="ty">Document</span>&gt; col =\n  db.<span class="fn">getCollection</span>(<span class="str">"estudiantes"</span>);\ncol.<span class="fn">insertOne</span>(doc);'},
+  {n:'Document',p:'org.bson',role:'Un documento tipo JSON.',
+   ana:'Una <b>ficha flexible</b> (clave→valor), como un Map. Cada ficha puede tener campos distintos: NoSQL no obliga un esquema.',
+   code:'<span class="kw">new</span> <span class="ty">Document</span>(<span class="str">"nombre"</span>, <span class="str">"Ana"</span>)\n  .<span class="fn">append</span>(<span class="str">"edad"</span>, <span class="nm">20</span>)\n  .<span class="fn">append</span>(<span class="str">"becado"</span>, <span class="kw">true</span>);'},
+  {n:'ObjectId',p:'org.bson.types',role:'El identificador único _id.',
+   ana:'La <b>huella digital</b> que Mongo estampa sola en cada ficha al guardarla.',
+   code:'<span class="ty">ObjectId</span> id =\n  doc.<span class="fn">getObjectId</span>(<span class="str">"_id"</span>);'},
+  {n:'MongoException',p:'com.mongodb',role:'Error de Mongo (no obligado por el compilador).',
+   ana:'Las <b>alarmas</b>: <code>MongoTimeoutException</code> = "sin señal"; <code>MongoSecurityException</code> = "llave equivocada".',
+   code:'<span class="kw">catch</span> (<span class="ty">MongoTimeoutException</span> e) {...}\n<span class="kw">catch</span> (<span class="ty">MongoSecurityException</span> e) {...}\n<span class="kw">catch</span> (<span class="ty">MongoException</span> e) {...}'}
+];
+function buildExplorer(data,listId,detailId){
+  const list=$(listId);
+  list.innerHTML=data.map((c,i)=>
+    '<button class="cl-chip'+(i===0?' on':'')+'" data-i="'+i+'">'+c.n+
+    '<span class="pkg">'+c.p+'</span></button>').join('');
+  function show(i){
+    const c=data[i];
+    $(detailId).innerHTML=
+      '<div class="cl-name">'+c.n+'</div>'+
+      '<div class="cl-pkg">'+c.p+'.'+c.n+'</div>'+
+      '<div class="cl-role">'+c.role+'</div>'+
+      '<div class="cl-ana">'+c.ana+'</div>'+
+      '<div class="cl-code">'+c.code+'</div>';
+    list.querySelectorAll('.cl-chip').forEach((b,j)=>b.classList.toggle('on',i===j));
+  }
+  list.querySelectorAll('.cl-chip').forEach((b,i)=>b.addEventListener('click',()=>show(i)));
+  show(0);
 }
-function dzAnswer(go){
-  // 'switch' en P1 → seguir afinando; lo demás → veredicto directo
-  if(go==='switch'){ dzStep=1; dzRenderQ(); return; }
-  if(go==='ifelse' && dzStep===0){ dzStep=2; dzRenderQ(); return; }
-  dzVerdict(go);
-}
-function dzVerdict(key){
-  const d=dzVerdicts[key];
-  $('dz-prog').textContent='Recomendación';
-  $('dz-stage').innerHTML=
-    '<div class="dz-result">'+
-      '<div class="dz-verdict '+d.cls+'">'+d.v+'</div>'+
-      '<div class="dz-why">'+d.why+'</div>'+
-    '</div>';
-}
-$('dz-reset').addEventListener('click',()=>{dzStep=0;dzRenderQ();});
-dzRenderQ();
+buildExplorer(sqlClasses,'sql-list','sql-detail');
+buildExplorer(mongoClasses,'mongo-list','mongo-detail');
 
-// ─── W5: checklist sprint review ────────────────────────────
-const chkItems=document.querySelectorAll('.chk-item');
-function chkUpdate(){
-  const done=document.querySelectorAll('.chk-item.done').length;
-  $('chk-count').textContent=done;
-  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
-  if(done===chkItems.length){
-    $('chk-final').innerHTML='<strong>Listo para la mesa.</strong> Tienes estructura, evidencia y discurso. Preséntalo con calma: avance honesto, bien explicado. Cierras el Bloque I — el Bloque II abre con herencia.';
+// ─── W3: animador de conversión de tipos ────────────────────
+const cvData=[
+  {k:'int', ct:'INTEGER', cv:'20', m:'getInt("edad")', jt:'int', jv:'20', st:'ok',
+   note:'Un <b>INTEGER</b> de SQL encaja perfecto en un <code>int</code> de Java. Traducción directa, sin pérdida.'},
+  {k:'str', ct:'TEXT', cv:'"Ana"', m:'getString("nombre")', jt:'String', jv:'"Ana"', st:'ok',
+   note:'<b>TEXT</b> se traduce a <code>String</code>. El texto viaja tal cual.'},
+  {k:'dbl', ct:'REAL', cv:'9.4', m:'getDouble("promedio")', jt:'double', jv:'9.4', st:'ok',
+   note:'<b>REAL</b> (número con decimales) se convierte en <code>double</code>.'},
+  {k:'bool', ct:'INTEGER', cv:'1', m:'getBoolean("becado")', jt:'boolean', jv:'true', st:'ok',
+   note:'SQLite no tiene booleano: guarda <code>0</code> y <code>1</code>. <code>getBoolean</code> traduce <b>1 → true</b> y <b>0 → false</b>.'},
+  {k:'null', ct:'NULL', cv:'∅', m:'getInt("edad")', jt:'int', jv:'0', st:'warn',
+   note:'⚠ La celda está <b>vacía (NULL)</b>, pero <code>getInt</code> devuelve <b>0</b> — ¡engañoso! Por eso preguntas <code>rs.wasNull()</code>: "¿era de verdad vacío?".'},
+  {k:'bad', ct:'TEXT', cv:'"veinte"', m:'getInt("edad")', jt:'int', jv:'💥', st:'err',
+   note:'Pedir un <code>int</code> de un texto que no es número es una <b>traducción imposible</b>: la conversión falla. Pide siempre el tipo que <b>de verdad</b> hay en la celda.'}
+];
+const cvLabels={int:'getInt',str:'getString',dbl:'getDouble',bool:'getBoolean',null:'NULL → getInt',bad:'TEXT → getInt'};
+let cvTimers=[];
+function cvClear(){cvTimers.forEach(t=>clearTimeout(t));cvTimers=[];}
+function cvPlay(d){
+  cvClear();
+  $('cv-cell-type').textContent=d.ct;
+  $('cv-cell-val').textContent=d.cv;
+  $('cv-method').textContent=d.m;
+  const vb=$('cv-var'); vb.className='cv-var';
+  $('cv-var-type').textContent='?'; $('cv-var-val').textContent='';
+  const tok=$('cv-token');
+  tok.className='cv-token show'; tok.dataset.st='ok'; tok.textContent=d.cv;
+  $('cv-note').innerHTML='Convirtiendo…';
+  void tok.offsetWidth;
+  cvTimers.push(setTimeout(()=>{tok.classList.add('go');},40));
+  cvTimers.push(setTimeout(()=>{tok.textContent=d.jv;tok.dataset.st=d.st;},650));
+  cvTimers.push(setTimeout(()=>{
+    $('cv-var-type').textContent=d.jt;
+    $('cv-var-val').textContent=d.jv;
+    vb.classList.add(d.st);
+    $('cv-note').innerHTML=d.note;
+  },1200));
+}
+$('cv-picks').innerHTML=cvData.map((d,i)=>
+  '<button class="cv-pick'+(i===0?' on':'')+'" data-i="'+i+'">'+cvLabels[d.k]+'</button>').join('');
+document.querySelectorAll('.cv-pick').forEach((b,i)=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.cv-pick').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); cvPlay(cvData[i]);
+}));
+
+// ─── W4: cursor del ResultSet ───────────────────────────────
+const cuRows=[{id:1,nombre:'Ana',edad:20},{id:2,nombre:'Beto',edad:22},{id:3,nombre:'Carla',edad:19}];
+let cuPos=-1;
+function cuBuild(){
+  $('cu-body').innerHTML=cuRows.map((r,i)=>
+    '<tr class="cu-row" data-i="'+i+'"><td class="cu-cursor"></td><td>'+r.id+'</td><td>'+r.nombre+'</td><td>'+r.edad+'</td></tr>').join('');
+}
+function cuLit(on){['cu-l1','cu-l2','cu-l3','cu-l4','cu-l5'].forEach(id=>$(id).classList.remove('lit'));on.forEach(id=>$(id).classList.add('lit'));}
+function cuRender(){
+  const rows=document.querySelectorAll('.cu-row');
+  rows.forEach((tr,i)=>{
+    tr.classList.remove('on','read');
+    tr.querySelector('.cu-cursor').textContent='';
+    if(i<cuPos) tr.classList.add('read');
+  });
+  if(cuPos<0){
+    cuLit([]);
+    $('cu-out').innerHTML='El cursor está <b>antes de la primera fila</b>. Aún no has leído nada. Pulsa <code>rs.next()</code>.';
+  } else if(cuPos<cuRows.length){
+    const tr=rows[cuPos]; tr.classList.add('on'); tr.querySelector('.cu-cursor').textContent='▶';
+    const r=cuRows[cuPos];
+    cuLit(['cu-l1','cu-l2','cu-l3','cu-l4']);
+    $('cu-out').innerHTML='<code>rs.next()</code> → <span class="tf t">true</span><br>El cursor avanza a la <b>fila '+(cuPos+1)+'</b>. Ahora lees sus tipos:<br><code>getInt("id") = '+r.id+'</code><br><code>getString("nombre") = "'+r.nombre+'"</code>';
+  } else {
+    cuLit(['cu-l1','cu-l5']);
+    $('cu-out').innerHTML='<code>rs.next()</code> → <span class="tf f">false</span><br>No hay más filas. La condición del <b>while</b> es falsa y el bucle <b>termina solo</b>.';
   }
 }
-chkItems.forEach(it=>{
-  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+$('cu-next').addEventListener('click',()=>{if(cuPos<cuRows.length){cuPos++;cuRender();}});
+$('cu-reset').addEventListener('click',()=>{cuPos=-1;cuRender();});
+cuBuild();cuRender();
+
+// ─── Sección II: resolución de dependencias ─────────────────
+const drChips=[
+  {n:'mongodb-driver-sync',t:'directa'},
+  {n:'mongodb-driver-core',t:'transitiva'},
+  {n:'bson',t:'transitiva'}
+];
+const drSteps=[
+  {nodes:['dr-pom'],chips:{0:'found'},t:'Declaras <b>una</b> dependencia en el <code>pom.xml</code>: <code>mongodb-driver-sync</code>. Solo el nombre y la versión — nada de descargar a mano.'},
+  {nodes:['dr-maven','dr-central'],chips:{0:'found'},t:'Maven le pregunta a <b>Maven Central</b> (el repositorio público) por esa librería.'},
+  {nodes:['dr-central'],chips:{0:'found',1:'found',2:'found'},t:'Pero esa librería <b>necesita otras</b> para funcionar: <code>mongodb-driver-core</code> y <code>bson</code>. Son <b>dependencias transitivas</b>, y Maven las descubre y trae solo.'},
+  {nodes:['dr-central','dr-cache'],chips:{0:'cached',1:'cached',2:'cached'},t:'Maven descarga las <b>3</b> a tu repositorio local <code>~/.m2/repository</code>.'},
+  {nodes:['dr-cache'],chips:{0:'cached',1:'cached',2:'cached'},t:'Listas en el classpath. La <b>próxima vez</b> Maven las toma de la caché — sin descargar de nuevo, incluso sin internet.'}
+];
+let drIdx=-1,drTimer=null;
+function drBuild(){
+  $('dr-deps').innerHTML=drChips.map((c,i)=>'<span class="dr-chip" id="dr-chip-'+i+'">'+c.n+'<span class="tag">'+c.t+'</span></span>').join('');
+}
+function drRender(){
+  ['dr-pom','dr-maven','dr-central','dr-cache'].forEach(id=>$(id).classList.remove('act'));
+  drChips.forEach((c,i)=>{const el=$('dr-chip-'+i);el.classList.remove('found','cached');el.style.display='';});
+  if(drIdx<0){
+    drChips.forEach((c,i)=>{if(i>0)$('dr-chip-'+i).style.display='none';});
+    $('dr-narr').innerHTML='Pulsa <b>Siguiente</b> para ver a Maven traer una librería… y todo lo que esa librería arrastra consigo.';
+    return;
+  }
+  const s=drSteps[drIdx];
+  s.nodes.forEach(id=>$(id).classList.add('act'));
+  drChips.forEach((c,i)=>{
+    const st=s.chips[i];
+    if(!st){$('dr-chip-'+i).style.display='none';}
+    else{$('dr-chip-'+i).style.display='';$('dr-chip-'+i).classList.add(st);}
+  });
+  $('dr-narr').innerHTML=s.t;
+}
+function drStop(){if(drTimer){clearInterval(drTimer);drTimer=null;$('dr-play').textContent='▶ Play';}}
+$('dr-next').addEventListener('click',()=>{drStop();if(drIdx<drSteps.length-1){drIdx++;drRender();}});
+$('dr-prev').addEventListener('click',()=>{drStop();if(drIdx>-1){drIdx--;drRender();}});
+$('dr-reset').addEventListener('click',()=>{drStop();drIdx=-1;drRender();});
+$('dr-play').addEventListener('click',()=>{
+  if(drTimer){drStop();return;}
+  if(drIdx>=drSteps.length-1){drIdx=-1;drRender();}
+  $('dr-play').textContent='❚❚ Pausa';
+  drTimer=setInterval(()=>{if(drIdx<drSteps.length-1){drIdx++;drRender();}else drStop();},1700);
 });
-chkUpdate();
+drBuild();drRender();
+
+// ─── Sección III: anatomía del pom.xml ──────────────────────
+const poBlocks=[
+  {p:'header',h:'<span class="tag">&lt;project&gt;</span>\n  <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>'},
+  {p:'gav',h:'\n  <span class="cm">&lt;!-- coordenadas: dirección única --&gt;</span>\n  <span class="tag">&lt;groupId&gt;</span>com.curso<span class="tag">&lt;/groupId&gt;</span>\n  <span class="tag">&lt;artifactId&gt;</span>demo-mongodb<span class="tag">&lt;/artifactId&gt;</span>\n  <span class="tag">&lt;version&gt;</span>1.0.0<span class="tag">&lt;/version&gt;</span>'},
+  {p:'packaging',h:'\n  <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>'},
+  {p:'properties',h:'\n  <span class="tag">&lt;properties&gt;</span>\n    <span class="tag">&lt;maven.compiler.release&gt;</span>17<span class="tag">&lt;/maven.compiler.release&gt;</span>\n    <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/…&gt;</span>\n  <span class="tag">&lt;/properties&gt;</span>'},
+  {p:'deps',h:'\n  <span class="tag">&lt;dependencies&gt;</span>\n    <span class="tag">&lt;dependency&gt;</span>\n      <span class="tag">&lt;groupId&gt;</span>org.mongodb<span class="tag">&lt;/groupId&gt;</span>\n      <span class="tag">&lt;artifactId&gt;</span>mongodb-driver-sync<span class="tag">&lt;/artifactId&gt;</span>\n      <span class="tag">&lt;version&gt;</span>5.8.0<span class="tag">&lt;/version&gt;</span>'},
+  {p:'scope',h:'      <span class="tag">&lt;scope&gt;</span>compile<span class="tag">&lt;/scope&gt;</span>'},
+  {p:'deps',h:'    <span class="tag">&lt;/dependency&gt;</span>\n  <span class="tag">&lt;/dependencies&gt;</span>'},
+  {p:'build',h:'\n  <span class="tag">&lt;build&gt;</span>\n    <span class="tag">&lt;finalName&gt;</span>demo-mongodb<span class="tag">&lt;/finalName&gt;</span>\n    <span class="tag">&lt;plugins&gt;</span> … <span class="tag">&lt;/plugins&gt;</span>\n  <span class="tag">&lt;/build&gt;</span>\n<span class="tag">&lt;/project&gt;</span>'}
+];
+const poData={
+  header:{tag:'Cabecera del POM',title:'¿Sigo el formato correcto?',desc:'<code>&lt;project&gt;</code> es la raíz del archivo. <code>&lt;modelVersion&gt;</code> es la versión del <strong>formato del POM</strong> (no de tu proyecto ni de Maven): hoy es casi siempre <code>4.0.0</code>.',ana:'Como el encabezado de un documento oficial: declara "esto es un POM y usa el formato 4.0.0".'},
+  gav:{tag:'Coordenadas · GAV',title:'¿Quién eres?',desc:'<code>groupId</code> (tu organización, en dominio invertido), <code>artifactId</code> (el nombre del proyecto) y <code>version</code> identifican tu artefacto de forma <strong>única</strong>: <code>groupId:artifactId:version</code>. El sufijo <code>-SNAPSHOT</code> marca una versión aún en desarrollo.',ana:'Es la dirección postal de tu librería: país, ciudad y número exacto. Así cualquiera la encuentra sin confundirla con otra.'},
+  packaging:{tag:'Empaquetado',title:'¿Qué produces?',desc:'El tipo de artefacto final: <code>jar</code> (por defecto, una librería o app), <code>war</code> (aplicación web) o <code>pom</code> (un proyecto que solo agrupa a otros).',ana:'El tipo de envase del producto terminado: frasco, caja o paquete.'},
+  properties:{tag:'Propiedades',title:'Variables reutilizables',desc:'Pares clave-valor que luego usas con <code>${…}</code>. Aquí fijas la versión de Java (<code>maven.compiler.release</code>), la codificación (<code>UTF-8</code>) y centralizas números de versión para no repetirlos.',ana:'Como anotar las cantidades una sola vez al inicio de la receta, en vez de repetirlas en cada paso.'},
+  deps:{tag:'Dependencias',title:'¿De qué dependes?',desc:'El corazón del archivo. Cada <code>&lt;dependency&gt;</code> es una librería externa con su propio <strong>GAV</strong>. Maven la descarga —<strong>y a las suyas, las transitivas</strong>— desde Maven Central.',ana:'La lista de la compra: nombras los ingredientes y el repartidor (Maven) trae todo, incluido lo que cada ingrediente necesita.'},
+  scope:{tag:'Alcance · scope',title:'¿Cuándo te necesito?',desc:'Define <strong>cuándo</strong> está disponible una dependencia: <code>compile</code> (siempre, por defecto), <code>test</code> (solo en pruebas, no se empaqueta), <code>provided</code> (la aporta el servidor o el JDK) y <code>runtime</code> (solo al ejecutar, como los drivers JDBC).',ana:'Como marcar en la receta qué ingrediente se sirve en la mesa y cuál solo sirve para probar y luego se descarta (el palillo).'},
+  build:{tag:'Construcción',title:'¿Cómo te construyes?',desc:'El bloque <code>&lt;build&gt;</code> personaliza la construcción. Los <code>&lt;plugins&gt;</code> hacen el trabajo: <code>maven-compiler-plugin</code> compila, <code>maven-shade-plugin</code> arma un "uber-jar" con todo dentro. <code>&lt;finalName&gt;</code> nombra el archivo resultante.',ana:'Las instrucciones de horneado: a qué temperatura y con qué herramientas se arma y empaqueta el plato final.'}
+};
+function poBuild(){
+  $('po-code').innerHTML=poBlocks.map((b,i)=>'<span class="po-block" data-p="'+b.p+'" data-i="'+i+'">'+b.h+'</span>').join('');
+  document.querySelectorAll('.po-block').forEach(el=>el.addEventListener('click',()=>poShow(el.dataset.p)));
+}
+function poShow(p){
+  document.querySelectorAll('.po-block').forEach(el=>el.classList.toggle('lit',el.dataset.p===p));
+  const d=poData[p];
+  $('po-tag').textContent=d.tag;$('po-title').textContent=d.title;
+  $('po-desc').innerHTML=d.desc;$('po-ana').innerHTML='⚜ '+d.ana;
+}
+poBuild();
+
+// ─── Sección IV: gestores por lenguaje ──────────────────────
+const xlLangs=[
+  {id:'java',name:'Java',mgr:'Maven (y Gradle)',file:'pom.xml',repo:'Maven Central — central.sonatype.com',cmd:'declarar &lt;dependency&gt; → mvn package',note:'El veterano (2004). "Convención sobre configuración": estructura fija y dependencias declaradas en XML. Es el modelo que aprendes hoy.'},
+  {id:'cpp',name:'C++',mgr:'Conan / vcpkg — ¡ninguno oficial!',file:'conanfile.txt / vcpkg.json',repo:'Conan Center / registro de vcpkg (fragmentado)',cmd:'conan install . · vcpkg install',note:'Durante décadas NO tuvo gestor oficial: bajabas el código de cada librería a mano y configurabas el compilador tú mismo, archivo por archivo. Aún hoy no hay un repositorio central universal.'},
+  {id:'csharp',name:'C#',mgr:'NuGet',file:'.csproj (&lt;PackageReference&gt;)',repo:'nuget.org',cmd:'dotnet add package &lt;nombre&gt;',note:'Integrado en .NET. Los paquetes viajan como .nupkg y se cachean una sola vez en ~/.nuget/packages para todos tus proyectos.'},
+  {id:'python',name:'Python',mgr:'pip (+ Poetry, uv)',file:'requirements.txt / pyproject.toml',repo:'PyPI — pypi.org',cmd:'pip install &lt;paquete&gt;',note:'Usa entornos virtuales (venv) para que cada proyecto tenga sus propias versiones aisladas y no se peleen entre sí.'},
+  {id:'go',name:'Go',mgr:'Go modules (integrado en "go")',file:'go.mod + go.sum',repo:'proxy.golang.org — ¡sin registro central!',cmd:'go get &lt;ruta&gt;@&lt;versión&gt;',note:'El nombre de la dependencia ES su URL (github.com/usuario/repo). Un servicio público (sum.golang.org) guarda una huella —un código de verificación— de cada versión para detectar si alguien la alteró.'}
+];
+$('xl-tabs').innerHTML=xlLangs.map((l,i)=>'<button class="xl-tab'+(i===0?' on':'')+'" data-i="'+i+'">'+l.name+'</button>').join('');
+function xlShow(i){
+  const l=xlLangs[i];
+  $('xl-card').innerHTML=
+    '<div class="xl-lang">'+l.name+'</div>'+
+    '<div class="xl-grid">'+
+      '<div class="xl-k">Gestor</div><div class="xl-v">'+l.mgr+'</div>'+
+      '<div class="xl-k">Manifiesto</div><div class="xl-v"><code>'+l.file+'</code></div>'+
+      '<div class="xl-k">Repo público</div><div class="xl-v">'+l.repo+'</div>'+
+      '<div class="xl-k">Instalar</div><div class="xl-v"><code>'+l.cmd+'</code></div>'+
+    '</div>'+
+    '<div class="xl-note">'+l.note+'</div>';
+  document.querySelectorAll('.xl-tab').forEach((b,j)=>b.classList.toggle('on',i===j));
+}
+document.querySelectorAll('.xl-tab').forEach((b,i)=>b.addEventListener('click',()=>xlShow(i)));
+xlShow(0);
 </script>
 </body>
 </html>

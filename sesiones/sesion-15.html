@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión XV — El árbol del código — Programación Avanzada</title>
+<title>Sesión XV — Práctica 2 · El arte de decidir — Programación Avanzada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -80,122 +80,17 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS DE LA SESIÓN 15 (HERENCIA) ↓↓↓
+   ↓↓↓ CSS ESPECÍFICO — SESIÓN 15 · PRÁCTICA 2 (IF / IF-ELSE) ↓↓↓
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─ Repaso del examen: tarjetas de error común ─ */
-.exm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
-.exm-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
-.exm-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
-.exm-t{font-family:'Cormorant Garamond',serif;font-size:1.28rem;color:var(--ink);margin-bottom:.4rem;line-height:1.15;}
-.exm-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
-.exm-d em{color:var(--blood);font-style:italic;}
-.exm-fix{font-family:'JetBrains Mono',monospace;font-size:.72rem;background:rgba(93,102,56,.1);border-left:2px solid var(--olive);padding:.5rem .7rem;color:var(--olive);margin-top:.7rem;}
-.exm-fix::before{content:'✓ ';color:var(--olive);font-weight:700;}
+/* ─ Ficha de la práctica ─ */
+.ficha-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.ficha-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.3rem;}
+.ficha-k{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.45rem;}
+.ficha-v{font-family:'Cormorant Garamond',serif;font-size:1.22rem;color:var(--ink);line-height:1.2;}
+.ficha-v small{display:block;font-family:'Crimson Pro',Georgia,serif;font-size:.88rem;color:var(--ink-soft);margin-top:.3rem;}
 
-/* ─ W1: Árbol de jerarquía interactivo ─ */
-.tre-stage{display:grid;grid-template-columns:1.05fr 1fr;gap:1.5rem;align-items:start;}
-.tre-tree{display:flex;flex-direction:column;align-items:center;gap:0;padding:1rem 0;}
-.tre-node{font-family:'JetBrains Mono',monospace;background:var(--paper);border:2px solid var(--ink);padding:.7rem 1.4rem;cursor:pointer;transition:all .22s;text-align:center;font-weight:700;color:var(--ink);position:relative;z-index:2;}
-.tre-node:hover{border-color:var(--blood);}
-.tre-node.lit{border-color:var(--blood);background:rgba(160,36,24,.08);box-shadow:0 0 0 3px rgba(160,36,24,.12);}
-.tre-node.base{border-color:var(--olive);}
-.tre-node.base.lit{border-color:var(--olive);background:rgba(93,102,56,.1);box-shadow:0 0 0 3px rgba(93,102,56,.14);}
-.tre-trunk{width:2px;height:26px;background:rgba(42,29,20,.4);}
-.tre-fork{display:flex;justify-content:center;gap:1.2rem;position:relative;width:100%;}
-.tre-branch{display:flex;flex-direction:column;align-items:center;}
-.tre-bar{width:70%;max-width:340px;height:2px;background:rgba(42,29,20,.4);margin-bottom:0;}
-.tre-panel{background:var(--ink);padding:1.5rem;min-height:260px;display:flex;flex-direction:column;gap:.8rem;}
-.tre-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
-.tre-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--paper);line-height:1.05;}
-.tre-sub{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(239,230,210,.55);margin-top:-.4rem;}
-.tre-block-t{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.3rem;}
-.tre-block-t.her{color:#9FBF9C;}
-.tre-block-t.own{color:#E8B04A;}
-.tre-list{display:flex;flex-wrap:wrap;gap:.4rem;}
-.tre-chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.25rem .6rem;border-radius:2px;}
-.tre-chip.her{background:rgba(159,191,156,.16);color:#bcd6b9;border:1px solid rgba(159,191,156,.4);}
-.tre-chip.own{background:rgba(232,176,74,.16);color:#E8B04A;border:1px solid rgba(232,176,74,.4);}
-.tre-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.45;color:rgba(239,230,210,.85);margin-top:auto;}
-.tre-phrase strong{color:#C9A961;font-style:normal;}
-
-/* ─ W2: Animador super() cimientos ─ */
-.sup-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:stretch;}
-.sup-build{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.5rem;min-height:280px;}
-.sup-floor{border:2px solid var(--line);background:var(--paper-deep);padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink-soft);opacity:.25;transform:translateY(10px);transition:all .5s cubic-bezier(.16,1,.3,1);}
-.sup-floor.up{opacity:1;transform:translateY(0);}
-.sup-floor.padre{border-color:var(--olive);}
-.sup-floor.padre.up{background:rgba(93,102,56,.12);border-color:var(--olive);color:var(--olive);font-weight:700;}
-.sup-floor.hija{border-color:var(--blood);}
-.sup-floor.hija.up{background:rgba(160,36,24,.08);border-color:var(--blood);color:var(--blood);font-weight:700;}
-.sup-floor small{display:block;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(42,29,20,.4);margin-bottom:.2rem;}
-.sup-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;}
-.sup-code{font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.95;color:var(--paper);}
-.sup-code .ln{display:block;white-space:pre;border-radius:2px;padding:0 .3rem;transition:background .3s;}
-.sup-code .ln.cur{background:rgba(232,176,74,.22);}
-.sup-code .kw{color:#D4956A;font-style:italic;}
-.sup-code .ty{color:#A6C2D6;}
-.sup-code .self{color:#8EAF8B;font-weight:700;}
-.sup-code .str{color:#C9A961;}
-.sup-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.sup-desc{margin-top:auto;padding-top:1.2rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.45;color:rgba(239,230,210,.85);}
-.sup-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
-
-/* ─ W3: Tabs Python vs Java ─ */
-.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
-.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
-.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
-.pj-head .badge{font-size:.6rem;color:var(--ochre);}
-.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:240px;}
-.pj-line{white-space:pre;display:block;padding:0 .3rem;border-radius:2px;}
-.pj-line .kw{color:var(--blood);font-style:italic;}
-.pj-line .cls{color:var(--ink);font-weight:700;}
-.pj-line .str{color:var(--ochre);}
-.pj-line .self{color:var(--olive);font-weight:700;}
-.pj-line .ty{color:#3E6E86;}
-.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
-.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
-.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
-
-/* ─ W4: Explorador is-a vs has-a ─ */
-.iha-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem;}
-.iha-col{background:var(--paper);border:1px solid var(--line);padding:1.2rem;}
-.iha-col.isa{border-top:3px solid var(--blood);}
-.iha-col.hasa{border-top:3px solid var(--olive);}
-.iha-h{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.9rem;}
-.iha-col.isa .iha-h{color:var(--blood);}
-.iha-col.hasa .iha-h{color:var(--olive);}
-.iha-card{font-family:'Cormorant Garamond',serif;font-size:1.12rem;color:var(--ink);background:var(--paper-deep);border:1px solid var(--line);padding:.6rem .9rem;margin-bottom:.5rem;cursor:pointer;transition:all .2s;}
-.iha-card:hover{border-color:var(--blood);transform:translateX(3px);}
-.iha-col.hasa .iha-card:hover{border-color:var(--olive);}
-.iha-card.on{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--blood);}
-.iha-col.hasa .iha-card.on{box-shadow:inset 3px 0 0 var(--olive);}
-.iha-card em{font-style:italic;color:var(--blood);}
-.iha-col.hasa .iha-card em{color:var(--olive);}
-.iha-panel{margin-top:1.2rem;padding:1.2rem 1.5rem;background:var(--ink);min-height:5rem;display:flex;gap:1rem;align-items:flex-start;}
-.iha-rel{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .6rem;flex-shrink:0;border-radius:2px;}
-.iha-rel.isa{background:rgba(160,36,24,.25);color:#E08A82;}
-.iha-rel.hasa{background:rgba(93,102,56,.25);color:#9FBF9C;}
-.iha-txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.45;color:rgba(239,230,210,.88);}
-.iha-txt strong{color:#C9A961;font-style:normal;font-weight:600;}
-.iha-txt code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
-
-/* ─ W5: La hija sabe hacer cosas que nunca definió ─ */
-.her-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
-.her-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:240px;overflow-x:auto;}
-.her-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;}
-.her-code .ln.hl{background:rgba(232,176,74,.25);}
-.her-code .kw{color:#D4956A;font-style:italic;}
-.her-code .ty{color:#A6C2D6;}
-.her-code .self{color:#8EAF8B;font-weight:700;}
-.her-code .str{color:#C9A961;}
-.her-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.her-code .out{color:#9FBF9C;}
-.her-note{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.5;color:var(--ink-soft);}
-.her-note strong{color:var(--ink);font-style:normal;font-weight:600;}
-.her-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
-
-/* ─ Caso de la práctica + req cards ─ */
+/* ─ Caso + requerimientos ─ */
 .caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
 .caso strong{color:var(--ink);font-style:normal;font-weight:600;}
 .req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
@@ -205,6 +100,116 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
 .req-d code{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--blood);}
 
+/* ─ Código Java oscuro (universal de la sesión) ─ */
+.jcode{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);overflow-x:auto;}
+.jcode .ln{white-space:pre;display:block;border-radius:2px;padding:0 .3rem;transition:background .3s;}
+.jcode .ln.hl{background:rgba(232,176,74,.25);}
+.jcode .ln.dim{opacity:.45;}
+.jcode .kw{color:#D4956A;font-style:italic;}
+.jcode .ty{color:#A6C2D6;}
+.jcode .cls{color:#8EAF8B;font-weight:700;}
+.jcode .str{color:#C9A961;}
+.jcode .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.jcode .out{color:#9FBF9C;}
+
+/* ─ W1: anatomía del if ─ */
+.ifw-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.ifw-side{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;}
+.ifw-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.5;color:var(--ink-soft);}
+.ifw-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.ifw-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.ifw-desc{margin-top:auto;padding-top:1.2rem;border-top:1px dashed var(--line);font-size:.98rem;color:var(--ink-soft);min-height:4.6rem;}
+.ifw-desc strong{color:var(--blood);}
+
+/* ─ Diagramas de actividades (UML animado) ─ */
+.act-flow{display:flex;flex-direction:column;align-items:center;padding:1rem 0;}
+.act-start{width:22px;height:22px;border-radius:50%;background:var(--ink);transition:all .3s;}
+.act-start.on{background:var(--blood);box-shadow:0 0 0 4px rgba(160,36,24,.2);}
+.act-end{width:22px;height:22px;border-radius:50%;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.act-end::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--ink);}
+.act-end.on{border-color:var(--blood);}
+.act-end.on::after{background:var(--blood);}
+.act-node{font-family:'JetBrains Mono',monospace;font-size:.72rem;background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:.55rem 1.1rem;color:var(--ink);text-align:center;transition:all .3s;}
+.act-node.on{border-color:var(--blood);background:rgba(160,36,24,.08);color:var(--blood);font-weight:700;box-shadow:0 0 0 3px rgba(160,36,24,.13);}
+.act-node.res{border-color:var(--olive);}
+.act-node.res.on{border-color:var(--olive);background:rgba(93,102,56,.12);color:var(--olive);box-shadow:0 0 0 3px rgba(93,102,56,.15);}
+.act-dec{font-family:'JetBrains Mono',monospace;font-size:.66rem;width:230px;min-height:82px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:var(--paper);border:none;outline:2px solid var(--ink);display:flex;align-items:center;justify-content:center;text-align:center;padding:0 2.6rem;color:var(--ink);transition:all .3s;position:relative;}
+.act-dec-wrap{position:relative;filter:drop-shadow(0 0 0 transparent);}
+.act-dec-wrap::before{content:'';position:absolute;inset:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:var(--ink);}
+.act-dec-wrap .act-dec{position:relative;margin:2px;width:226px;min-height:78px;}
+.act-dec-wrap.on::before{background:var(--blood);}
+.act-dec-wrap.on .act-dec{background:rgba(239,225,205,1);color:var(--blood);font-weight:700;}
+.act-line{width:2px;height:24px;background:rgba(42,29,20,.4);}
+.act-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.12em;color:var(--ink-soft);padding:.15rem .4rem;}
+.act-branches{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;max-width:560px;justify-items:center;padding-top:.4rem;}
+.act-branch{display:flex;flex-direction:column;align-items:center;gap:.2rem;}
+.act-row{display:flex;align-items:center;gap:.6rem;justify-content:center;}
+.act-caption{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--ink-soft);text-align:center;margin-top:1rem;min-height:2.6rem;}
+.act-caption strong{color:var(--blood);font-style:normal;}
+
+/* ─ Historia de usuario ─ */
+.hu-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--olive);padding:1.8rem 2rem;margin-top:1.5rem;}
+.hu-tag{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--olive);margin-bottom:.9rem;}
+.hu-body{font-family:'Cormorant Garamond',serif;font-size:1.35rem;line-height:1.5;color:var(--ink);}
+.hu-body strong{color:var(--blood);font-weight:600;}
+.hu-crit{margin-top:1.2rem;padding-top:1rem;border-top:1px dashed var(--line);}
+.hu-crit-t{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.5rem;}
+.hu-crit ul{margin-left:1.2rem;font-size:.96rem;color:var(--ink-soft);}
+.hu-crit li{padding:.2rem 0;}
+.hu-crit code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--blood);}
+
+/* ─ UML clases ─ */
+.uml-stage{display:flex;gap:2rem;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-top:1.5rem;}
+.uml-box{background:var(--paper);border:2px solid var(--ink);min-width:280px;font-family:'JetBrains Mono',monospace;font-size:.74rem;}
+.uml-name{background:var(--ink);color:var(--paper);text-align:center;padding:.55rem;font-weight:700;letter-spacing:.08em;}
+.uml-sec{border-top:2px solid var(--ink);padding:.6rem .9rem;line-height:1.9;}
+.uml-sec .pri{color:var(--blood);}
+.uml-sec .pub{color:var(--olive);}
+.uml-sec .ty{color:#3E6E86;}
+.uml-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--ink-soft);max-width:260px;align-self:center;line-height:1.5;}
+.uml-note strong{color:var(--ink);font-style:normal;}
+
+/* ─ Ruta paso a paso ─ */
+.paso{display:grid;grid-template-columns:64px 1fr;gap:1.4rem;margin-top:2.6rem;position:relative;}
+.paso:not(:last-child)::before{content:'';position:absolute;left:31px;top:66px;bottom:-2.6rem;width:2px;background:rgba(42,29,20,.22);}
+.paso-num{width:64px;height:64px;border-radius:50%;background:var(--paper-deep);border:2px solid var(--blood);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--blood);font-weight:600;position:relative;z-index:2;}
+.paso-body{padding-top:.4rem;}
+.paso-t{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);line-height:1.1;margin-bottom:.5rem;}
+.paso-t em{font-style:italic;color:var(--blood);}
+.paso-d{font-size:1.02rem;color:var(--ink-soft);max-width:640px;}
+.paso-d strong{color:var(--ink);}
+.paso-d code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--paper-deep);padding:.1rem .35rem;border:1px solid var(--line);color:var(--blood);}
+.paso .jcode{margin-top:1.2rem;border-left:3px solid var(--blood);}
+.paso-tip{margin-top:1rem;padding:.9rem 1.2rem;background:rgba(93,102,56,.09);border-left:2px solid var(--olive);font-size:.95rem;color:var(--ink-soft);}
+.paso-tip strong{color:var(--olive);}
+
+/* ─ W: clasificador vivo ─ */
+.clas-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.clas-panel{background:var(--paper);border:1px solid var(--line);padding:1.6rem;display:flex;flex-direction:column;gap:1rem;}
+.clas-nota{font-family:'Cormorant Garamond',serif;font-size:3.4rem;line-height:1;color:var(--ink);text-align:center;}
+.clas-nota small{display:block;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-top:.3rem;}
+.clas-slider{width:100%;accent-color:var(--blood);cursor:pointer;}
+.clas-out{margin-top:auto;background:var(--ink);padding:1.3rem 1.4rem;display:flex;flex-direction:column;gap:.5rem;}
+.clas-estado{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;}
+.clas-estado.ap{color:#9FBF9C;}
+.clas-estado.rep{color:#E08A82;}
+.clas-nivel{font-family:'Cormorant Garamond',serif;font-size:2.1rem;line-height:1;color:var(--paper);}
+.clas-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:rgba(239,230,210,.85);}
+
+/* ─ Entregable / documento ─ */
+.doc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-top:1.5rem;}
+.doc-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.1rem;text-align:center;}
+.doc-n{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);margin-bottom:.4rem;}
+.doc-t{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);line-height:1.15;}
+.doc-d{font-size:.82rem;color:var(--ink-soft);margin-top:.4rem;line-height:1.4;}
+
+/* ─ Criterios / evidencias ─ */
+.crit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.crit-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.crit-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.6rem;}
+.crit-card ul{margin-left:1.1rem;font-size:.9rem;color:var(--ink-soft);line-height:1.5;}
+.crit-card li{padding:.15rem 0;}
+
 /* ─ Reglas IA ─ */
 .ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
 .ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
@@ -213,8 +218,17 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
 .ia-rule em{color:var(--ink);}
 
+/* ─ Bibliografía ─ */
+.biblio{margin-top:1.5rem;}
+.biblio-item{padding:.7rem 0;border-bottom:1px dashed var(--line);font-size:1rem;color:var(--ink-soft);}
+.biblio-item em{color:var(--ink);}
+
 @media(max-width:860px){
-  .exm-grid,.req-grid,.tre-stage,.sup-stage,.pj-stage,.iha-grid,.her-stage{grid-template-columns:1fr;}
+  .ficha-grid,.req-grid,.ifw-stage,.clas-stage,.crit-grid{grid-template-columns:1fr;}
+  .doc-grid{grid-template-columns:1fr 1fr;}
+  .paso{grid-template-columns:48px 1fr;}
+  .paso-num{width:48px;height:48px;font-size:1.3rem;}
+  .paso:not(:last-child)::before{left:23px;}
 }
 </style>
 </head>
@@ -222,258 +236,493 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 <div class="progress" id="prog"></div>
 <nav class="course-nav">
   <a href="sesion-14.html" class="back">Sesión 14</a>
-  <span class="session-label">Sesión 15 · 08.07.2026</span>
-  <a href="../index.html" class="next">Curso</a>
+  <span class="session-label">Sesión 15 · 08.07.2026 · Laboratorio</span>
+  <a href="sesion-16.html" class="next">Sesión 16</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Auto(Vehiculo):</div>
-  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">super().__init__(marca)</div>
-  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">Moto <strong style="font-weight:400">es un</strong> Vehiculo</div>
-  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">class Camion extends Vehiculo</div>
-  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">Vehiculo ──▷ Auto · Camion · Moto</div>
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">if (notaFinal &gt;= 60) { ... }</div>
+  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">} else { estado = "Reprobado"; }</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">if (aprobado) { if (nota &gt;= 90) ... }</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">"¡Excelente trabajo, sigue así!"</div>
+  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">Estudiante → evaluarEstado() → clasificar()</div>
   <div class="hero-inner">
-    <div class="hero-label">Sesión XV · Bloque II · Herencia · Ref. Temario 5.1 · 5.1.1 · 5.1.2 · 5.1.3 · Python · Java</div>
-    <h1>El árbol<br>del <em>código.</em></h1>
-    <p class="hero-sub">Cerramos el examen y abrimos el Bloque II. Hoy descubres el mecanismo más poderoso de la POO: una clase puede <em>nacer</em> de otra y heredar todo lo que ya sabe — como un árbol genealógico, pero de código.</p>
+    <div class="hero-label">Sesión XV · Práctica 2 de 6 · Sentencias de control · Ref. Temario 3.1 · 3.2 · Java · IntelliJ IDEA</div>
+    <h1>El arte<br>de <em>decidir.</em></h1>
+    <p class="hero-sub">Cerramos el examen con tu retroalimentación individual — y hoy el laboratorio es tuyo: 2 horas para construir en <em>Java</em> un sistema que evalúa, clasifica y motiva a estudiantes usando <em>if</em>, <em>if/else</em> e <em>ifs anidados</em>. De la historia de usuario al código corriendo en IntelliJ.</p>
   </div>
 </section>
 
-<!-- I: cierre del examen -->
+<!-- I: ficha de la práctica -->
 <section>
   <div class="wrap">
-    <p class="marker">I · Antes de avanzar — el examen parcial</p>
-    <p class="lead">Un examen no es una sentencia.<br>Es un <em>diagnóstico.</em></p>
-    <p class="subtle">Cerramos el Bloque I revisando juntos el examen. No para lamentar la calificación, sino para <strong>convertir cada error en un punto de mejora</strong>. Estos son los tres tropiezos que más se repitieron — mira si reconoces alguno, porque vamos a corregirlos hoy mismo construyendo sobre lo que ya sabes:</p>
-    <div class="exm-grid">
-      <div class="exm-card">
-        <div class="exm-num">Error común 01</div>
-        <div class="exm-t">Confundir clase con objeto</div>
-        <div class="exm-d">Tratar a <code>Producto</code> (el molde) como si fuera un producto concreto. La clase se <em>define una vez</em>; los objetos se <em>instancian muchas</em>.</div>
-        <div class="exm-fix">La clase es el plano; el objeto, la casa construida.</div>
+    <p class="marker">I · La ficha — qué haremos hoy</p>
+    <p class="lead">Práctica 2 de 6:<br>sentencias de <em>control.</em></p>
+    <p class="subtle"><strong>Objetivo:</strong> aplicar las sentencias de control <strong>if</strong>, <strong>if/else</strong> e <strong>ifs anidados</strong> en la programación orientada a objetos para diseñar e implementar un sistema funcional que <strong>evalúe y clasifique información</strong>. Es la práctica institucional del Practicario MCT158 — se trabaja hoy en el laboratorio y se entrega por Blackboard.</p>
+    <div class="ficha-grid">
+      <div class="ficha-card">
+        <div class="ficha-k">Temas del temario</div>
+        <div class="ficha-v">3.1 · if – if/else<small>3.2 · if's anidados</small></div>
       </div>
-      <div class="exm-card">
-        <div class="exm-num">Error común 02</div>
-        <div class="exm-t">Olvidar <code>self</code> / acceso directo</div>
-        <div class="exm-d">Leer un atributo sin <code>self.</code> dentro del método, o tocar un atributo privado <em>desde fuera</em> en vez de pasar por su getter.</div>
-        <div class="exm-fix">Dentro de la clase: self. Desde fuera: el método público.</div>
+      <div class="ficha-card">
+        <div class="ficha-k">Duración · Escenario</div>
+        <div class="ficha-v">2 horas<small>Laboratorio de cómputo</small></div>
       </div>
-      <div class="exm-card">
-        <div class="exm-num">Error común 03</div>
-        <div class="exm-t">Diagrama que no coincide</div>
-        <div class="exm-d">El diagrama de clases decía una cosa y el código hacía otra. Un método dibujado que <em>no existía</em> en el código — la regla de oro de la Sesión 8, rota.</div>
-        <div class="exm-fix">El plano y el código deben contar la misma historia.</div>
+      <div class="ficha-card">
+        <div class="ficha-k">Software</div>
+        <div class="ficha-v">Java<small>IntelliJ IDEA (proyecto nuevo, JDK instalado)</small></div>
       </div>
     </div>
-    <p class="subtle" style="margin-top:2rem">La buena noticia: todo lo que viste en el Bloque I — clases, atributos, encapsulamiento, relaciones — es <strong>justo lo que necesitas</strong> para entender la herencia. No empezamos de cero. <em>Construimos encima.</em> Que es, literalmente, de lo que trata el tema de hoy.</p>
+    <p class="subtle" style="margin-top:1.8rem">Nada de esto es nuevo: el <strong>if/else lo dominas en Python</strong> desde la Sesión 9, y las clases en Java las conoces desde el Bloque I. Hoy juntas las dos piezas — <em>decisiones dentro de objetos</em> — en el idioma de Java.</p>
   </div>
 </section>
 
-<!-- II: qué es la herencia -->
+<!-- II: el caso -->
 <section>
   <div class="wrap">
-    <p class="marker">II · Qué es la herencia</p>
-    <p class="lead">Si tres clases comparten lo mismo,<br>no lo escribas <em>tres veces.</em></p>
-    <p class="subtle">La <strong>herencia</strong> permite crear una clase nueva a partir de una clase ya existente. La nueva (la <strong>subclase</strong> o <em>hija</em>) recibe automáticamente los atributos y métodos de la otra (la <strong>superclase</strong>, clase base o <em>padre</em>), y encima puede añadir lo suyo. Es el principio <strong>DRY</strong>: <em>don't repeat yourself</em> — no te repitas. Toca cada clase del árbol para ver qué hereda gratis y qué añade por su cuenta:</p>
-    <div class="widget" data-tag="Click en cada clase del árbol">
-      <div class="tre-stage">
-        <div class="tre-tree">
-          <div class="tre-node base lit" data-t="vehiculo">Vehiculo</div>
-          <div class="tre-trunk"></div>
-          <div style="width:70%;max-width:340px;border-top:2px solid rgba(42,29,20,.4)"></div>
-          <div class="tre-fork" style="width:70%;max-width:340px">
-            <div class="tre-branch"><div style="width:2px;height:18px;background:rgba(42,29,20,.4)"></div><div class="tre-node" data-t="auto">Auto</div></div>
-            <div class="tre-branch"><div style="width:2px;height:18px;background:rgba(42,29,20,.4)"></div><div class="tre-node" data-t="camion">Camion</div></div>
-            <div class="tre-branch"><div style="width:2px;height:18px;background:rgba(42,29,20,.4)"></div><div class="tre-node" data-t="moto">Moto</div></div>
-          </div>
-        </div>
-        <div class="tre-panel">
-          <div class="tre-tag" id="tre-tag">Clase base</div>
-          <div class="tre-title" id="tre-title">Vehiculo</div>
-          <div class="tre-sub" id="tre-sub">la raíz del árbol</div>
-          <div>
-            <div class="tre-block-t her" id="tre-her-t">Define para todos</div>
-            <div class="tre-list" id="tre-her"></div>
-          </div>
-          <div>
-            <div class="tre-block-t own">Propio de esta clase</div>
-            <div class="tre-list" id="tre-own"></div>
-          </div>
-          <div class="tre-phrase" id="tre-phrase"></div>
-        </div>
-      </div>
-    </div>
-    <p class="subtle" style="margin-top:1.5rem">Eso es una <strong>jerarquía de herencia</strong>: un árbol donde lo común vive arriba y lo específico, abajo. <strong>Herencia simple</strong> = cada hija tiene <em>un solo</em> padre (lo que ves aquí). <strong>Herencia múltiple</strong> = una hija con varios padres a la vez — Python la permite, Java no; la veremos más adelante. Hoy nos quedamos con la simple, que es la que usarás en tu proyecto.</p>
-  </div>
-</section>
-
-<!-- III: super() construye sobre los cimientos -->
-<section>
-  <div class="wrap">
-    <p class="marker">III · super() — construir sobre los cimientos</p>
-    <p class="lead">La hija no rehace los cimientos.<br>Llama al padre con <em>super().</em></p>
-    <p class="subtle">Cuando creas un objeto de la subclase, primero hay que construir la parte que viene del padre y <em>luego</em> añadir lo propio. Para eso existe <strong>super()</strong>: dentro del constructor de la hija, le pide al padre que inicialice los atributos heredados. Pulsa <strong>Siguiente</strong> o <strong>▶ Play</strong> y observa cómo se levanta el edificio — primero el piso del padre, luego el de la hija:</p>
-    <div class="widget" data-tag="super() paso a paso">
-      <div class="sup-stage">
-        <div class="sup-build">
-          <div class="sup-floor hija" id="sup-f-hija"><small>Subclase · Moto</small>self.cilindraje = cc</div>
-          <div class="sup-floor padre" id="sup-f-padre"><small>Clase base · Vehiculo</small>self.marca, self.modelo, self.anio</div>
-          <div class="sup-floor" id="sup-f-base" style="opacity:1;transform:none;border-style:dashed;text-align:center">cimientos · suelo</div>
-        </div>
-        <div class="sup-side">
-          <div class="sup-code">
-            <span class="ln" id="sup-l0"><span class="kw">class</span> <span class="self">Moto</span>(<span class="self">Vehiculo</span>):</span>
-            <span class="ln" id="sup-l1">    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, modelo, anio, cc):</span>
-            <span class="ln" id="sup-l2">        <span class="kw">super</span>().__init__(marca, modelo, anio)</span>
-            <span class="ln" id="sup-l3">        <span class="self">self</span>.cilindraje = cc</span>
-            <span class="ln" id="sup-l4"></span>
-            <span class="ln" id="sup-l5">m = <span class="self">Moto</span>(<span class="str">"Italika"</span>, <span class="str">"FT250"</span>, <span class="ty">2024</span>, <span class="ty">250</span>)</span>
-          </div>
-          <div class="sup-desc" id="sup-desc">Pulsa <strong>Siguiente</strong> para construir la moto paso a paso, desde los cimientos del Vehiculo.</div>
-        </div>
-      </div>
-      <div class="w-controls">
-        <button class="btn" id="sup-reset">⟲ Reset</button>
-        <button class="btn" id="sup-prev">◀ Atrás</button>
-        <button class="btn on" id="sup-next">Siguiente ▶</button>
-        <button class="btn" id="sup-play">▶ Play</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- IV: Python vs Java -->
-<section>
-  <div class="wrap">
-    <p class="marker">IV · La sintaxis — Python ↔ Java</p>
-    <p class="lead">Misma idea, dos idiomas.<br>Python <em>hereda</em>; Java <em>extends.</em></p>
-    <p class="subtle">El concepto es idéntico en los dos lenguajes — solo cambian las palabras. Python es tu lenguaje base; Java te lo encontrarás en la práctica institucional. Recorre los cuatro momentos clave de una herencia y compáralos lado a lado:</p>
-    <div class="widget" data-tag="Mismo concepto · dos lenguajes">
-      <div class="pj-stage">
-        <div class="pj-col">
-          <div class="pj-head">Python <span class="badge">tu lenguaje base</span></div>
-          <div class="pj-body" id="py-body"></div>
-        </div>
-        <div class="pj-col">
-          <div class="pj-head">Java <span class="badge">la práctica institucional</span></div>
-          <div class="pj-body" id="java-body"></div>
-        </div>
-      </div>
-      <div class="w-controls">
-        <button class="btn on" data-eq="hereda">Heredar</button>
-        <button class="btn" data-eq="super">Llamar al padre</button>
-        <button class="btn" data-eq="extra">Añadir lo propio</button>
-        <button class="btn" data-eq="usar">Usar lo heredado</button>
-      </div>
-      <div class="pj-note" id="pj-note"></div>
-    </div>
-  </div>
-</section>
-
-<!-- V: is-a vs has-a -->
-<section>
-  <div class="wrap">
-    <p class="marker">V · "es un" vs "tiene un" — cuándo heredar</p>
-    <p class="lead">No todo lo que se relaciona<br>se <em>hereda.</em></p>
-    <p class="subtle">La pregunta que decide si usar herencia es de una sola frase. Si puedes decir con sentido <strong>"X es un Y"</strong> (<em>is-a</em>), es herencia. Si lo natural es <strong>"X tiene un Y"</strong> (<em>has-a</em>), <em>no</em> es herencia — es composición o asociación, las flechas que ya viste en UML. Toca cada caso y lee la frase clave:</p>
-    <div class="widget" data-tag="Toca cada relación">
-      <div class="iha-grid">
-        <div class="iha-col isa">
-          <div class="iha-h">Relación "es un" → Herencia</div>
-          <div class="iha-card on" data-i="moto">Una <em>Moto</em> es un Vehiculo</div>
-          <div class="iha-card" data-i="perro">Un <em>Perro</em> es un Animal</div>
-          <div class="iha-card" data-i="ahorro">Una <em>CuentaAhorro</em> es una Cuenta</div>
-        </div>
-        <div class="iha-col hasa">
-          <div class="iha-h">Relación "tiene un" → NO herencia</div>
-          <div class="iha-card" data-i="motor">Una Moto <em>tiene un</em> Motor</div>
-          <div class="iha-card" data-i="dueno">Un Perro <em>tiene un</em> Dueño</div>
-          <div class="iha-card" data-i="tarjeta">Una Cuenta <em>tiene una</em> Tarjeta</div>
-        </div>
-      </div>
-      <div class="iha-panel">
-        <div class="iha-rel isa" id="iha-rel">es un</div>
-        <div class="iha-txt" id="iha-txt"></div>
-      </div>
-    </div>
-    <p class="subtle" style="margin-top:1.5rem">Truco de bolsillo: una Moto <strong>no</strong> "es un" Motor — sería absurdo decirlo. Por eso el motor es un <em>atributo</em> de la moto, no su clase padre. Si la frase con "es un" suena rara, <strong>no heredes</strong>.</p>
-  </div>
-</section>
-
-<!-- VI: la hija sabe hacer cosas que nunca definió -->
-<section>
-  <div class="wrap">
-    <p class="marker">VI · La magia — métodos que la hija nunca escribió</p>
-    <p class="lead">La hija sabe arrancar<br>sin haberlo <em>aprendido.</em></p>
-    <p class="subtle">Esto es lo que hace a la herencia tan poderosa: la subclase puede usar métodos que <strong>jamás definió</strong>, porque los heredó del padre. Recorre los tres pasos — define el padre, hereda en la hija, y mira cómo la hija ejecuta un método que no está en su propio código:</p>
-    <div class="widget" data-tag="Tres pasos · método heredado">
-      <div class="her-stage">
-        <div class="her-code" id="her-code"></div>
-        <div class="her-note" id="her-note"></div>
-      </div>
-      <div class="w-controls">
-        <button class="btn on" data-her="padre">1 · La clase base</button>
-        <button class="btn" data-her="hija">2 · La hija hereda</button>
-        <button class="btn" data-her="uso">3 · Usar lo heredado</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- VII: puente a la práctica -->
-<section>
-  <div class="wrap">
-    <p class="marker">VII · Puente a la práctica — la flota de transporte</p>
-    <p class="lead">Tu primer caso real de herencia:<br>una <em>empresa de transporte.</em></p>
-    <p class="subtle">Lo que viste hoy aterriza en la <strong>Práctica institucional 4 (Herencia)</strong>. No la entregas hoy, pero entiende el caso desde ya — porque la jerarquía que diseñarás para <em>tu proyecto</em> sigue exactamente este patrón:</p>
+    <p class="marker">II · El caso — lee antes de programar</p>
+    <p class="lead">Un sistema que no solo califica:<br><em>retroalimenta.</em></p>
     <div class="caso">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;">Practicario MCT158 · Práctica 4 de 6 · Herencia</div>
-      <p style="margin-bottom:1rem;">Una <strong>empresa de transporte</strong> gestiona su <strong>flota de vehículos</strong>: automóviles, camiones y motocicletas. Todos comparten datos: <strong>marca, modelo, año y tipo de combustible</strong>. Pero cada tipo añade lo suyo — un auto tiene <strong>número de puertas</strong>, un camión una <strong>carga máxima</strong>, una motocicleta un <strong>cilindraje</strong>.</p>
-      <p>Modela una clase base <strong>Vehiculo</strong> con los atributos comunes y tres subclases que hereden de ella. Usa <strong>super()</strong> en cada constructor hija para inicializar los atributos heredados antes de añadir los propios.</p>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;">Practicario MCT158 · Práctica 2 de 6 · Sentencias de control y repetición</div>
+      <p style="margin-bottom:1rem;">Formas parte de un <strong>equipo de desarrollo de software para instituciones de educación</strong>. A tu equipo se le asignó implementar un sistema para <strong>clasificar y dar retroalimentación sobre el desempeño académico</strong> de los estudiantes. El sistema se construirá con <strong>orientación a objetos en Java</strong>, usando las sentencias de control <strong>if, if/else e ifs anidados</strong>.</p>
+      <p>Con base en la <strong>nota final</strong> de cada estudiante, el sistema deberá: evaluar si <strong>aprobó o no</strong>; clasificar su desempeño en niveles — <strong>excelente, bueno, regular o reprobado</strong>; y mostrar un <strong>mensaje motivacional o de mejora</strong> según el nivel obtenido.</p>
     </div>
     <div class="req-grid">
       <div class="req-card">
-        <div class="req-num">Clase base</div>
-        <div class="req-t">Vehiculo</div>
-        <div class="req-d"><code>marca, modelo, anio, combustible</code> — lo que todos comparten. Vive una sola vez, arriba del árbol.</div>
+        <div class="req-num">Requerimiento 01</div>
+        <div class="req-t">Evaluar el estado</div>
+        <div class="req-d">Con la nota final, decidir si el estudiante <strong>aprobó o reprobó</strong>. Una sola decisión → un <code>if/else</code>.</div>
       </div>
       <div class="req-card">
-        <div class="req-num">Subclase 01</div>
-        <div class="req-t">Auto</div>
-        <div class="req-d">Hereda todo de Vehiculo y añade <code>num_puertas</code>. <em>Un auto es un vehículo.</em></div>
+        <div class="req-num">Requerimiento 02</div>
+        <div class="req-t">Clasificar el desempeño</div>
+        <div class="req-d">Ubicar la nota en un nivel: <strong>excelente, bueno, regular o reprobado</strong>. Varias decisiones encadenadas → <code>ifs anidados</code>.</div>
       </div>
       <div class="req-card">
-        <div class="req-num">Subclase 02</div>
-        <div class="req-t">Camion</div>
-        <div class="req-d">Hereda todo y añade <code>carga_maxima</code>. Su constructor llama a <code>super()</code> primero.</div>
+        <div class="req-num">Requerimiento 03</div>
+        <div class="req-t">Mensaje motivacional</div>
+        <div class="req-d">Según el nivel, mostrar un <strong>mensaje de felicitación o de mejora</strong>. La retroalimentación es el corazón del sistema.</div>
       </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">El practicario no fija la escala: <strong>tu equipo la define y la defiende</strong>. En esta guía usaremos la convencional — aprobado con <span class="inlinecode">&gt;= 60</span>; niveles: <strong>90–100 excelente</strong>, <strong>80–89 bueno</strong>, <strong>60–79 regular</strong>, <strong>&lt; 60 reprobado</strong>. Si tu equipo elige otra, documenta el porqué en la historia de usuario.</p>
+  </div>
+</section>
+
+<!-- III: concepto — anatomía del if -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · El concepto — tres formas de decidir</p>
+    <p class="lead">Un programa sin decisiones<br>siempre cuenta la <em>misma historia.</em></p>
+    <p class="subtle">Toda la práctica gira sobre tres estructuras. El <strong>if</strong> decide si algo pasa o no. El <strong>if/else</strong> elige entre dos caminos. Y el <strong>if anidado</strong> mete una decisión <em>dentro</em> de otra — primero filtro grueso, luego filtro fino. Elige una pestaña y pulsa <strong>▶ Recorrer</strong> para ver, línea por línea, qué camino toma Java con una nota de ejemplo:</p>
+    <div class="widget" data-tag="Anatomía de la decisión · animado">
+      <div class="w-controls" style="margin-top:0;margin-bottom:1.5rem;">
+        <button class="btn on" data-ifw="simple">if simple</button>
+        <button class="btn" data-ifw="ifelse">if / else</button>
+        <button class="btn" data-ifw="anidado">ifs anidados</button>
+      </div>
+      <div class="ifw-stage">
+        <div class="jcode" id="ifw-code"></div>
+        <div class="ifw-side">
+          <div class="ifw-note" id="ifw-note"></div>
+          <div class="ifw-desc" id="ifw-desc">Pulsa <strong>▶ Recorrer</strong> para animar la ejecución paso a paso.</div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn on" id="ifw-play">▶ Recorrer</button>
+        <button class="btn" id="ifw-reset">⟲ Reset</button>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.5rem">Regla de lectura: en Java la condición <strong>siempre va entre paréntesis</strong> y el bloque <strong>entre llaves</strong>. No hay <span class="inlinecode">elif</span> como en Python — se escribe <span class="inlinecode">else if</span>, con espacio. Y la indentación en Java no cambia el significado (las llaves mandan), pero <em>sí</em> cambia la legibilidad: indenta como si fuera Python.</p>
+  </div>
+</section>
+
+<!-- IV: paso a paso -->
+<section>
+  <div class="wrap">
+    <p class="marker">IV · La ruta — siete pasos, en orden</p>
+    <p class="lead">Del papel al código:<br>así se construye la <em>práctica.</em></p>
+    <p class="subtle">Las 7 actividades del practicario forman una ruta deliberada: primero <strong>entiendes</strong> (historia de usuario), luego <strong>diseñas</strong> (diagramas), y al final <strong>programas</strong>. Si empiezas por el código, lo estás haciendo al revés. Cada paso de abajo trae su ejemplo de referencia — úsalo como guía, no como copia.</p>
+
+    <!-- PASO 1 -->
+    <div class="paso">
+      <div class="paso-num">1</div>
+      <div class="paso-body">
+        <div class="paso-t">Historia de <em>usuario</em></div>
+        <p class="paso-d">Establece los requerimientos con el formato <strong>Como… / Quiero… / Para…</strong> — rol, acción y propósito. Añade criterios de aceptación: son la lista contra la que al final compruebas tu programa.</p>
+        <div class="hu-card">
+          <div class="hu-tag">Ejemplo de referencia · HU-01</div>
+          <div class="hu-body"><strong>Como</strong> docente de la institución, <strong>quiero</strong> registrar la nota final de cada estudiante y que el sistema determine su estado, clasifique su desempeño y muestre un mensaje personalizado, <strong>para</strong> dar retroalimentación inmediata que motive la mejora académica.</div>
+          <div class="hu-crit">
+            <div class="hu-crit-t">Criterios de aceptación</div>
+            <ul>
+              <li>La nota final es un número entre <code>0</code> y <code>100</code>.</li>
+              <li>El estado es <strong>Aprobado</strong> si la nota es <code>&gt;= 60</code>; en otro caso, <strong>Reprobado</strong>.</li>
+              <li>Los niveles son: excelente (90–100), bueno (80–89), regular (60–79), reprobado (&lt; 60).</li>
+              <li>Cada nivel tiene un mensaje motivacional o de mejora distinto.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="paso">
+      <div class="paso-num">2</div>
+      <div class="paso-body">
+        <div class="paso-t">Diagrama de <em>clases</em></div>
+        <p class="paso-d">Define <strong>solo</strong> los atributos y métodos necesarios para resolver el caso — ni uno más. Atributos <strong>privados</strong> (−) como aprendiste en encapsulamiento; métodos <strong>públicos</strong> (+) para lo que el sistema ofrece hacia afuera.</p>
+        <div class="uml-stage">
+          <div class="uml-box">
+            <div class="uml-name">Estudiante</div>
+            <div class="uml-sec">
+              <span class="pri">−</span> nombre: <span class="ty">String</span><br>
+              <span class="pri">−</span> notaFinal: <span class="ty">double</span>
+            </div>
+            <div class="uml-sec">
+              <span class="pub">+</span> Estudiante(nombre, notaFinal)<br>
+              <span class="pub">+</span> getNombre(): <span class="ty">String</span><br>
+              <span class="pub">+</span> evaluarEstado(): <span class="ty">String</span><br>
+              <span class="pub">+</span> clasificarDesempenio(): <span class="ty">String</span><br>
+              <span class="pub">+</span> obtenerMensaje(): <span class="ty">String</span>
+            </div>
+          </div>
+          <div class="uml-note"><strong>Una clase basta</strong> para el dominio (más tu <strong>Main</strong> que la usa). El estudiante <em>sabe</em> su nota, y por eso a él le corresponde evaluarse y clasificarse — los datos y las decisiones que los usan viven juntos. Eso es POO.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="paso">
+      <div class="paso-num">3</div>
+      <div class="paso-body">
+        <div class="paso-t">Diagrama de actividades — <em>¿aprobó?</em></div>
+        <p class="paso-d">El primer diagrama modela la decisión simple: <strong>aprobado o reprobado</strong>. Recuerda los elementos UML: <strong>círculo</strong> de inicio, <strong>rectángulos redondeados</strong> para actividades, <strong>rombos</strong> para decisiones, flechas con guardas <code>[sí]</code> / <code>[no]</code>, y círculo de fin. Anima el flujo con las dos notas de prueba:</p>
+        <div class="widget" data-tag="Diagrama de actividades · estado">
+          <div class="act-flow" id="act1">
+            <div class="act-start" id="a1-ini"></div>
+            <div class="act-line"></div>
+            <div class="act-node" id="a1-leer">Leer notaFinal</div>
+            <div class="act-line"></div>
+            <div class="act-dec-wrap" id="a1-dec"><div class="act-dec">¿notaFinal &gt;= 60?</div></div>
+            <div class="act-branches">
+              <div class="act-branch"><span class="act-lbl">[sí]</span><div class="act-node res" id="a1-ap">estado = "Aprobado"</div></div>
+              <div class="act-branch"><span class="act-lbl">[no]</span><div class="act-node" id="a1-rep">estado = "Reprobado"</div></div>
+            </div>
+            <div class="act-line"></div>
+            <div class="act-node" id="a1-show">Mostrar estado</div>
+            <div class="act-line"></div>
+            <div class="act-end" id="a1-fin"></div>
+          </div>
+          <div class="act-caption" id="a1-cap">Elige una nota de prueba y mira qué camino recorre el flujo.</div>
+          <div class="w-controls" style="justify-content:center;">
+            <button class="btn" data-a1="85">▶ nota = 85</button>
+            <button class="btn" data-a1="45">▶ nota = 45</button>
+            <button class="btn" id="a1-reset">⟲ Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div class="paso">
+      <div class="paso-num">4</div>
+      <div class="paso-body">
+        <div class="paso-t">Diagrama de actividades — <em>niveles y mensaje</em></div>
+        <p class="paso-d">El segundo diagrama modela la clasificación: aquí los rombos se <strong>encadenan en cascada</strong> — cada <code>[no]</code> baja a la siguiente pregunta. Esta cascada de rombos es <em>exactamente</em> lo que después será tu if anidado en Java: el diagrama y el código deben contar la misma historia.</p>
+        <div class="widget" data-tag="Diagrama de actividades · niveles + mensaje">
+          <div class="act-flow" id="act2">
+            <div class="act-start" id="a2-ini"></div>
+            <div class="act-line"></div>
+            <div class="act-node" id="a2-leer">Leer notaFinal</div>
+            <div class="act-line"></div>
+            <div class="act-row">
+              <div class="act-dec-wrap" id="a2-d90"><div class="act-dec">¿notaFinal &gt;= 90?</div></div>
+              <span class="act-lbl">[sí] →</span>
+              <div class="act-node res" id="a2-exc">nivel = "Excelente"</div>
+            </div>
+            <span class="act-lbl">[no]</span>
+            <div class="act-line"></div>
+            <div class="act-row">
+              <div class="act-dec-wrap" id="a2-d80"><div class="act-dec">¿notaFinal &gt;= 80?</div></div>
+              <span class="act-lbl">[sí] →</span>
+              <div class="act-node res" id="a2-bue">nivel = "Bueno"</div>
+            </div>
+            <span class="act-lbl">[no]</span>
+            <div class="act-line"></div>
+            <div class="act-row">
+              <div class="act-dec-wrap" id="a2-d60"><div class="act-dec">¿notaFinal &gt;= 60?</div></div>
+              <span class="act-lbl">[sí] →</span>
+              <div class="act-node res" id="a2-reg">nivel = "Regular"</div>
+            </div>
+            <span class="act-lbl">[no]</span>
+            <div class="act-line"></div>
+            <div class="act-node" id="a2-rep">nivel = "Reprobado"</div>
+            <div class="act-line"></div>
+            <div class="act-node" id="a2-msg">Mostrar mensaje motivacional según nivel</div>
+            <div class="act-line"></div>
+            <div class="act-end" id="a2-fin"></div>
+          </div>
+          <div class="act-caption" id="a2-cap">Prueba las cuatro notas: cada una recorre un camino distinto por la cascada.</div>
+          <div class="w-controls" style="justify-content:center;">
+            <button class="btn" data-a2="95">▶ 95</button>
+            <button class="btn" data-a2="84">▶ 84</button>
+            <button class="btn" data-a2="70">▶ 70</button>
+            <button class="btn" data-a2="45">▶ 45</button>
+            <button class="btn" id="a2-reset">⟲ Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 5 -->
+    <div class="paso">
+      <div class="paso-num">5</div>
+      <div class="paso-body">
+        <div class="paso-t">Las clases en <em>Java</em> (IntelliJ)</div>
+        <p class="paso-d">Abre IntelliJ IDEA → <strong>New Project → Java</strong> (elige tu JDK) → nómbralo <code>Practica2SentenciasControl</code>. En <code>src</code>, crea la clase <code>Estudiante</code>: atributos <strong>privados</strong>, constructor y getter. Traduce tu diagrama de clases — nada que no esté dibujado.</p>
+        <div class="jcode">
+<span class="ln"><span class="cm">// src/Estudiante.java</span></span>
+<span class="ln"><span class="kw">public class</span> <span class="cls">Estudiante</span> {</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">String</span> nombre;</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">double</span> notaFinal;</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="cls">Estudiante</span>(<span class="ty">String</span> nombre, <span class="ty">double</span> notaFinal) {</span>
+<span class="ln">        <span class="kw">this</span>.nombre = nombre;</span>
+<span class="ln">        <span class="kw">this</span>.notaFinal = notaFinal;</span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="ty">String</span> getNombre() {</span>
+<span class="ln">        <span class="kw">return</span> nombre;</span>
+<span class="ln">    }</span>
+<span class="ln">}</span>
+        </div>
+        <div class="paso-tip"><strong>Tip IntelliJ:</strong> escribe <code>psvm</code> + Tab en tu Main para generar el método <code>main</code>, y <code>sout</code> + Tab para <code>System.out.println()</code>. Los diagramas van en tu documento; el código, en el proyecto.</div>
+      </div>
+    </div>
+
+    <!-- PASO 6 -->
+    <div class="paso">
+      <div class="paso-num">6</div>
+      <div class="paso-body">
+        <div class="paso-t">Implementar <em>evaluarEstado()</em> — el if/else</div>
+        <p class="paso-d">Traduce el diagrama del <strong>paso 3</strong> a código: el rombo se vuelve la condición, cada rama se vuelve un bloque. Un solo <code>if/else</code>, dentro de la clase <code>Estudiante</code>:</p>
+        <div class="jcode">
+<span class="ln">    <span class="cm">// Requerimiento 01 · diagrama del paso 3</span></span>
+<span class="ln">    <span class="kw">public</span> <span class="ty">String</span> evaluarEstado() {</span>
+<span class="ln">        <span class="kw">if</span> (notaFinal &gt;= 60) {</span>
+<span class="ln">            <span class="kw">return</span> <span class="str">"Aprobado"</span>;</span>
+<span class="ln">        } <span class="kw">else</span> {</span>
+<span class="ln">            <span class="kw">return</span> <span class="str">"Reprobado"</span>;</span>
+<span class="ln">        }</span>
+<span class="ln">    }</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 7 -->
+    <div class="paso">
+      <div class="paso-num">7</div>
+      <div class="paso-body">
+        <div class="paso-t">Implementar la <em>clasificación</em> — ifs anidados</div>
+        <p class="paso-d">Ahora el diagrama del <strong>paso 4</strong>: primero la decisión gruesa (<em>¿aprobó?</em>) y, <strong>dentro</strong> del sí, la cascada fina de niveles. Ese if-dentro-del-if es el <strong>if anidado</strong> del tema 3.2. Completa con el mensaje y un <code>Main</code> que lo pruebe:</p>
+        <div class="jcode">
+<span class="ln">    <span class="cm">// Requerimiento 02 · diagrama del paso 4</span></span>
+<span class="ln">    <span class="kw">public</span> <span class="ty">String</span> clasificarDesempenio() {</span>
+<span class="ln">        <span class="kw">if</span> (notaFinal &gt;= 60) {              <span class="cm">// decisión gruesa: ¿aprobó?</span></span>
+<span class="ln">            <span class="kw">if</span> (notaFinal &gt;= 90) {          <span class="cm">// decisión fina, ANIDADA</span></span>
+<span class="ln">                <span class="kw">return</span> <span class="str">"Excelente"</span>;</span>
+<span class="ln">            } <span class="kw">else if</span> (notaFinal &gt;= 80) {</span>
+<span class="ln">                <span class="kw">return</span> <span class="str">"Bueno"</span>;</span>
+<span class="ln">            } <span class="kw">else</span> {</span>
+<span class="ln">                <span class="kw">return</span> <span class="str">"Regular"</span>;</span>
+<span class="ln">            }</span>
+<span class="ln">        } <span class="kw">else</span> {</span>
+<span class="ln">            <span class="kw">return</span> <span class="str">"Reprobado"</span>;</span>
+<span class="ln">        }</span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="cm">// Requerimiento 03 · mensaje según nivel</span></span>
+<span class="ln">    <span class="kw">public</span> <span class="ty">String</span> obtenerMensaje() {</span>
+<span class="ln">        <span class="ty">String</span> nivel = clasificarDesempenio();</span>
+<span class="ln">        <span class="kw">if</span> (nivel.equals(<span class="str">"Excelente"</span>)) {</span>
+<span class="ln">            <span class="kw">return</span> <span class="str">"¡Extraordinario! Tu esfuerzo está dando frutos: sigue así."</span>;</span>
+<span class="ln">        } <span class="kw">else if</span> (nivel.equals(<span class="str">"Bueno"</span>)) {</span>
+<span class="ln">            <span class="kw">return</span> <span class="str">"¡Buen trabajo! Estás muy cerca de la excelencia."</span>;</span>
+<span class="ln">        } <span class="kw">else if</span> (nivel.equals(<span class="str">"Regular"</span>)) {</span>
+<span class="ln">            <span class="kw">return</span> <span class="str">"Aprobaste, pero puedes más: refuerza los temas donde dudaste."</span>;</span>
+<span class="ln">        } <span class="kw">else</span> {</span>
+<span class="ln">            <span class="kw">return</span> <span class="str">"Esta nota no te define: identifica qué falló y vuelve a intentarlo."</span>;</span>
+<span class="ln">        }</span>
+<span class="ln">    }</span>
+        </div>
+        <div class="jcode" style="margin-top:1rem;">
+<span class="ln"><span class="cm">// src/Main.java — prueba con varios casos, no solo uno</span></span>
+<span class="ln"><span class="kw">public class</span> <span class="cls">Main</span> {</span>
+<span class="ln">    <span class="kw">public static</span> <span class="ty">void</span> main(<span class="ty">String</span>[] args) {</span>
+<span class="ln">        <span class="cls">Estudiante</span> e = <span class="kw">new</span> <span class="cls">Estudiante</span>(<span class="str">"Ana Torres"</span>, 92);</span>
+<span class="ln">        <span class="ty">System</span>.out.println(e.getNombre());</span>
+<span class="ln">        <span class="ty">System</span>.out.println(<span class="str">"Estado: "</span> + e.evaluarEstado());</span>
+<span class="ln">        <span class="ty">System</span>.out.println(<span class="str">"Nivel:  "</span> + e.clasificarDesempenio());</span>
+<span class="ln">        <span class="ty">System</span>.out.println(e.obtenerMensaje());</span>
+<span class="ln">    }</span>
+<span class="ln">}</span>
+<span class="ln"> </span>
+<span class="ln"><span class="cm">// Salida:</span></span>
+<span class="ln"><span class="out">Ana Torres</span></span>
+<span class="ln"><span class="out">Estado: Aprobado</span></span>
+<span class="ln"><span class="out">Nivel:  Excelente</span></span>
+<span class="ln"><span class="out">¡Extraordinario! Tu esfuerzo está dando frutos: sigue así.</span></span>
+        </div>
+        <div class="paso-tip"><strong>Prueba las fronteras:</strong> ejecuta con 60, 59, 80, 79, 90 y 89. Los errores de los sistemas de clasificación viven casi siempre en los límites — si tus fronteras responden bien, tu lógica está bien.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V: clasificador vivo -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · Pruébalo — el sistema terminado, vivo</p>
+    <p class="lead">Mueve la nota.<br>Mira <em>pensar</em> al programa.</p>
+    <p class="subtle">Así se comporta el sistema que estás construyendo. Arrastra el deslizador: a la izquierda se ilumina el <strong>camino exacto</strong> que Java recorre dentro del if anidado, y a la derecha aparece lo que el estudiante recibiría. Fíjate qué pasa justo en 60, en 80 y en 90:</p>
+    <div class="widget" data-tag="clasificarDesempenio() en ejecución">
+      <div class="clas-stage">
+        <div class="jcode" id="clas-code"></div>
+        <div class="clas-panel">
+          <div class="clas-nota"><span id="clas-val">85</span><small>nota final</small></div>
+          <input type="range" min="0" max="100" value="85" class="clas-slider" id="clas-slider">
+          <div class="clas-out">
+            <div class="clas-estado ap" id="clas-estado">ESTADO · APROBADO</div>
+            <div class="clas-nivel" id="clas-nivel">Bueno</div>
+            <div class="clas-msg" id="clas-msg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI: entrega -->
+<section>
+  <div class="wrap">
+    <p class="marker">VI · La entrega — Blackboard, formato institucional</p>
+    <p class="lead">Un solo envío,<br>dos <em>piezas.</em></p>
+    <p class="subtle">La práctica se entrega <strong>por Blackboard</strong> al final del laboratorio (o en la fecha indicada en la plataforma). El envío lleva <strong>un documento con formato institucional</strong> y, <strong>anexo, el proyecto completo de IntelliJ</strong> comprimido en <span class="inlinecode">.zip</span>. Estructura del documento:</p>
+    <div class="doc-grid">
+      <div class="doc-card">
+        <div class="doc-n">Sección 1</div>
+        <div class="doc-t">Portada</div>
+        <div class="doc-d">Datos institucionales, materia, práctica, tu nombre, docente y fecha.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 2</div>
+        <div class="doc-t">Introducción</div>
+        <div class="doc-d">Qué problema resuelve el sistema y qué sentencias de control usa.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 3</div>
+        <div class="doc-t">Desarrollo</div>
+        <div class="doc-d">Historia de usuario, diagrama de clases, los 2 diagramas de actividades, código y capturas de la ejecución.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 4</div>
+        <div class="doc-t">Conclusión</div>
+        <div class="doc-d">Responde las 3 preguntas del practicario (abajo) con tus palabras.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 5</div>
+        <div class="doc-t">Referencias</div>
+        <div class="doc-d">Bibliografía en <strong>formato APA</strong> (7ª ed.). Incluye toda fuente que hayas consultado.</div>
+      </div>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Evidencias que debe contener el desarrollo</div>
+      <ul>
+        <li><strong>Historia de usuario</strong> con los requerimientos del sistema (rol, acción, propósito y criterios).</li>
+        <li><strong>Diagrama de clases</strong> con atributos y métodos — y modificadores de acceso.</li>
+        <li><strong>Diagrama de actividades 1:</strong> evaluar el estado del alumno (aprobado / reprobado).</li>
+        <li><strong>Diagrama de actividades 2:</strong> clasificar el desempeño en niveles y mostrar el mensaje motivacional.</li>
+        <li><strong>Proyecto IntelliJ IDEA</strong> con los códigos fuente en Java (<code>Estudiante.java</code>, <code>Main.java</code>) — anexo como <code>.zip</code>.</li>
+        <li><strong>Capturas de la ejecución</strong> con al menos un caso por nivel: excelente, bueno, regular y reprobado.</li>
+      </ul>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Para tu conclusión — las 3 preguntas del practicario</div>
+      <ol>
+        <li>¿Qué <strong>ventajas</strong> ofrece el uso de sentencias de control para la toma de decisiones en un programa?</li>
+        <li>¿Cómo podrías <strong>optimizar</strong> el sistema para manejar un mayor número de estudiantes de manera más eficiente? <em>(Pista: piensa en los ciclos y arreglos de las sesiones 11 y 12.)</em></li>
+        <li>¿Qué <strong>impacto</strong> tiene un sistema como este en la organización de datos y la retroalimentación en un entorno educativo?</li>
+      </ol>
     </div>
     <div class="ia-rules">
-      <div class="ia-rules-tag">Reglas de la IA para diseñar tu jerarquía</div>
-      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué <code>combustible</code> va en la clase base y no en cada subclase?"</span></div>
-      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise tu árbol</em>: "esta es mi jerarquía, ¿algún atributo está repetido en las hijas que debería subir al padre?"</span></div>
-      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "diséñame la jerarquía completa de mi proyecto" — <em>si la IA decidió tu árbol, no podrás defender por qué cada clase está donde está. Y eso es justo lo que se evalúa hoy.</em></span></div>
+      <div class="ia-rules-tag">Reglas de la IA en esta práctica</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué el else if solo se evalúa si el if anterior fue falso?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise</em>: "este es mi diagrama de actividades y este mi código, ¿cuentan la misma historia?"</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle el sistema o el documento completos — <em>la rúbrica evalúa que TÚ puedas defender cada decisión del diseño, y eso no se delega.</em></span></div>
     </div>
+  </div>
+</section>
+
+<!-- VII: criterios -->
+<section>
+  <div class="wrap">
+    <p class="marker">VII · Cómo se evalúa — la rúbrica</p>
+    <p class="lead">Tres frentes.<br>El mismo <em>estándar.</em></p>
+    <div class="crit-grid">
+      <div class="crit-card">
+        <div class="req-num">Frente 01</div>
+        <div class="crit-t">Análisis del caso</div>
+        <ul>
+          <li>Identificación adecuada de <strong>actores, objetivos y restricciones</strong>.</li>
+          <li>Historia de usuario clara y completa: <strong>rol, acción y propósito</strong>.</li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <div class="req-num">Frente 02</div>
+        <div class="crit-t">Diseño del sistema</div>
+        <ul>
+          <li>Diagramas de actividades con <strong>UML correcto</strong>: rombos para decisiones, rectángulos redondeados para actividades, flechas de transición.</li>
+          <li>Los diagramas <strong>reflejan las decisiones</strong> del programa (if, if/else, anidados).</li>
+          <li>Coherencia entre <strong>diagramas e historia de usuario</strong>.</li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <div class="req-num">Frente 03</div>
+        <div class="crit-t">Implementación en Java</div>
+        <ul>
+          <li>Clases con los <strong>atributos y métodos necesarios</strong>, bien codificados.</li>
+          <li>POO real: <strong>modificadores de acceso</strong> y código dividido en unidades lógicas.</li>
+          <li>Programa <strong>funcional</strong> que cumple los tres requerimientos.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">La regla de oro de la Sesión 8 aplica entera: <strong>el diagrama y el código deben contar la misma historia</strong>. Si tu rombo dice <span class="inlinecode">&gt;= 60</span> y tu if dice <span class="inlinecode">&gt; 60</span>, ya perdiste puntos — y un estudiante con 60 exacto, su aprobación.</p>
   </div>
 </section>
 
 <!-- CIERRE -->
 <section class="cierre">
   <div class="wrap-n">
-    <p class="marker">VIII · Para la próxima clase</p>
-    <p class="lead">El proyecto entra al Bloque II.<br>Y empieza por su <em>árbol genealógico.</em></p>
-    <p class="subtle">La participación de hoy se evalúa así: <strong>cada equipo propone, en clase, la jerarquía de clases de su proyecto integrador</strong>. Llega con un primer borrador para defenderlo — no tiene que estar perfecto, tiene que estar <em>pensado</em>.</p>
+    <p class="marker">VIII · Cierre — bibliografía y siguiente parada</p>
+    <p class="lead">Decidir es la mitad del oficio.<br>La otra mitad es <em>repetir.</em></p>
+    <p class="subtle">Tu propia pregunta de conclusión #2 lo adelanta: este sistema clasifica a <strong>un</strong> estudiante, pero una escuela tiene cientos. Ciclos y arreglos (que ya viste en las sesiones 11 y 12) son la respuesta — y el proyecto integrador del Bloque II los va a necesitar. La próxima sesión seguimos con el temario del bloque.</p>
     <div class="tarea">
-      <div class="tarea-tag">Avance del proyecto · Bloque II</div>
+      <div class="tarea-tag">Bibliografía de la práctica · formato APA</div>
+      <div class="biblio">
+        <div class="biblio-item">Deitel, P. J., &amp; Deitel, H. M. (2023). <em>Cómo programar en Java</em> (12ª ed.). Pearson Educación.</div>
+        <div class="biblio-item">Joyanes Aguilar, L. (2023). <em>Java: Desarrollo de aplicaciones empresariales</em> (3ª ed.). McGraw-Hill.</div>
+        <div class="biblio-item">Sierra, K., &amp; Bates, B. (2022). <em>Java a fondo: Aprende programación orientada a objetos con Java</em> (3ª ed.). O'Reilly Media.</div>
+      </div>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Checklist antes de subir a Blackboard</div>
       <ol>
-        <li>Identifica en tu proyecto <strong>clases que comparten atributos o métodos</strong>: ahí se esconde una clase base.</li>
-        <li>Dibuja tu <strong>jerarquía de herencia simple</strong>: una clase base arriba, las subclases abajo, con el triángulo apuntando al padre.</li>
-        <li>Valida cada flecha con la frase <strong>"X es un Y"</strong>. Si suena raro, no es herencia — es un atributo (<em>"tiene un"</em>).</li>
-        <li>Marca qué atributos viven en la <strong>base</strong> (los comunes) y cuáles son <strong>propios</strong> de cada subclase.</li>
-        <li>Programa en <strong>Python</strong> tu clase base y al menos una subclase, usando <code>super().__init__()</code> en la hija.</li>
-        <li><strong>Prepárate para proponerla en clase</strong> — esa propuesta es tu participación evaluada.</li>
-        <li><em>Opcional:</em> avanza la <strong>Práctica institucional 4</strong> modelando la flota de transporte en Python o Java.</li>
+        <li>Documento institucional completo: <strong>portada, introducción, desarrollo, conclusión y referencias APA</strong>.</li>
+        <li>Las <strong>4 evidencias de diseño</strong> dentro del desarrollo: historia de usuario, diagrama de clases y los 2 de actividades.</li>
+        <li>Capturas de ejecución con <strong>un caso por nivel</strong> (incluye las fronteras: 60, 80, 90).</li>
+        <li>Proyecto IntelliJ <strong>anexo en .zip</strong> — comprime la carpeta completa del proyecto.</li>
+        <li>Un solo envío en la actividad de <strong>Blackboard · Práctica 2</strong>.</li>
       </ol>
     </div>
   </div>
@@ -488,259 +737,189 @@ window.addEventListener('scroll',()=>{const h=document.documentElement;document.
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
 const $=id=>document.getElementById(id);
-const L=html=>'<span class="pj-line">'+html+'</span>';
 
-// ─── W1: árbol de jerarquía ─────────────────────────────────
-const treData={
-  vehiculo:{tag:'Clase base',title:'Vehiculo',sub:'la raíz del árbol',base:true,
-    her:[],
-    own:['marca','modelo','anio','combustible','arrancar()','describir()'],
-    herT:'Define para todos',
-    phrase:'Todo lo que escribas aquí lo reciben <strong>las tres subclases, gratis</strong>. Por eso lo común vive arriba: se escribe una vez.'},
-  auto:{tag:'Subclase',title:'Auto',sub:'class Auto(Vehiculo)',base:false,
-    her:['marca','modelo','anio','combustible','arrancar()','describir()'],
-    own:['num_puertas'],
-    herT:'Hereda de Vehiculo',
-    phrase:'Un <strong>Auto es un Vehiculo</strong>: recibe los 6 miembros del padre sin reescribir nada, y solo añade <strong>num_puertas</strong>.'},
-  camion:{tag:'Subclase',title:'Camion',sub:'class Camion(Vehiculo)',base:false,
-    her:['marca','modelo','anio','combustible','arrancar()','describir()'],
-    own:['carga_maxima'],
-    herT:'Hereda de Vehiculo',
-    phrase:'El <strong>Camion</strong> también arranca y se describe — sin definir esos métodos. Lo único nuevo es <strong>carga_maxima</strong>.'},
-  moto:{tag:'Subclase',title:'Moto',sub:'class Moto(Vehiculo)',base:false,
-    her:['marca','modelo','anio','combustible','arrancar()','describir()'],
-    own:['cilindraje'],
-    herT:'Hereda de Vehiculo',
-    phrase:'Misma raíz, otra rama. La <strong>Moto</strong> hereda lo común y aporta su <strong>cilindraje</strong>. Eso es una jerarquía de herencia simple.'},
+// ─── W1: anatomía del if (tabs + trace animado) ─────────────
+const ifwData={
+  simple:{
+    lines:[
+      '<span class="ty">double</span> nota = 72;',
+      '',
+      '<span class="kw">if</span> (nota &gt;= 60) {',
+      '    <span class="ty">System</span>.out.println(<span class="str">"Aprobado"</span>);',
+      '}',
+      '',
+      '<span class="ty">System</span>.out.println(<span class="str">"Fin"</span>);',
+    ],
+    note:'El <strong>if simple</strong> es una compuerta: si la condición es <strong>verdadera</strong> entra al bloque; si es falsa, <strong>lo salta</strong> y sigue de largo. No hay camino alternativo.',
+    trace:[
+      {l:0,d:'La nota vale <strong>72</strong>.'},
+      {l:2,d:'Se evalúa la condición: 72 &gt;= 60 → <strong>verdadera</strong>. Entramos al bloque.'},
+      {l:3,d:'Se ejecuta el bloque: imprime <strong>"Aprobado"</strong>.'},
+      {l:6,d:'El programa continúa después del if. Con nota 45, habría saltado directo aquí.'},
+    ]
+  },
+  ifelse:{
+    lines:[
+      '<span class="ty">double</span> nota = 45;',
+      '',
+      '<span class="kw">if</span> (nota &gt;= 60) {',
+      '    estado = <span class="str">"Aprobado"</span>;',
+      '} <span class="kw">else</span> {',
+      '    estado = <span class="str">"Reprobado"</span>;',
+      '}',
+    ],
+    note:'El <strong>if/else</strong> es una bifurcación: <strong>siempre</strong> se ejecuta exactamente uno de los dos bloques. Es el requerimiento 01 de tu práctica: aprobado <em>o</em> reprobado, sin tercera opción.',
+    trace:[
+      {l:0,d:'La nota vale <strong>45</strong>.'},
+      {l:2,d:'Se evalúa: 45 &gt;= 60 → <strong>falsa</strong>. NO entramos al primer bloque.'},
+      {l:4,d:'La condición falló, así que tomamos el camino del <strong>else</strong>.'},
+      {l:5,d:'estado = <strong>"Reprobado"</strong>. Uno de los dos bloques siempre corre.'},
+    ]
+  },
+  anidado:{
+    lines:[
+      '<span class="ty">double</span> nota = 85;',
+      '',
+      '<span class="kw">if</span> (nota &gt;= 60) {          <span class="cm">// filtro grueso</span>',
+      '    <span class="kw">if</span> (nota &gt;= 90) {      <span class="cm">// filtro fino</span>',
+      '        nivel = <span class="str">"Excelente"</span>;',
+      '    } <span class="kw">else if</span> (nota &gt;= 80) {',
+      '        nivel = <span class="str">"Bueno"</span>;',
+      '    } <span class="kw">else</span> {',
+      '        nivel = <span class="str">"Regular"</span>;',
+      '    }',
+      '} <span class="kw">else</span> {',
+      '    nivel = <span class="str">"Reprobado"</span>;',
+      '}',
+    ],
+    note:'El <strong>if anidado</strong> mete una decisión <em>dentro</em> de otra: primero el filtro grueso (¿aprobó?) y solo si pasa, el filtro fino (¿qué tan bien?). Es el requerimiento 02 — y el tema 3.2 del temario.',
+    trace:[
+      {l:0,d:'La nota vale <strong>85</strong>.'},
+      {l:2,d:'Filtro grueso: 85 &gt;= 60 → <strong>verdadera</strong>. El estudiante aprobó; entramos.'},
+      {l:3,d:'Ya DENTRO del if, filtro fino: 85 &gt;= 90 → <strong>falsa</strong>. No es excelente.'},
+      {l:5,d:'Siguiente pregunta de la cascada: 85 &gt;= 80 → <strong>verdadera</strong>.'},
+      {l:6,d:'nivel = <strong>"Bueno"</strong>. Nota cómo el else de la línea 11 nunca se tocó: era del filtro grueso.'},
+    ]
+  }
 };
-function treRender(k){
-  const d=treData[k];
-  $('tre-tag').textContent=d.tag;
-  $('tre-title').textContent=d.title;
-  $('tre-sub').textContent=d.sub;
-  $('tre-her-t').textContent=d.herT;
-  $('tre-her').innerHTML=d.her.length?d.her.map(x=>'<span class="tre-chip her">'+x+'</span>').join(''):'<span class="tre-sub">— es la raíz, no hereda de nadie —</span>';
-  $('tre-own').innerHTML=d.own.map(x=>'<span class="tre-chip own">'+x+'</span>').join('');
-  $('tre-phrase').innerHTML=d.phrase;
+let ifwKey='simple',ifwTimer=null;
+function ifwRender(){
+  const d=ifwData[ifwKey];
+  $('ifw-code').innerHTML=d.lines.map((h,i)=>'<span class="ln" id="ifw-l'+i+'">'+(h||' ')+'</span>').join('');
+  $('ifw-note').innerHTML=d.note;
+  $('ifw-desc').innerHTML='Pulsa <strong>▶ Recorrer</strong> para animar la ejecución paso a paso.';
 }
-document.querySelectorAll('.tre-node').forEach(n=>{
-  n.addEventListener('click',()=>{
-    document.querySelectorAll('.tre-node').forEach(x=>x.classList.remove('lit'));
-    n.classList.add('lit');
-    treRender(n.dataset.t);
+function ifwStop(){if(ifwTimer){clearInterval(ifwTimer);ifwTimer=null;}}
+document.querySelectorAll('[data-ifw]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    ifwStop();
+    document.querySelectorAll('[data-ifw]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    ifwKey=b.dataset.ifw;
+    ifwRender();
   });
 });
-treRender('vehiculo');
+$('ifw-play').addEventListener('click',()=>{
+  ifwStop();ifwRender();
+  const t=ifwData[ifwKey].trace;let i=-1;
+  ifwTimer=setInterval(()=>{
+    i++;
+    if(i>=t.length){ifwStop();return;}
+    document.querySelectorAll('#ifw-code .ln').forEach(l=>l.classList.remove('hl'));
+    const el=$('ifw-l'+t[i].l);if(el)el.classList.add('hl');
+    $('ifw-desc').innerHTML='<strong>Paso '+(i+1)+':</strong> '+t[i].d;
+  },1500);
+});
+$('ifw-reset').addEventListener('click',()=>{ifwStop();ifwRender();});
+ifwRender();
 
-// ─── W2: animador super() ───────────────────────────────────
-const supSteps=[
-  {floors:[],lines:['sup-l5'],desc:'Pides una <strong>Moto</strong>: Python entra al constructor de la subclase con los 4 datos.'},
-  {floors:[],lines:['sup-l1'],desc:'Arranca el <code>__init__</code> de Moto. Pero antes de poner nada propio, hay una orden esperando.'},
-  {floors:['sup-f-padre'],lines:['sup-l2'],desc:'<strong>super().__init__(...)</strong> sube al padre <strong>Vehiculo</strong> y construye PRIMERO los cimientos: marca, modelo y año.'},
-  {floors:['sup-f-padre','sup-f-hija'],lines:['sup-l3'],desc:'Con los cimientos puestos, la hija añade lo SUYO: <strong>cilindraje</strong>. El orden importa — primero el padre, luego la hija.'},
-  {floors:['sup-f-padre','sup-f-hija'],lines:[],desc:'Edificio completo: la Moto tiene <strong>los 3 atributos del padre + el suyo</strong>. Eso es lo que hace super(): construir sobre los cimientos, no rehacerlos.'},
+// ─── Diagramas de actividades animados ──────────────────────
+let a1Timer=null,a2Timer=null;
+function clearAct(prefix,ids){ids.forEach(id=>$(id).classList.remove('on'));}
+const A1=['a1-ini','a1-leer','a1-dec','a1-ap','a1-rep','a1-show','a1-fin'];
+const A2=['a2-ini','a2-leer','a2-d90','a2-exc','a2-d80','a2-bue','a2-d60','a2-reg','a2-rep','a2-msg','a2-fin'];
+function playAct(path,caption,capId,ids,stopRef){
+  if(stopRef.t){clearInterval(stopRef.t);stopRef.t=null;}
+  clearAct('',ids);
+  let i=-1;
+  stopRef.t=setInterval(()=>{
+    i++;
+    if(i>=path.length){clearInterval(stopRef.t);stopRef.t=null;$(capId).innerHTML=caption;return;}
+    $(path[i]).classList.add('on');
+  },600);
+}
+const a1Ref={t:null},a2Ref={t:null};
+document.querySelectorAll('[data-a1]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const n=+b.dataset.a1;
+    const path=n>=60?['a1-ini','a1-leer','a1-dec','a1-ap','a1-show','a1-fin']:['a1-ini','a1-leer','a1-dec','a1-rep','a1-show','a1-fin'];
+    const cap=n>=60
+      ?'Con nota <strong>'+n+'</strong>: el rombo responde [sí] → estado = <strong>"Aprobado"</strong>. Este flujo es tu futuro if/else.'
+      :'Con nota <strong>'+n+'</strong>: el rombo responde [no] → estado = <strong>"Reprobado"</strong>. Mismo rombo, otra rama.';
+    $('a1-cap').innerHTML='Recorriendo el flujo con nota = '+n+'…';
+    playAct(path,cap,'a1-cap',A1,a1Ref);
+  });
+});
+$('a1-reset').addEventListener('click',()=>{if(a1Ref.t){clearInterval(a1Ref.t);a1Ref.t=null;}clearAct('',A1);$('a1-cap').innerHTML='Elige una nota de prueba y mira qué camino recorre el flujo.';});
+document.querySelectorAll('[data-a2]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const n=+b.dataset.a2;
+    let path,niv;
+    if(n>=90){path=['a2-ini','a2-leer','a2-d90','a2-exc','a2-msg','a2-fin'];niv='Excelente';}
+    else if(n>=80){path=['a2-ini','a2-leer','a2-d90','a2-d80','a2-bue','a2-msg','a2-fin'];niv='Bueno';}
+    else if(n>=60){path=['a2-ini','a2-leer','a2-d90','a2-d80','a2-d60','a2-reg','a2-msg','a2-fin'];niv='Regular';}
+    else{path=['a2-ini','a2-leer','a2-d90','a2-d80','a2-d60','a2-rep','a2-msg','a2-fin'];niv='Reprobado';}
+    $('a2-cap').innerHTML='Recorriendo la cascada con nota = '+n+'…';
+    playAct(path,'Nota <strong>'+n+'</strong> → nivel <strong>"'+niv+'"</strong>. Cada [no] baja un rombo más — exactamente como el else de un if anidado.','a2-cap',A2,a2Ref);
+  });
+});
+$('a2-reset').addEventListener('click',()=>{if(a2Ref.t){clearInterval(a2Ref.t);a2Ref.t=null;}clearAct('',A2);$('a2-cap').innerHTML='Prueba las cuatro notas: cada una recorre un camino distinto por la cascada.';});
+
+// ─── Clasificador vivo ──────────────────────────────────────
+const clasLines=[
+  '<span class="kw">public</span> <span class="ty">String</span> clasificarDesempenio() {',
+  '    <span class="kw">if</span> (notaFinal &gt;= 60) {',
+  '        <span class="kw">if</span> (notaFinal &gt;= 90) {',
+  '            <span class="kw">return</span> <span class="str">"Excelente"</span>;',
+  '        } <span class="kw">else if</span> (notaFinal &gt;= 80) {',
+  '            <span class="kw">return</span> <span class="str">"Bueno"</span>;',
+  '        } <span class="kw">else</span> {',
+  '            <span class="kw">return</span> <span class="str">"Regular"</span>;',
+  '        }',
+  '    } <span class="kw">else</span> {',
+  '        <span class="kw">return</span> <span class="str">"Reprobado"</span>;',
+  '    }',
+  '}',
 ];
-let supIdx=-1,supTimer=null;
-function supRender(){
-  ['sup-f-padre','sup-f-hija'].forEach(f=>$(f).classList.remove('up'));
-  ['sup-l0','sup-l1','sup-l2','sup-l3','sup-l5'].forEach(l=>$(l).classList.remove('cur'));
-  if(supIdx<0){
-    $('sup-desc').innerHTML='Pulsa <strong>Siguiente</strong> para construir la moto paso a paso, desde los cimientos del Vehiculo.';
-    return;
-  }
-  const s=supSteps[supIdx];
-  s.floors.forEach(f=>$(f).classList.add('up'));
-  s.lines.forEach(l=>$(l).classList.add('cur'));
-  $('sup-desc').innerHTML=s.desc;
-}
-function supStop(){if(supTimer){clearInterval(supTimer);supTimer=null;$('sup-play').textContent='▶ Play';}}
-$('sup-next').addEventListener('click',()=>{supStop();if(supIdx<supSteps.length-1){supIdx++;supRender();}});
-$('sup-prev').addEventListener('click',()=>{supStop();if(supIdx>-1){supIdx--;supRender();}});
-$('sup-reset').addEventListener('click',()=>{supStop();supIdx=-1;supRender();});
-$('sup-play').addEventListener('click',()=>{
-  if(supTimer){supStop();return;}
-  if(supIdx>=supSteps.length-1){supIdx=-1;supRender();}
-  $('sup-play').textContent='❚❚ Pausa';
-  supTimer=setInterval(()=>{
-    if(supIdx<supSteps.length-1){supIdx++;supRender();}
-    else supStop();
-  },1600);
-});
-supRender();
-
-// ─── W3: Python ↔ Java ──────────────────────────────────────
-const eqData={
-  hereda:{
-    py:[
-      '<span class="kw">class</span> <span class="cls">Vehiculo</span>:',
-      '    <span class="kw">def</span> __init__(<span class="self">self</span>, marca):',
-      '        <span class="self">self</span>.marca = marca',
-      '',
-      '<span class="cm"># la hija: padre entre paréntesis</span>',
-      '<span class="kw">class</span> <span class="cls">Auto</span>(<span class="cls">Vehiculo</span>):',
-      '    <span class="kw">pass</span>  <span class="cm"># ya hereda todo</span>',
-    ],
-    java:[
-      '<span class="kw">public class</span> <span class="cls">Vehiculo</span> {',
-      '    <span class="kw">protected</span> <span class="ty">String</span> marca;',
-      '}',
-      '',
-      '<span class="cm">// la hija: la palabra extends</span>',
-      '<span class="kw">public class</span> <span class="cls">Auto</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {',
-      '    <span class="cm">// ya hereda todo</span>',
-      '}',
-    ],
-    note:'Para heredar, Python pone el <strong>padre entre paréntesis</strong>: <em>class Auto(Vehiculo)</em>. Java usa la palabra clave <strong>extends</strong>. Misma flecha del triángulo UML, dos sintaxis.'
-  },
-  super:{
-    py:[
-      '<span class="kw">class</span> <span class="cls">Auto</span>(<span class="cls">Vehiculo</span>):',
-      '    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, puertas):',
-      '        <span class="kw">super</span>().__init__(marca)',
-      '        <span class="self">self</span>.puertas = puertas',
-    ],
-    java:[
-      '<span class="kw">public class</span> <span class="cls">Auto</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {',
-      '    <span class="kw">public</span> Auto(<span class="ty">String</span> marca, <span class="ty">int</span> puertas) {',
-      '        <span class="kw">super</span>(marca);',
-      '        <span class="self">this</span>.puertas = puertas;',
-      '    }',
-      '}',
-    ],
-    note:'En ambos, <strong>super(...)</strong> llama al constructor del padre — y debe ir <strong>primero</strong>. Python escribe <em>super().__init__(...)</em>; Java solo <em>super(...)</em>. Construye los cimientos antes de lo propio.'
-  },
-  extra:{
-    py:[
-      '<span class="kw">class</span> <span class="cls">Camion</span>(<span class="cls">Vehiculo</span>):',
-      '    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, carga):',
-      '        <span class="kw">super</span>().__init__(marca)',
-      '        <span class="self">self</span>.carga_max = carga',
-      '',
-      '    <span class="kw">def</span> cargar(<span class="self">self</span>, kg):',
-      '        <span class="cm"># método NUEVO, solo del camión</span>',
-      '        <span class="kw">return</span> kg &lt;= <span class="self">self</span>.carga_max',
-    ],
-    java:[
-      '<span class="kw">public class</span> <span class="cls">Camion</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {',
-      '    <span class="kw">private</span> <span class="ty">double</span> cargaMax;',
-      '',
-      '    <span class="kw">public boolean</span> cargar(<span class="ty">double</span> kg) {',
-      '        <span class="cm">// método NUEVO, solo del camión</span>',
-      '        <span class="kw">return</span> kg &lt;= cargaMax;',
-      '    }',
-      '}',
-    ],
-    note:'La hija no se limita a heredar: <strong>añade atributos y métodos propios</strong>. <em>cargar()</em> existe solo en Camion — el padre y los demás hermanos no lo conocen. Heredar no es copiar: es extender.'
-  },
-  usar:{
-    py:[
-      'a = <span class="cls">Auto</span>(<span class="str">"Nissan"</span>, <span class="ty">4</span>)',
-      '',
-      'a.arrancar()   <span class="cm"># heredado de Vehiculo</span>',
-      'a.puertas      <span class="cm"># propio de Auto</span>',
-    ],
-    java:[
-      'Auto a = <span class="kw">new</span> Auto(<span class="str">"Nissan"</span>, <span class="ty">4</span>);',
-      '',
-      'a.arrancar();  <span class="cm">// heredado de Vehiculo</span>',
-      'a.getPuertas(); <span class="cm">// propio de Auto</span>',
-    ],
-    note:'Desde fuera <strong>no notas la diferencia</strong>: el objeto Auto responde tanto a lo heredado (<em>arrancar</em>) como a lo propio (<em>puertas</em>) con la misma naturalidad. Para quien lo usa, es un solo objeto coherente.'
-  }
+const clasMsg={
+  Excelente:'¡Extraordinario! Tu esfuerzo está dando frutos: sigue así.',
+  Bueno:'¡Buen trabajo! Estás muy cerca de la excelencia.',
+  Regular:'Aprobaste, pero puedes más: refuerza los temas donde dudaste.',
+  Reprobado:'Esta nota no te define: identifica qué falló y vuelve a intentarlo.',
 };
-function eqRender(key){
-  const d=eqData[key];
-  $('py-body').innerHTML=d.py.map(L).join('');
-  $('java-body').innerHTML=d.java.map(L).join('');
-  $('pj-note').innerHTML=d.note;
-}
-document.querySelectorAll('[data-eq]').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('[data-eq]').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    eqRender(b.dataset.eq);
+$('clas-code').innerHTML=clasLines.map((h,i)=>'<span class="ln" id="cl-'+i+'">'+h+'</span>').join('');
+function clasUpdate(){
+  const n=+$('clas-slider').value;
+  $('clas-val').textContent=n;
+  let nivel,path;
+  if(n>=90){nivel='Excelente';path=[0,1,2,3];}
+  else if(n>=80){nivel='Bueno';path=[0,1,2,4,5];}
+  else if(n>=60){nivel='Regular';path=[0,1,2,4,6,7];}
+  else{nivel='Reprobado';path=[0,1,9,10];}
+  clasLines.forEach((_,i)=>{
+    const el=$('cl-'+i);
+    el.classList.toggle('hl',path.includes(i));
+    el.classList.toggle('dim',!path.includes(i)&&i!==12);
   });
-});
-eqRender('hereda');
-
-// ─── W4: is-a vs has-a ──────────────────────────────────────
-const ihaData={
-  moto:{rel:'es un',cls:'isa',txt:'<strong>Moto es un Vehiculo.</strong> La frase tiene sentido perfecto → es herencia. En código: <code>class Moto(Vehiculo)</code>. La moto comparte la naturaleza del vehículo.'},
-  perro:{rel:'es un',cls:'isa',txt:'<strong>Perro es un Animal.</strong> Una subclase clásica → <code>class Perro(Animal)</code>. El perro hereda comer(), dormir() y añade ladrar().'},
-  ahorro:{rel:'es un',cls:'isa',txt:'<strong>CuentaAhorro es una Cuenta.</strong> Hereda saldo y depositar(), y añade su tasa de interés → <code>class CuentaAhorro(Cuenta)</code>. (¡La cuenta bancaria que ya programaste!)'},
-  motor:{rel:'tiene un',cls:'hasa',txt:'<strong>Moto tiene un Motor.</strong> Una moto NO "es un" motor — sería absurdo. El motor es un <em>atributo</em> de la moto: <code>self.motor = Motor()</code>. Composición, no herencia.'},
-  dueno:{rel:'tiene un',cls:'hasa',txt:'<strong>Perro tiene un Dueño.</strong> Un perro no "es un" dueño. Es una asociación: el perro guarda una referencia a su dueño como atributo, no lo hereda.'},
-  tarjeta:{rel:'tiene una',cls:'hasa',txt:'<strong>Cuenta tiene una Tarjeta.</strong> La cuenta no "es una" tarjeta. La tarjeta es un objeto que la cuenta posee → atributo. Si la frase con "es un" suena rara, no heredes.'},
-};
-function ihaRender(k){
-  const d=ihaData[k];
-  $('iha-rel').textContent=d.rel;
-  $('iha-rel').className='iha-rel '+d.cls;
-  $('iha-txt').innerHTML=d.txt;
+  const ap=n>=60;
+  const est=$('clas-estado');
+  est.textContent='ESTADO · '+(ap?'APROBADO':'REPROBADO');
+  est.className='clas-estado '+(ap?'ap':'rep');
+  $('clas-nivel').textContent=nivel;
+  $('clas-msg').textContent='"'+clasMsg[nivel]+'"';
 }
-document.querySelectorAll('.iha-card').forEach(c=>{
-  c.addEventListener('click',()=>{
-    document.querySelectorAll('.iha-card').forEach(x=>x.classList.remove('on'));
-    c.classList.add('on');
-    ihaRender(c.dataset.i);
-  });
-});
-ihaRender('moto');
-
-// ─── W5: método heredado ────────────────────────────────────
-const herData={
-  padre:{
-    code:[
-      ['<span class="kw">class</span> <span class="self">Vehiculo</span>:',0],
-      ['    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, modelo):',0],
-      ['        <span class="self">self</span>.marca = marca',0],
-      ['        <span class="self">self</span>.modelo = modelo',0],
-      ['',0],
-      ['    <span class="kw">def</span> arrancar(<span class="self">self</span>):',1],
-      ['        <span class="kw">print</span>(<span class="str">f"{self.marca} hace brrr..."</span>)',0],
-    ],
-    note:'La <strong>clase base</strong>. Define <code>arrancar()</code> una sola vez, aquí arriba. Nada nuevo todavía — es la POO que ya dominas del Bloque I.'
-  },
-  hija:{
-    code:[
-      ['<span class="kw">class</span> <span class="self">Moto</span>(<span class="self">Vehiculo</span>):',1],
-      ['    <span class="kw">def</span> __init__(<span class="self">self</span>, marca, modelo, cc):',0],
-      ['        <span class="kw">super</span>().__init__(marca, modelo)',1],
-      ['        <span class="self">self</span>.cilindraje = cc',0],
-      ['',0],
-      ['    <span class="cm"># Moto NO define arrancar()...</span>',1],
-      ['    <span class="cm"># ...y aun así lo tendrá.</span>',0],
-    ],
-    note:'La hija solo añade <code>cilindraje</code>. <strong>No escribe arrancar()</strong> por ningún lado. Pero al heredar de Vehiculo, ese método ya viaja con ella — gratis.'
-  },
-  uso:{
-    code:[
-      ['m = <span class="self">Moto</span>(<span class="str">"Italika"</span>, <span class="str">"FT250"</span>, <span class="ty">250</span>)',0],
-      ['',0],
-      ['m.arrancar()',1],
-      ['',0],
-      ['<span class="cm"># Salida en consola:</span>',0],
-      ['<span class="out">Italika hace brrr...</span>',1],
-      ['',0],
-      ['<span class="cm"># Moto nunca definió arrancar().</span>',0],
-      ['<span class="cm"># Lo heredó completo de Vehiculo.</span>',0],
-    ],
-    note:'La magia: <strong>m.arrancar() funciona</strong> aunque Moto jamás escribió ese método. Lo heredó. Esto es el corazón de la herencia — reusar comportamiento sin copiarlo. En Java sería idéntico con <code>extends</code>.'
-  }
-};
-function herRender(k){
-  const d=herData[k];
-  $('her-code').innerHTML=d.code.map(([html,hl])=>'<span class="ln'+(hl?' hl':'')+'">'+html+'</span>').join('');
-  $('her-note').innerHTML=d.note;
-}
-document.querySelectorAll('[data-her]').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('[data-her]').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    herRender(b.dataset.her);
-  });
-});
-herRender('padre');
+$('clas-slider').addEventListener('input',clasUpdate);
+clasUpdate();
 </script>
 </body>
 </html>

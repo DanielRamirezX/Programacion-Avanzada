@@ -171,6 +171,29 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .fin-text strong{color:#C9A961;font-style:normal;font-weight:600;}
 .fin-text code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
 
+/* W6: práctica guiada tkinter + mixins */
+.gp-steps{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem;}
+.gp-panel{background:var(--ink);padding:1.5rem;display:grid;grid-template-columns:1.15fr 1fr;gap:1.3rem;align-items:start;}
+.gp-file{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:rgba(239,230,210,.5);margin-bottom:.8rem;padding-bottom:.6rem;border-bottom:1px solid rgba(239,230,210,.12);}
+.gp-code{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.8;color:var(--paper);overflow-x:auto;}
+.gp-code .ln{white-space:pre;display:block;}
+.gp-code .kw{color:#D4956A;font-style:italic;}
+.gp-code .ty{color:#A6C2D6;}
+.gp-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.gp-code .str{color:#C9A961;}
+.gp-code .self{color:#9FBF9C;}
+.gp-side{display:flex;flex-direction:column;gap:1rem;}
+.gp-goal{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#C9A961;}
+.gp-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.88);}
+.gp-text strong{color:#C9A961;font-style:normal;font-weight:600;}
+.gp-text code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+.gp-check{border-left:2px solid var(--olive);background:rgba(93,102,56,.18);padding:.8rem 1rem;font-size:.95rem;color:#C9D6B8;line-height:1.5;}
+.gp-check strong{color:#BCD48F;}
+.gp-check code{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+.gp-svg{width:100%;height:auto;display:block;}
+.gp-legend{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:.9rem;padding-top:.7rem;border-top:1px solid rgba(239,230,210,.12);font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.06em;color:rgba(239,230,210,.6);}
+.gp-legend .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:.45rem;vertical-align:middle;}
+
 /* tabla comparativa */
 .cmp{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
 .cmp th,.cmp td{border:1px solid var(--line);padding:.8rem 1rem;text-align:left;vertical-align:top;}
@@ -196,7 +219,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .ia-rule em{color:var(--ink);}
 
 @media(max-width:860px){
-  .mro-stage,.sup-stage,.pj-stage,.dia-stage,.fin-panel,.fin-grid,.role-grid{grid-template-columns:1fr;}
+  .mro-stage,.sup-stage,.pj-stage,.dia-stage,.fin-panel,.fin-grid,.role-grid,.gp-panel{grid-template-columns:1fr;}
   .cmp{font-size:.85rem;}
   .cmp th,.cmp td{padding:.55rem .6rem;}
 }
@@ -217,6 +240,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
   <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">Admin.__mro__</div>
   <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">linealización C3</div>
   <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">final class · sealed</div>
+  <div class="hero-float" style="top:66%;right:22%;--r:-2deg;animation-delay:-11s">class CampoValidado(SacudibleMixin, tk.Entry)</div>
   <div class="hero-inner">
     <div class="hero-label">Sesión XVI · Bloque II · Herencia · Ref. Temario 5.1.3 · 5.2 · 5.3 · Python · Java</div>
     <h1>Dos padres,<br>un <em>orden.</em></h1>
@@ -402,10 +426,49 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
   </div>
 </section>
 
-<!-- VII: la actividad -->
+<!-- VII: práctica guiada tkinter + mixins -->
 <section>
   <div class="wrap">
-    <p class="marker">VII · Tu turno — roles de usuario</p>
+    <p class="marker">VII · Práctica guiada — herencia que se ve</p>
+    <p class="lead">Hasta ahora el MRO era un diagrama.<br>Ahora va a <em>moverse en tu pantalla.</em></p>
+    <p class="subtle">Vamos a construir, paso a paso, una mini-app con <strong>tkinter</strong> — la biblioteca gráfica que <em>ya viene con Python</em> (nada que instalar). ¿Por qué tkinter en la clase de herencia? Porque en tkinter <strong>todo widget es una clase</strong> y la forma natural de usarlo es <em>heredando</em>. Y porque nos permite conocer el <strong>mixin</strong>: el uso legítimo más común de la herencia múltiple en el mundo real. Cada paso es un archivo listo para correr en <span class="inlinecode">Laboratorio/sesion-16/</span> — escribe, corre, observa, y hasta entonces pasa al siguiente.</p>
+    <div class="widget" data-tag="Cinco pasos · escribe y corre cada uno">
+      <div class="gp-steps">
+        <button class="btn on" data-gp="0">1 · La ventana</button>
+        <button class="btn" data-gp="1">2 · Tu botón</button>
+        <button class="btn" data-gp="2">3 · El mixin</button>
+        <button class="btn" data-gp="3">4 · Herencia múltiple</button>
+        <button class="btn" data-gp="4">5 · La app</button>
+      </div>
+      <div class="gp-panel">
+        <div>
+          <div class="gp-file" id="gp-file"></div>
+          <div class="gp-code" id="gp-code"></div>
+          <div class="gp-uml" id="gp-uml" style="display:none"></div>
+        </div>
+        <div class="gp-side">
+          <div class="gp-goal" id="gp-goal"></div>
+          <div class="gp-text" id="gp-text"></div>
+          <div class="gp-check" id="gp-check"></div>
+        </div>
+      </div>
+      <div class="w-controls">
+        <button class="btn" id="gp-prev">◀ Paso anterior</button>
+        <button class="btn on" id="gp-next">Paso siguiente ▶</button>
+        <button class="btn btn-olive" id="gp-view">◇ Ver el UML</button>
+      </div>
+    </div>
+    <div class="caso" style="font-style:normal;font-size:1.02rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem;">Mixins en el mundo real</div>
+      Los mixins son la razón por la que la herencia múltiple sigue viva. La biblioteca estándar los usa: <span class="inlinecode">socketserver.ThreadingMixIn</span> convierte cualquier servidor en multihilo con una línea — <span class="inlinecode">class MiServidor(ThreadingMixIn, TCPServer)</span>. Django los usa para permisos: <span class="inlinecode">class MiVista(LoginRequiredMixin, View)</span>. La receta es siempre la misma: <strong>el mixin primero, la clase "real" después</strong>, y el nombre termina en <em>Mixin</em> para que se lea la intención.
+    </div>
+  </div>
+</section>
+
+<!-- VIII: la actividad -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · Tu turno — roles de usuario</p>
     <p class="lead">Modela un sistema donde un<br><em>Administrador</em> es Empleado <em>y</em> Cliente.</p>
     <p class="subtle">El ejercicio de hoy: una plataforma tiene tres tipos de usuario, pero el administrador es un caso especial — cobra como empleado <em>y</em> compra como cliente. Es el escenario perfecto para herencia múltiple. Diseña la jerarquía, haz que <span class="inlinecode">super()</span> coopere y luego <em>verifica tu diseño imprimiendo el MRO</em>.</p>
     <div class="role-grid">
@@ -440,7 +503,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 <!-- CIERRE -->
 <section class="cierre">
   <div class="wrap-n">
-    <p class="marker">VIII · Para la próxima clase</p>
+    <p class="marker">IX · Para la próxima clase</p>
     <p class="lead">La herencia bien diseñada no se nota.<br>La mal diseñada, <em>se sufre.</em></p>
     <p class="subtle">Tu proyecto integrador ya tiene clases sueltas. Es hora de darles una <strong>jerarquía</strong>: qué hereda de qué, dónde coopera <span class="inlinecode">super()</span>, y qué clases conviene dejar como base para lo que viene — porque la próxima unidad son <strong>interfaces y clases abstractas (ABC)</strong>, y se construyen sobre lo de hoy.</p>
     <div class="tarea">
@@ -450,6 +513,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
         <li><strong>Cadena de super() correcta</strong>: cada <code>__init__</code> que herede debe llamar a <code>super().__init__(...)</code>. Verifica que cada clase se inicializa una sola vez.</li>
         <li><strong>Imprime y comenta el MRO</strong>: agrega una línea que muestre <code>TuClase.__mro__</code> y un comentario que explique por qué ese orden.</li>
         <li><strong>Prepara el terreno para ABC</strong>: marca qué clases serán <em>base</em> (no instanciables directamente) — la próxima sesión las volveremos abstractas con <code>abc</code> e interfaces.</li>
+        <li><strong>Reto opcional — un mixin en tu proyecto</strong>: identifica una habilidad transversal (auditable, exportable a JSON, notificable…) y modélala como mixin, como el <code>SacudibleMixin</code> de la práctica guiada. Recuerda: el mixin va primero en la lista de bases.</li>
         <li><strong>Sube el commit a GitHub</strong> con la jerarquía y el MRO documentado. <em>Es tu participación de la sesión</em> — ese commit es la evidencia.</li>
       </ol>
     </div>
@@ -781,6 +845,238 @@ document.querySelectorAll('[data-fin]').forEach(c=>{
   });
 });
 finRender('fclase');
+
+// ─── W6: práctica guiada tkinter + mixins ───────────────────
+const gpData=[
+  {
+    file:'▸ Laboratorio/sesion-16/paso_01_ventana.py',
+    goal:'Paso 1 · Heredar una ventana completa',
+    code:[
+      '<span class="kw">import</span> tkinter <span class="kw">as</span> tk',
+      '',
+      '<span class="kw">class</span> <span class="ty">MiVentana</span>(tk.Tk):',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>):',
+      '        <span class="kw">super</span>().__init__()   <span class="cm"># sin esto, no hay ventana</span>',
+      '        <span class="self">self</span>.title(<span class="str">"Sesión 16 — Herencia visible"</span>)',
+      '        <span class="self">self</span>.geometry(<span class="str">"360x220"</span>)',
+      '',
+      '<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:',
+      '    app = <span class="ty">MiVentana</span>()',
+      '    app.mainloop()   <span class="cm"># el ciclo que la mantiene viva</span>',
+    ],
+    text:'<strong>tkinter viene con Python</strong> — no instalas nada. <code>tk.Tk</code> es una clase con cientos de métodos ya escritos: la tuya hereda <em>todo</em> y solo personaliza título y tamaño. Y fíjate en <code>super().__init__()</code>: es la sección III en acción — si tu clase no coopera, la ventana real nunca se construye. <code>mainloop()</code> es el ciclo de eventos: bloquea el programa y mantiene viva la ventana hasta que la cierras.',
+    check:'<strong>✓ Checkpoint:</strong> al correrlo aparece una ventana vacía con tu título. Ahora comenta la línea de <code>super().__init__()</code> y corre de nuevo: el <code>AttributeError</code> que verás es una cadena de super() rota, en carne propia.'
+  },
+  {
+    file:'▸ Laboratorio/sesion-16/paso_02_boton_propio.py',
+    goal:'Paso 2 · Un widget hijo con personalidad',
+    code:[
+      '<span class="kw">class</span> <span class="ty">BotonPeligro</span>(tk.Button):',
+      '    <span class="cm">"""Un Button normal… pero rojo por defecto."""</span>',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, master, **kwargs):',
+      '        <span class="kw">super</span>().__init__(',
+      '            master,',
+      '            bg=<span class="str">"#A02418"</span>, fg=<span class="str">"white"</span>,',
+      '            activebackground=<span class="str">"#6E1810"</span>,',
+      '            **kwargs)   <span class="cm"># text, command… viajan al padre</span>',
+      '',
+      '<span class="cm"># dentro de MiVentana.__init__:</span>',
+      '<span class="ty">BotonPeligro</span>(<span class="self">self</span>, text=<span class="str">"Eliminar"</span>).pack(pady=20)',
+    ],
+    text:'<code>master</code> es el contenedor donde vivirá el widget (tu ventana), y <code>**kwargs</code> es la cooperación de <code>super()</code> con argumentos reales: tu clase fija los colores y <em>todo lo demás</em> (texto, comando, fuente) pasa intacto al padre. No programaste <code>.pack()</code>, ni el hover, ni el clic — <strong>los heredaste</strong>.',
+    check:'<strong>✓ Checkpoint:</strong> un botón rojo dentro de la ventana. Agrega <code>BotonPeligro(self, text="Vaciar carrito").pack()</code>: dos botones distintos, <strong>una sola clase</strong>.'
+  },
+  {
+    file:'▸ Laboratorio/sesion-16/paso_03_mixin.py',
+    goal:'Paso 3 · El mixin — media clase, una habilidad',
+    code:[
+      '<span class="kw">class</span> <span class="ty">SacudibleMixin</span>:',
+      '    <span class="cm">"""No hereda de nadie. No se instancia sola.</span>',
+      '    <span class="cm">Aporta UNA habilidad: sacudirse."""</span>',
+      '    <span class="kw">def</span> sacudir(<span class="self">self</span>, fuerza=8, veces=8):',
+      '        ventana = <span class="self">self</span>.winfo_toplevel()  <span class="cm"># ¡el mixin no lo define!</span>',
+      '        x, y = ventana.winfo_x(), ventana.winfo_y()',
+      '        <span class="kw">for</span> i <span class="kw">in</span> <span class="kw">range</span>(veces):',
+      '            dx = fuerza <span class="kw">if</span> i % 2 == 0 <span class="kw">else</span> -fuerza',
+      '            ventana.geometry(<span class="str">f"+{x+dx}+{y}"</span>)',
+      '            ventana.update(); ventana.after(30)',
+      '        ventana.geometry(<span class="str">f"+{x}+{y}"</span>)',
+      '',
+      '<span class="kw">class</span> <span class="ty">VentanaSacudible</span>(<span class="ty">SacudibleMixin</span>, tk.Tk):',
+      '    <span class="kw">pass</span>   <span class="cm"># ventana + habilidad = herencia múltiple</span>',
+    ],
+    text:'Un <strong>mixin</strong> es una clase que no vive sola: <em>presume</em> que la mezclarán con otra. Míralo: usa <code>self.winfo_toplevel()</code>… ¡que el mixin no define! Ese método lo pondrá el widget con el que se combine. Por eso <code>VentanaSacudible</code> funciona: la habilidad la puso el mixin, la ventana la puso <code>tk.Tk</code>. <strong>Un mixin es media clase</strong> — la otra mitad la pone su pareja.',
+    check:'<strong>✓ Checkpoint:</strong> el archivo del paso trae un botón <em>Sacúdeme</em> que llama a <code>self.sacudir()</code> — la ventana entera tiembla. Antes de abrirse, la terminal imprime el <code>__mro__</code>: ¿dónde quedó el mixin en la fila?'
+  },
+  {
+    file:'▸ Laboratorio/sesion-16/paso_04_campo_validado.py',
+    goal:'Paso 4 · Herencia múltiple con propósito',
+    code:[
+      '<span class="kw">class</span> <span class="ty">CampoValidado</span>(<span class="ty">SacudibleMixin</span>, tk.Entry):',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>, master, validador, **kwargs):',
+      '        <span class="kw">super</span>().__init__(master, **kwargs)  <span class="cm"># atraviesa el mixin → Entry</span>',
+      '        <span class="self">self</span>.validador = validador',
+      '',
+      '    <span class="kw">def</span> validar(<span class="self">self</span>):',
+      '        <span class="kw">if</span> <span class="self">self</span>.validador(<span class="self">self</span>.get()):',
+      '            <span class="self">self</span>.config(bg=<span class="str">"white"</span>)',
+      '            <span class="kw">return</span> <span class="ty">True</span>',
+      '        <span class="self">self</span>.config(bg=<span class="str">"#F5C6C0"</span>)   <span class="cm"># rosa: dato inválido</span>',
+      '        <span class="self">self</span>.sacudir()              <span class="cm"># ← habilidad del mixin</span>',
+      '        <span class="kw">return</span> <span class="ty">False</span>',
+      '',
+      '<span class="kw">print</span>(<span class="ty">CampoValidado</span>.__mro__)',
+      '<span class="cm"># (CampoValidado, SacudibleMixin, Entry, Widget, …, object)</span>',
+    ],
+    text:'Aquí está el diamante de la sección II, pero <em>con sentido</em>. Convención universal: <strong>el mixin va primero</strong> — queda antes en el MRO, así que si hay choque de métodos, gana el mixin. Y como <code>SacudibleMixin</code> no define <code>__init__</code>, el <code>super().__init__()</code> lo <em>atraviesa</em> siguiendo el MRO hasta llegar a <code>tk.Entry</code> — super() no llama "al padre": llama <strong>al siguiente de la fila</strong>.',
+    check:'<strong>✓ Checkpoint:</strong> la terminal muestra el MRO con <code>SacudibleMixin</code> antes que <code>Entry</code>. Invierte las bases — <code>class CampoValidado(tk.Entry, SacudibleMixin)</code> — corre de nuevo y compara la tupla.'
+  },
+  {
+    file:'▸ Laboratorio/sesion-16/paso_05_login.py',
+    goal:'Paso 5 · La app — todo junto',
+    code:[
+      '<span class="kw">class</span> <span class="ty">VentanaLogin</span>(tk.Tk):',
+      '    <span class="kw">def</span> __init__(<span class="self">self</span>):',
+      '        <span class="kw">super</span>().__init__()',
+      '        <span class="self">self</span>.title(<span class="str">"Acceso — Sesión 16"</span>)',
+      '        tk.Label(<span class="self">self</span>, text=<span class="str">"Usuario (mín. 3)"</span>).pack(pady=(18, 2))',
+      '        <span class="self">self</span>.usuario = <span class="ty">CampoValidado</span>(<span class="self">self</span>, validador=<span class="kw">lambda</span> t: <span class="kw">len</span>(t) >= 3)',
+      '        <span class="self">self</span>.usuario.pack()',
+      '        <span class="self">self</span>.clave = <span class="ty">CampoValidado</span>(<span class="self">self</span>, show=<span class="str">"*"</span>,',
+      '                                    validador=<span class="kw">lambda</span> t: <span class="kw">len</span>(t) >= 8)',
+      '        <span class="self">self</span>.clave.pack()',
+      '        <span class="ty">BotonPeligro</span>(<span class="self">self</span>, text=<span class="str">"Entrar"</span>, command=<span class="self">self</span>.intentar).pack(pady=18)',
+      '',
+      '    <span class="kw">def</span> intentar(<span class="self">self</span>):',
+      '        ok_usuario = <span class="self">self</span>.usuario.validar()   <span class="cm"># sin "and" directo:</span>',
+      '        ok_clave = <span class="self">self</span>.clave.validar()       <span class="cm"># queremos que AMBOS validen</span>',
+      '        <span class="kw">if</span> ok_usuario <span class="kw">and</span> ok_clave:',
+      '            <span class="self">self</span>.title(<span class="str">"✓ Bienvenido"</span>)',
+    ],
+    text:'Tres clases tuyas, <strong>tres formas de herencia</strong>: <code>VentanaLogin</code> hereda <em>simple</em> de <code>tk.Tk</code>, <code>BotonPeligro</code> <em>especializa</em> un widget, y <code>CampoValidado</code> <em>mezcla</em> mixin + Entry. Detalle fino en <code>intentar()</code>: si validáramos en línea con <code>and</code>, el <em>cortocircuito</em> haría que el segundo campo ni se valide cuando el primero falla — por eso se validan primero y se combinan después.',
+    check:'<strong>✓ Checkpoint:</strong> escribe un usuario de 2 letras y pulsa <em>Entrar</em>: el campo se pinta rosa y la ventana se sacude. Corrige ambos campos y el título dice <em>✓ Bienvenido</em>.'
+  }
+];
+// UML de cada paso: nodes = clases, edges = herencia (triángulo hueco) o composición (rombo + línea punteada)
+const gpUmlData=[
+  {w:320,h:305,nodes:[
+    {name:'tk.Tk',x:85,y:20,w:150,kind:'tk',rows:['title()','geometry()','mainloop()','… y cientos más']},
+    {name:'MiVentana',x:85,y:220,w:150,kind:'own',rows:['__init__()']}
+  ],edges:[{a:'MiVentana',b:'tk.Tk'}]},
+  {w:490,h:300,nodes:[
+    {name:'tk.Tk',x:30,y:20,w:145,kind:'tk',rows:['mainloop()','…']},
+    {name:'tk.Button',x:300,y:20,w:160,kind:'tk',rows:['pack()','config()','clic, hover, …']},
+    {name:'MiVentana',x:30,y:210,w:145,kind:'own',rows:['__init__()']},
+    {name:'BotonPeligro',x:300,y:210,w:160,kind:'own',rows:['__init__(master, **kw)']}
+  ],edges:[
+    {a:'MiVentana',b:'tk.Tk'},
+    {a:'BotonPeligro',b:'tk.Button'},
+    {a:'MiVentana',b:'BotonPeligro',type:'compose',label:'contiene'}
+  ]},
+  {w:490,h:320,nodes:[
+    {name:'SacudibleMixin',x:25,y:25,w:190,kind:'mixin',stereo:'«mixin»',rows:['sacudir(fuerza, veces)']},
+    {name:'tk.Tk',x:300,y:25,w:160,kind:'tk',rows:['title()','geometry()','winfo_toplevel()','…']},
+    {name:'VentanaSacudible',x:150,y:230,w:190,kind:'own',rows:['pass  (hereda todo)']}
+  ],edges:[
+    {a:'VentanaSacudible',b:'SacudibleMixin',label:'1º'},
+    {a:'VentanaSacudible',b:'tk.Tk',label:'2º'}
+  ]},
+  {w:490,h:335,nodes:[
+    {name:'SacudibleMixin',x:25,y:25,w:190,kind:'mixin',stereo:'«mixin»',rows:['sacudir(fuerza, veces)']},
+    {name:'tk.Entry',x:300,y:25,w:160,kind:'tk',rows:['get()','config(bg=…)','pack()','…']},
+    {name:'CampoValidado',x:140,y:235,w:210,kind:'own',rows:['validador','__init__(master, validador)','validar()']}
+  ],edges:[
+    {a:'CampoValidado',b:'SacudibleMixin',label:'1º'},
+    {a:'CampoValidado',b:'tk.Entry',label:'2º'}
+  ]},
+  {w:640,h:345,nodes:[
+    {name:'SacudibleMixin',x:15,y:25,w:155,kind:'mixin',stereo:'«mixin»',rows:['sacudir()']},
+    {name:'tk.Entry',x:190,y:25,w:125,kind:'tk',rows:['get()  …']},
+    {name:'tk.Button',x:335,y:25,w:125,kind:'tk',rows:['clic, hover …']},
+    {name:'tk.Tk',x:480,y:25,w:140,kind:'tk',rows:['mainloop()  …']},
+    {name:'CampoValidado',x:95,y:240,w:165,kind:'own',rows:['validar()']},
+    {name:'BotonPeligro',x:300,y:240,w:140,kind:'own',rows:['__init__()']},
+    {name:'VentanaLogin',x:470,y:240,w:155,kind:'own',rows:['usuario · clave','intentar()']}
+  ],edges:[
+    {a:'CampoValidado',b:'SacudibleMixin',label:'1º'},
+    {a:'CampoValidado',b:'tk.Entry',label:'2º'},
+    {a:'BotonPeligro',b:'tk.Button'},
+    {a:'VentanaLogin',b:'tk.Tk'},
+    {a:'VentanaLogin',b:'CampoValidado',type:'compose',label:'contiene'},
+    {a:'VentanaLogin',b:'BotonPeligro',type:'compose'}
+  ]}
+];
+const gpColors={tk:'#A6C2D6',mixin:'#C9A961',own:'#E0A184'};
+function gpH(n){return (n.stereo?38:24)+n.rows.length*15+9;}
+function gpAnch(n,side){
+  const h=gpH(n),cx=n.x+n.w/2,cy=n.y+h/2;
+  if(side==='top')return[cx,n.y];
+  if(side==='bottom')return[cx,n.y+h];
+  if(side==='left')return[n.x,cy];
+  return[n.x+n.w,cy];
+}
+function gpUmlSvg(u){
+  const byName={};u.nodes.forEach(n=>byName[n.name]=n);
+  let s='';
+  u.edges.forEach(e=>{
+    const a=byName[e.a],b=byName[e.b];
+    if(e.type==='compose'){
+      const aIzq=a.x+a.w<=b.x;  // el rombo sale del lado que mira hacia la otra clase
+      const p1=gpAnch(a,aIzq?'right':'left'),p2=gpAnch(b,aIzq?'left':'right');
+      s+='<line x1="'+p1[0]+'" y1="'+p1[1]+'" x2="'+p2[0]+'" y2="'+p2[1]+'" stroke="rgba(239,230,210,.45)" stroke-width="1.3" stroke-dasharray="4 4"/>';
+      s+='<rect x="-5" y="-5" width="10" height="10" fill="#2A1D14" stroke="rgba(239,230,210,.6)" stroke-width="1.2" transform="translate('+p1[0]+','+p1[1]+') rotate(45)"/>';
+      if(e.label)s+='<text x="'+((p1[0]+p2[0])/2)+'" y="'+((p1[1]+p2[1])/2-7)+'" font-family="JetBrains Mono,monospace" font-size="10" fill="rgba(239,230,210,.55)" text-anchor="middle">'+e.label+'</text>';
+    }else{
+      const p1=gpAnch(a,'top'),p2=gpAnch(b,'bottom');
+      const dx=p2[0]-p1[0],dy=p2[1]-p1[1],len=Math.hypot(dx,dy);
+      const ex=p2[0]-dx/len*13,ey=p2[1]-dy/len*13;
+      const col=gpColors[b.kind],ang=Math.atan2(dy,dx)*180/Math.PI+90;
+      s+='<line x1="'+p1[0]+'" y1="'+p1[1]+'" x2="'+ex+'" y2="'+ey+'" stroke="'+col+'" stroke-width="1.4"/>';
+      s+='<path d="M0,0 L-7,13 L7,13 Z" fill="#2A1D14" stroke="'+col+'" stroke-width="1.4" transform="translate('+p2[0]+','+p2[1]+') rotate('+ang+')"/>';
+      if(e.label)s+='<text x="'+((p1[0]+p2[0])/2+11)+'" y="'+((p1[1]+p2[1])/2)+'" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#C9A961">'+e.label+'</text>';
+    }
+  });
+  u.nodes.forEach(n=>{
+    const h=gpH(n),col=gpColors[n.kind],cx=n.x+n.w/2;
+    s+='<rect x="'+n.x+'" y="'+n.y+'" width="'+n.w+'" height="'+h+'" rx="3" fill="rgba(239,230,210,.05)" stroke="'+col+'" stroke-width="1.4"/>';
+    let ty=n.y;
+    if(n.stereo){s+='<text x="'+cx+'" y="'+(n.y+14)+'" font-family="JetBrains Mono,monospace" font-size="10" font-style="italic" fill="'+col+'" text-anchor="middle">'+n.stereo+'</text>';ty+=14;}
+    s+='<text x="'+cx+'" y="'+(ty+17)+'" font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="#EFE6D2" text-anchor="middle">'+n.name+'</text>';
+    const sep=ty+24;
+    s+='<line x1="'+n.x+'" y1="'+sep+'" x2="'+(n.x+n.w)+'" y2="'+sep+'" stroke="'+col+'" stroke-width="1" opacity=".5"/>';
+    n.rows.forEach((r,i)=>{s+='<text x="'+(n.x+9)+'" y="'+(sep+15+i*15)+'" font-family="JetBrains Mono,monospace" font-size="10.5" fill="rgba(239,230,210,.78)">'+r+'</text>';});
+  });
+  return '<svg class="gp-svg" viewBox="0 0 '+u.w+' '+u.h+'" role="img" aria-label="Diagrama UML del paso">'+s+'</svg>'
+    +'<div class="gp-legend">'
+    +'<span><span class="dot" style="background:#A6C2D6"></span>tkinter — la heredas</span>'
+    +'<span><span class="dot" style="background:#C9A961"></span>mixin</span>'
+    +'<span><span class="dot" style="background:#E0A184"></span>tu clase</span>'
+    +'<span>△ hereda de · ◇⌁ contiene</span>'
+    +'</div>';
+}
+let gpIdx=0,gpView='code';
+function gpRender(){
+  const d=gpData[gpIdx];
+  $('gp-file').textContent=d.file;
+  $('gp-code').innerHTML=d.code.map(h=>'<span class="ln">'+h+'</span>').join('');
+  $('gp-goal').textContent=d.goal;
+  $('gp-text').innerHTML=d.text;
+  $('gp-check').innerHTML=d.check;
+  const uml=gpView==='uml';
+  $('gp-code').style.display=uml?'none':'block';
+  $('gp-uml').style.display=uml?'block':'none';
+  if(uml)$('gp-uml').innerHTML=gpUmlSvg(gpUmlData[gpIdx]);
+  $('gp-view').textContent=uml?'⌨ Ver el código':'◇ Ver el UML';
+  $('gp-view').classList.toggle('on',uml);
+  document.querySelectorAll('[data-gp]').forEach(b=>b.classList.toggle('on',+b.dataset.gp===gpIdx));
+}
+document.querySelectorAll('[data-gp]').forEach(b=>{
+  b.addEventListener('click',()=>{gpIdx=+b.dataset.gp;gpRender();});
+});
+$('gp-prev').addEventListener('click',()=>{if(gpIdx>0){gpIdx--;gpRender();}});
+$('gp-next').addEventListener('click',()=>{if(gpIdx<gpData.length-1){gpIdx++;gpRender();}});
+$('gp-view').addEventListener('click',()=>{gpView=gpView==='code'?'uml':'code';gpRender();});
+gpRender();
 </script>
 </body>
 </html>

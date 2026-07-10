@@ -262,7 +262,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
   <div class="wrap">
     <p class="marker">II · El MRO — la linealización C3</p>
     <p class="lead">Python toma el diamante<br>y lo aplana en una <em>fila ordenada.</em></p>
-    <p class="subtle">El diamante clásico: <strong>D</strong> hereda de <strong>B</strong> y <strong>C</strong>; ambas heredan de <strong>A</strong>. Cuando llamas un método en un objeto <span class="inlinecode">D</span>, Python no se pierde: aplica el <strong>algoritmo C3</strong> y produce <em>una sola lista</em> de búsqueda. Pulsa para ver cómo ilumina la clase en cada paso, y fíjate en la regla de oro: <strong>A va al final</strong>, después de todas sus hijas.</p>
+    <p class="subtle">El diamante clásico, contado en familia: el <strong>Hijo</strong> hereda del <strong>Padre</strong> y de la <strong>Madre</strong>; ambos heredan del <strong>Abuelo</strong>. Cuando llamas un método en un objeto <span class="inlinecode">Hijo</span>, Python no se pierde: aplica el <strong>algoritmo C3</strong> y produce <em>una sola lista</em> de búsqueda. Pulsa para ver cómo ilumina la clase en cada paso, y fíjate en la regla de oro: <strong>el Abuelo va al final</strong>, después de todos sus descendientes.</p>
     <div class="widget" data-tag="Recorre el MRO paso a paso">
       <div class="mro-stage">
         <div class="mro-draw">
@@ -271,15 +271,15 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
             <line class="edge" x1="150" y1="62" x2="220" y2="118"/>
             <line class="edge" x1="80" y1="162" x2="150" y2="218"/>
             <line class="edge" x1="220" y1="162" x2="150" y2="218"/>
-            <g class="mro-node" id="n-A"><rect x="118" y="22" width="64" height="40" rx="3"/><text x="150" y="42">A</text><text class="ord" x="195" y="42" id="o-A"></text></g>
-            <g class="mro-node" id="n-B"><rect x="48" y="118" width="64" height="40" rx="3"/><text x="80" y="138">B</text><text class="ord" x="32" y="138" id="o-B"></text></g>
-            <g class="mro-node" id="n-C"><rect x="188" y="118" width="64" height="40" rx="3"/><text x="220" y="138">C</text><text class="ord" x="268" y="138" id="o-C"></text></g>
-            <g class="mro-node" id="n-D"><rect x="118" y="218" width="64" height="40" rx="3"/><text x="150" y="238">D</text><text class="ord" x="195" y="238" id="o-D"></text></g>
+            <g class="mro-node" id="n-A"><rect x="108" y="22" width="84" height="40" rx="3"/><text x="150" y="42">Abuelo</text><text class="ord" x="200" y="42" id="o-A"></text></g>
+            <g class="mro-node" id="n-B"><rect x="38" y="118" width="84" height="40" rx="3"/><text x="80" y="138">Padre</text><text class="ord" x="26" y="138" id="o-B"></text></g>
+            <g class="mro-node" id="n-C"><rect x="178" y="118" width="84" height="40" rx="3"/><text x="220" y="138">Madre</text><text class="ord" x="272" y="138" id="o-C"></text></g>
+            <g class="mro-node" id="n-D"><rect x="108" y="218" width="84" height="40" rx="3"/><text x="150" y="238">Hijo</text><text class="ord" x="200" y="238" id="o-D"></text></g>
           </svg>
         </div>
         <div class="mro-side">
           <div class="mro-chain" id="mro-chain"></div>
-          <div class="mro-expl" id="mro-expl">Pulsa <strong>Siguiente</strong> para que Python busque el método empezando por <code>D</code>. Verás el orden exacto que sigue.</div>
+          <div class="mro-expl" id="mro-expl">Pulsa <strong>Siguiente</strong> para que Python busque el método empezando por <code>Hijo</code>. Verás el orden exacto que sigue.</div>
         </div>
       </div>
       <div class="w-controls">
@@ -291,7 +291,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
     </div>
     <div class="caso" style="font-style:normal;font-size:1.02rem;">
       <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem;">Lo que verías en la terminal</div>
-      <span class="inlinecode">&gt;&gt;&gt; D.__mro__</span> &nbsp;te devuelve la tupla <span class="inlinecode">(D, B, C, A, object)</span>. <strong>Toda</strong> clase termina en <span class="inlinecode">object</span> — es la raíz universal de Python. El MRO no es magia: es una propiedad que puedes <em>inspeccionar</em> en cualquier momento con <span class="inlinecode">D.__mro__</span> o <span class="inlinecode">D.mro()</span>.
+      <span class="inlinecode">&gt;&gt;&gt; Hijo.__mro__</span> &nbsp;te devuelve la tupla <span class="inlinecode">(Hijo, Padre, Madre, Abuelo, object)</span>. <strong>Toda</strong> clase termina en <span class="inlinecode">object</span> — es la raíz universal de Python. El MRO no es magia: es una propiedad que puedes <em>inspeccionar</em> en cualquier momento con <span class="inlinecode">Hijo.__mro__</span> o <span class="inlinecode">Hijo.mro()</span>.
     </div>
   </div>
 </section>
@@ -305,10 +305,10 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
     <div class="widget" data-tag="super() recorre el MRO">
       <div class="sup-stage">
         <div class="sup-stack" id="sup-stack">
-          <div class="sup-frame" data-f="0"><span class="who">D.greet()</span> <span class="call">→ "soy D" + super()</span></div>
-          <div class="sup-frame" data-f="1"><span class="who">B.greet()</span> <span class="call">→ "soy B" + super()</span></div>
-          <div class="sup-frame" data-f="2"><span class="who">C.greet()</span> <span class="call">→ "soy C" + super()</span></div>
-          <div class="sup-frame" data-f="3"><span class="who">A.greet()</span> <span class="call">→ "soy A" (fin de la cadena)</span></div>
+          <div class="sup-frame" data-f="0"><span class="who">Hijo.greet()</span> <span class="call">→ "soy el Hijo" + super()</span></div>
+          <div class="sup-frame" data-f="1"><span class="who">Padre.greet()</span> <span class="call">→ "soy el Padre" + super()</span></div>
+          <div class="sup-frame" data-f="2"><span class="who">Madre.greet()</span> <span class="call">→ "soy la Madre" + super()</span></div>
+          <div class="sup-frame" data-f="3"><span class="who">Abuelo.greet()</span> <span class="call">→ "soy el Abuelo" (fin de la cadena)</span></div>
         </div>
         <div class="sup-side">
           <div class="sup-out" id="sup-out"><span class="pl">consola — pulsa Play o Siguiente…</span></div>
@@ -357,7 +357,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
     <table class="cmp">
       <thead><tr><th>Aspecto</th><th>Python</th><th>Java</th></tr></thead>
       <tbody>
-        <tr><td><strong>Herencia múltiple de clases</strong></td><td>Sí, nativa: <code>class D(B, C)</code></td><td>No permitida</td></tr>
+        <tr><td><strong>Herencia múltiple de clases</strong></td><td>Sí, nativa: <code>class Hijo(Padre, Madre)</code></td><td>No permitida</td></tr>
         <tr><td><strong>Cómo se combinan varios padres</strong></td><td>MRO + linealización C3</td><td>Interfaces: <code>implements A, B</code></td></tr>
         <tr><td><strong>Estado heredado de varios</strong></td><td>Sí (atributos de cada padre)</td><td>No (interfaces no tienen estado)</td></tr>
         <tr><td><strong>Problema del diamante</strong></td><td>Resuelto por C3</td><td>Evitado por diseño</td></tr>
@@ -372,7 +372,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
   <div class="wrap">
     <p class="marker">V · El problema del diamante</p>
     <p class="lead">El mismo abuelo, heredado<br>por <em>dos caminos.</em> ¿Quién manda?</p>
-    <p class="subtle">Este es el clásico que durante décadas hizo que muchos lenguajes le tuvieran miedo a la herencia múltiple. Dos clases (<strong>B</strong> y <strong>C</strong>) comparten un abuelo (<strong>A</strong>), y <strong>D</strong> hereda de ambas. Si A se ejecutara dos veces, o si nadie supiera cuál versión usar, sería un caos. Cambia entre los dos lenguajes y mira la diferencia de filosofía:</p>
+    <p class="subtle">Este es el clásico que durante décadas hizo que muchos lenguajes le tuvieran miedo a la herencia múltiple. El <strong>Padre</strong> y la <strong>Madre</strong> heredan ambos del mismo <strong>Abuelo</strong>, y el <strong>Hijo</strong> hereda de los dos — así que lo del Abuelo le llega <em>por dos caminos</em>. Si el Abuelo se ejecutara dos veces, o si nadie supiera cuál versión usar, sería un caos. <em>(Sí: en este árbol papá y mamá comparten abuelo. Es un árbol de <strong>clases</strong>, no un árbol genealógico — a Python no le escandaliza.)</em> Cambia entre los dos lenguajes y mira la diferencia de filosofía:</p>
     <div class="widget" data-tag="Python lo resuelve · Java lo prohíbe">
       <div class="dia-stage">
         <div class="dia-draw">
@@ -381,10 +381,10 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
             <line class="edge" id="de-ca" x1="180" y1="62" x2="230" y2="108"/>
             <line class="edge" id="de-db" x1="70" y1="152" x2="120" y2="198"/>
             <line class="edge" id="de-dc" x1="230" y1="152" x2="180" y2="198"/>
-            <rect class="nbox" x="120" y="22" width="60" height="40" rx="3"/><text class="nlabel" x="150" y="42">A</text>
-            <rect class="nbox" x="40" y="108" width="60" height="40" rx="3"/><text class="nlabel" x="70" y="128">B</text>
-            <rect class="nbox" x="200" y="108" width="60" height="40" rx="3"/><text class="nlabel" x="230" y="128">C</text>
-            <rect class="nbox" x="120" y="198" width="60" height="40" rx="3"/><text class="nlabel" x="150" y="218">D</text>
+            <rect class="nbox" x="110" y="22" width="80" height="40" rx="3"/><text class="nlabel" x="150" y="42">Abuelo</text>
+            <rect class="nbox" x="30" y="108" width="80" height="40" rx="3"/><text class="nlabel" x="70" y="128">Padre</text>
+            <rect class="nbox" x="190" y="108" width="80" height="40" rx="3"/><text class="nlabel" x="230" y="128">Madre</text>
+            <rect class="nbox" x="110" y="198" width="80" height="40" rx="3"/><text class="nlabel" x="150" y="218">Hijo</text>
             <text class="qmark" id="dia-q" x="150" y="130">?</text>
           </svg>
           <div class="dia-verdict" id="dia-verdict"></div>
@@ -533,11 +533,12 @@ const L=html=>'<span class="pj-line">'+html+'</span>';
 
 // ─── W1: visualizador del MRO ───────────────────────────────
 const mroOrder=['D','B','C','A'];
+const fam={D:'Hijo',B:'Padre',C:'Madre',A:'Abuelo'};
 const mroExpl={
-  D:'<strong>Paso 1 · D.</strong> Python siempre empieza por la propia clase. Si <code>D</code> define el método, lo usa y ya. Si no, pasa al siguiente del MRO.',
-  B:'<strong>Paso 2 · B.</strong> El primer padre escrito en <code>class D(B, C)</code>. El orden en que listas los padres <em>importa</em>: B va antes que C.',
-  C:'<strong>Paso 3 · C.</strong> El segundo padre. Fíjate en algo crucial: C va <em>antes</em> que A, aunque C también herede de A. C3 nunca pone a un padre antes que a sus hijas.',
-  A:'<strong>Paso 4 · A.</strong> El abuelo común, hasta el final. Esta es la regla de oro de C3: <strong>una clase aparece después de todas las que heredan de ella</strong>. Después de A vendría <code>object</code>.'
+  D:'<strong>Paso 1 · Hijo.</strong> Python siempre empieza por la propia clase. Si <code>Hijo</code> define el método, lo usa y ya. Si no, pasa al siguiente del MRO.',
+  B:'<strong>Paso 2 · Padre.</strong> El primero que listaste en <code>class Hijo(Padre, Madre)</code>. El orden en que escribes a los padres <em>importa</em>: Padre va antes que Madre.',
+  C:'<strong>Paso 3 · Madre.</strong> La segunda de la lista. Fíjate en algo crucial: la Madre va <em>antes</em> que el Abuelo, aunque ella también herede de él. C3 nunca pone a un ancestro antes que sus descendientes.',
+  A:'<strong>Paso 4 · Abuelo.</strong> El ancestro común, hasta el final. Esta es la regla de oro de C3: <strong>una clase aparece después de todas las que heredan de ella</strong>. Después del Abuelo vendría <code>object</code>.'
 };
 let mroIdx=-1,mroFull=false;
 function mroRender(){
@@ -548,8 +549,8 @@ function mroRender(){
   });
   if(mroFull){
     mroOrder.forEach((c,i)=>{$('n-'+c).classList.add('lit');$('o-'+c).textContent=(i+1);});
-    $('mro-chain').innerHTML=mroOrder.map((c,i)=>'<span class="tk on">'+c+'</span>').join('<span class="arr">→</span>')+'<span class="arr">→</span><span class="tk">object</span>';
-    $('mro-expl').innerHTML='<strong>El MRO completo:</strong> <code>(D, B, C, A, object)</code>. Esta es exactamente la tupla que devuelve <code>D.__mro__</code>. Cuando buscas un método, Python recorre esta fila de izquierda a derecha y usa la <em>primera</em> clase que lo define.';
+    $('mro-chain').innerHTML=mroOrder.map((c,i)=>'<span class="tk on">'+fam[c]+'</span>').join('<span class="arr">→</span>')+'<span class="arr">→</span><span class="tk">object</span>';
+    $('mro-expl').innerHTML='<strong>El MRO completo:</strong> <code>(Hijo, Padre, Madre, Abuelo, object)</code>. Esta es exactamente la tupla que devuelve <code>Hijo.__mro__</code>. Cuando buscas un método, Python recorre esta fila de izquierda a derecha y usa la <em>primera</em> clase que lo define.';
     return;
   }
   mroOrder.forEach((c,i)=>{
@@ -559,10 +560,10 @@ function mroRender(){
   });
   $('mro-chain').innerHTML=mroOrder.map((c,i)=>{
     const cls=i===mroIdx?'tk on':(i<mroIdx?'tk':'tk');
-    return '<span class="'+cls+'" style="'+(i>mroIdx?'opacity:.4':'')+'">'+c+'</span>';
+    return '<span class="'+cls+'" style="'+(i>mroIdx?'opacity:.4':'')+'">'+fam[c]+'</span>';
   }).join('<span class="arr">→</span>')+'<span class="arr">→</span><span class="tk" style="opacity:.4">object</span>';
   $('mro-expl').innerHTML=mroIdx<0
-    ?'Pulsa <strong>Siguiente</strong> para que Python busque el método empezando por <code>D</code>. Verás el orden exacto que sigue.'
+    ?'Pulsa <strong>Siguiente</strong> para que Python busque el método empezando por <code>Hijo</code>. Verás el orden exacto que sigue.'
     :mroExpl[mroOrder[mroIdx]];
 }
 $('mro-next').addEventListener('click',()=>{mroFull=false;if(mroIdx<mroOrder.length-1){mroIdx++;}mroRender();});
@@ -573,10 +574,10 @@ mroRender();
 
 // ─── W2: super() encadenado ─────────────────────────────────
 const supSteps=[
-  {frame:0,out:['soy D'],narr:'<strong>D.greet()</strong> se ejecuta primero (D está al frente del MRO). Imprime "soy D" y llama a <code>super()</code>. ¿A quién? Al siguiente del MRO: <strong>B</strong>.'},
-  {frame:1,out:['soy D','soy B'],narr:'<strong>super() saltó a B</strong>, no a A. Aunque B hereda de A, super() respeta el MRO: D → <strong>B</strong> → C → A. B imprime y vuelve a delegar.'},
-  {frame:2,out:['soy D','soy B','soy C'],narr:'Ahora <strong>C</strong>. Este es el punto clave de la herencia múltiple cooperativa: el <code>super()</code> dentro de <em>B</em> no llamó a A — llamó a <strong>C</strong>, su "hermana" en el diamante. C3 hace que A se ejecute una sola vez.'},
-  {frame:3,out:['soy D','soy B','soy C','soy A'],narr:'<strong>A</strong>, el final de la cadena. A imprime y ya no llama a super (o llama a object). Cuatro clases, <strong>cada una ejecutada exactamente una vez</strong>, en el orden del MRO. Eso es cooperación.'}
+  {frame:0,out:['soy el Hijo'],narr:'<strong>Hijo.greet()</strong> se ejecuta primero (el Hijo está al frente del MRO). Imprime "soy el Hijo" y llama a <code>super()</code>. ¿A quién? Al siguiente del MRO: <strong>el Padre</strong>.'},
+  {frame:1,out:['soy el Hijo','soy el Padre'],narr:'<strong>super() llegó al Padre</strong>, el primero de los dos padres listados. El Padre imprime y vuelve a delegar con super(). ¿Y a quién llamará? Cuidado: <em>no</em> al Abuelo…'},
+  {frame:2,out:['soy el Hijo','soy el Padre','soy la Madre'],narr:'Ahora <strong>la Madre</strong>. Este es el punto clave de la herencia múltiple cooperativa: el <code>super()</code> dentro del <em>Padre</em> no llamó al Abuelo — llamó a la <strong>Madre</strong>, su "hermana" en el árbol de clases. C3 hace que el Abuelo se ejecute una sola vez.'},
+  {frame:3,out:['soy el Hijo','soy el Padre','soy la Madre','soy el Abuelo'],narr:'<strong>El Abuelo</strong>, el final de la cadena. Imprime y ya no llama a super (o llama a object). Cuatro clases, <strong>cada una ejecutada exactamente una vez</strong>, en el orden del MRO. Eso es cooperación.'}
 ];
 let supIdx=-1,supTimer=null;
 function supRender(){
@@ -749,30 +750,30 @@ const diaData={
     conflict:false,
     verdict:{cls:'ok',txt:'✓ Compila y corre'},
     code:[
-      '<span class="kw">class</span> A: ...',
-      '<span class="kw">class</span> B(A): ...',
-      '<span class="kw">class</span> C(A): ...',
-      '<span class="kw">class</span> D(B, C): ...   <span class="cm"># válido</span>',
+      '<span class="kw">class</span> Abuelo: ...',
+      '<span class="kw">class</span> Padre(Abuelo): ...',
+      '<span class="kw">class</span> Madre(Abuelo): ...',
+      '<span class="kw">class</span> Hijo(Padre, Madre): ...   <span class="cm"># válido</span>',
       '',
-      '<span class="out">&gt;&gt;&gt; D.__mro__</span>',
-      '<span class="out">(D, B, C, A, object)</span>',
+      '<span class="out">&gt;&gt;&gt; Hijo.__mro__</span>',
+      '<span class="out">(Hijo, Padre, Madre, Abuelo, object)</span>',
     ],
-    expl:'<strong>Python lo resuelve.</strong> El algoritmo <em>C3</em> linealiza el diamante en una sola fila: <code>D → B → C → A → object</code>. A aparece <strong>una sola vez</strong>, al final. No hay ambigüedad ni doble ejecución: hay un orden, y es inspeccionable.'
+    expl:'<strong>Python lo resuelve.</strong> El algoritmo <em>C3</em> linealiza el diamante en una sola fila: <code>Hijo → Padre → Madre → Abuelo → object</code>. El Abuelo aparece <strong>una sola vez</strong>, al final. No hay ambigüedad ni doble ejecución: hay un orden, y es inspeccionable.'
   },
   java:{
     edges:['de-ba','de-ca','de-db','de-dc'],
     conflict:true,
     verdict:{cls:'err',txt:'✗ No compila'},
     code:[
-      '<span class="kw">class</span> A { }',
-      '<span class="kw">class</span> B <span class="kw">extends</span> A { }',
-      '<span class="kw">class</span> C <span class="kw">extends</span> A { }',
-      '<span class="err">class D extends B, C { }</span>',
+      '<span class="kw">class</span> Abuelo { }',
+      '<span class="kw">class</span> Padre <span class="kw">extends</span> Abuelo { }',
+      '<span class="kw">class</span> Madre <span class="kw">extends</span> Abuelo { }',
+      '<span class="err">class Hijo extends Padre, Madre { }</span>',
       '',
-      '<span class="err">// error: clase no puede extender</span>',
-      '<span class="err">// varias clases a la vez</span>',
+      '<span class="err">// error: una clase no puede</span>',
+      '<span class="err">// extender varias clases a la vez</span>',
     ],
-    expl:'<strong>Java lo prohíbe.</strong> No existe <code>extends B, C</code>: el lenguaje eliminó el problema del diamante <em>quitando la herencia múltiple de clases</em>. ¿La solución para "ser varias cosas"? <strong>Interfaces</strong> — que no tienen estado, así que el abuelo nunca se hereda dos veces con datos en conflicto.'
+    expl:'<strong>Java lo prohíbe.</strong> No existe <code>extends Padre, Madre</code>: el lenguaje eliminó el problema del diamante <em>quitando la herencia múltiple de clases</em>. ¿La solución para "ser varias cosas"? <strong>Interfaces</strong> — que no tienen estado, así que el Abuelo nunca se hereda dos veces con datos en conflicto.'
   }
 };
 function diaRender(key){

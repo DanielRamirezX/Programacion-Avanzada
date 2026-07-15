@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión XVII — El contrato — Programación Avanzada</title>
+<title>Sesión XVII — Práctica 3 · Un lugar para cada quien — Programación Avanzada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@ html{scroll-behavior:smooth;}
 body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
 
+/* ─ NAV / PROGRESS (universal) ─ */
 .course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
 .course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
 .course-nav a:hover{color:var(--blood);}
@@ -22,12 +23,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
 .progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
 
+/* ─ LAYOUT (universal) ─ */
 section{position:relative;padding:5rem 2rem;}
 .wrap{max-width:1080px;margin:0 auto;}
 .wrap-n{max-width:720px;margin:0 auto;}
 .marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
 .marker::after{content:'';flex:1;height:1px;background:var(--line);}
 
+/* ─ HERO (universal) ─ */
 .hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
 .hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
@@ -37,161 +40,23 @@ section{position:relative;padding:5rem 2rem;}
 .hero h1 em{font-style:italic;color:var(--blood);}
 .hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
 
+/* ─ TYPE (universal) ─ */
 .lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
 .lead em{font-style:italic;color:var(--blood);}
 .subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
 .subtle strong{color:var(--ink);}
 .inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
 
+/* ─ WIDGET SHELL (universal) ─ */
 .widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
 .widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
-.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
-.w-prompt em{color:var(--blood);font-style:italic;}
 .w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
 .btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
 .btn:hover{border-color:var(--blood);color:var(--blood);}
 .btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
 .btn-olive.on{background:var(--olive);border-color:var(--olive);}
 
-/* caso */
-.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
-.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
-
-/* ═══════════════════════════════════════════════════════════════
-   ↓↓↓ CSS ESPECÍFICO DE LOS WIDGETS — SESIÓN XVII ↓↓↓
-   ═══════════════════════════════════════════════════════════════ */
-
-/* W1: explorador del contrato (ct-) */
-.ct-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
-.ct-doc{background:var(--ink);padding:1.6rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.95;color:rgba(239,230,210,.9);}
-.ct-l{white-space:pre;display:block;border-radius:2px;padding:0 .3rem;}
-.ct-l .kw{color:#D4956A;font-style:italic;}
-.ct-l .cls{color:#fff;font-weight:700;}
-.ct-l .ty{color:#A6C2D6;}
-.ct-l .self{color:#8EAF8B;font-weight:700;}
-.ct-l .cm{color:rgba(239,230,210,.42);font-style:italic;}
-.ct-l .dec{color:#C9A961;}
-.ct-sig{cursor:pointer;border-bottom:1px dotted rgba(201,169,97,.5);transition:all .2s;}
-.ct-sig:hover{background:rgba(201,169,97,.14);}
-.ct-sig.active{background:rgba(160,36,24,.4);border-bottom:1px solid var(--ochre);}
-.ct-panel{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.6rem;min-height:260px;display:flex;flex-direction:column;gap:.7rem;}
-.ct-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);}
-.ct-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--ink);line-height:1.1;}
-.ct-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:var(--ink-soft);}
-.ct-desc strong{color:var(--ink);font-style:normal;font-weight:600;}
-.ct-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .35rem;border:1px solid var(--line);color:var(--blood);}
-.ct-meter{margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-soft);}
-.ct-meter strong{color:var(--olive);}
-
-/* W2: tabs ABC / Protocol / interface (cmp-) */
-.cmp-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
-.cmp-tab{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.55rem .9rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;}
-.cmp-tab:hover{border-color:var(--blood);color:var(--blood);}
-.cmp-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
-.cmp-head{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;color:var(--ink-soft);margin-bottom:.6rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
-.cmp-head .badge{color:var(--ochre);}
-.cmp-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.85;color:var(--paper);min-height:300px;overflow-x:auto;}
-.cmp-code .ln{white-space:pre;display:block;}
-.cmp-code .kw{color:#D4956A;font-style:italic;}
-.cmp-code .ty{color:#A6C2D6;}
-.cmp-code .self{color:#8EAF8B;font-weight:700;}
-.cmp-code .str{color:#C9A961;}
-.cmp-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.cmp-code .dec{color:#C9A961;}
-.cmp-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
-.cmp-note strong{color:var(--ink);font-style:normal;font-weight:600;}
-.cmp-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
-
-/* W3: implementa o explota (ie-) */
-.ie-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
-.ie-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);min-height:250px;}
-.ie-code .ln{white-space:pre;display:block;border-radius:2px;padding:0 .25rem;transition:background .3s;}
-.ie-code .ln.hl{background:rgba(232,176,74,.22);}
-.ie-code .ln.bad{background:rgba(160,36,24,.32);}
-.ie-code .kw{color:#D4956A;font-style:italic;}
-.ie-code .ty{color:#A6C2D6;}
-.ie-code .self{color:#8EAF8B;font-weight:700;}
-.ie-code .str{color:#C9A961;}
-.ie-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.ie-code .dec{color:#C9A961;}
-.ie-side{display:flex;flex-direction:column;gap:1rem;}
-.ie-console{background:#1c130d;border:1px solid rgba(239,230,210,.12);padding:1.1rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.7;flex:1;min-height:120px;overflow-x:auto;}
-.ie-prompt{color:var(--blood);}
-.ie-ok{color:#9FBF9C;}
-.ie-err{color:#E08A82;}
-.ie-dim{color:rgba(239,230,210,.5);}
-.ie-explain{padding:1.1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
-.ie-explain strong{color:var(--ink);font-style:normal;font-weight:600;}
-.ie-explain code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
-
-/* W4: niveles de encapsulamiento (enc-) */
-.enc-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
-.enc-castle{display:flex;flex-direction:column;gap:.5rem;}
-.enc-ring{border:2px solid var(--line);background:var(--paper);padding:1rem 1.2rem;cursor:pointer;transition:all .25s;position:relative;}
-.enc-ring:hover{border-color:var(--blood);}
-.enc-ring.on{border-color:var(--blood);box-shadow:0 0 0 3px rgba(160,36,24,.12);}
-.enc-ring.lv0.on{border-color:var(--olive);box-shadow:0 0 0 3px rgba(93,102,56,.14);}
-.enc-sym{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;color:var(--blood);}
-.enc-ring.lv0 .enc-sym{color:var(--olive);}
-.enc-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-top:.15rem;}
-.enc-hint{font-size:.85rem;color:var(--ink-soft);margin-top:.2rem;}
-.enc-panel{background:var(--ink);padding:1.5rem;min-height:280px;display:flex;flex-direction:column;gap:.8rem;}
-.enc-ptag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);}
-.enc-pcode{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:var(--paper);background:rgba(239,230,210,.06);padding:.9rem 1rem;border-left:2px solid var(--ochre);}
-.enc-pcode .kw{color:#D4956A;font-style:italic;}
-.enc-pcode .self{color:#8EAF8B;font-weight:700;}
-.enc-pcode .dec{color:#C9A961;}
-.enc-pcode .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.enc-pcode .err{color:#E08A82;}
-.enc-pcode .ok{color:#9FBF9C;}
-.enc-pdesc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
-.enc-pdesc strong{color:#C9A961;font-style:normal;font-weight:600;}
-
-/* W5: duck typing (dt-) */
-.dt-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
-.dt-code{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);}
-.dt-code .ln{white-space:pre;display:block;}
-.dt-code .kw{color:#D4956A;font-style:italic;}
-.dt-code .ty{color:#A6C2D6;}
-.dt-code .self{color:#8EAF8B;font-weight:700;}
-.dt-code .str{color:#C9A961;}
-.dt-code .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.dt-pick{display:flex;flex-direction:column;gap:.7rem;justify-content:center;}
-.dt-opt{background:var(--paper);border:1px solid var(--line);padding:1.1rem 1.3rem;cursor:pointer;transition:all .2s;display:flex;gap:.9rem;align-items:center;}
-.dt-opt:hover{border-color:var(--blood);}
-.dt-opt.on{border-color:var(--olive);background:rgba(93,102,56,.07);}
-.dt-emoji{font-size:1.6rem;flex-shrink:0;}
-.dt-opt-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);}
-.dt-opt-d{font-size:.85rem;color:var(--ink-soft);}
-.dt-out{margin-top:1.4rem;padding:1.1rem 1.3rem;background:#1c130d;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;color:#9FBF9C;min-height:3.2rem;}
-.dt-out .ie-dim{color:rgba(239,230,210,.5);}
-.dt-explain{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--olive);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;color:var(--ink-soft);}
-.dt-explain strong{color:var(--olive);font-style:normal;font-weight:600;}
-.dt-explain code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--olive);}
-
-/* tabla resumen */
-.tcmp{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
-.tcmp th,.tcmp td{border:1px solid var(--line);padding:.75rem 1rem;text-align:left;vertical-align:top;}
-.tcmp th{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;}
-.tcmp td:first-child{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--ink);background:var(--paper);}
-.tcmp td{background:var(--paper);color:var(--ink-soft);}
-.tcmp code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blood);}
-
-/* guía */
-.guia{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
-.guia-card{background:var(--paper);border:1px solid var(--line);padding:1.3rem 1.5rem;}
-.guia-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--ink);line-height:1.4;}
-.guia-q::before{content:'¿';color:var(--blood);}
-.guia-hint{font-size:.88rem;color:rgba(42,29,20,.55);margin-top:.5rem;font-style:italic;}
-
-/* reglas IA */
-.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
-.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
-.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
-.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
-.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
-.ia-rule em{color:var(--ink);}
-
+/* ─ CIERRE / TAREA (universal) ─ */
 .cierre{background:var(--paper-deep);}
 .tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
 .tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
@@ -200,16 +65,233 @@ section{position:relative;padding:5rem 2rem;}
 .tarea li strong{color:var(--ink);}
 .tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
 
+/* ─ FOOTER (universal) ─ */
 footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
+
+/* ─ REVEAL (universal) ─ */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
 @media(max-width:860px){
   section{padding:3.5rem 1.2rem;}
-  .ct-stage,.ie-stage,.enc-stage,.dt-stage,.guia{grid-template-columns:1fr;}
-  .tcmp{font-size:.82rem;}
-  .tcmp th,.tcmp td{padding:.5rem .55rem;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO — SESIÓN 17 · PRÁCTICA 3 (ARRAYS) ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─ Ficha de la práctica ─ */
+.ficha-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.ficha-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.3rem;}
+.ficha-k{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.45rem;}
+.ficha-v{font-family:'Cormorant Garamond',serif;font-size:1.22rem;color:var(--ink);line-height:1.2;}
+.ficha-v small{display:block;font-family:'Crimson Pro',Georgia,serif;font-size:.88rem;color:var(--ink-soft);margin-top:.3rem;}
+
+/* ─ Caso + requerimientos ─ */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+.req-d code{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--blood);}
+
+/* ─ Alerta "esto se entrega en Java" ─ */
+.alerta{background:rgba(160,36,24,.05);border:1px dashed var(--blood);padding:1.4rem 1.8rem;margin-top:1.8rem;font-size:1.05rem;color:var(--ink-soft);}
+.alerta strong{color:var(--blood);}
+
+/* ─ Código Java oscuro (universal de la sesión) ─ */
+.jcode{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);overflow-x:auto;}
+.jcode .ln{white-space:pre;display:block;border-radius:2px;padding:0 .3rem;transition:background .3s;}
+.jcode .ln.hl{background:rgba(232,176,74,.25);}
+.jcode .kw{color:#D4956A;font-style:italic;}
+.jcode .ty{color:#A6C2D6;}
+.jcode .cls{color:#8EAF8B;font-weight:700;}
+.jcode .str{color:#C9A961;}
+.jcode .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.jcode .out{color:#9FBF9C;}
+.jcode .err{color:#E08A82;}
+
+/* ─ W1: anatomía del array (estante) ─ */
+.arr-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.arr-side{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;gap:1.2rem;}
+.arr-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.14rem;line-height:1.5;color:var(--ink-soft);}
+.arr-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.arr-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+.arr-shelf{display:flex;gap:.5rem;margin-top:auto;}
+.arr-slot{flex:1;min-height:72px;border:2px solid var(--ink);background:var(--paper-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;position:relative;transition:all .25s;}
+.arr-slot .idx{position:absolute;top:.2rem;left:.4rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--ink-soft);}
+.arr-slot.null{border-style:dashed;border-color:rgba(42,29,20,.4);}
+.arr-slot .val{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:rgba(42,29,20,.45);font-style:italic;}
+.arr-slot.filled .val{color:var(--ink);font-style:normal;font-weight:700;}
+.arr-slot .pu{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blood);}
+.arr-tag{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:var(--ink-soft);text-align:center;}
+.arr-none{border:2px dashed rgba(42,29,20,.35);padding:1.2rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(42,29,20,.5);margin-top:auto;}
+
+/* ─ W2: Python ↔ Java ─ */
+.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
+.pj-head .badge{font-size:.6rem;color:var(--ochre);}
+.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:230px;}
+.pj-line{white-space:pre;display:block;padding:0 .3rem;}
+.pj-line .kw{color:var(--blood);font-style:italic;}
+.pj-line .cls{color:var(--ink);font-weight:700;}
+.pj-line .str{color:var(--ochre);}
+.pj-line .ty{color:#3E6E86;}
+.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pj-line .err{color:var(--blood);}
+.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.pj-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Ruta paso a paso ─ */
+.paso{display:grid;grid-template-columns:64px 1fr;gap:1.4rem;margin-top:2.6rem;position:relative;}
+.paso:not(:last-child)::before{content:'';position:absolute;left:31px;top:66px;bottom:-2.6rem;width:2px;background:rgba(42,29,20,.22);}
+.paso-num{width:64px;height:64px;border-radius:50%;background:var(--paper-deep);border:2px solid var(--blood);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--blood);font-weight:600;position:relative;z-index:2;}
+.paso-body{padding-top:.4rem;}
+.paso-t{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);line-height:1.1;margin-bottom:.5rem;}
+.paso-t em{font-style:italic;color:var(--blood);}
+.paso-d{font-size:1.02rem;color:var(--ink-soft);max-width:640px;}
+.paso-d strong{color:var(--ink);}
+.paso-d code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--paper-deep);padding:.1rem .35rem;border:1px solid var(--line);color:var(--blood);}
+.paso .jcode{margin-top:1.2rem;border-left:3px solid var(--blood);}
+.paso-tip{margin-top:1rem;padding:.9rem 1.2rem;background:rgba(93,102,56,.09);border-left:2px solid var(--olive);font-size:.95rem;color:var(--ink-soft);}
+.paso-tip strong{color:var(--olive);}
+.paso-tip code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Diagramas de flujo (SVG, uno por requerimiento) ─ */
+.fl-svg{width:100%;max-width:600px;height:auto;display:block;margin:0 auto;}
+.fl-edge{stroke:rgba(42,29,20,.55);stroke-width:1.8;fill:none;}
+.fl-ah{fill:rgba(42,29,20,.55);}
+.fl-loop{stroke:var(--ochre);stroke-width:1.6;stroke-dasharray:6 4;fill:none;}
+.fl-ah.loop{fill:var(--ochre);}
+.fl-loop-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;fill:var(--ochre);font-weight:700;letter-spacing:.05em;}
+.fl-lbl{font-family:'JetBrains Mono',monospace;font-size:10.5px;fill:var(--ink-soft);letter-spacing:.08em;}
+.fl-shape{fill:var(--paper);stroke:var(--ink);stroke-width:2;transition:all .3s;}
+.fl-txt{font-family:'JetBrains Mono',monospace;font-size:11px;fill:var(--ink);text-anchor:middle;transition:all .3s;}
+.fl-txt.sm{font-size:10px;}
+.fl-start{fill:var(--ink);transition:all .3s;}
+.fl-end-o{fill:none;stroke:var(--ink);stroke-width:3;transition:all .3s;}
+.fl-end-i{fill:var(--ink);transition:all .3s;}
+g.res .fl-shape{stroke:var(--olive);}
+g.on .fl-shape{stroke:var(--blood);fill:rgba(160,36,24,.07);}
+g.on .fl-txt{fill:var(--blood);font-weight:700;}
+g.res.on .fl-shape{stroke:var(--olive);fill:rgba(93,102,56,.12);}
+g.res.on .fl-txt{fill:var(--olive);}
+g.on .fl-start{fill:var(--blood);}
+g.on .fl-end-o{stroke:var(--blood);}
+g.on .fl-end-i{fill:var(--blood);}
+@keyframes flpulse{0%{transform:scale(1);}45%{transform:scale(1.12);}100%{transform:scale(1);}}
+g.pulse{animation:flpulse .5s ease;transform-box:fill-box;transform-origin:center;}
+.act-caption{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--ink-soft);text-align:center;margin-top:1rem;min-height:2.6rem;}
+.act-caption strong{color:var(--blood);font-style:normal;}
+
+/* ─ Caso de uso (SVG) ─ */
+.uc-svg{width:100%;max-width:640px;height:auto;display:block;margin:1rem auto 0;}
+.uc-actor{stroke:var(--ink);stroke-width:2;fill:none;}
+.uc-sys{fill:none;stroke:var(--ink);stroke-width:2;}
+.uc-systitle{font-family:'JetBrains Mono',monospace;font-size:11px;fill:var(--ink-soft);text-anchor:middle;letter-spacing:.08em;}
+.uc-oval{fill:var(--paper);stroke:var(--ink);stroke-width:2;transition:all .25s;cursor:pointer;}
+.uc-oval.on{stroke:var(--blood);fill:rgba(160,36,24,.07);stroke-width:2.6;}
+.uc-label{font-family:'JetBrains Mono',monospace;font-size:12.5px;fill:var(--ink);text-anchor:middle;pointer-events:none;}
+.uc-line{stroke:rgba(42,29,20,.5);stroke-width:1.6;transition:all .25s;}
+.uc-line.on{stroke:var(--blood);stroke-width:2.4;}
+.uc-alabel{font-family:'JetBrains Mono',monospace;font-size:11px;fill:var(--ink);text-anchor:middle;font-weight:700;}
+.uc-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);min-height:4rem;}
+.uc-note strong{color:var(--ink);font-style:normal;}
+.uc-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Tarjeta CRC ─ */
+.crc-card{background:var(--paper);border:2px solid var(--ink);margin-top:1.5rem;font-size:.95rem;max-width:640px;}
+.crc-name{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.78rem;padding:.55rem .9rem;font-weight:700;letter-spacing:.08em;display:flex;justify-content:space-between;align-items:baseline;}
+.crc-name small{font-weight:400;color:rgba(239,230,210,.55);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;}
+.crc-cols{display:grid;grid-template-columns:1.5fr 1fr;}
+.crc-col{padding:.9rem 1.1rem;}
+.crc-col+.crc-col{border-left:2px solid var(--ink);}
+.crc-h{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.crc-col ul{margin-left:1.1rem;color:var(--ink-soft);font-size:.92rem;line-height:1.45;}
+.crc-col li{padding:.18rem 0;}
+.crc-col code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blood);}
+
+/* ─ Diagrama de secuencia (SVG) ─ */
+.seq-svg{width:100%;max-width:660px;height:auto;display:block;margin:0 auto;}
+.seq-head-box{fill:var(--paper);stroke:var(--ink);stroke-width:1.8;}
+.seq-head-txt{font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:700;fill:var(--ink);text-anchor:middle;}
+.seq-life{stroke:rgba(42,29,20,.4);stroke-width:1.6;stroke-dasharray:5 5;}
+.seq-step{opacity:.12;transition:opacity .45s;}
+.seq-step.on{opacity:1;}
+.seq-msg{stroke:var(--ink);stroke-width:2;}
+.seq-msg.ret{stroke-dasharray:5 4;stroke:var(--olive);}
+.seq-ah{fill:var(--ink);}
+.seq-ah.ret{fill:var(--olive);}
+.seq-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;fill:var(--ink);text-anchor:middle;}
+.seq-lbl.ret{fill:var(--olive);}
+.seq-self{fill:none;stroke:var(--ink);stroke-width:2;}
+.seq-loop{fill:none;stroke:var(--ochre);stroke-width:1.8;stroke-dasharray:7 5;}
+.seq-loop-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;fill:var(--ochre);font-weight:700;}
+.seq-cap{margin-top:1rem;padding:.9rem 1.2rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.06rem;line-height:1.45;color:var(--ink-soft);min-height:3.4rem;}
+.seq-cap strong{color:var(--ink);font-style:normal;}
+.seq-cap code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.76rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ W: el array vivo ─ */
+.viv-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:stretch;}
+.viv-left{background:var(--paper);border:1px solid var(--line);padding:1.4rem;display:flex;flex-direction:column;gap:1rem;}
+.viv-shelf{display:flex;gap:.55rem;}
+.viv-slot{flex:1;min-height:92px;border:2px solid var(--ink);background:var(--paper-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;position:relative;transition:all .25s;text-align:center;padding:.5rem .2rem .4rem;}
+.viv-slot .idx{position:absolute;top:.25rem;left:.45rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--ink-soft);}
+.viv-slot.null{border-style:dashed;border-color:rgba(42,29,20,.4);}
+.viv-slot .nul{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:rgba(42,29,20,.45);font-style:italic;}
+.viv-slot .nm{font-family:'Cormorant Garamond',serif;font-size:.98rem;color:var(--ink);font-weight:600;line-height:1.1;}
+.viv-slot .pu{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blood);}
+.viv-slot .tel{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--ink-soft);}
+.viv-slot.flash{border-color:var(--ochre);box-shadow:0 0 0 3px rgba(181,133,42,.3);}
+.viv-slot.scan{border-color:var(--blood);box-shadow:0 0 0 3px rgba(160,36,24,.2);}
+.viv-meta{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.06em;color:var(--ink-soft);}
+.viv-meta strong{color:var(--blood);}
+.viv-con{background:var(--ink);padding:1.2rem 1.3rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.85;color:#9FBF9C;overflow-y:auto;max-height:340px;min-height:280px;}
+.viv-con .sys{color:rgba(239,230,210,.5);font-style:italic;}
+.viv-con .err{color:#E08A82;}
+.viv-con .ok{color:#C9A961;}
+
+/* ─ Entregable / documento ─ */
+.doc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-top:1.5rem;}
+.doc-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.1rem;text-align:center;}
+.doc-n{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);margin-bottom:.4rem;}
+.doc-t{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);line-height:1.15;}
+.doc-d{font-size:.82rem;color:var(--ink-soft);margin-top:.4rem;line-height:1.4;}
+
+/* ─ Criterios / evidencias ─ */
+.crit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.crit-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.crit-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.6rem;}
+.crit-card ul{margin-left:1.1rem;font-size:.9rem;color:var(--ink-soft);line-height:1.5;}
+.crit-card li{padding:.15rem 0;}
+
+/* ─ Reglas IA ─ */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+.ia-rule code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Bibliografía ─ */
+.biblio{margin-top:1.5rem;}
+.biblio-item{padding:.7rem 0;border-bottom:1px dashed var(--line);font-size:1rem;color:var(--ink-soft);}
+.biblio-item em{color:var(--ink);}
+
+@media(max-width:860px){
+  .ficha-grid,.req-grid,.arr-stage,.pj-stage,.viv-stage,.crit-grid{grid-template-columns:1fr;}
+  .doc-grid{grid-template-columns:1fr 1fr;}
+  .paso{grid-template-columns:48px 1fr;}
+  .paso-num{width:48px;height:48px;font-size:1.3rem;}
+  .paso:not(:last-child)::before{left:23px;}
+  .crc-cols{grid-template-columns:1fr;}
+  .crc-col+.crc-col{border-left:none;border-top:2px solid var(--ink);}
 }
 </style>
 </head>
@@ -217,255 +299,561 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 <div class="progress" id="prog"></div>
 <nav class="course-nav">
   <a href="sesion-16.html" class="back">Sesión 16</a>
-  <span class="session-label">Sesión 17 · 15.07.2026</span>
-  <a href="../index.html" class="next">Curso</a>
+  <span class="session-label">Sesión 17 · 15.07.2026 · Laboratorio</span>
+  <a href="sesion-18.html" class="next">Sesión 18</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Pago(ABC):</div>
-  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">@abstractmethod</div>
-  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">interface Notificable</div>
-  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">self.__saldo  ·  @property</div>
-  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">def cobrar(self) -&gt; bool: ...</div>
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">Empleado[] empleados = new Empleado[10];</div>
+  <div class="hero-float" style="top:28%;right:10%;--r:3deg;animation-delay:-3s">empleados[0] = new Empleado("Ana", "Gerente", ...);</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">for (int i = 0; i &lt; empleados.length; i++)</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">empleados.length  // 10, para siempre</div>
+  <div class="hero-float" style="top:52%;left:40%;--r:1deg;animation-delay:-4.5s">ArrayIndexOutOfBoundsException: 10</div>
   <div class="hero-inner">
-    <div class="hero-label">Sesión XVII · Bloque II · Interfaces · Ref. Temario 5.4 · 5.5 · Python · Java</div>
-    <h1>El <em>contrato.</em></h1>
-    <p class="hero-sub">Una interfaz no escribe código: escribe una <em>promesa</em>. Dice <em>qué</em> debe poder hacerse, jamás cómo. Hoy aprendes a prometer sin implementar — y a hacer que el lenguaje te obligue a cumplir.</p>
+    <div class="hero-label">Sesión XVII · Práctica 3 de 6 · Arrays · Ref. Temario 4.1 · 4.2 · 4.3 · Java · Eclipse IDE</div>
+    <h1>Un lugar<br>para <em>cada quien.</em></h1>
+    <p class="hero-sub">La tienda <em>Mercado tecnológico</em> no encuentra a su gente: gerentes, vendedores y cajeros anotados en papeles sueltos. Hoy le construyes su sistema de personal en <em>Java</em> — y la columna vertebral es un <em>array</em>: casillas numeradas, tamaño fijo, un lugar para cada quien. 2 horas de laboratorio.</p>
   </div>
 </section>
 
-<!-- I: la idea -->
+<!-- I: ficha de la práctica -->
 <section>
-  <div class="wrap-n">
-    <p class="marker">I · Prometer sin implementar</p>
-    <p class="lead">Una interfaz es un <em>contrato.</em><br>Define el <em>qué</em>, nunca el <em>cómo.</em></p>
-    <p class="subtle">Hasta hoy, cada clase decía qué hacía <strong>y cómo lo hacía</strong>. Una interfaz separa esas dos cosas: declara los métodos que algo <em>debe</em> tener — su firma, su nombre, lo que recibe y lo que devuelve — y deja el cuerpo vacío. Es una lista de obligaciones. Quien firme el contrato (quien lo implemente) está <strong>forzado</strong> a cumplir cada cláusula, o el programa ni siquiera arranca.</p>
+  <div class="wrap">
+    <p class="marker">I · La ficha — qué haremos hoy</p>
+    <p class="lead">Práctica 3 de 6:<br><em>arrays.</em></p>
+    <p class="subtle"><strong>Objetivo:</strong> implementar los conceptos de <strong>arrays en Java</strong> — declaración, creación e inicialización — para administrar sus elementos en un <strong>entorno orientado a objetos</strong>. Es la práctica institucional del Practicario MCT158 — se trabaja hoy en el laboratorio y se entrega por Blackboard.</p>
+    <div class="ficha-grid">
+      <div class="ficha-card">
+        <div class="ficha-k">Temas del temario</div>
+        <div class="ficha-v">4.1 · Declaración<small>4.2 · Creación &nbsp;·&nbsp; 4.3 · Inicialización</small></div>
+      </div>
+      <div class="ficha-card">
+        <div class="ficha-k">Duración · Escenario</div>
+        <div class="ficha-v">2 horas<small>Laboratorio de cómputo</small></div>
+      </div>
+      <div class="ficha-card">
+        <div class="ficha-k">Software</div>
+        <div class="ficha-v">Java<small>Eclipse IDE (JDK instalado)</small></div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">Tampoco hoy partes de cero: en Python <strong>vives con listas</strong> desde el Bloque I, y las clases en Java las conoces desde las prácticas anteriores. El array es el primo <em>rígido</em> de la lista — y esa rigidez es justamente la lección de hoy.</p>
+    <div class="alerta">⚠ <strong>La comparación con Python es andamiaje para entender.</strong> La entrega de esta práctica es <strong>sí o sí en Java</strong>: proyecto de Eclipse IDE con los códigos fuente, anexo en el envío de Blackboard.</div>
+  </div>
+</section>
+
+<!-- II: el caso -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El caso — lee antes de programar</p>
+    <p class="lead">Una tienda que pierde<br>a su propia <em>gente.</em></p>
     <div class="caso">
-      Piensa en un <strong>enchufe</strong>. La pared no sabe ni le importa si conectas una lámpara, un cargador o una licuadora. Solo exige una cosa: <strong>dos clavijas, este voltaje</strong>. Ese es el contrato. La lámpara y la licuadora lo cumplen de formas internas completamente distintas — pero ambas <em>encajan</em>. En software, esa pared es la <strong>interfaz</strong>: define la forma del enchufe, no lo que hay del otro lado.
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;">Practicario MCT158 · Práctica 3 de 6 · Arrays</div>
+      <p style="margin-bottom:1rem;">La tienda <strong>"Mercado tecnológico"</strong> enfrenta desafíos para administrar su <strong>inventario de personal por sucursal</strong>, que incluye <strong>gerentes, vendedores y cajeros</strong>. Como <strong>desarrollador junior</strong> de esta empresa, se te asignó crear un sistema básico y eficiente de administración de personal que permita <strong>registrar los datos básicos</strong> de los 3 puestos, <strong>actualizar sus datos de contacto</strong> y <strong>mostrar la ficha de información</strong> de estos.</p>
+      <p>El sistema debe desarrollarse utilizando conceptos fundamentales de <strong>arrays</strong> en un entorno orientado a objetos en <strong>Java</strong>: <strong>declaración, creación e inicialización</strong>. El objetivo es auxiliar a Mercado tecnológico a ordenar mejor su inventario de personal, mejorando las operaciones diarias de la sucursal.</p>
     </div>
-    <p class="subtle" style="margin-top:1.6rem">En <strong>Java</strong> esto tiene una palabra dedicada: <span class="inlinecode">interface</span>. En <strong>Python</strong> — nuestro lenguaje base — lo logramos con <span class="inlinecode">ABC</span> (Abstract Base Class) y con <span class="inlinecode">Protocol</span>. Tres caminos, la misma idea. Vamos a recorrerlos.</p>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Requerimiento 01</div>
+        <div class="req-t">Registrar al personal</div>
+        <div class="req-d">Dar de alta empleados de los <strong>3 puestos</strong> (gerente, vendedor, cajero) con sus datos básicos. Cada alta ocupa <strong>una casilla del array</strong>: <code>empleados[contador]</code>.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 02</div>
+        <div class="req-t">Actualizar contacto</div>
+        <div class="req-d"><strong>Buscar</strong> a un empleado dentro del array (recorrido con <code>for</code>) y actualizar su <strong>teléfono y correo</strong>.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 03</div>
+        <div class="req-t">Mostrar la ficha</div>
+        <div class="req-d"><strong>Recorrer</strong> el array e imprimir la <strong>ficha de información</strong> de cada empleado registrado — sin tocar las casillas vacías.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">Fíjate en el patrón: los tres requerimientos son las <strong>tres operaciones básicas de un array</strong> — escribir en una casilla, buscar recorriendo, leer recorriendo. El caso es de tienda, pero el músculo que entrenas hoy aparece en cualquier sistema que guarde <em>varias cosas del mismo tipo</em>.</p>
   </div>
 </section>
 
-<!-- II: explorador del contrato -->
+<!-- III: concepto — anatomía del array -->
 <section>
   <div class="wrap">
-    <p class="marker">II · Anatomía de un contrato</p>
-    <p class="lead">Cada firma sin cuerpo<br>es una <em>obligación</em> que heredas.</p>
-    <p class="subtle">Aquí está una ABC de Python: una pasarela de pagos. Fíjate que ningún método tiene cuerpo — solo <span class="inlinecode">...</span> o <span class="inlinecode">pass</span>. Eso no es código incompleto: es <strong>una promesa exigida</strong>. Toca cada firma marcada para ver a qué te obliga si decides implementar este contrato:</p>
-    <div class="widget" data-tag="Toca cada firma">
-      <div class="ct-stage">
-        <div class="ct-doc" id="ct-doc">
-          <span class="ct-l"><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod</span>
-          <span class="ct-l"></span>
-          <span class="ct-l"><span class="kw">class</span> <span class="cls">MetodoPago</span>(ABC):</span>
-          <span class="ct-l">    <span class="cm"># el contrato: QUÉ debe poder hacer</span></span>
-          <span class="ct-l">    <span class="cm"># todo medio de pago. No el CÓMO.</span></span>
-          <span class="ct-l"></span>
-          <span class="ct-l">    <span class="dec">@abstractmethod</span></span>
-          <span class="ct-l">    <span class="kw">def</span> <span class="ct-sig" data-s="cobrar">cobrar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span></span>: ...</span>
-          <span class="ct-l"></span>
-          <span class="ct-l">    <span class="dec">@abstractmethod</span></span>
-          <span class="ct-l">    <span class="kw">def</span> <span class="ct-sig" data-s="reembolsar">reembolsar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span></span>: ...</span>
-          <span class="ct-l"></span>
-          <span class="ct-l">    <span class="dec">@property</span></span>
-          <span class="ct-l">    <span class="dec">@abstractmethod</span></span>
-          <span class="ct-l">    <span class="kw">def</span> <span class="ct-sig" data-s="comision">comision(<span class="self">self</span>) -&gt; <span class="ty">float</span></span>: ...</span>
-        </div>
-        <div class="ct-panel">
-          <div class="ct-tag" id="ct-tag">El contrato</div>
-          <div class="ct-title" id="ct-title">Una promesa, tres cláusulas</div>
-          <div class="ct-desc" id="ct-desc">Toca cualquiera de las firmas resaltadas a la izquierda. Cada una es un método que <strong>cualquier</strong> medio de pago real — tarjeta, transferencia, criptomoneda — estará <em>obligado</em> a escribir, cada uno a su manera.</div>
-          <div class="ct-meter" id="ct-meter">Cláusulas exploradas: <strong>0 de 3</strong></div>
+    <p class="marker">III · El concepto — declarar, crear, inicializar</p>
+    <p class="lead">Un array es un estante:<br>casillas numeradas, tamaño <em>fijo.</em></p>
+    <p class="subtle">Los tres subtemas del temario son, literalmente, los <strong>tres momentos de vida</strong> de un array. <strong>4.1 Declarar</strong>: existe la etiqueta, no el estante. <strong>4.2 Crear</strong>: se construye el estante con un número de casillas <em>que ya nunca cambia</em>. <strong>4.3 Inicializar</strong>: se llenan las casillas. Pulsa cada momento y mira el código junto al estado del estante:</p>
+    <div class="widget" data-tag="Los tres momentos · pulsa cada uno">
+      <div class="w-controls" style="margin-top:0;margin-bottom:1.5rem;">
+        <button class="btn on" data-arr="declarar">4.1 · Declarar</button>
+        <button class="btn" data-arr="crear">4.2 · Crear</button>
+        <button class="btn" data-arr="inicializar">4.3 · Inicializar</button>
+      </div>
+      <div class="arr-stage">
+        <div class="jcode" id="arr-code"></div>
+        <div class="arr-side">
+          <div class="arr-note" id="arr-note"></div>
+          <div id="arr-visual"></div>
         </div>
       </div>
     </div>
+    <p class="subtle" style="margin-top:1.5rem">Tres reglas que no se negocian: los índices <strong>empiezan en 0</strong> (la última casilla es <span class="inlinecode">length - 1</span>); el tamaño se consulta con <span class="inlinecode">empleados.length</span> — <em>sin paréntesis</em>, es propiedad, no método; y pedir una casilla que no existe lanza <span class="inlinecode">ArrayIndexOutOfBoundsException</span> en plena ejecución.</p>
   </div>
 </section>
 
-<!-- III: tres caminos -->
+<!-- IV: Python ↔ Java -->
 <section>
   <div class="wrap">
-    <p class="marker">III · Tres caminos, una idea</p>
-    <p class="lead">ABC, Protocol e <em>interface.</em><br>El mismo contrato, distinta letra.</p>
-    <p class="subtle">El contrato <span class="inlinecode">MetodoPago</span> de la sección anterior se puede escribir de tres maneras. Dos son de Python (nuestra base), una es de Java para que veas el contraste. Recorre las pestañas y lee la nota de cada una — la diferencia entre <strong>ABC</strong> y <strong>Protocol</strong> es la más importante del día:</p>
-    <div class="widget" data-tag="Mismo contrato · tres formas">
-      <div class="cmp-tabs">
-        <button class="cmp-tab on" data-cmp="abc">Python · ABC</button>
-        <button class="cmp-tab" data-cmp="proto">Python · Protocol</button>
-        <button class="cmp-tab" data-cmp="java">Java · interface</button>
-      </div>
-      <div class="cmp-head"><span id="cmp-title">Python · ABC — herencia explícita</span><span class="badge" id="cmp-badge">abc.ABC + @abstractmethod</span></div>
-      <div class="cmp-code" id="cmp-code"></div>
-      <div class="cmp-note" id="cmp-note"></div>
-    </div>
-    <table class="tcmp">
-      <thead>
-        <tr><th>Criterio</th><th>ABC (Python)</th><th>Protocol (Python)</th><th>interface (Java)</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Cómo se firma</td><td>Heredar: <code>class Tarjeta(MetodoPago)</code></td><td>Nada: solo tener los métodos</td><td><code>implements Notificable</code></td></tr>
-        <tr><td>Verifica el contrato</td><td>Al <strong>instanciar</strong> (en ejecución)</td><td>Por <strong>estructura</strong> (duck typing)</td><td>Al <strong>compilar</strong></td></tr>
-        <tr><td>Acoplamiento</td><td>La clase conoce a la ABC</td><td>Cero: la clase ni se entera</td><td>La clase nombra la interfaz</td></tr>
-        <tr><td>Úsalo cuando…</td><td>Quieres jerarquía + código compartido</td><td>Quieres encajar sin heredar</td><td>Programas en Java</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- IV: implementa o explota -->
-<section>
-  <div class="wrap">
-    <p class="marker">IV · Implementa o explota</p>
-    <p class="lead">Un contrato que no obliga<br>no es un <em>contrato.</em></p>
-    <p class="subtle">Aquí está la fuerza de una ABC: si firmas el contrato pero olvidas una cláusula, Python <strong>no te deja crear el objeto</strong>. El error salta al instanciar, no a la hora de usar el método. Recórrelo paso a paso — verás la clase incompleta, el intento de instanciarla y la explosión:</p>
-    <div class="widget" data-tag="Avanza paso a paso">
-      <div class="ie-stage">
-        <div class="ie-code" id="ie-code"></div>
-        <div class="ie-side">
-          <div class="ie-console" id="ie-console"></div>
-          <div class="ie-explain" id="ie-explain">Pulsa <strong>Siguiente</strong> para ver qué pasa cuando una clase firma el contrato pero deja una cláusula sin cumplir.</div>
+    <p class="marker">IV · Python ↔ Java — la lista elástica y el estante de concreto</p>
+    <p class="lead">En Python las listas <em>crecen.</em><br>En Java, el array <em>ya nació medido.</em></p>
+    <p class="subtle">Todo lo que hoy harás con arrays lo has hecho ya con listas de Python — pero el array te obliga a decidir <strong>tipo y tamaño por adelantado</strong>, y esa disciplina es la que el temario quiere que practiques. Compara operación por operación:</p>
+    <div class="widget" data-tag="Misma operación · dos lenguajes">
+      <div class="pj-stage">
+        <div class="pj-col">
+          <div class="pj-head">Python <span class="badge">lista — elástica</span></div>
+          <div class="pj-body" id="py-body"></div>
+        </div>
+        <div class="pj-col">
+          <div class="pj-head">Java <span class="badge">array — tamaño fijo</span></div>
+          <div class="pj-body" id="java-body"></div>
         </div>
       </div>
       <div class="w-controls">
-        <button class="btn" id="ie-reset">⟲ Reset</button>
-        <button class="btn" id="ie-prev">◀ Atrás</button>
-        <button class="btn on" id="ie-next">Siguiente ▶</button>
-        <button class="btn" id="ie-play">▶ Play</button>
+        <button class="btn on" data-eq="declara">Declarar y crear</button>
+        <button class="btn" data-eq="inicializa">Inicializar</button>
+        <button class="btn" data-eq="recorre">Recorrer</button>
+        <button class="btn" data-eq="tam">El tamaño</button>
+      </div>
+      <div class="pj-note" id="pj-note"></div>
+    </div>
+    <div class="alerta">⚠ Repite conmigo: <strong>Python es para entender, Java es para entregar.</strong> El practicario pide el proyecto en <strong>Eclipse IDE con código Java</strong> — la columna izquierda no se entrega, se aprende de ella.</div>
+  </div>
+</section>
+
+<!-- V: la ruta -->
+<section>
+  <div class="wrap">
+    <p class="marker">V · La ruta — seis actividades, en orden</p>
+    <p class="lead">Del papel al código:<br>así se construye la <em>práctica.</em></p>
+    <p class="subtle">Las 6 actividades del practicario forman la misma ruta que ya conoces de la Práctica 2: primero <strong>entiendes</strong> (caso de uso), luego <strong>diseñas</strong> (tarjeta CRC y diagrama de secuencia), y al final <strong>programas</strong> (los 3 requerimientos en Java). Ojo con los pasos 4–6: <strong>ahí no hay código para copiar</strong> — cada requerimiento te entrega su <strong>diagrama de flujo</strong> y tú lo conviertes en Java. El diagrama es el mapa; el código es tu viaje.</p>
+
+    <!-- PASO 1 -->
+    <div class="paso">
+      <div class="paso-num">1</div>
+      <div class="paso-body">
+        <div class="paso-t">Diagrama de <em>caso de uso</em></div>
+        <p class="paso-d">Establece los requerimientos del sistema: ¿<strong>quién</strong> lo usa (actor) y <strong>qué</strong> puede hacer con él (casos de uso)? La rúbrica revisa tres cosas: actores bien identificados, casos de uso con <strong>nombres claros y precisos</strong> (verbo + objeto), y las <strong>asociaciones</strong> actor–caso correctamente trazadas. Pulsa cada óvalo:</p>
+        <div class="widget" data-tag="Caso de uso · ejemplo de referencia">
+          <svg class="uc-svg" viewBox="0 0 640 320">
+            <circle class="uc-actor" cx="70" cy="105" r="14"/>
+            <line class="uc-actor" x1="70" y1="119" x2="70" y2="160"/>
+            <line class="uc-actor" x1="46" y1="132" x2="94" y2="132"/>
+            <line class="uc-actor" x1="70" y1="160" x2="50" y2="190"/>
+            <line class="uc-actor" x1="70" y1="160" x2="90" y2="190"/>
+            <text class="uc-alabel" x="70" y="212">Gerente de</text>
+            <text class="uc-alabel" x="70" y="226">sucursal</text>
+            <rect class="uc-sys" x="180" y="18" width="440" height="286" rx="4"/>
+            <text class="uc-systitle" x="400" y="40">SISTEMA DE ADMINISTRACIÓN DE PERSONAL</text>
+            <line class="uc-line" id="ucl-0" x1="96" y1="115" x2="252" y2="92"/>
+            <line class="uc-line" id="ucl-1" x1="96" y1="130" x2="252" y2="170"/>
+            <line class="uc-line" id="ucl-2" x1="96" y1="145" x2="252" y2="248"/>
+            <ellipse class="uc-oval" id="uco-0" cx="400" cy="92" rx="148" ry="30"/>
+            <text class="uc-label" x="400" y="97">Registrar empleado</text>
+            <ellipse class="uc-oval" id="uco-1" cx="400" cy="170" rx="148" ry="30"/>
+            <text class="uc-label" x="400" y="175">Actualizar datos de contacto</text>
+            <ellipse class="uc-oval" id="uco-2" cx="400" cy="248" rx="148" ry="30"/>
+            <text class="uc-label" x="400" y="253">Mostrar ficha de información</text>
+          </svg>
+          <div class="uc-note" id="uc-note">Pulsa un caso de uso (o los botones) para ver qué requerimiento cubre y qué espera la rúbrica de él.</div>
+          <div class="w-controls">
+            <button class="btn" data-uc="0">UC-01 Registrar</button>
+            <button class="btn" data-uc="1">UC-02 Actualizar</button>
+            <button class="btn" data-uc="2">UC-03 Mostrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="paso">
+      <div class="paso-num">2</div>
+      <div class="paso-body">
+        <div class="paso-t">Tarjeta <em>CRC</em></div>
+        <p class="paso-d">CRC = <strong>Clase · Responsabilidades · Colaboraciones</strong>. Es una ficha por clase: qué <em>sabe y hace</em> (responsabilidades) y con <em>quién trabaja</em> (colaboradores). Nuestro diseño usa dos clases — la que administra el array y la que representa a cada empleado:</p>
+        <div class="crc-card">
+          <div class="crc-name">RegistroPersonal <small>tarjeta CRC</small></div>
+          <div class="crc-cols">
+            <div class="crc-col">
+              <div class="crc-h">Responsabilidades</div>
+              <ul>
+                <li>Conocer el array <code>Empleado[] empleados</code> y cuántas casillas están ocupadas (<code>contador</code>).</li>
+                <li>Registrar un empleado en la primera casilla libre.</li>
+                <li>Buscar un empleado por nombre y actualizar su contacto.</li>
+                <li>Recorrer el array y mostrar todas las fichas.</li>
+              </ul>
+            </div>
+            <div class="crc-col">
+              <div class="crc-h">Colaboradores</div>
+              <ul>
+                <li><code>Empleado</code> — cada casilla del array guarda uno.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="crc-card">
+          <div class="crc-name">Empleado <small>tarjeta CRC</small></div>
+          <div class="crc-cols">
+            <div class="crc-col">
+              <div class="crc-h">Responsabilidades</div>
+              <ul>
+                <li>Conocer sus datos: nombre, puesto (gerente / vendedor / cajero), teléfono y correo.</li>
+                <li>Actualizar sus propios datos de contacto.</li>
+                <li>Generar su ficha de información.</li>
+              </ul>
+            </div>
+            <div class="crc-col">
+              <div class="crc-h">Colaboradores</div>
+              <ul>
+                <li>— (no necesita a nadie: es el experto en sus propios datos).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="paso-tip"><strong>Regla CRC:</strong> si una responsabilidad usa los datos de una clase, esa responsabilidad pertenece a <em>esa</em> clase. El empleado genera <em>su</em> ficha; el registro administra <em>su</em> array. Igual que en la Práctica 2: los datos y las decisiones que los usan viven juntos.</div>
+      </div>
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="paso">
+      <div class="paso-num">3</div>
+      <div class="paso-body">
+        <div class="paso-t">Diagrama de <em>secuencia</em></div>
+        <p class="paso-d">El practicario pide modelar la <strong>gestión del array</strong>: agregar y mostrar sus elementos. En un diagrama de secuencia, el <strong>tiempo corre hacia abajo</strong>: cada columna es un participante (actor u objeto), las flechas sólidas son <strong>llamadas</strong> y las punteadas, <strong>respuestas</strong>. Elige la operación y pulsa <strong>▶ Animar</strong>:</p>
+        <div class="widget" data-tag="Diagrama de secuencia · gestión del array">
+          <div class="w-controls" style="margin-top:0;margin-bottom:1.2rem;">
+            <button class="btn on" data-seq="reg">agregar — registrar()</button>
+            <button class="btn" data-seq="mos">mostrar — mostrarFichas()</button>
+          </div>
+          <div id="seq-holder"></div>
+          <div class="seq-cap" id="seq-cap">Pulsa <strong>▶ Animar</strong> para recorrer los mensajes en orden.</div>
+          <div class="w-controls">
+            <button class="btn on" id="seq-play">▶ Animar</button>
+            <button class="btn" id="seq-reset">⟲ Reset</button>
+          </div>
+        </div>
+        <div class="paso-tip"><strong>Para la rúbrica:</strong> mensajes <em>etiquetados</em> con el método real (<code>registrar(nuevo)</code>, no "guardar cosa"), secuencia lógica de arriba hacia abajo, y el marco <code>loop</code> cuando la operación recorre el array. Tu diagrama y tu código deben contar la misma historia.</div>
+      </div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div class="paso">
+      <div class="paso-num">4</div>
+      <div class="paso-body">
+        <div class="paso-t">Java en Eclipse — <em>registrar</em> (Req. 01)</div>
+        <p class="paso-d">Abre Eclipse → <strong>File → New → Java Project</strong> → nómbralo <code>Practica3Arrays</code>. En <code>src</code> crea las dos clases de tu CRC. Aquí tienes el <strong>esqueleto</strong> — atributos y firmas, <em>sin lógica</em>: cada <code>TODO</code> lo resuelves tú siguiendo el diagrama de flujo de su requerimiento. Empezamos por <code>registrar()</code>:</p>
+        <div class="jcode">
+<span class="ln"><span class="cm">// src/Empleado.java — esqueleto: las firmas sí, la lógica no</span></span>
+<span class="ln"><span class="kw">public class</span> <span class="cls">Empleado</span> {</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">String</span> nombre;</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">String</span> puesto;    <span class="cm">// "Gerente", "Vendedor" o "Cajero"</span></span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">String</span> telefono;</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">String</span> correo;</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="cls">Empleado</span>(<span class="ty">String</span> nombre, <span class="ty">String</span> puesto,</span>
+<span class="ln">                    <span class="ty">String</span> telefono, <span class="ty">String</span> correo) {</span>
+<span class="ln">        <span class="cm">// TODO: guarda los 4 datos (recuerda this.)</span></span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="ty">String</span> getNombre() { <span class="cm">/* TODO */</span> }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public void</span> actualizarContacto(<span class="ty">String</span> telefono, <span class="ty">String</span> correo) { <span class="cm">/* TODO */</span> }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="ty">String</span> generarFicha() { <span class="cm">/* TODO: nombre · puesto · Tel · correo */</span> }</span>
+<span class="ln">}</span>
+        </div>
+        <div class="jcode" style="margin-top:1rem;">
+<span class="ln"><span class="cm">// src/RegistroPersonal.java — esqueleto</span></span>
+<span class="ln"><span class="kw">public class</span> <span class="cls">RegistroPersonal</span> {</span>
+<span class="ln">    <span class="kw">private</span> <span class="cls">Empleado</span>[] empleados;    <span class="cm">// 4.1 · DECLARACIÓN</span></span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">int</span> contador;</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="cls">RegistroPersonal</span>(<span class="ty">int</span> capacidad) {</span>
+<span class="ln">        <span class="cm">// TODO: 4.2 · CREACIÓN — construye el array con new</span></span>
+<span class="ln">        <span class="cm">//       y deja el contador en 0</span></span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public void</span> registrar(<span class="cls">Empleado</span> nuevo) {</span>
+<span class="ln">        <span class="cm">// TODO: sigue el diagrama de flujo ↓ (aquí vive 4.3)</span></span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public void</span> actualizarContacto(<span class="ty">String</span> nombre, <span class="ty">String</span> telefono, <span class="ty">String</span> correo) {</span>
+<span class="ln">        <span class="cm">// TODO: diagrama del paso 5</span></span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public void</span> mostrarFichas() {</span>
+<span class="ln">        <span class="cm">// TODO: diagrama del paso 6</span></span>
+<span class="ln">    }</span>
+<span class="ln">}</span>
+        </div>
+        <div class="widget" data-tag="Diagrama de flujo · Req. 01 · registrar()">
+          <svg class="fl-svg" viewBox="0 0 600 432">
+            <line class="fl-edge" x1="300" y1="34" x2="300" y2="58"/><polygon class="fl-ah" points="300,62 295,53 305,53"/>
+            <line class="fl-edge" x1="300" y1="98" x2="300" y2="122"/><polygon class="fl-ah" points="300,126 295,117 305,117"/>
+            <polyline class="fl-edge" points="148,186 150,186 150,236"/><polygon class="fl-ah" points="150,240 145,231 155,231"/>
+            <polyline class="fl-edge" points="452,186 450,186 450,236"/><polygon class="fl-ah" points="450,240 445,231 455,231"/>
+            <line class="fl-edge" x1="150" y1="278" x2="150" y2="302"/><polygon class="fl-ah" points="150,306 145,297 155,297"/>
+            <polyline class="fl-edge" points="150,340 150,372 300,372"/>
+            <polyline class="fl-edge" points="450,278 450,372 300,372"/>
+            <line class="fl-edge" x1="300" y1="372" x2="300" y2="396"/><polygon class="fl-ah" points="300,400 295,391 305,391"/>
+            <text class="fl-lbl" x="160" y="212">[sí]</text>
+            <text class="fl-lbl" x="412" y="212">[no]</text>
+            <g id="r-ini"><circle class="fl-start" cx="300" cy="24" r="10"/></g>
+            <g id="r-rec"><rect class="fl-shape" x="196" y="64" width="208" height="34" rx="17"/><text class="fl-txt" x="300" y="86">Recibir al nuevo empleado</text></g>
+            <g id="r-dec"><polygon class="fl-shape" points="300,128 452,186 300,244 148,186"/><text class="fl-txt" x="300" y="182">¿contador &lt;</text><text class="fl-txt" x="300" y="197">empleados.length?</text></g>
+            <g id="r-asig" class="res"><rect class="fl-shape" x="45" y="244" width="210" height="34" rx="17"/><text class="fl-txt" x="150" y="266">empleados[contador] = nuevo</text></g>
+            <g id="r-inc" class="res"><rect class="fl-shape" x="105" y="308" width="90" height="32" rx="16"/><text class="fl-txt" x="150" y="328">contador++</text></g>
+            <g id="r-lleno"><rect class="fl-shape" x="345" y="244" width="210" height="34" rx="17"/><text class="fl-txt" x="450" y="266">Mostrar "Registro lleno"</text></g>
+            <g id="r-fin"><circle class="fl-end-o" cx="300" cy="414" r="11"/><circle class="fl-end-i" cx="300" cy="414" r="5"/></g>
+          </svg>
+          <div class="act-caption" id="r-cap">Elige un escenario y recorre el camino que tu código deberá seguir.</div>
+          <div class="w-controls" style="justify-content:center;">
+            <button class="btn" data-r="esp">▶ contador = 2 · hay espacio</button>
+            <button class="btn" data-r="lleno">▶ contador = 4 · lleno</button>
+            <button class="btn" id="r-reset">⟲ Reset</button>
+          </div>
+        </div>
+        <div class="paso-tip"><strong>Tip Eclipse:</strong> escribe <code>sysout</code> + <code>Ctrl + Espacio</code> para generar <code>System.out.println()</code>, y <code>main</code> + <code>Ctrl + Espacio</code> para el método main. Si en tu equipo trabajas con IntelliJ, el código es idéntico — pero la evidencia del practicario pide el <strong>proyecto de Eclipse</strong>.</div>
+      </div>
+    </div>
+
+    <!-- PASO 5 -->
+    <div class="paso">
+      <div class="paso-num">5</div>
+      <div class="paso-body">
+        <div class="paso-t">Java — <em>actualizar contacto</em> (Req. 02)</div>
+        <p class="paso-d">Para actualizar hay que <strong>encontrar</strong> primero: un <code>for</code> recorre las casillas ocupadas (<code>0</code> a <code>contador - 1</code>) comparando nombres. Ojo: los <code>String</code> se comparan con <code>.equals()</code>, <strong>nunca</strong> con <code>==</code>. Aquí no hay código para copiar — este flujo es tu mapa, y el método <code>actualizarContacto(nombre, telefono, correo)</code> lo escribes tú:</p>
+        <div class="widget" data-tag="Diagrama de flujo · Req. 02 · actualizarContacto()">
+          <svg class="fl-svg" viewBox="0 0 620 520">
+            <line class="fl-edge" x1="230" y1="34" x2="230" y2="58"/><polygon class="fl-ah" points="230,62 225,53 235,53"/>
+            <line class="fl-edge" x1="230" y1="94" x2="230" y2="120"/><polygon class="fl-ah" points="230,124 225,115 235,115"/>
+            <line class="fl-edge" x1="350" y1="178" x2="370" y2="178"/><polygon class="fl-ah" points="374,178 365,173 365,183"/>
+            <line class="fl-edge" x1="230" y1="232" x2="230" y2="256"/><polygon class="fl-ah" points="230,260 225,251 235,251"/>
+            <line class="fl-edge" x1="360" y1="316" x2="372" y2="316"/><polygon class="fl-ah" points="376,316 367,311 367,321"/>
+            <line class="fl-edge" x1="230" y1="372" x2="230" y2="396"/><polygon class="fl-ah" points="230,400 225,391 235,391"/>
+            <polyline class="fl-edge" points="484,336 484,470 230,470"/>
+            <polyline class="fl-edge" points="586,178 606,178 606,470 484,470"/>
+            <line class="fl-edge" x1="230" y1="470" x2="230" y2="484"/><polygon class="fl-ah" points="230,488 225,479 235,479"/>
+            <polyline class="fl-loop" points="190,418 60,418 60,178 102,178"/><polygon class="fl-ah loop" points="106,178 97,173 97,183"/>
+            <text class="fl-loop-lbl" transform="rotate(-90 48 298)" x="48" y="298" text-anchor="middle">↺ vuelve a preguntar</text>
+            <text class="fl-lbl" x="352" y="168">[no]</text>
+            <text class="fl-lbl" x="240" y="250">[sí]</text>
+            <text class="fl-lbl" x="362" y="306">[sí]</text>
+            <text class="fl-lbl" x="242" y="390">[no]</text>
+            <g id="a-ini"><circle class="fl-start" cx="230" cy="24" r="10"/></g>
+            <g id="a-i0"><rect class="fl-shape" x="190" y="62" width="80" height="32" rx="16"/><text class="fl-txt" x="230" y="82">i = 0</text></g>
+            <g id="a-queda"><polygon class="fl-shape" points="230,124 350,178 230,232 110,178"/><text class="fl-txt" x="230" y="182">¿i &lt; contador?</text></g>
+            <g id="a-nof"><rect class="fl-shape" x="376" y="161" width="210" height="34" rx="17"/><text class="fl-txt" x="481" y="183">Mostrar "No se encontró"</text></g>
+            <g id="a-eq"><polygon class="fl-shape" points="230,260 360,316 230,372 100,316"/><text class="fl-txt sm" x="230" y="313">¿empleados[i].getNombre()</text><text class="fl-txt sm" x="230" y="326">.equals(nombre)?</text></g>
+            <g id="a-upd" class="res"><rect class="fl-shape" x="378" y="296" width="212" height="40" rx="17"/><text class="fl-txt sm" x="484" y="312">empleados[i]</text><text class="fl-txt sm" x="484" y="326">.actualizarContacto(tel, correo)</text></g>
+            <g id="a-inc"><rect class="fl-shape" x="190" y="402" width="80" height="32" rx="16"/><text class="fl-txt" x="230" y="422">i++</text></g>
+            <g id="a-fin"><circle class="fl-end-o" cx="230" cy="500" r="11"/><circle class="fl-end-i" cx="230" cy="500" r="5"/></g>
+          </svg>
+          <div class="act-caption" id="a-cap">Dos escenarios: el nombre existe (dos vueltas) o nadie coincide (el for se agota).</div>
+          <div class="w-controls" style="justify-content:center;">
+            <button class="btn" data-a="hit">▶ "Luis Pérez" está en [1]</button>
+            <button class="btn" data-a="miss">▶ el nombre no existe (contador = 2)</button>
+            <button class="btn" id="a-reset">⟲ Reset</button>
+          </div>
+        </div>
+        <div class="paso-tip"><strong>¿Por qué hasta <code>contador</code> y no hasta <code>empleados.length</code>?</strong> Porque de <code>contador</code> en adelante las casillas siguen en <code>null</code> — y llamar <code>.getNombre()</code> sobre un <code>null</code> revienta con <code>NullPointerException</code>. El array completo existe; el <em>contenido</em> solo llega hasta donde has registrado.</div>
+      </div>
+    </div>
+
+    <!-- PASO 6 -->
+    <div class="paso">
+      <div class="paso-num">6</div>
+      <div class="paso-body">
+        <div class="paso-t">Java — <em>mostrar fichas</em> (Req. 03) y el Main</div>
+        <p class="paso-d">La lectura es el mismo recorrido, ahora <strong>delegando</strong>: cada empleado genera su propia ficha — su tarjeta CRC lo dice. Traduce el flujo a <code>mostrarFichas()</code> y cierra con un <code>Main</code> que ejercite los tres requerimientos en orden: crear <code>RegistroPersonal(10)</code>, registrar un gerente, un vendedor y un cajero, mostrar fichas, actualizar el contacto de uno, y mostrar de nuevo. Sin código para copiar — pero con una vara para medirte al final:</p>
+        <div class="widget" data-tag="Diagrama de flujo · Req. 03 · mostrarFichas()">
+          <svg class="fl-svg" viewBox="0 0 620 352">
+            <line class="fl-edge" x1="230" y1="34" x2="230" y2="58"/><polygon class="fl-ah" points="230,62 225,53 235,53"/>
+            <line class="fl-edge" x1="230" y1="96" x2="230" y2="120"/><polygon class="fl-ah" points="230,124 225,115 235,115"/>
+            <line class="fl-edge" x1="230" y1="156" x2="230" y2="180"/><polygon class="fl-ah" points="230,184 225,175 235,175"/>
+            <line class="fl-edge" x1="350" y1="238" x2="372" y2="238"/><polygon class="fl-ah" points="376,238 367,233 367,243"/>
+            <line class="fl-edge" x1="486" y1="258" x2="486" y2="278"/><polygon class="fl-ah" points="486,282 481,273 491,273"/>
+            <line class="fl-edge" x1="230" y1="292" x2="230" y2="310"/><polygon class="fl-ah" points="230,314 225,305 235,305"/>
+            <polyline class="fl-loop" points="526,300 604,300 604,166 240,166"/><polygon class="fl-ah loop" points="236,166 245,161 245,171"/>
+            <text class="fl-loop-lbl" x="420" y="158" text-anchor="middle">↺ repite mientras i &lt; contador</text>
+            <text class="fl-lbl" x="354" y="228">[sí]</text>
+            <text class="fl-lbl" x="242" y="306">[no]</text>
+            <g id="m-ini"><circle class="fl-start" cx="230" cy="24" r="10"/></g>
+            <g id="m-head"><rect class="fl-shape" x="90" y="62" width="280" height="34" rx="17"/><text class="fl-txt sm" x="230" y="84">Imprimir encabezado (contador de length)</text></g>
+            <g id="m-i0"><rect class="fl-shape" x="190" y="124" width="80" height="32" rx="16"/><text class="fl-txt" x="230" y="144">i = 0</text></g>
+            <g id="m-dec"><polygon class="fl-shape" points="230,184 350,238 230,292 110,238"/><text class="fl-txt" x="230" y="242">¿i &lt; contador?</text></g>
+            <g id="m-imp" class="res"><rect class="fl-shape" x="378" y="218" width="216" height="40" rx="17"/><text class="fl-txt sm" x="486" y="234">Imprimir "[i] " +</text><text class="fl-txt sm" x="486" y="248">empleados[i].generarFicha()</text></g>
+            <g id="m-inc"><rect class="fl-shape" x="446" y="284" width="80" height="32" rx="16"/><text class="fl-txt" x="486" y="304">i++</text></g>
+            <g id="m-fin"><circle class="fl-end-o" cx="230" cy="328" r="11"/><circle class="fl-end-i" cx="230" cy="328" r="5"/></g>
+          </svg>
+          <div class="act-caption" id="m-cap">Este flujo es un for dibujado: pruébalo con 2 registrados y con el registro vacío.</div>
+          <div class="w-controls" style="justify-content:center;">
+            <button class="btn" data-m="dos">▶ contador = 2</button>
+            <button class="btn" data-m="vacio">▶ registro vacío</button>
+            <button class="btn" id="m-reset">⟲ Reset</button>
+          </div>
+        </div>
+        <div class="jcode" style="margin-top:1.2rem;">
+<span class="ln"><span class="cm">// Salida esperada del Main (después de actualizar a Luis):</span></span>
+<span class="ln"><span class="out">── Personal: 3 de 10 ──</span></span>
+<span class="ln"><span class="out">[0] Ana Torres · Gerente · Tel: 55-1234-5678 · ana@mercadotec.mx</span></span>
+<span class="ln"><span class="out">[1] Luis Pérez · Vendedor · Tel: 55-0000-9999 · luis.perez@mercadotec.mx</span></span>
+<span class="ln"><span class="out">[2] María López · Cajero · Tel: 55-1111-2222 · maria@mercadotec.mx</span></span>
+        </div>
+        <div class="paso-tip"><strong>Prueba las fronteras del array:</strong> registra hasta llenar la capacidad y una vez más (¿responde bien el aviso de lleno?); actualiza un nombre que no existe; muestra las fichas con el registro vacío. Los errores de arrays viven en los límites — índice 0, <code>length - 1</code> y las casillas en <code>null</code>.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- V: encapsulamiento avanzado -->
+<!-- VI: el array vivo -->
 <section>
   <div class="wrap">
-    <p class="marker">V · El castillo del encapsulamiento</p>
-    <p class="lead">No todo lo de un objeto<br>es para el <em>mundo exterior.</em></p>
-    <p class="subtle">Un buen contrato expone solo la puerta principal y esconde la maquinaria. Python tiene <strong>cuatro niveles</strong> de acceso, de la muralla más baja a la más alta. Ojo: en Python son <em>convenciones y trucos</em>, no candados de verdad como en Java — pero un profesional los respeta. Toca cada anillo del castillo:</p>
-    <div class="widget" data-tag="Toca cada anillo">
-      <div class="enc-stage">
-        <div class="enc-castle">
-          <div class="enc-ring lv0 on" data-enc="pub">
-            <div class="enc-sym">saldo</div>
-            <div class="enc-name">Público</div>
-            <div class="enc-hint">Sin guion bajo · cualquiera lo toca</div>
-          </div>
-          <div class="enc-ring" data-enc="prot">
-            <div class="enc-sym">_saldo</div>
-            <div class="enc-name">Protegido</div>
-            <div class="enc-hint">Un guion bajo · "uso interno, por favor"</div>
-          </div>
-          <div class="enc-ring" data-enc="priv">
-            <div class="enc-sym">__saldo</div>
-            <div class="enc-name">Privado</div>
-            <div class="enc-hint">Dos guiones · name mangling</div>
-          </div>
-          <div class="enc-ring" data-enc="prop">
-            <div class="enc-sym">@property</div>
-            <div class="enc-name">Propiedad</div>
-            <div class="enc-hint">La puerta controlada · acceso con reglas</div>
+    <p class="marker">VI · Pruébalo — el array vivo</p>
+    <p class="lead">Cuatro casillas.<br>Mira <em>trabajar</em> al registro.</p>
+    <p class="subtle">Así se comporta el sistema que estás construyendo — aquí con <span class="inlinecode">new Empleado[4]</span> para que lo llenes rápido. Registra, actualiza y muestra: a la izquierda el <strong>estado real del array</strong> (casillas en <span class="inlinecode">null</span> incluidas), a la derecha la consola. Intenta registrar a un quinto empleado y verás la lección del tamaño fijo:</p>
+    <div class="widget" data-tag="RegistroPersonal en ejecución">
+      <div class="viv-stage">
+        <div class="viv-left">
+          <div class="viv-shelf" id="viv-shelf"></div>
+          <div class="viv-meta" id="viv-meta"></div>
+          <div class="w-controls" style="margin-top:auto;">
+            <button class="btn" id="viv-reg">▶ registrar(siguiente)</button>
+            <button class="btn" id="viv-act">▶ actualizar contacto de Luis</button>
+            <button class="btn" id="viv-mos">▶ mostrarFichas()</button>
+            <button class="btn" id="viv-reset">⟲ Reset</button>
           </div>
         </div>
-        <div class="enc-panel">
-          <div class="enc-ptag" id="enc-ptag">Nivel 0 · público</div>
-          <div class="enc-pcode" id="enc-pcode"></div>
-          <div class="enc-pdesc" id="enc-pdesc"></div>
-        </div>
+        <div class="viv-con" id="viv-con"><span class="sys">consola — pulsa un botón…</span></div>
       </div>
-    </div>
-    <p class="subtle" style="margin-top:1.6rem">La estrella es <span class="inlinecode">@property</span>: te deja escribir <span class="inlinecode">cuenta.saldo</span> como si fuera un atributo simple, pero por debajo corre un método que <strong>valida, calcula o protege</strong>. Es el getter de Java (Sesión 3) con la cara amable de un atributo. Y en Java, el equivalente del <span class="inlinecode">__privado</span> es la palabra real <span class="inlinecode">private</span> — ahí sí el compilador te corta la mano.</p>
-  </div>
-</section>
-
-<!-- VI: duck typing, puente a polimorfismo -->
-<section>
-  <div class="wrap">
-    <p class="marker">VI · Adelanto — duck typing</p>
-    <p class="lead">Si camina como pato<br>y grazna como pato…<br><em>es</em> un pato.</p>
-    <p class="subtle">Aquí se cierra el círculo y se abre el siguiente. Una función que recibe "algo que sabe cobrar" no pregunta <em>de qué clase eres</em> — solo te pide que cumplas el contrato. Eso es <strong>duck typing</strong>, y es la antesala directa del <strong>polimorfismo</strong> del Sprint 2. Elige qué objeto le pasas a la misma función y mira qué pasa:</p>
-    <div class="widget" data-tag="Elige el objeto">
-      <div class="dt-stage">
-        <div class="dt-code" id="dt-code">
-          <span class="ln"><span class="kw">def</span> procesar(metodo, monto):</span>
-          <span class="ln">    <span class="cm"># no pregunto QUÉ eres,</span></span>
-          <span class="ln">    <span class="cm"># solo pido que sepas cobrar()</span></span>
-          <span class="ln">    <span class="kw">if</span> metodo.cobrar(monto):</span>
-          <span class="ln">        <span class="kw">return</span> <span class="str">"Pago aprobado ✓"</span></span>
-          <span class="ln">    <span class="kw">return</span> <span class="str">"Pago rechazado ✗"</span></span>
-        </div>
-        <div class="dt-pick">
-          <div class="dt-opt on" data-dt="tarjeta">
-            <div class="dt-emoji">💳</div>
-            <div><div class="dt-opt-t">Tarjeta()</div><div class="dt-opt-d">tiene cobrar() · implementa el contrato</div></div>
-          </div>
-          <div class="dt-opt" data-dt="cripto">
-            <div class="dt-emoji">🪙</div>
-            <div><div class="dt-opt-t">Cripto()</div><div class="dt-opt-d">tiene cobrar() · ni hereda de la ABC</div></div>
-          </div>
-          <div class="dt-opt" data-dt="taco">
-            <div class="dt-emoji">🌮</div>
-            <div><div class="dt-opt-t">Taco()</div><div class="dt-opt-d">no tiene cobrar() · no cumple el contrato</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="dt-out" id="dt-out"></div>
-      <div class="dt-explain" id="dt-explain"></div>
     </div>
   </div>
 </section>
 
-<!-- VII: el taller -->
+<!-- VII: entrega -->
 <section>
   <div class="wrap">
-    <p class="marker">VII · El taller de hoy — tu proyecto integrador</p>
-    <p class="lead">Diseña el contrato<br>de tu <em>proyecto.</em></p>
-    <p class="subtle">La experiencia de aprendizaje de hoy es práctica: vas a diseñar e implementar <strong>una interfaz o ABC para tu proyecto integrador</strong>, y a comparar cómo se vería en Java (<span class="inlinecode">interface</span>) versus Python (<span class="inlinecode">ABC</span> / <span class="inlinecode">Protocol</span>). Estas preguntas te guían — las respuestas las decides tú según tu dominio:</p>
-    <div class="guia">
-      <div class="guia-card">
-        <div class="guia-q">Qué familia de objetos de tu proyecto comparte un mismo "deber hacer"?</div>
-        <div class="guia-hint">Pista: busca varias clases que respondan a la misma pregunta de formas distintas.</div>
+    <p class="marker">VII · La entrega — Blackboard, formato institucional</p>
+    <p class="lead">Un solo envío,<br>dos <em>piezas.</em></p>
+    <p class="subtle">La práctica se entrega <strong>por Blackboard</strong> al final del laboratorio (o en la fecha indicada en la plataforma). El envío lleva <strong>un documento con formato institucional</strong> y, <strong>anexo, el proyecto completo de Eclipse</strong> comprimido en <span class="inlinecode">.zip</span>. Estructura del documento:</p>
+    <div class="doc-grid">
+      <div class="doc-card">
+        <div class="doc-n">Sección 1</div>
+        <div class="doc-t">Portada</div>
+        <div class="doc-d">Datos institucionales, materia, práctica, tu nombre, docente y fecha.</div>
       </div>
-      <div class="guia-card">
-        <div class="guia-q">Cuáles son las 2 o 3 cláusulas mínimas del contrato? (sus firmas)</div>
-        <div class="guia-hint">Nombre del método, qué recibe, qué devuelve. Nada de cuerpo todavía.</div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 2</div>
+        <div class="doc-t">Introducción</div>
+        <div class="doc-d">Qué problema resuelve el sistema y qué papel juega el array en él.</div>
       </div>
-      <div class="guia-card">
-        <div class="guia-q">Te conviene ABC (jerarquía + código común) o Protocol (encajar sin heredar)?</div>
-        <div class="guia-hint">Si dos clases ya existentes deben "encajar" sin tocarlas, piensa en Protocol.</div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 3</div>
+        <div class="doc-t">Desarrollo</div>
+        <div class="doc-d">Caso de uso, tarjeta(s) CRC, diagrama de secuencia, código y capturas de la ejecución.</div>
       </div>
-      <div class="guia-card">
-        <div class="guia-q">Qué atributos esconderías con _ o __, y cuál expondrías con @property?</div>
-        <div class="guia-hint">El saldo, una clave, un identificador interno… ¿qué no debe tocar el exterior?</div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 4</div>
+        <div class="doc-t">Conclusión</div>
+        <div class="doc-d">Responde las 3 preguntas del practicario (abajo) con tus palabras.</div>
       </div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 5</div>
+        <div class="doc-t">Referencias</div>
+        <div class="doc-d">Bibliografía en <strong>formato APA</strong> (7ª ed.). Incluye toda fuente que hayas consultado.</div>
+      </div>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Evidencias que pide el practicario</div>
+      <ul>
+        <li><strong>Caso de uso</strong> con los requerimientos del sistema — actores, casos y asociaciones.</li>
+        <li><strong>Tarjeta CRC</strong> de la clase o clases: responsabilidades y colaboraciones según los requerimientos.</li>
+        <li><strong>Diagrama de secuencia</strong> para la gestión del array — agregar y/o mostrar sus elementos.</li>
+        <li><strong>Proyecto en Eclipse IDE</strong> con los códigos fuente en Java (<code>Empleado.java</code>, <code>RegistroPersonal.java</code>, <code>Main.java</code>) — anexo como <code>.zip</code>.</li>
+        <li><strong>Capturas de la ejecución</strong> (recomendado): registro de los 3 puestos, una actualización de contacto y las fichas impresas.</li>
+      </ul>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Para tu conclusión — las 3 preguntas del practicario</div>
+      <ol>
+        <li>¿Cómo se aplica el concepto de <strong>arrays</strong> en la gestión de inventarios en un sistema real?</li>
+        <li>¿Qué <strong>funcionalidades adicionales</strong> agregarías al sistema para que sea más útil para los usuarios?</li>
+        <li>¿Cómo <strong>relacionarías</strong> este caso práctico con problemas que podrías encontrar en proyectos del mundo real?</li>
+      </ol>
     </div>
     <div class="ia-rules">
-      <div class="ia-rules-tag">Reglas de la IA para diseñar tu contrato</div>
-      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿cuándo conviene un Protocol en vez de una ABC?"</span></div>
-      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>critique tu diseño</em>: "este es mi contrato Notificable, ¿le sobra o falta algún método?"</span></div>
-      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te ayude a <em>traducir</em> tu ABC de Python a una <code>interface</code> de Java, para la comparativa</span></div>
-      <div class="ia-rule"><span class="no">✗</span><span>Pedirle "diseña la arquitectura de mi proyecto" — <em>en la presentación defenderás cada cláusula: si no sabes por qué está ahí, no es tu contrato.</em></span></div>
+      <div class="ia-rules-tag">Reglas de la IA en esta práctica</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué recorro hasta <code>contador</code> y no hasta <code>length</code>?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise</em>: "este es mi diagrama de secuencia y este mi método registrar, ¿cuentan la misma historia?"</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle el sistema o el documento completos — <em>la rúbrica evalúa que TÚ puedas defender cada decisión del diseño, y eso no se delega.</em></span></div>
     </div>
+  </div>
+</section>
+
+<!-- VIII: criterios -->
+<section>
+  <div class="wrap">
+    <p class="marker">VIII · Cómo se evalúa — la rúbrica</p>
+    <p class="lead">Tres frentes.<br>El mismo <em>estándar.</em></p>
+    <div class="crit-grid">
+      <div class="crit-card">
+        <div class="req-num">Frente 01</div>
+        <div class="crit-t">Análisis del caso</div>
+        <ul>
+          <li><strong>Actores correctamente identificados</strong> en el caso de uso.</li>
+          <li>Casos de uso con <strong>nombres claros, precisos y comprensibles</strong> que reflejan las funcionalidades.</li>
+          <li><strong>Asociaciones</strong> actor–caso de uso correctamente representadas.</li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <div class="req-num">Frente 02</div>
+        <div class="crit-t">Diseño del sistema</div>
+        <ul>
+          <li>El diagrama de secuencia incluye los <strong>objetos y actores principales</strong> de la gestión del array.</li>
+          <li>Mensajes <strong>correctamente etiquetados</strong> y en secuencia lógica.</li>
+          <li>El diagrama <strong>refleja el flujo</strong> de las operaciones (agregar / mostrar).</li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <div class="req-num">Frente 03</div>
+        <div class="crit-t">Implementación en Java</div>
+        <ul>
+          <li>Clases con los <strong>atributos relevantes y métodos</strong> que cumplen los requisitos.</li>
+          <li>POO real: <strong>modificadores de acceso</strong> y código organizado en componentes lógicos claros.</li>
+          <li>Programa <strong>funcional</strong> que satisface por completo el caso expuesto.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">La regla de oro sigue intacta: <strong>diagrama y código deben contar la misma historia</strong>. Si tu secuencia dice <span class="inlinecode">empleados[contador] = nuevo</span> y tu código hace otra cosa, ya perdiste puntos — y probablemente también un empleado en el camino.</p>
   </div>
 </section>
 
 <!-- CIERRE -->
 <section class="cierre">
   <div class="wrap-n">
-    <p class="marker">VIII · Para la próxima clase</p>
-    <p class="lead">Define el <em>qué.</em><br>El <em>cómo</em> llega en el Sprint 2.</p>
-    <p class="subtle">Hoy prometiste sin implementar. La próxima sesión vas a cumplir esas promesas de muchas formas distintas — eso es <strong>polimorfismo</strong>, y el contrato que diseñes hoy es exactamente la base que necesita.</p>
+    <p class="marker">IX · Cierre — bibliografía y siguiente parada</p>
+    <p class="lead">Hoy el estante fue de concreto.<br>Pronto verás estantes que <em>crecen.</em></p>
+    <p class="subtle">Tu pregunta de conclusión #2 apunta ahí: ¿qué le falta al sistema? Espacio que crezca solo, búsquedas mejores, datos que sobrevivan al cierre del programa. Java tiene respuesta para lo primero — <span class="inlinecode">ArrayList</span>, el primo elástico del array (el equivalente de la lista de Python) — y el rumbo del curso responde el resto. La próxima sesión: <strong>polimorfismo y Sprint 2 Review</strong>.</p>
     <div class="tarea">
-      <div class="tarea-tag">Avance del proyecto · entregable de la sesión</div>
+      <div class="tarea-tag">Bibliografía de la práctica · formato APA</div>
+      <div class="biblio">
+        <div class="biblio-item">Deitel, P. J., &amp; Deitel, H. M. (2023). <em>Cómo programar en Java</em> (12ª ed.). Pearson Educación.</div>
+        <div class="biblio-item">Joyanes Aguilar, L. (2023). <em>Java: Desarrollo de aplicaciones empresariales</em> (3ª ed.). McGraw-Hill.</div>
+      </div>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Checklist antes de subir a Blackboard</div>
       <ol>
-        <li><strong>Diseña el contrato</strong> de tu proyecto integrador: una <code>ABC</code> o <code>Protocol</code> en Python con 2–3 métodos abstractos (solo firmas, sin cuerpo).</li>
-        <li><strong>Implementa al menos dos clases</strong> que firmen ese contrato, cada una cumpliendo las cláusulas a su manera.</li>
-        <li>Aplica <strong>encapsulamiento avanzado</strong>: esconde lo interno con <code>_</code> / <code>__</code> y expón lo necesario con <code>@property</code>.</li>
-        <li>Haz la <strong>comparativa</strong>: escribe cómo se vería ese mismo contrato como <code>interface</code> en Java. Una columna Python, una Java.</li>
-        <li><strong>Prepara tu presentación en clase:</strong> 3 minutos defendiendo tu contrato — qué obliga, por qué esas cláusulas y no otras.</li>
-        <li>Deja lista la semilla del <strong>polimorfismo del Sprint 2</strong>: una función que reciba "cualquier cosa que cumpla el contrato".</li>
-        <li>Sube todo a tu repo. El contrato bien diseñado hoy te ahorrará reescrituras la próxima semana.</li>
+        <li>Documento institucional completo: <strong>portada, introducción, desarrollo, conclusión y referencias APA</strong>.</li>
+        <li>Las <strong>3 evidencias de diseño</strong> dentro del desarrollo: caso de uso, tarjeta(s) CRC y diagrama de secuencia.</li>
+        <li>Código en Java con los <strong>3 requerimientos funcionando</strong>: registrar, actualizar contacto y mostrar fichas.</li>
+        <li>Proyecto <strong>Eclipse anexo en .zip</strong> — comprime la carpeta completa del proyecto.</li>
+        <li>Un solo envío en la actividad de <strong>Blackboard · Práctica 3</strong>.</li>
       </ol>
     </div>
   </div>
@@ -480,226 +868,393 @@ window.addEventListener('scroll',()=>{const h=document.documentElement;document.
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
 const $=id=>document.getElementById(id);
+const L=html=>'<span class="pj-line">'+(html||' ')+'</span>';
 
-// ─── W1: explorador del contrato ────────────────────────────
-const ctData={
-  cobrar:{tag:'Cláusula 1 · método abstracto',title:'cobrar(monto) → bool',
-    desc:'Todo medio de pago <strong>debe poder cobrar</strong>. Recibe un monto, devuelve <code>True</code> si el cobro funcionó. La ABC no dice <em>cómo</em>: una tarjeta llama a un banco, una cripto firma una transacción. Cada quien su manera — pero todos lo tienen.'},
-  reembolsar:{tag:'Cláusula 2 · método abstracto',title:'reembolsar(monto) → bool',
-    desc:'Si se puede cobrar, se debe poder <strong>devolver</strong>. Misma firma, lógica inversa. Que esté en el contrato significa que <em>ningún</em> medio de pago puede existir sin saber reembolsar — eso es lo que garantiza una interfaz.'},
-  comision:{tag:'Cláusula 3 · propiedad abstracta',title:'comision → float',
-    desc:'Una propiedad abstracta: el contrato exige que <strong>cualquier medio de pago exponga su comisión</strong> con <code>@property</code>, pero no fija el valor. Una tarjeta cobra 3%, una transferencia 0%. La forma de acceso es obligatoria; el número, libre.'},
-};
-let ctSeen=new Set();
-function ctRender(k){
-  const d=ctData[k];
-  $('ct-tag').textContent=d.tag;
-  $('ct-title').textContent=d.title;
-  $('ct-desc').innerHTML=d.desc;
-  ctSeen.add(k);
-  $('ct-meter').innerHTML='Cláusulas exploradas: <strong>'+ctSeen.size+' de 3</strong>'+(ctSeen.size===3?' — ya viste el contrato completo. Quien lo firme, las cumple todas.':'');
+// ─── W1: anatomía del array ─────────────────────────────────
+function shelfHTML(slots){
+  return '<div class="arr-shelf">'+slots.map((s,i)=>{
+    if(s===null)return '<div class="arr-slot null"><span class="idx">['+i+']</span><span class="val">null</span></div>';
+    return '<div class="arr-slot filled"><span class="idx">['+i+']</span><span class="val">'+s.v+'</span>'+(s.p?'<span class="pu">'+s.p+'</span>':'')+'</div>';
+  }).join('')+'</div>';
 }
-document.querySelectorAll('.ct-sig').forEach(el=>{
-  el.addEventListener('click',()=>{
-    document.querySelectorAll('.ct-sig').forEach(x=>x.classList.remove('active'));
-    el.classList.add('active');
-    ctRender(el.dataset.s);
-  });
-});
-
-// ─── W2: ABC / Protocol / interface ─────────────────────────
-const L2=h=>'<span class="ln">'+h+'</span>';
-const cmpData={
-  abc:{
-    title:'Python · ABC — herencia explícita',
-    badge:'abc.ABC + @abstractmethod',
+const arrData={
+  declarar:{
     code:[
-      '<span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod',
+      '<span class="cm">// 4.1 · DECLARACIÓN — nace la referencia, no el array</span>',
+      '<span class="cls">Empleado</span>[] empleados;',
       '',
-      '<span class="kw">class</span> MetodoPago(ABC):',
-      '    <span class="dec">@abstractmethod</span>',
-      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span>: ...',
+      '<span class="cm">// el tipo va primero y los corchetes lo acompañan.</span>',
+      '<span class="cm">// también compila "Empleado empleados[];" (estilo C)</span>',
+      '<span class="cm">// pero en Java se prefiere Empleado[] empleados;</span>',
       '',
-      '<span class="cm"># firmar = heredar de la ABC</span>',
-      '<span class="kw">class</span> Tarjeta(MetodoPago):',
-      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto):',
-      '        <span class="kw">return</span> <span class="self">self</span>._banco.autorizar(monto)',
+      '<span class="err">// usarla ahora = error: no está inicializada</span>',
     ],
-    note:'La forma <strong>clásica</strong> de Python. La clase <code>Tarjeta</code> <strong>hereda</strong> de <code>MetodoPago</code>, declarando explícitamente "yo firmo este contrato". Ventaja: la ABC puede traer <strong>código común</strong> ya hecho. Verificación: al instanciar.'
+    note:'Declarar solo crea la <strong>etiqueta</strong>: una variable que <em>podrá</em> apuntar a un array de <code>Empleado</code>. El estante todavía no existe — no hay casillas, no hay <code>length</code>, no hay nada que usar.',
+    visual:'<div class="arr-none">empleados → (sin array todavía)</div>'
   },
-  proto:{
-    title:'Python · Protocol — duck typing estructural',
-    badge:'typing.Protocol · sin heredar',
+  crear:{
     code:[
-      '<span class="kw">from</span> typing <span class="kw">import</span> Protocol',
+      '<span class="cm">// 4.2 · CREACIÓN — se construye el estante</span>',
+      'empleados = <span class="kw">new</span> <span class="cls">Empleado</span>[5];',
       '',
-      '<span class="kw">class</span> MetodoPago(Protocol):',
-      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto: <span class="ty">float</span>) -&gt; <span class="ty">bool</span>: ...',
+      '<span class="ty">System</span>.out.println(empleados.length); <span class="cm">// 5</span>',
       '',
-      '<span class="cm"># NO hereda de nada. Solo tiene</span>',
-      '<span class="cm"># el método. Ya cumple el Protocol.</span>',
-      '<span class="kw">class</span> Tarjeta:',
-      '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto):',
-      '        <span class="kw">return</span> <span class="self">self</span>._banco.autorizar(monto)',
+      '<span class="cm">// las 5 casillas existen desde YA…</span>',
+      '<span class="cm">// …pero todas contienen null.</span>',
+      '<span class="cm">// Y 5 será el tamaño PARA SIEMPRE.</span>',
     ],
-    note:'La forma <strong>moderna</strong>. <code>Tarjeta</code> <em>ni se entera</em> de que existe <code>MetodoPago</code>: como <strong>tiene la forma correcta</strong> (un <code>cobrar</code> compatible), encaja. Esto es <strong>duck typing estructural</strong>. Acoplamiento cero — ideal para hacer encajar clases que ya existen.'
+    note:'<code>new Empleado[5]</code> reserva <strong>5 casillas de golpe</strong>, todas en <code>null</code>. El número que pongas aquí es un contrato: el array <strong>nunca</strong> crecerá ni encogerá. Por eso tu clase necesita el <code>contador</code> — el array sabe su capacidad, pero no cuántas casillas has usado.',
+    visual:shelfHTML([null,null,null,null,null])+'<div class="arr-tag" style="margin-top:.6rem">empleados.length = 5 · todas en null</div>'
   },
-  java:{
-    title:'Java · interface — verificada al compilar',
-    badge:'interface + implements',
+  inicializar:{
     code:[
-      '<span class="kw">public interface</span> MetodoPago {',
-      '    <span class="cm">// solo firmas, sin cuerpo</span>',
-      '    <span class="ty">boolean</span> cobrar(<span class="ty">double</span> monto);',
-      '}',
+      '<span class="cm">// 4.3 · INICIALIZACIÓN — se llenan las casillas</span>',
+      'empleados[0] = <span class="kw">new</span> <span class="cls">Empleado</span>(<span class="str">"Ana"</span>, <span class="str">"Gerente"</span>, …);',
+      'empleados[1] = <span class="kw">new</span> <span class="cls">Empleado</span>(<span class="str">"Luis"</span>, <span class="str">"Vendedor"</span>, …);',
+      'empleados[2] = <span class="kw">new</span> <span class="cls">Empleado</span>(<span class="str">"María"</span>, <span class="str">"Cajero"</span>, …);',
       '',
-      '<span class="cm">// firmar = implements</span>',
-      '<span class="kw">public class</span> Tarjeta <span class="kw">implements</span> MetodoPago {',
-      '    <span class="dec">@Override</span>',
-      '    <span class="kw">public</span> <span class="ty">boolean</span> cobrar(<span class="ty">double</span> monto) {',
-      '        <span class="kw">return</span> banco.autorizar(monto);',
-      '    }',
-      '}',
+      '<span class="cm">// atajo: declarar + crear + inicializar en una línea</span>',
+      '<span class="ty">String</span>[] puestos = {<span class="str">"Gerente"</span>, <span class="str">"Vendedor"</span>, <span class="str">"Cajero"</span>};',
+      '',
+      '<span class="err">// empleados[5] = … → ArrayIndexOutOfBoundsException</span>',
     ],
-    note:'Java tiene la palabra dedicada: <code>interface</code>. La clase la firma con <code>implements</code>. La gran diferencia: Java verifica el contrato <strong>al compilar</strong> — si olvidas un método, el programa <em>ni siquiera se construye</em>. En Python el chequeo es en ejecución.'
-  },
-};
-function cmpRender(k){
-  const d=cmpData[k];
-  $('cmp-title').textContent=d.title;
-  $('cmp-badge').textContent=d.badge;
-  $('cmp-code').innerHTML=d.code.map(L2).join('');
-  $('cmp-note').innerHTML=d.note;
-}
-document.querySelectorAll('[data-cmp]').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('[data-cmp]').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    cmpRender(b.dataset.cmp);
-  });
-});
-cmpRender('abc');
-
-// ─── W3: implementa o explota ───────────────────────────────
-const ieLines=[
-  '<span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod',
-  '',
-  '<span class="kw">class</span> MetodoPago(ABC):',
-  '    <span class="dec">@abstractmethod</span>',
-  '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto): ...',
-  '    <span class="dec">@abstractmethod</span>',
-  '    <span class="kw">def</span> reembolsar(<span class="self">self</span>, monto): ...',
-  '',
-  '<span class="kw">class</span> Transferencia(MetodoPago):',
-  '    <span class="kw">def</span> cobrar(<span class="self">self</span>, monto):',
-  '        <span class="kw">return</span> <span class="kw">True</span>',
-  '    <span class="cm"># falta reembolsar() ... ¿pasará?</span>',
-  '',
-  't = Transferencia()',
-];
-const ieSteps=[
-  {hl:[2,3,4,5,6],bad:[],con:[['ie-dim','# 1. El contrato exige DOS métodos:']],
-    txt:'La ABC <strong>MetodoPago</strong> declara dos cláusulas obligatorias: <code>cobrar</code> y <code>reembolsar</code>. Ambas con <code>@abstractmethod</code>: son promesas que quien herede <em>debe</em> cumplir.'},
-  {hl:[8,9,10],bad:[],con:[['ie-dim','# 2. Transferencia firma el contrato...']],
-    txt:'<strong>Transferencia</strong> hereda de <code>MetodoPago</code> — firma el contrato. Implementa <code>cobrar</code>… pero mira la línea 11: <strong>olvidó reembolsar</strong>. El contrato quedó a medias.'},
-  {hl:[11],bad:[11],con:[['ie-dim','# 3. La cláusula sin cumplir:'],['ie-err','#    reembolsar() nunca se escribió']],
-    txt:'Ahí está el hueco. En un lenguaje sin contratos, esto pasaría desapercibido hasta que alguien llamara a <code>reembolsar</code> en producción. Con una ABC, Python lo caza <strong>antes</strong>.'},
-  {hl:[13],bad:[],con:[['ie-prompt','&gt;&gt;&gt; t = Transferencia()']],
-    txt:'Intentamos <strong>crear el objeto</strong>. Nota: ni siquiera estamos llamando a <code>reembolsar</code> — solo instanciando. Aquí es donde la ABC hace su trabajo.'},
-  {hl:[13],bad:[13],con:[['ie-prompt','&gt;&gt;&gt; t = Transferencia()'],['ie-err','TypeError: Can\'t instantiate abstract'],['ie-err','class Transferencia with abstract'],['ie-err','method reembolsar']],
-    txt:'💥 <strong>TypeError al instanciar.</strong> El objeto no llega a nacer. La ABC garantiza que <em>no existe</em> un Transferencia incompleto rondando tu sistema. Eso es un contrato que <strong>obliga</strong> — exactamente lo que querías.'},
-];
-function ieRender(idx){
-  $('ie-code').innerHTML=ieLines.map((h,i)=>{
-    let cls='ln';
-    if(idx>=0){
-      if(ieSteps[idx].bad.includes(i)) cls+=' bad';
-      else if(ieSteps[idx].hl.includes(i)) cls+=' hl';
-    }
-    return '<span class="'+cls+'">'+(h||' ')+'</span>';
-  }).join('');
-  if(idx<0){
-    $('ie-console').innerHTML='<span class="ie-dim">&gt;&gt;&gt; esperando...</span>';
-    $('ie-explain').innerHTML='Pulsa <strong>Siguiente</strong> para ver qué pasa cuando una clase firma el contrato pero deja una cláusula sin cumplir.';
-  }else{
-    $('ie-console').innerHTML=ieSteps[idx].con.map(([c,t])=>'<div class="'+c+'">'+t+'</div>').join('');
-    $('ie-explain').innerHTML=ieSteps[idx].txt;
+    note:'Inicializar es <strong>asignar contenido casilla por casilla</strong> — empezando en el índice <code>0</code>. El atajo con llaves <code>{…}</code> hace los tres momentos de una sola vez, cuando ya conoces los valores. Las casillas 3 y 4 siguen en <code>null</code>: <em>existir no es lo mismo que estar llena</em>.',
+    visual:shelfHTML([{v:'Ana',p:'Gerente'},{v:'Luis',p:'Vendedor'},{v:'María',p:'Cajero'},null,null])+'<div class="arr-tag" style="margin-top:.6rem">3 ocupadas · 2 en null · length sigue siendo 5</div>'
   }
-}
-let ieIdx=-1,ieTimer=null;
-function ieStop(){if(ieTimer){clearInterval(ieTimer);ieTimer=null;$('ie-play').textContent='▶ Play';}}
-$('ie-next').addEventListener('click',()=>{ieStop();if(ieIdx<ieSteps.length-1){ieIdx++;ieRender(ieIdx);}});
-$('ie-prev').addEventListener('click',()=>{ieStop();if(ieIdx>-1){ieIdx--;ieRender(ieIdx);}});
-$('ie-reset').addEventListener('click',()=>{ieStop();ieIdx=-1;ieRender(ieIdx);});
-$('ie-play').addEventListener('click',()=>{
-  if(ieTimer){ieStop();return;}
-  if(ieIdx>=ieSteps.length-1){ieIdx=-1;ieRender(ieIdx);}
-  $('ie-play').textContent='❚❚ Pausa';
-  ieTimer=setInterval(()=>{
-    if(ieIdx<ieSteps.length-1){ieIdx++;ieRender(ieIdx);}
-    else ieStop();
-  },1900);
-});
-ieRender(-1);
-
-// ─── W4: niveles de encapsulamiento ─────────────────────────
-const encData={
-  pub:{lv0:true,ptag:'Nivel 0 · público',
-    code:'<span class="kw">class</span> Cuenta:\n    <span class="kw">def</span> __init__(<span class="self">self</span>):\n        <span class="self">self</span>.saldo = <span class="ok">1000</span>\n\nc.saldo = -<span class="ok">99999</span>  <span class="cm"># nadie lo impide</span>',
-    desc:'<strong>Público:</strong> sin guion bajo. Cualquier código, desde cualquier parte, puede leerlo <em>y modificarlo</em>. Cómodo, pero peligroso: nada impide poner un saldo negativo. Úsalo solo para datos que <strong>de verdad</strong> son libres.'},
-  prot:{lv0:false,ptag:'Nivel 1 · protegido',
-    code:'<span class="kw">class</span> Cuenta:\n    <span class="kw">def</span> __init__(<span class="self">self</span>):\n        <span class="self">self</span>._saldo = <span class="ok">1000</span>\n\n<span class="cm"># funciona, pero el _ grita:</span>\nc._saldo  <span class="cm"># "no me toques desde fuera"</span>',
-    desc:'<strong>Protegido:</strong> un guion bajo <code>_saldo</code>. Es una <em>convención</em>, no un candado: Python no lo impide, pero le dice a otros programadores "esto es uso interno de la clase y sus hijas". En Java esto sería <code>protected</code>.'},
-  priv:{lv0:false,ptag:'Nivel 2 · privado · name mangling',
-    code:'<span class="kw">class</span> Cuenta:\n    <span class="kw">def</span> __init__(<span class="self">self</span>):\n        <span class="self">self</span>.__saldo = <span class="ok">1000</span>\n\nc.__saldo\n<span class="err"># AttributeError: no existe __saldo</span>\n<span class="cm"># Python lo renombró: _Cuenta__saldo</span>',
-    desc:'<strong>Privado:</strong> dos guiones <code>__saldo</code>. Aquí entra el <strong>name mangling</strong>: Python lo renombra internamente a <code>_Cuenta__saldo</code> para que no choque ni se acceda por accidente desde fuera. No es seguridad real, pero es la muralla más alta de Python.'},
-  prop:{lv0:false,ptag:'Nivel 3 · la puerta controlada',
-    code:'<span class="kw">class</span> Cuenta:\n    <span class="dec">@property</span>\n    <span class="kw">def</span> saldo(<span class="self">self</span>):\n        <span class="kw">return</span> <span class="self">self</span>.__saldo\n\n    <span class="dec">@saldo.setter</span>\n    <span class="kw">def</span> saldo(<span class="self">self</span>, v):\n        <span class="kw">if</span> v &lt; <span class="ok">0</span>: <span class="kw">raise</span> ValueError\n        <span class="self">self</span>.__saldo = v',
-    desc:'<strong>@property:</strong> la joya. Escribes <code>c.saldo</code> como si fuera un atributo simple, pero por dentro corre un método que <em>valida</em>. El <code>setter</code> rechaza un saldo negativo. Guardas lo privado adentro y expones una <strong>puerta con reglas</strong>. Es el getter/setter de Java con cara de atributo.'},
 };
-function encRender(k){
-  const d=encData[k];
-  $('enc-ptag').textContent=d.ptag;
-  $('enc-pcode').innerHTML=d.code.replace(/\n/g,'<br>');
-  $('enc-pdesc').innerHTML=d.desc;
+function arrRender(key){
+  const d=arrData[key];
+  $('arr-code').innerHTML=d.code.map(h=>'<span class="ln">'+(h||' ')+'</span>').join('');
+  $('arr-note').innerHTML=d.note;
+  $('arr-visual').innerHTML=d.visual;
 }
-document.querySelectorAll('[data-enc]').forEach(r=>{
-  r.addEventListener('click',()=>{
-    document.querySelectorAll('[data-enc]').forEach(x=>x.classList.remove('on'));
-    r.classList.add('on');
-    encRender(r.dataset.enc);
+document.querySelectorAll('[data-arr]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-arr]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    arrRender(b.dataset.arr);
   });
 });
-encRender('pub');
+arrRender('declarar');
 
-// ─── W5: duck typing ────────────────────────────────────────
-const dtData={
-  tarjeta:{
-    out:'<span class="ie-dim">&gt;&gt;&gt; procesar(Tarjeta(), 250)</span><br>Pago aprobado ✓',
-    txt:'<strong>Encaja.</strong> <code>Tarjeta</code> implementa la ABC y tiene <code>cobrar()</code>. La función ni preguntó su clase: pidió el comportamiento, lo recibió. <em>Camina como pato, grazna como pato.</em>'
+// ─── W2: Python ↔ Java ──────────────────────────────────────
+const eqData={
+  declara:{
+    py:[
+      '<span class="cm"># una lista nace lista para usarse:</span>',
+      'empleados = []',
+      '',
+      '<span class="cm"># sin tipo, sin tamaño, en un paso.</span>',
+      '<span class="cm"># crece sola conforme agregas.</span>',
+    ],
+    java:[
+      '<span class="cm">// dos momentos separados:</span>',
+      '<span class="cls">Empleado</span>[] empleados;             <span class="cm">// 4.1 declarar</span>',
+      'empleados = <span class="kw">new</span> <span class="cls">Empleado</span>[10];    <span class="cm">// 4.2 crear</span>',
+      '',
+      '<span class="cm">// o en una sola línea:</span>',
+      '<span class="cls">Empleado</span>[] equipo = <span class="kw">new</span> <span class="cls">Empleado</span>[10];',
+    ],
+    note:'Java te exige <strong>dos decisiones por adelantado</strong> que Python pospone: el <strong>tipo</strong> de lo que guardarás (solo <code>Empleado</code>, nada más) y el <strong>tamaño</strong> (10, para siempre). No es burocracia: es un contrato que el compilador vigila por ti.'
   },
-  cripto:{
-    out:'<span class="ie-dim">&gt;&gt;&gt; procesar(Cripto(), 250)</span><br>Pago aprobado ✓',
-    txt:'<strong>También encaja — y esto es lo bonito.</strong> <code>Cripto</code> <em>no hereda</em> de la ABC, pero tiene un <code>cobrar()</code> compatible. A la función le da igual el linaje: solo le importa la <strong>forma</strong>. Eso es duck typing puro, y la base del Protocol.'
+  inicializa:{
+    py:[
+      '<span class="cm"># append agrega Y agranda:</span>',
+      'empleados.append(<span class="cls">Empleado</span>(<span class="str">"Ana"</span>, <span class="str">"Gerente"</span>))',
+      '',
+      '<span class="cm"># literal: crea y llena de una vez</span>',
+      'puestos = [<span class="str">"Gerente"</span>, <span class="str">"Vendedor"</span>, <span class="str">"Cajero"</span>]',
+    ],
+    java:[
+      '<span class="cm">// 4.3 · asignar a una casilla EXISTENTE:</span>',
+      'empleados[0] = <span class="kw">new</span> <span class="cls">Empleado</span>(<span class="str">"Ana"</span>, <span class="str">"Gerente"</span>, …);',
+      '',
+      '<span class="cm">// literal: declara + crea + inicializa</span>',
+      '<span class="ty">String</span>[] puestos = {<span class="str">"Gerente"</span>, <span class="str">"Vendedor"</span>, <span class="str">"Cajero"</span>};',
+    ],
+    note:'La diferencia clave: <code>append</code> <strong>agrega espacio</strong>; <code>empleados[0] =</code> solo <strong>llena espacio que ya existía</strong>. En Java nadie agrega casillas — por eso tu <code>registrar()</code> necesita el <code>if (contador &lt; empleados.length)</code>.'
   },
-  taco:{
-    out:'<span class="ie-dim">&gt;&gt;&gt; procesar(Taco(), 250)</span><br><span class="ie-err">AttributeError: \'Taco\' object has<br>no attribute \'cobrar\'</span>',
-    txt:'<strong>Explota.</strong> Un <code>Taco</code> no sabe cobrar — no cumple el contrato. Python no lo detecta antes (a menos que uses un Protocol con verificación): <em>truena al usarlo</em>. Por eso los contratos importan: te avisan temprano quién no encaja.'
+  recorre:{
+    py:[
+      '<span class="kw">for</span> e <span class="kw">in</span> empleados:',
+      '    <span class="kw">print</span>(e.generar_ficha())',
+      '',
+      '<span class="cm"># con índice:</span>',
+      '<span class="kw">for</span> i, e <span class="kw">in</span> <span class="kw">enumerate</span>(empleados):',
+      '    <span class="kw">print</span>(i, e.generar_ficha())',
+    ],
+    java:[
+      '<span class="cm">// clásico, con índice:</span>',
+      '<span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; contador; i++) {',
+      '    <span class="ty">System</span>.out.println(empleados[i].generarFicha());',
+      '}',
+      '',
+      '<span class="cm">// for-each (recorre TODO, nulls incluidos):</span>',
+      '<span class="kw">for</span> (<span class="cls">Empleado</span> e : empleados) { … }',
+    ],
+    note:'En Python la lista solo contiene lo que agregaste. En Java el array <strong>completo existe desde su creación</strong> — recorrer hasta <code>length</code> visita también las casillas en <code>null</code>. De ahí la regla de la práctica: <strong>recorre hasta <code>contador</code></strong>, la frontera de lo realmente ocupado.'
   },
+  tam:{
+    py:[
+      '<span class="kw">len</span>(empleados)   <span class="cm"># cambia con cada append</span>',
+      '',
+      'empleados.append(otro)   <span class="cm"># crece</span>',
+      'empleados.remove(alguno) <span class="cm"># encoge</span>',
+    ],
+    java:[
+      'empleados.length   <span class="cm">// fijo desde new — sin paréntesis</span>',
+      '',
+      '<span class="cm">// ¿se llenó? no hay append. Opciones:</span>',
+      '<span class="cm">// 1) avisar "registro lleno" (esta práctica)</span>',
+      '<span class="cm">// 2) crear un array más grande y copiar</span>',
+      '<span class="cm">// 3) ArrayList — el primo elástico (próximamente)</span>',
+    ],
+    note:'<code>len()</code> es una foto que cambia; <code>.length</code> es un contrato que se firma una sola vez, en el <code>new</code>. Cuando el array se llena, en esta práctica basta con <strong>avisar</strong> — pero anota la pregunta para tu conclusión #2: ¿qué harías para que el sistema no se quede sin espacio?'
+  }
 };
-function dtRender(k){
-  const d=dtData[k];
-  $('dt-out').innerHTML=d.out;
-  $('dt-explain').innerHTML=d.txt;
+function eqRender(key){
+  const d=eqData[key];
+  $('py-body').innerHTML=d.py.map(L).join('');
+  $('java-body').innerHTML=d.java.map(L).join('');
+  $('pj-note').innerHTML=d.note;
 }
-document.querySelectorAll('[data-dt]').forEach(o=>{
-  o.addEventListener('click',()=>{
-    document.querySelectorAll('[data-dt]').forEach(x=>x.classList.remove('on'));
-    o.classList.add('on');
-    dtRender(o.dataset.dt);
+document.querySelectorAll('[data-eq]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-eq]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    eqRender(b.dataset.eq);
   });
 });
-dtRender('tarjeta');
+eqRender('declara');
+
+// ─── W3: caso de uso ────────────────────────────────────────
+const ucNotes=[
+  '<strong>UC-01 · Registrar empleado.</strong> Cubre el requerimiento 01: dar de alta gerentes, vendedores y cajeros con sus datos básicos. En el código será <code>registro.registrar(new Empleado(…))</code> — y cada alta ocupa una casilla del array.',
+  '<strong>UC-02 · Actualizar datos de contacto.</strong> Cubre el requerimiento 02: localizar a un empleado y cambiar su teléfono y correo. Nota el nombre: <em>verbo + objeto</em>, claro y preciso — eso pide la rúbrica.',
+  '<strong>UC-03 · Mostrar ficha de información.</strong> Cubre el requerimiento 03: recorrer el array e imprimir la ficha de cada empleado. Es el caso de uso que tu diagrama de secuencia modela con el marco <code>loop</code>.'
+];
+function ucSelect(i){
+  [0,1,2].forEach(j=>{
+    $('uco-'+j).classList.toggle('on',j===i);
+    $('ucl-'+j).classList.toggle('on',j===i);
+  });
+  document.querySelectorAll('[data-uc]').forEach(b=>b.classList.toggle('on',+b.dataset.uc===i));
+  $('uc-note').innerHTML=ucNotes[i];
+}
+[0,1,2].forEach(i=>{
+  $('uco-'+i).addEventListener('click',()=>ucSelect(i));
+});
+document.querySelectorAll('[data-uc]').forEach(b=>b.addEventListener('click',()=>ucSelect(+b.dataset.uc)));
+
+// ─── W4: diagrama de secuencia ──────────────────────────────
+function seqArrow(x1,x2,y,label,ret){
+  const dir=x2>x1?1:-1;
+  const tip=x2-dir*4;
+  const cls=ret?' ret':'';
+  return '<line class="seq-msg'+cls+'" x1="'+x1+'" y1="'+y+'" x2="'+tip+'" y2="'+y+'"/>'
+    +'<polygon class="seq-ah'+cls+'" points="'+x2+','+y+' '+(x2-dir*12)+','+(y-5)+' '+(x2-dir*12)+','+(y+5)+'"/>'
+    +'<text class="seq-lbl'+cls+'" x="'+((x1+x2)/2)+'" y="'+(y-8)+'">'+label+'</text>';
+}
+const seqHeads='<rect class="seq-head-box" x="45" y="12" width="120" height="34" rx="3"/><text class="seq-head-txt" x="105" y="34">Gerente</text>'
+  +'<rect class="seq-head-box" x="245" y="12" width="170" height="34" rx="3"/><text class="seq-head-txt" x="330" y="34">:RegistroPersonal</text>'
+  +'<rect class="seq-head-box" x="480" y="12" width="130" height="34" rx="3"/><text class="seq-head-txt" x="545" y="34">empleados[ ]</text>';
+function seqLives(h){
+  return '<line class="seq-life" x1="105" y1="46" x2="105" y2="'+h+'"/><line class="seq-life" x1="330" y1="46" x2="330" y2="'+h+'"/><line class="seq-life" x1="545" y1="46" x2="545" y2="'+h+'"/>';
+}
+const seqData={
+  reg:{
+    h:250,
+    steps:[
+      {svg:seqArrow(105,326,85,'registrar(nuevo)'),cap:'<strong>1.</strong> El actor pide la operación al objeto que administra el array: <code>registro.registrar(nuevo)</code>. El gerente no toca el array directamente — <em>siempre</em> a través de la clase.'},
+      {svg:seqArrow(330,541,125,'empleados[contador] = nuevo'),cap:'<strong>2.</strong> El registro escribe en la casilla libre: <code>empleados[contador] = nuevo</code>. Este mensaje es la <strong>inicialización</strong> (4.3) del temario, dibujada.'},
+      {svg:'<path class="seq-self" d="M 330 155 h 46 v 26 h -46"/><polygon class="seq-ah" points="330,181 342,176 342,186"/><text class="seq-lbl" x="415" y="172">contador++</text>',cap:'<strong>3.</strong> Un mensaje a sí mismo: <code>contador++</code>. La casilla quedó ocupada y el registro actualiza su cuenta interna.'},
+      {svg:seqArrow(326,109,215,'✓ registrado',true),cap:'<strong>4.</strong> Respuesta (flecha punteada): confirmación al actor. Cuatro mensajes, una historia completa — la misma que cuenta tu método <code>registrar()</code>.'}
+    ]
+  },
+  mos:{
+    h:300,
+    steps:[
+      {svg:seqArrow(105,326,85,'mostrarFichas()'),cap:'<strong>1.</strong> El actor pide ver al personal: <code>registro.mostrarFichas()</code>.'},
+      {svg:'<rect class="seq-loop" x="255" y="105" width="360" height="120" rx="3"/><text class="seq-loop-tag" x="268" y="122">loop [i = 0 .. contador-1]</text>',cap:'<strong>2.</strong> El marco <code>loop</code>: lo que está dentro se repite por cada casilla <strong>ocupada</strong> — de 0 a contador-1, no hasta length. Este marco es el <code>for</code> de tu código, dibujado.'},
+      {svg:seqArrow(330,541,155,'empleados[i].generarFicha()'),cap:'<strong>3.</strong> En cada vuelta, el registro le pide a la casilla <code>i</code> su ficha. Nota quién trabaja: <strong>el empleado genera su propia ficha</strong> — como dice su tarjeta CRC.'},
+      {svg:seqArrow(541,334,195,'ficha (String)',true),cap:'<strong>4.</strong> El empleado responde con su ficha (flecha punteada = respuesta). El loop repite los mensajes 3 y 4 hasta agotar las casillas ocupadas.'},
+      {svg:seqArrow(326,109,260,'fichas impresas',true),cap:'<strong>5.</strong> Al salir del loop, el registro entrega el resultado al actor. Compara: este diagrama y el método <code>mostrarFichas()</code> del paso 6 cuentan exactamente la misma historia.'}
+    ]
+  }
+};
+let seqKey='reg',seqTimer=null,seqIdx=-1;
+function seqBuild(){
+  const d=seqData[seqKey];
+  let svg='<svg class="seq-svg" viewBox="0 0 660 '+(d.h+10)+'">'+seqHeads+seqLives(d.h);
+  d.steps.forEach((s,i)=>{svg+='<g class="seq-step" id="seq-s'+i+'">'+s.svg+'</g>';});
+  svg+='</svg>';
+  $('seq-holder').innerHTML=svg;
+  $('seq-cap').innerHTML='Pulsa <strong>▶ Animar</strong> para recorrer los mensajes en orden. Puedes pausar en cualquier momento.';
+  seqIdx=-1;
+  $('seq-play').textContent='▶ Animar';
+}
+function seqStop(){if(seqTimer){clearInterval(seqTimer);seqTimer=null;}}
+function seqStep(){
+  const d=seqData[seqKey];
+  if(seqIdx<d.steps.length-1){
+    seqIdx++;
+    $('seq-s'+seqIdx).classList.add('on');
+    $('seq-cap').innerHTML=d.steps[seqIdx].cap;
+  }
+  if(seqIdx>=d.steps.length-1){seqStop();$('seq-play').textContent='▶ Animar';}
+}
+document.querySelectorAll('[data-seq]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    seqStop();
+    document.querySelectorAll('[data-seq]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    seqKey=b.dataset.seq;
+    seqBuild();
+  });
+});
+$('seq-play').addEventListener('click',()=>{
+  if(seqTimer){                              // corriendo → pausa
+    seqStop();
+    $('seq-play').textContent='▶ Continuar';
+    return;
+  }
+  const d=seqData[seqKey];
+  if(seqIdx>=d.steps.length-1)seqBuild();    // ya terminó → reinicia limpio
+  $('seq-play').textContent='❚❚ Pausa';
+  seqStep();                                 // primer mensaje al instante
+  if(seqIdx<d.steps.length-1)seqTimer=setInterval(seqStep,1900);
+});
+$('seq-reset').addEventListener('click',()=>{seqStop();seqBuild();});
+seqBuild();
+
+// ─── Diagramas de flujo por requerimiento ───────────────────
+const flowIds={
+  r:['r-ini','r-rec','r-dec','r-asig','r-inc','r-lleno','r-fin'],
+  a:['a-ini','a-i0','a-queda','a-nof','a-eq','a-upd','a-inc','a-fin'],
+  m:['m-ini','m-head','m-i0','m-dec','m-imp','m-inc','m-fin']
+};
+const flowRefs={r:{t:null},a:{t:null},m:{t:null}};
+const flowCaps={
+  r:'Elige un escenario y recorre el camino que tu código deberá seguir.',
+  a:'Dos escenarios: el nombre existe (dos vueltas) o nadie coincide (el for se agota).',
+  m:'Este flujo es un for dibujado: pruébalo con 2 registrados y con el registro vacío.'
+};
+function flowClear(k){
+  if(flowRefs[k].t){clearInterval(flowRefs[k].t);flowRefs[k].t=null;}
+  flowIds[k].forEach(id=>$(id).classList.remove('on','pulse'));
+}
+function flowPlay(k,path,capFinal,capId){
+  flowClear(k);
+  $(capId).innerHTML='Recorriendo el flujo…';
+  let i=-1;
+  flowRefs[k].t=setInterval(()=>{
+    i++;
+    if(i>=path.length){clearInterval(flowRefs[k].t);flowRefs[k].t=null;$(capId).innerHTML=capFinal;return;}
+    flowIds[k].forEach(id=>$(id).classList.remove('pulse'));
+    const e=$(path[i]);
+    e.classList.add('on');
+    void e.offsetWidth;                      // reinicia la animación pulse
+    e.classList.add('pulse');
+  },600);
+}
+const flowRuns={
+  'r-esp':{k:'r',capId:'r-cap',path:['r-ini','r-rec','r-dec','r-asig','r-inc','r-fin'],cap:'Con espacio: el rombo responde <strong>[sí]</strong> → la casilla se llena (ahí vive la <strong>inicialización 4.3</strong>) y el contador sube. Ese es tu if con su bloque verdadero.'},
+  'r-lleno':{k:'r',capId:'r-cap',path:['r-ini','r-rec','r-dec','r-lleno','r-fin'],cap:'Lleno: el rombo responde <strong>[no]</strong> → solo un aviso. Sin este camino, tu código lanzaría <strong>ArrayIndexOutOfBoundsException</strong>.'},
+  'a-hit':{k:'a',capId:'a-cap',path:['a-ini','a-i0','a-queda','a-eq','a-inc','a-queda','a-eq','a-upd','a-fin'],cap:'Luis está en [1]: la vuelta i=0 no coincide → <strong>i++ y ↺</strong>; la vuelta i=1 coincide → actualizar y terminar. Acabas de ver dos vueltas de tu futuro for.'},
+  'a-miss':{k:'a',capId:'a-cap',path:['a-ini','a-i0','a-queda','a-eq','a-inc','a-queda','a-eq','a-inc','a-queda','a-nof','a-fin'],cap:'Nadie coincide: el for agota las casillas ocupadas, ¿i &lt; contador? responde <strong>[no]</strong> y se avisa. Nota que jamás tocó las casillas en <strong>null</strong>.'},
+  'm-dos':{k:'m',capId:'m-cap',path:['m-ini','m-head','m-i0','m-dec','m-imp','m-inc','m-dec','m-imp','m-inc','m-dec','m-fin'],cap:'contador = 2: dos vueltas de imprimir + i++, y a la tercera pregunta el rombo corta con <strong>[no]</strong>. Este flujo es tu for, vuelta por vuelta.'},
+  'm-vacio':{k:'m',capId:'m-cap',path:['m-ini','m-head','m-i0','m-dec','m-fin'],cap:'Registro vacío: encabezado "0 de 10" y el rombo corta de inmediato — cero vueltas, cero <strong>NullPointerException</strong>.'}
+};
+document.querySelectorAll('[data-r],[data-a],[data-m]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const key=b.dataset.r?('r-'+b.dataset.r):(b.dataset.a?('a-'+b.dataset.a):('m-'+b.dataset.m));
+    const run=flowRuns[key];
+    flowPlay(run.k,run.path,run.cap,run.capId);
+  });
+});
+$('r-reset').addEventListener('click',()=>{flowClear('r');$('r-cap').innerHTML=flowCaps.r;});
+$('a-reset').addEventListener('click',()=>{flowClear('a');$('a-cap').innerHTML=flowCaps.a;});
+$('m-reset').addEventListener('click',()=>{flowClear('m');$('m-cap').innerHTML=flowCaps.m;});
+
+// ─── W5: el array vivo ──────────────────────────────────────
+const vivQueue=[
+  {n:'Ana Torres',p:'Gerente',t:'55-1234-5678'},
+  {n:'Luis Pérez',p:'Vendedor',t:'55-8765-4321'},
+  {n:'María López',p:'Cajero',t:'55-1111-2222'},
+  {n:'Pedro Ruiz',p:'Vendedor',t:'55-3333-4444'},
+  {n:'Sofía Díaz',p:'Cajero',t:'55-5555-6666'},
+];
+let vivArr,vivCont,vivQi,vivScan=null,vivLogEmpty;
+function vivInit(){
+  vivArr=[null,null,null,null];vivCont=0;vivQi=0;vivLogEmpty=true;
+  if(vivScan){clearInterval(vivScan);vivScan=null;}
+  $('viv-con').innerHTML='<span class="sys">consola — pulsa un botón…</span>';
+  vivPaint();
+}
+function vivPaint(scanIdx){
+  $('viv-shelf').innerHTML=vivArr.map((e,i)=>{
+    if(!e)return '<div class="viv-slot null"><span class="idx">['+i+']</span><span class="nul">null</span></div>';
+    const cls=i===scanIdx?' scan':(e.flash?' flash':'');
+    return '<div class="viv-slot'+cls+'"><span class="idx">['+i+']</span><span class="nm">'+e.n+'</span><span class="pu">'+e.p+'</span><span class="tel">'+e.t+'</span></div>';
+  }).join('');
+  $('viv-meta').innerHTML='contador = <strong>'+vivCont+'</strong> &nbsp;·&nbsp; empleados.length = <strong>4</strong> (fijo)';
+}
+function vivLog(html,cls){
+  const con=$('viv-con');
+  if(vivLogEmpty){con.innerHTML='';vivLogEmpty=false;}
+  con.innerHTML+='<div class="'+(cls||'')+'">'+html+'</div>';
+  con.scrollTop=con.scrollHeight;
+}
+$('viv-reg').addEventListener('click',()=>{
+  if(vivScan)return;
+  if(vivCont>=vivArr.length){
+    vivLog('&gt; registrar("'+vivQueue[vivQi%vivQueue.length].n+'")');
+    vivLog('⚠ Registro lleno: empleados.length = 4 y en Java el array NO crece.','err');
+    vivLog('&nbsp;&nbsp;(sin el if de guardia esto sería ArrayIndexOutOfBoundsException: 4)','err');
+    return;
+  }
+  const e=vivQueue[vivQi%vivQueue.length];vivQi++;
+  vivArr.forEach(x=>{if(x)x.flash=false;});
+  vivArr[vivCont]={n:e.n,p:e.p,t:e.t,flash:true};
+  vivLog('&gt; registrar("'+e.n+'") → empleados['+vivCont+'] <span class="ok">✓</span>');
+  vivCont++;
+  vivPaint();
+});
+$('viv-act').addEventListener('click',()=>{
+  if(vivScan)return;
+  vivLog('&gt; actualizarContacto("Luis Pérez", "55-0000-9999", …)');
+  let found=false;
+  vivArr.forEach(e=>{if(e)e.flash=false;});
+  for(let i=0;i<vivCont;i++){
+    if(vivArr[i]&&vivArr[i].n==='Luis Pérez'){
+      vivArr[i].t='55-0000-9999';vivArr[i].flash=true;found=true;
+      vivLog('&nbsp;&nbsp;encontrado en empleados['+i+'] → contacto actualizado <span class="ok">✓</span>');
+      break;
+    }
+  }
+  if(!found)vivLog('&nbsp;&nbsp;No se encontró a "Luis Pérez" — regístralo primero.','err');
+  vivPaint();
+});
+$('viv-mos').addEventListener('click',()=>{
+  if(vivScan)return;
+  vivLog('&gt; mostrarFichas()');
+  if(vivCont===0){
+    vivLog('&nbsp;&nbsp;── Personal: 0 de 4 ──','sys');
+    vivLog('&nbsp;&nbsp;(el array existe, pero todas las casillas siguen en null)','sys');
+    return;
+  }
+  vivLog('&nbsp;&nbsp;── Personal: '+vivCont+' de 4 ──','sys');
+  let i=-1;
+  vivScan=setInterval(()=>{
+    i++;
+    if(i>=vivCont){clearInterval(vivScan);vivScan=null;vivPaint();return;}
+    vivPaint(i);
+    const e=vivArr[i];
+    vivLog('&nbsp;&nbsp;['+i+'] '+e.n+' · '+e.p+' · Tel: '+e.t);
+  },700);
+});
+$('viv-reset').addEventListener('click',vivInit);
+vivInit();
 </script>
 </body>
 </html>

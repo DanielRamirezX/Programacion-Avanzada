@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión XVIII — Un mensaje, muchas respuestas — Programación Avanzada</title>
+<title>Sesión XVIII — Práctica 4 · Todo lo común, una sola vez — Programación Avanzada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@ html{scroll-behavior:smooth;}
 body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.6;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.35' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;mix-blend-mode:multiply;}
 
+/* ─ NAV / PROGRESS (universal) ─ */
 .course-nav{position:sticky;top:0;z-index:999;background:rgba(239,230,210,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
 .course-nav a{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s;}
 .course-nav a:hover{color:var(--blood);}
@@ -22,12 +23,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .course-nav .session-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(42,29,20,.4);}
 .progress{position:fixed;top:0;left:0;height:3px;background:var(--blood);z-index:1001;width:0;}
 
+/* ─ LAYOUT (universal) ─ */
 section{position:relative;padding:5rem 2rem;}
 .wrap{max-width:1080px;margin:0 auto;}
 .wrap-n{max-width:720px;margin:0 auto;}
 .marker{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
 .marker::after{content:'';flex:1;height:1px;background:var(--line);}
 
+/* ─ HERO (universal) ─ */
 .hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem;overflow:hidden;position:relative;}
 .hero-float{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blood);opacity:.13;letter-spacing:.05em;pointer-events:none;white-space:nowrap;animation:floaty 14s ease-in-out infinite;}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-22px) rotate(var(--r,0deg));}}
@@ -37,136 +40,23 @@ section{position:relative;padding:5rem 2rem;}
 .hero h1 em{font-style:italic;color:var(--blood);}
 .hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--ink-soft);margin-top:1.5rem;max-width:680px;}
 
+/* ─ TYPE (universal) ─ */
 .lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
 .lead em{font-style:italic;color:var(--blood);}
 .subtle{font-size:1.05rem;color:var(--ink-soft);margin-top:1rem;max-width:680px;}
 .subtle strong{color:var(--ink);}
 .inlinecode{font-family:'JetBrains Mono',monospace;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);font-size:.85rem;}
 
+/* ─ WIDGET SHELL (universal) ─ */
 .widget{background:var(--paper-deep);border:1px solid var(--line);border-left:3px solid var(--blood);padding:2.2rem;margin-top:2.5rem;position:relative;}
 .widget::before{content:attr(data-tag);position:absolute;top:-.7rem;left:1.8rem;background:var(--paper);padding:0 .9rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blood);}
-.w-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--ink-soft);margin-bottom:1.5rem;}
-.w-prompt em{color:var(--blood);font-style:italic;}
 .w-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem;}
 .btn{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;padding:.6rem 1rem;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:all .2s;text-transform:uppercase;}
 .btn:hover{border-color:var(--blood);color:var(--blood);}
 .btn.on{background:var(--blood);color:var(--paper);border-color:var(--blood);}
 .btn-olive.on{background:var(--olive);border-color:var(--olive);}
 
-/* ═══════════════════════════════════════════════════════════════
-   CSS DE WIDGETS — Sesión XVIII · Polimorfismo
-   prefijos: .poc- (colección polimórfica) · .duck- (duck typing)
-             .ov- (override tabs) · .iso- (isinstance explorer)
-             .pj- (comparativa py/java) · .chk- (sprint checklist)
-   ═══════════════════════════════════════════════════════════════ */
-
-/* W1: colección polimórfica animada */
-.poc-stage{display:grid;grid-template-columns:1fr;gap:1.5rem;}
-.poc-list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
-.poc-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--olive);padding:1.2rem 1rem;text-align:center;transition:all .35s cubic-bezier(.16,1,.3,1);}
-.poc-card.firing{border-top-color:var(--blood);box-shadow:0 0 0 3px rgba(160,36,24,.14);transform:translateY(-6px);}
-.poc-icon{font-size:2.2rem;line-height:1;}
-.poc-name{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink);margin-top:.5rem;font-weight:700;}
-.poc-kind{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:.2rem;}
-.poc-out{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--olive);margin-top:.7rem;min-height:1.3rem;opacity:0;transform:translateY(6px);transition:all .35s;}
-.poc-card.firing .poc-out{opacity:1;transform:translateY(0);color:var(--blood);font-weight:700;}
-.poc-console{background:var(--ink);padding:1.3rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.85;color:rgba(239,230,210,.85);min-height:200px;}
-.poc-console .prompt{color:var(--blood);}
-.poc-console .out{color:#9FBF9C;}
-.poc-console .cm{color:rgba(239,230,210,.42);font-style:italic;}
-.poc-console .ln{display:block;white-space:pre-wrap;}
-.poc-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);}
-.poc-note strong{color:var(--ink);font-style:normal;font-weight:600;}
-
-/* W2: duck typing */
-.duck-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
-.duck-shelf{display:flex;flex-direction:column;gap:.7rem;}
-.duck-obj{background:var(--paper);border:1px solid var(--line);padding:.9rem 1.1rem;cursor:pointer;display:flex;align-items:center;gap:.9rem;transition:all .2s;}
-.duck-obj:hover{border-color:var(--blood);}
-.duck-obj.sel{border-color:var(--blood);background:rgba(160,36,24,.06);}
-.duck-emo{font-size:1.6rem;line-height:1;}
-.duck-meta{flex:1;}
-.duck-cls{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--ink);font-weight:700;}
-.duck-has{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--ink-soft);margin-top:.15rem;}
-.duck-test{background:var(--ink);padding:1.5rem;min-height:240px;display:flex;flex-direction:column;gap:.8rem;}
-.duck-q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--paper);line-height:1.2;}
-.duck-q em{color:#E8B04A;font-style:italic;}
-.duck-verdict{font-family:'JetBrains Mono',monospace;font-size:.95rem;padding:.7rem 1rem;border-left:3px solid;transition:all .25s;}
-.duck-verdict.ok{color:#9FBF9C;border-color:#9FBF9C;background:rgba(159,191,156,.08);}
-.duck-verdict.no{color:#E08A82;border-color:#E08A82;background:rgba(224,138,130,.08);}
-.duck-expl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.5;color:rgba(239,230,210,.82);margin-top:auto;}
-.duck-expl strong{color:#C9A961;font-style:normal;font-weight:600;}
-.duck-expl code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
-
-/* W3: override tabs Python / Java */
-.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
-.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
-.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
-.pj-head .badge{font-size:.6rem;color:var(--ochre);}
-.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:300px;}
-.pj-line{white-space:pre;display:block;padding:0 .3rem;border-radius:2px;}
-.pj-line.hl{background:rgba(232,176,74,.18);}
-.pj-line .kw{color:var(--blood);font-style:italic;}
-.pj-line .cls{color:var(--ink);font-weight:700;}
-.pj-line .str{color:var(--ochre);}
-.pj-line .self{color:var(--olive);font-weight:700;}
-.pj-line .ty{color:#3E6E86;}
-.pj-line .dec{color:#8a6420;font-weight:700;}
-.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
-.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
-.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
-.pj-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
-
-/* W4: explorador isinstance / instanceof */
-.iso-stage{display:grid;grid-template-columns:1fr 1.05fr;gap:1.5rem;align-items:stretch;}
-.iso-cases{display:flex;flex-direction:column;gap:.7rem;}
-.iso-case{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--line);padding:1rem 1.2rem;cursor:pointer;transition:all .2s;}
-.iso-case:hover{border-left-color:var(--blood);}
-.iso-case.sel{border-left-color:var(--blood);background:rgba(160,36,24,.05);}
-.iso-snip{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--ink);line-height:1.6;}
-.iso-snip .kw{color:var(--blood);font-style:italic;}
-.iso-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;margin-top:.5rem;}
-.iso-tag.good{color:var(--olive);}
-.iso-tag.bad{color:var(--blood);}
-.iso-panel{background:var(--ink);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;}
-.iso-verdict{font-family:'Cormorant Garamond',serif;font-size:1.7rem;line-height:1.05;}
-.iso-verdict.good{color:#9FBF9C;}
-.iso-verdict.bad{color:#E08A82;}
-.iso-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.5;color:rgba(239,230,210,.85);}
-.iso-desc strong{color:#C9A961;font-style:normal;font-weight:600;}
-.iso-fix{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:rgba(239,230,210,.9);padding:.8rem 1rem;background:rgba(239,230,210,.06);border-left:2px solid var(--ochre);margin-top:auto;}
-.iso-fix .cm{color:rgba(239,230,210,.45);font-style:italic;}
-.iso-fix .kw{color:#D4956A;font-style:italic;}
-
-/* W5: checklist sprint + tarea 3 */
-.chk-progress{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ink-soft);margin-bottom:1.2rem;}
-.chk-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:.5rem;overflow:hidden;}
-.chk-fill{height:100%;background:var(--olive);width:0;transition:width .4s;}
-.chk-group{margin-top:1.4rem;}
-.chk-group-t{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:.6rem;}
-.chk-item{display:flex;gap:.8rem;align-items:flex-start;padding:.55rem .8rem;background:var(--paper);border:1px solid var(--line);margin-bottom:.45rem;cursor:pointer;transition:all .2s;}
-.chk-item:hover{border-color:var(--olive);}
-.chk-item.done{background:rgba(93,102,56,.08);border-color:var(--olive);}
-.chk-box{width:1.15rem;height:1.15rem;border:2px solid var(--line);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--paper);transition:all .2s;}
-.chk-item.done .chk-box{background:var(--olive);border-color:var(--olive);}
-.chk-item.done .chk-box::after{content:'✓';}
-.chk-txt{font-size:.98rem;color:var(--ink-soft);line-height:1.4;}
-.chk-item.done .chk-txt{color:var(--ink);}
-.chk-txt strong{color:var(--ink);}
-
-/* tarjetas conceptuales reutilizables */
-.con-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
-.con-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.4rem;}
-.con-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.5rem;}
-.con-d{font-size:.94rem;color:var(--ink-soft);line-height:1.5;}
-.con-d code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
-.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
-.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
-.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
-.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
-.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
-.ia-rule em{color:var(--ink);}
-
+/* ─ CIERRE / TAREA (universal) ─ */
 .cierre{background:var(--paper-deep);}
 .tarea{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;}
 .tarea-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
@@ -175,16 +65,195 @@ section{position:relative;padding:5rem 2rem;}
 .tarea li strong{color:var(--ink);}
 .tarea code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--paper-deep);padding:.1rem .4rem;border:1px solid var(--line);color:var(--blood);}
 
+/* ─ FOOTER (universal) ─ */
 footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 .foot-meta{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,29,20,.4);}
 
+/* ─ REVEAL (universal) ─ */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
 @media(max-width:860px){
   section{padding:3.5rem 1.2rem;}
-  .poc-list{grid-template-columns:repeat(2,1fr);}
-  .duck-stage,.iso-stage,.pj-stage,.con-grid{grid-template-columns:1fr;}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ↓↓↓ CSS ESPECÍFICO — SESIÓN 18 · PRÁCTICA 4 (HERENCIA) ↓↓↓
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─ Ficha de la práctica ─ */
+.ficha-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.ficha-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.3rem;}
+.ficha-k{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.45rem;}
+.ficha-v{font-family:'Cormorant Garamond',serif;font-size:1.22rem;color:var(--ink);line-height:1.2;}
+.ficha-v small{display:block;font-family:'Crimson Pro',Georgia,serif;font-size:.88rem;color:var(--ink-soft);margin-top:.3rem;}
+
+/* ─ Caso + requerimientos ─ */
+.caso{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ochre);padding:2rem;margin-top:2rem;font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;line-height:1.6;color:var(--ink-soft);}
+.caso strong{color:var(--ink);font-style:normal;font-weight:600;}
+.req-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;}
+.req-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.req-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem;}
+.req-t{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--ink);margin-bottom:.4rem;}
+.req-d{font-size:.92rem;color:var(--ink-soft);line-height:1.45;}
+.req-d code{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--blood);}
+
+/* ─ Alerta ─ */
+.alerta{background:rgba(160,36,24,.05);border:1px dashed var(--blood);padding:1.4rem 1.8rem;margin-top:1.8rem;font-size:1.05rem;color:var(--ink-soft);}
+.alerta strong{color:var(--blood);}
+.alerta code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Código Java oscuro ─ */
+.jcode{background:var(--ink);padding:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.76rem;line-height:1.9;color:var(--paper);overflow-x:auto;}
+.jcode .ln{white-space:pre;display:block;border-radius:2px;padding:0 .3rem;transition:background .3s;}
+.jcode .ln.hl{background:rgba(232,176,74,.25);}
+.jcode .ln.dim{opacity:.45;}
+.jcode .kw{color:#D4956A;font-style:italic;}
+.jcode .ty{color:#A6C2D6;}
+.jcode .cls{color:#8EAF8B;font-weight:700;}
+.jcode .str{color:#C9A961;}
+.jcode .cm{color:rgba(239,230,210,.45);font-style:italic;}
+.jcode .out{color:#9FBF9C;}
+.jcode .err{color:#E08A82;}
+
+/* ─ W1: jerarquía UML interactiva ─ */
+.uh-svg{width:100%;max-width:680px;height:auto;display:block;margin:0 auto;}
+.uh-box{fill:var(--paper);stroke:var(--ink);stroke-width:2;transition:all .25s;}
+g.uh-g{cursor:pointer;}
+g.uh-g.on .uh-box{stroke:var(--blood);fill:rgba(160,36,24,.05);stroke-width:2.6;}
+.uh-title{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;fill:var(--ink);text-anchor:middle;transition:fill .25s;}
+g.uh-g.on .uh-title{fill:var(--blood);}
+.uh-row{font-family:'JetBrains Mono',monospace;font-size:10.5px;fill:var(--ink-soft);transition:fill .25s;}
+g.uh-g.on .uh-row{fill:var(--ink);}
+.uh-sep{stroke:var(--ink);stroke-width:1;opacity:.45;}
+.uh-edge{stroke:rgba(42,29,20,.5);stroke-width:1.8;fill:none;}
+.uh-tri{fill:var(--paper);stroke:var(--ink);stroke-width:2;}
+.uh-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--blood);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);min-height:4rem;}
+.uh-note strong{color:var(--ink);font-style:normal;}
+.uh-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ W2: cadena de super (constructores) ─ */
+.sup-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:stretch;}
+.sup-stack{background:var(--paper);border:1px solid var(--line);padding:1.3rem;display:flex;flex-direction:column;gap:.6rem;min-height:300px;}
+.sup-frame{border:1.5px solid var(--line);background:var(--paper-deep);padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink-soft);opacity:.4;transition:all .35s;position:relative;}
+.sup-frame .who{font-weight:700;color:var(--ink);display:block;}
+.sup-frame .call{color:rgba(42,29,20,.6);font-style:italic;}
+.sup-frame.active{opacity:1;border-color:var(--blood);background:rgba(160,36,24,.07);transform:translateX(6px);}
+.sup-frame.done{opacity:1;border-color:var(--olive);background:rgba(93,102,56,.08);}
+.sup-side{background:var(--ink);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+.sup-out{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.75;color:#9FBF9C;background:rgba(239,230,210,.05);border-left:2px solid var(--olive);padding:.8rem 1rem;min-height:6rem;}
+.sup-out .pl{color:rgba(239,230,210,.35);}
+.sup-narr{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:rgba(239,230,210,.88);margin-top:auto;}
+.sup-narr strong{color:#C9A961;font-style:normal;font-weight:600;}
+.sup-narr code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.76rem;color:#D4956A;background:rgba(239,230,210,.08);padding:.1rem .3rem;border-radius:2px;}
+
+/* ─ W3: Python ↔ Java ─ */
+.pj-stage{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.pj-col{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+.pj-head{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.7rem 1.2rem;letter-spacing:.1em;display:flex;justify-content:space-between;align-items:center;}
+.pj-head .badge{font-size:.6rem;color:var(--ochre);}
+.pj-body{padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;min-height:220px;}
+.pj-line{white-space:pre;display:block;padding:0 .3rem;}
+.pj-line .kw{color:var(--blood);font-style:italic;}
+.pj-line .cls{color:var(--ink);font-weight:700;}
+.pj-line .str{color:var(--ochre);}
+.pj-line .ty{color:#3E6E86;}
+.pj-line .cm{color:rgba(42,29,20,.42);font-style:italic;}
+.pj-line .err{color:var(--blood);}
+.pj-note{margin-top:1.2rem;padding:1rem 1.3rem;background:var(--paper);border-left:2px solid var(--ochre);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:var(--ink-soft);}
+.pj-note strong{color:var(--ink);font-style:normal;font-weight:600;}
+.pj-note code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Ruta paso a paso ─ */
+.paso{display:grid;grid-template-columns:64px 1fr;gap:1.4rem;margin-top:2.6rem;position:relative;}
+.paso:not(:last-child)::before{content:'';position:absolute;left:31px;top:66px;bottom:-2.6rem;width:2px;background:rgba(42,29,20,.22);}
+.paso-num{width:64px;height:64px;border-radius:50%;background:var(--paper-deep);border:2px solid var(--blood);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--blood);font-weight:600;position:relative;z-index:2;}
+.paso-body{padding-top:.4rem;}
+.paso-t{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--ink);line-height:1.1;margin-bottom:.5rem;}
+.paso-t em{font-style:italic;color:var(--blood);}
+.paso-d{font-size:1.02rem;color:var(--ink-soft);max-width:640px;}
+.paso-d strong{color:var(--ink);}
+.paso-d code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--paper-deep);padding:.1rem .35rem;border:1px solid var(--line);color:var(--blood);}
+.paso .jcode{margin-top:1.2rem;border-left:3px solid var(--blood);}
+.paso-tip{margin-top:1rem;padding:.9rem 1.2rem;background:rgba(93,102,56,.09);border-left:2px solid var(--olive);font-size:.95rem;color:var(--ink-soft);}
+.paso-tip strong{color:var(--olive);}
+.paso-tip code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Tabla común vs específico ─ */
+.cmp{width:100%;max-width:640px;border-collapse:collapse;margin-top:1.2rem;font-size:.95rem;}
+.cmp th,.cmp td{border:1px solid var(--line);padding:.6rem .9rem;text-align:left;vertical-align:top;}
+.cmp th{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);background:var(--paper);}
+.cmp td{color:var(--ink-soft);background:var(--paper);}
+.cmp td strong{color:var(--ink);}
+.cmp tr:nth-child(even) td{background:rgba(42,29,20,.03);}
+.cmp code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--blood);}
+
+/* ─ W5: trace de mostrarDetalles ─ */
+.det-stage{display:grid;grid-template-columns:1.15fr 1fr;gap:1.5rem;align-items:stretch;}
+.det-side{background:var(--paper);border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+.det-out{font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.8;color:var(--olive);background:rgba(93,102,56,.08);border-left:2px solid var(--olive);padding:.8rem 1rem;min-height:5.4rem;}
+.det-out .pl{color:rgba(42,29,20,.4);font-style:italic;}
+.det-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink-soft);margin-top:auto;}
+.det-desc strong{color:var(--ink);font-style:normal;}
+.det-desc code{font-family:'JetBrains Mono',monospace;font-style:normal;font-size:.78rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ W6: la flota viva ─ */
+.flo-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:stretch;}
+.flo-left{background:var(--paper);border:1px solid var(--line);padding:1.4rem;display:flex;flex-direction:column;gap:1rem;}
+.flo-shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;}
+.flo-card{min-height:96px;border:2px solid var(--ink);background:var(--paper-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;position:relative;transition:all .25s;text-align:center;padding:.5rem .3rem .4rem;}
+.flo-card .idx{position:absolute;top:.25rem;left:.45rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--ink-soft);}
+.flo-card.null{border-style:dashed;border-color:rgba(42,29,20,.4);}
+.flo-card .nul{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:rgba(42,29,20,.45);font-style:italic;}
+.flo-card .tipo{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);font-weight:700;}
+.flo-card .nm{font-family:'Cormorant Garamond',serif;font-size:.98rem;color:var(--ink);font-weight:600;line-height:1.1;}
+.flo-card .comun{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--ink-soft);}
+.flo-card .esp{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--olive);font-weight:700;}
+.flo-card.flash{border-color:var(--ochre);box-shadow:0 0 0 3px rgba(181,133,42,.3);}
+.flo-card.scan{border-color:var(--blood);box-shadow:0 0 0 3px rgba(160,36,24,.2);}
+.flo-meta{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.06em;color:var(--ink-soft);}
+.flo-meta strong{color:var(--blood);}
+.flo-con{background:var(--ink);padding:1.2rem 1.3rem;font-family:'JetBrains Mono',monospace;font-size:.68rem;line-height:1.8;color:#9FBF9C;overflow-y:auto;max-height:360px;min-height:300px;}
+.flo-con .sys{color:rgba(239,230,210,.5);font-style:italic;}
+.flo-con .err{color:#E08A82;}
+.flo-con .ok{color:#C9A961;}
+.flo-con .her{color:#A6C2D6;}
+
+/* ─ Entregable / documento ─ */
+.doc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-top:1.5rem;}
+.doc-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ochre);padding:1.1rem;text-align:center;}
+.doc-n{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);margin-bottom:.4rem;}
+.doc-t{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--ink);line-height:1.15;}
+.doc-d{font-size:.82rem;color:var(--ink-soft);margin-top:.4rem;line-height:1.4;}
+
+/* ─ Criterios ─ */
+.crit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.5rem;}
+.crit-card{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--blood);padding:1.4rem;}
+.crit-t{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.6rem;}
+.crit-card ul{margin-left:1.1rem;font-size:.92rem;color:var(--ink-soft);line-height:1.55;}
+.crit-card li{padding:.18rem 0;}
+
+/* ─ Reglas IA ─ */
+.ia-rules{background:var(--paper);border:1px dashed var(--blood);padding:1.6rem 1.8rem;margin-top:1.8rem;}
+.ia-rules-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem;}
+.ia-rule{display:flex;gap:.8rem;padding:.45rem 0;font-size:1.02rem;color:var(--ink-soft);align-items:baseline;}
+.ia-rule .ok{color:var(--olive);font-weight:700;flex-shrink:0;}
+.ia-rule .no{color:var(--blood);font-weight:700;flex-shrink:0;}
+.ia-rule em{color:var(--ink);}
+.ia-rule code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper-deep);padding:.1rem .3rem;border:1px solid var(--line);color:var(--blood);}
+
+/* ─ Bibliografía ─ */
+.biblio{margin-top:1.5rem;}
+.biblio-item{padding:.7rem 0;border-bottom:1px dashed var(--line);font-size:1rem;color:var(--ink-soft);}
+.biblio-item em{color:var(--ink);}
+
+@media(max-width:860px){
+  .ficha-grid,.req-grid,.sup-stage,.pj-stage,.det-stage,.flo-stage,.crit-grid{grid-template-columns:1fr;}
+  .doc-grid{grid-template-columns:1fr 1fr;}
+  .flo-shelf{grid-template-columns:1fr 1fr;}
+  .paso{grid-template-columns:48px 1fr;}
+  .paso-num{width:48px;height:48px;font-size:1.3rem;}
+  .paso:not(:last-child)::before{left:23px;}
 }
 </style>
 </head>
@@ -192,279 +261,478 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
 <div class="progress" id="prog"></div>
 <nav class="course-nav">
   <a href="sesion-17.html" class="back">Sesión 17</a>
-  <span class="session-label">Sesión 18 · Sprint 2 · 17.07.2026</span>
-  <a href="../index.html" class="next">Curso</a>
+  <span class="session-label">Sesión 18 · 17.07.2026 · Laboratorio</span>
+  <a href="sesion-19.html" class="next">Sesión 19</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">for figura in figuras: figura.area()</div>
-  <div class="hero-float" style="top:28%;right:11%;--r:3deg;animation-delay:-3s">def hablar(self): ...</div>
-  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">@Override</div>
-  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">if hasattr(x, "volar"):</div>
-  <div class="hero-float" style="top:50%;left:42%;--r:1deg;animation-delay:-4.5s">isinstance(o, Figura)</div>
+  <div class="hero-float" style="top:14%;left:9%;--r:-4deg">class Camion extends Vehiculo {</div>
+  <div class="hero-float" style="top:28%;right:10%;--r:3deg;animation-delay:-3s">super(marca, modelo, anio, combustible);</div>
+  <div class="hero-float" style="bottom:32%;left:13%;--r:2deg;animation-delay:-6s">private double capacidadCarga;</div>
+  <div class="hero-float" style="bottom:18%;right:14%;--r:-3deg;animation-delay:-9s">super.mostrarDetalles();</div>
+  <div class="hero-float" style="top:52%;left:40%;--r:1deg;animation-delay:-4.5s">Vehiculo[] flota = new Vehiculo[10];</div>
   <div class="hero-inner">
-    <div class="hero-label">Sesión XVIII · Bloque II · Polimorfismo · Sprint 2 Review · Ref. Temario 5.6 · 5.6.1 · 5.6.2 · 5.6.3 · Python · Java</div>
-    <h1>Un mensaje,<br>muchas <em>respuestas.</em></h1>
-    <p class="hero-sub">Le mandas <em>el mismo</em> mensaje a una lista de objetos distintos — y cada uno responde a su manera. Eso es <em>polimorfismo</em>: muchas formas de cumplir un mismo contrato. Hoy lo implementas, y presentas tu Sprint 2.</p>
+    <div class="hero-label">Sesión XVIII · Práctica 4 de 6 · Herencia · Ref. Temario 5.1 · 5.2 · Java · Eclipse IDE</div>
+    <h1>Todo lo común,<br>una sola <em>vez.</em></h1>
+    <p class="hero-sub">Una empresa de transporte no logra ordenar su flota: automóviles, camiones y motocicletas comparten casi todo, pero cada uno tiene lo suyo. La respuesta es <em>herencia</em>: una clase base <em>Vehiculo</em> que guarda lo común una sola vez, y subclases que solo agregan lo específico. Hoy la construyes en Java — con <em>extends</em> y <em>super</em>.</p>
   </div>
 </section>
 
-<!-- I: la idea -->
-<section>
-  <div class="wrap-n">
-    <p class="marker">I · La palabra, partida en dos</p>
-    <p class="lead">Poli = muchas.<br>Morfo = <em>formas.</em></p>
-    <p class="subtle">Ya dominas <strong>herencia</strong> (sesiones 15-16) y <strong>interfaces</strong> (sesión 17). El polimorfismo es lo que les da sentido: cuando varias clases comparten un método con el <strong>mismo nombre</strong> pero <strong>cuerpo distinto</strong>, puedes tratarlas a todas igual y dejar que cada una responda según lo que <em>es</em>. Escribes el código una vez; funciona para clases que aún <em>ni existen</em>.</p>
-    <div class="con-grid">
-      <div class="con-card">
-        <div class="con-t">El contrato</div>
-        <div class="con-d">Todas prometen un método: <code>area()</code>, <code>sonido()</code>, <code>dibujar()</code>. Viene de una <strong>clase base</strong> o de una <strong>interfaz</strong>.</div>
-      </div>
-      <div class="con-card">
-        <div class="con-t">La sobrescritura</div>
-        <div class="con-d">Cada subclase reimplementa el método a su manera. En Python es directo; en Java lo marcas con <code>@Override</code>.</div>
-      </div>
-      <div class="con-card">
-        <div class="con-t">El despacho</div>
-        <div class="con-d">En tiempo de ejecución, el objeto <em>real</em> decide qué versión corre. No el tipo de la variable: el <strong>objeto</strong>.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- II: colección polimórfica animada -->
+<!-- I: ficha de la práctica -->
 <section>
   <div class="wrap">
-    <p class="marker">II · La colección heterogénea</p>
-    <p class="lead">Una lista con figuras <em>distintas.</em><br>Un solo <code style="font-size:.6em">for</code>. Cada una responde lo suyo.</p>
-    <p class="subtle">Aquí está el corazón del tema. Tienes una lista con un círculo, un cuadrado, un triángulo y un rectángulo — <strong>tipos diferentes en la misma colección</strong>. Pulsa <em>ejecutar</em> y observa: el mismo <span class="inlinecode">figura.area()</span> recorre la lista, pero cada objeto calcula su área <em>a su manera</em>. Eso es un argumento polimórfico en acción.</p>
-    <div class="widget" data-tag="Pulsa ejecutar · mira cada respuesta">
-      <div class="poc-stage">
-        <div class="poc-list" id="poc-list">
-          <div class="poc-card" data-poc="circulo">
-            <div class="poc-icon">●</div>
-            <div class="poc-name">Circulo(r=3)</div>
-            <div class="poc-kind">subclase de Figura</div>
-            <div class="poc-out" id="out-circulo"></div>
-          </div>
-          <div class="poc-card" data-poc="cuadrado">
-            <div class="poc-icon">■</div>
-            <div class="poc-name">Cuadrado(l=4)</div>
-            <div class="poc-kind">subclase de Figura</div>
-            <div class="poc-out" id="out-cuadrado"></div>
-          </div>
-          <div class="poc-card" data-poc="triangulo">
-            <div class="poc-icon">▲</div>
-            <div class="poc-name">Triangulo(6,2)</div>
-            <div class="poc-kind">subclase de Figura</div>
-            <div class="poc-out" id="out-triangulo"></div>
-          </div>
-          <div class="poc-card" data-poc="rectangulo">
-            <div class="poc-icon">▬</div>
-            <div class="poc-name">Rectangulo(5,2)</div>
-            <div class="poc-kind">subclase de Figura</div>
-            <div class="poc-out" id="out-rectangulo"></div>
-          </div>
-        </div>
-        <div class="poc-console" id="poc-console"></div>
+    <p class="marker">I · La ficha — qué haremos hoy</p>
+    <p class="lead">Práctica 4 de 6:<br><em>herencia.</em></p>
+    <p class="subtle"><strong>Objetivo:</strong> implementar los conceptos de <strong>herencia en Java</strong> para modelar y gestionar una <strong>jerarquía de clases</strong>, utilizando un entorno orientado a objetos. Es la práctica institucional del Practicario MCT158 — se trabaja hoy en el laboratorio y se entrega por Blackboard.</p>
+    <div class="ficha-grid">
+      <div class="ficha-card">
+        <div class="ficha-k">Temas del temario</div>
+        <div class="ficha-v">5.1 · Herencia<small>5.1.1 clases nuevas · 5.1.2 jerarquías · 5.1.3 simple y múltiple &nbsp;·&nbsp; 5.2 referencia super</small></div>
       </div>
+      <div class="ficha-card">
+        <div class="ficha-k">Duración · Escenario</div>
+        <div class="ficha-v">2 horas<small>Laboratorio de cómputo</small></div>
+      </div>
+      <div class="ficha-card">
+        <div class="ficha-k">Software</div>
+        <div class="ficha-v">Java<small>Eclipse IDE (JDK instalado)</small></div>
+      </div>
+    </div>
+    <div class="alerta">⚠ <strong>Ventaja injusta:</strong> la herencia ya la viviste en Python — sesión 16, con MRO, <code>super()</code> y el diamante en familia. Hoy es la <strong>versión Java</strong> del mismo concepto, y la entrega es <strong>sí o sí en Java</strong>: proyecto de Eclipse IDE con la clase base y sus subclases, anexo en Blackboard.</div>
+  </div>
+</section>
+
+<!-- II: el caso -->
+<section>
+  <div class="wrap">
+    <p class="marker">II · El caso — lee antes de programar</p>
+    <p class="lead">Una flota entera,<br>tres formas de <em>rodar.</em></p>
+    <div class="caso">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;font-style:normal;">Practicario MCT158 · Práctica 4 de 6 · Herencia</div>
+      <p style="margin-bottom:1rem;">Una <strong>empresa de transporte</strong> del sector de logística y movilidad enfrenta un problema al gestionar su <strong>flota de vehículos</strong>: automóviles, camiones y motocicletas. Necesita un sistema para <strong>organizar, visualizar y operar</strong> la información de los vehículos y mejorar la eficiencia de la operación.</p>
+      <p style="margin-bottom:1rem;">Todos los vehículos comparten características comunes — <strong>marca, modelo, año de fabricación y capacidad de combustible</strong> — pero cada tipo tiene lo suyo: los <strong>camiones</strong>, una capacidad de carga máxima; los <strong>automóviles</strong>, un número de puertas; las <strong>motocicletas</strong>, un cilindraje.</p>
+      <p>El equipo de programación decidió resolverlo con <strong>herencia en Java</strong>: código lógico y reutilizable, listo para futuras expansiones — como la gama de <strong>vehículos eléctricos</strong> que viene en camino.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-num">Requerimiento 01</div>
+        <div class="req-t">Modelar la jerarquía</div>
+        <div class="req-d">Clase base <code>Vehiculo</code> con lo común; subclases <code>Auto</code>, <code>Camion</code> y <code>Motocicleta</code> que la <strong>extienden</strong> con lo específico.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 02</div>
+        <div class="req-t">Registrar vehículos</div>
+        <div class="req-d">Instanciar cualquier tipo llamando <strong>al constructor de la base</strong> vía <code>super(...)</code> para inicializar lo heredado — y guardarlo en el inventario.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-num">Requerimiento 03</div>
+        <div class="req-t">Mostrar detalles</div>
+        <div class="req-d">Consultar un vehículo o toda la gama mostrando <strong>lo general</strong> (marca, modelo, año) <strong>y lo específico</strong> de cada tipo — con <code>super.mostrarDetalles()</code>.</div>
+      </div>
+    </div>
+    <p class="subtle" style="margin-top:1.8rem">Fíjate en la frase clave del caso: <em>"favoreciendo próximas expansiones"</em>. La herencia no solo ordena lo que ya existe — deja la puerta abierta: cuando lleguen los <strong>vehículos eléctricos</strong>, serán una subclase más, <strong>sin tocar</strong> lo que ya funciona.</p>
+  </div>
+</section>
+
+<!-- III: concepto — la jerarquía -->
+<section>
+  <div class="wrap">
+    <p class="marker">III · El concepto — qué hereda cada quien</p>
+    <p class="lead">La base guarda lo común.<br>Las hijas, solo su <em>diferencia.</em></p>
+    <p class="subtle">Este es el diagrama de clases del sistema — y también tu <strong>ejemplo de referencia</strong> para la evidencia de la práctica. La flecha de <strong>triángulo hueco</strong> apunta siempre a la base y se lee "<em>es un</em>": un Camión <em>es un</em> Vehículo. Pulsa cada clase y mira qué recibe por herencia y qué aporta:</p>
+    <div class="widget" data-tag="Diagrama de clases · pulsa cada clase">
+      <svg class="uh-svg" viewBox="0 0 660 300">
+        <polyline class="uh-edge" points="125,214 125,168 535,168"/>
+        <polyline class="uh-edge" points="535,214 535,168"/>
+        <polyline class="uh-edge" points="330,214 330,156"/>
+        <polygon class="uh-tri" points="330,142 320,156 340,156"/>
+        <g class="uh-g" id="uh-veh">
+          <rect class="uh-box" x="210" y="14" width="240" height="128" rx="2"/>
+          <text class="uh-title" x="330" y="34">Vehiculo</text>
+          <line class="uh-sep" x1="210" y1="42" x2="450" y2="42"/>
+          <text class="uh-row" x="222" y="58">− marca: String</text>
+          <text class="uh-row" x="222" y="72">− modelo: String</text>
+          <text class="uh-row" x="222" y="86">− anio: int</text>
+          <text class="uh-row" x="222" y="100">− combustible: double</text>
+          <line class="uh-sep" x1="210" y1="108" x2="450" y2="108"/>
+          <text class="uh-row" x="222" y="124">+ mostrarDetalles()</text>
+        </g>
+        <g class="uh-g" id="uh-auto">
+          <rect class="uh-box" x="30" y="214" width="190" height="70" rx="2"/>
+          <text class="uh-title" x="125" y="233">Auto</text>
+          <line class="uh-sep" x1="30" y1="241" x2="220" y2="241"/>
+          <text class="uh-row" x="42" y="257">− numPuertas: int</text>
+          <text class="uh-row" x="42" y="273">+ mostrarDetalles()</text>
+        </g>
+        <g class="uh-g" id="uh-cam">
+          <rect class="uh-box" x="235" y="214" width="190" height="70" rx="2"/>
+          <text class="uh-title" x="330" y="233">Camion</text>
+          <line class="uh-sep" x1="235" y1="241" x2="425" y2="241"/>
+          <text class="uh-row" x="247" y="257">− capacidadCarga: double</text>
+          <text class="uh-row" x="247" y="273">+ mostrarDetalles()</text>
+        </g>
+        <g class="uh-g" id="uh-moto">
+          <rect class="uh-box" x="440" y="214" width="190" height="70" rx="2"/>
+          <text class="uh-title" x="535" y="233">Motocicleta</text>
+          <line class="uh-sep" x1="440" y1="241" x2="630" y2="241"/>
+          <text class="uh-row" x="452" y="257">− cilindraje: int</text>
+          <text class="uh-row" x="452" y="273">+ mostrarDetalles()</text>
+        </g>
+      </svg>
+      <div class="uh-note" id="uh-note">Pulsa una clase del diagrama (o los botones) para leerla.</div>
       <div class="w-controls">
-        <button class="btn on" id="poc-run">▶ ejecutar el for</button>
-        <button class="btn" id="poc-step">paso a paso</button>
-        <button class="btn" id="poc-reset">⟲ reset</button>
+        <button class="btn" data-uh="veh">Vehiculo (base)</button>
+        <button class="btn" data-uh="auto">Auto</button>
+        <button class="btn" data-uh="cam">Camion</button>
+        <button class="btn" data-uh="moto">Motocicleta</button>
       </div>
-      <div class="poc-note" id="poc-note">El <strong>for</strong> no pregunta de qué tipo es cada figura. Solo le manda el mensaje <em>area()</em> y confía en que cada objeto sabe responder. Ese es el regalo del polimorfismo: <strong>código que no cambia cuando agregas figuras nuevas</strong>.</div>
+    </div>
+    <div class="caso" style="font-style:normal;font-size:1.02rem;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem;">5.1.3 · ¿Y la herencia múltiple?</div>
+      El temario la menciona y tú ya la conoces <em>por dentro</em>: en Python viste <span class="inlinecode">class Hijo(Padre, Madre)</span>, el MRO y el diamante (sesión 16). Java tomó otro camino: <strong>solo herencia simple</strong> — cada clase tiene <em>un único</em> <span class="inlinecode">extends</span> — y eliminó el diamante de raíz. Para "ser varias cosas" Java usa <strong>interfaces</strong>. En esta práctica basta la herencia simple: un vehículo es <em>un</em> tipo de vehículo, y punto.
     </div>
   </div>
 </section>
 
-<!-- III: sobrescritura Python / Java -->
+<!-- IV: Python ↔ Java -->
 <section>
   <div class="wrap">
-    <p class="marker">III · La sobrescritura — Python ↔ Java</p>
-    <p class="lead">Mismo nombre de método.<br>Cuerpo <em>reescrito</em> en cada hija.</p>
-    <p class="subtle">Para que el <span class="inlinecode">for</span> de arriba funcione, cada subclase <strong>sobrescribe</strong> (override) el método de la base. En Python solo redefines el método; en Java agregas la anotación <span class="inlinecode">@Override</span> — que no es obligatoria, pero el compilador la usa para protegerte. Recorre los seis pasos en ambos lenguajes:</p>
-    <div class="widget" data-tag="Mismo concepto · dos lenguajes">
+    <p class="marker">IV · Python ↔ Java — la misma herencia, otro acento</p>
+    <p class="lead">Ya sabes heredar.<br>Hoy solo cambia el <em>idioma.</em></p>
+    <p class="subtle">Todo lo que hiciste en la sesión 16 con Python tiene su traducción directa. Compara pieza por pieza — y fíjate en la diferencia de carácter: donde Python <em>confía</em>, Java <em>exige</em>:</p>
+    <div class="widget" data-tag="Misma pieza · dos lenguajes">
       <div class="pj-stage">
         <div class="pj-col">
-          <div class="pj-head">Python <span class="badge">tu lenguaje base</span></div>
+          <div class="pj-head">Python <span class="badge">sesión 16</span></div>
           <div class="pj-body" id="py-body"></div>
         </div>
         <div class="pj-col">
-          <div class="pj-head">Java <span class="badge">polimorfismo formal</span></div>
+          <div class="pj-head">Java <span class="badge">hoy · práctica 4</span></div>
           <div class="pj-body" id="java-body"></div>
         </div>
       </div>
       <div class="w-controls">
-        <button class="btn on" data-ov="base">1 · La base</button>
-        <button class="btn" data-ov="hija">2 · Override</button>
-        <button class="btn" data-ov="super">3 · Llamar al padre</button>
-        <button class="btn" data-ov="lista">4 · Colección</button>
-        <button class="btn" data-ov="recorre">5 · Mismo mensaje</button>
-        <button class="btn" data-ov="salida">6 · Despacho</button>
+        <button class="btn on" data-eq="declara">Declarar la subclase</button>
+        <button class="btn" data-eq="ctor">Constructor + super</button>
+        <button class="btn" data-eq="metodo">Extender un método</button>
+        <button class="btn" data-eq="multi">Herencia múltiple</button>
       </div>
       <div class="pj-note" id="pj-note"></div>
     </div>
   </div>
 </section>
 
-<!-- IV: duck typing -->
+<!-- V: la ruta -->
 <section>
   <div class="wrap">
-    <p class="marker">IV · Duck typing — el sello de Python</p>
-    <p class="lead">«Si camina como pato<br>y suena como pato…<br><em>es un pato.</em>»</p>
-    <p class="subtle">Java exige que el contrato sea <strong>formal</strong>: para meter algo en una lista de <span class="inlinecode">Volador</span>, la clase debe <em>declarar</em> que implementa esa interfaz. Python no pregunta el linaje: si el objeto <strong>tiene el método</strong> que necesitas, lo usa y punto. No importa de qué clase venga. Toca cada objeto y comprueba si "vuela":</p>
-    <div class="widget" data-tag="¿Tiene .volar()? Entonces vuela">
-      <div class="duck-stage">
-        <div class="duck-shelf" id="duck-shelf">
-          <div class="duck-obj sel" data-duck="pajaro">
-            <div class="duck-emo">🐦</div>
-            <div class="duck-meta"><div class="duck-cls">Pajaro</div><div class="duck-has">def volar(self): ...</div></div>
-          </div>
-          <div class="duck-obj" data-duck="avion">
-            <div class="duck-emo">✈️</div>
-            <div class="duck-meta"><div class="duck-cls">Avion</div><div class="duck-has">def volar(self): ...</div></div>
-          </div>
-          <div class="duck-obj" data-duck="superman">
-            <div class="duck-emo">🦸</div>
-            <div class="duck-meta"><div class="duck-cls">Superheroe</div><div class="duck-has">def volar(self): ...</div></div>
-          </div>
-          <div class="duck-obj" data-duck="pinguino">
-            <div class="duck-emo">🐧</div>
-            <div class="duck-meta"><div class="duck-cls">Pinguino</div><div class="duck-has">def nadar(self): ...</div></div>
-          </div>
-          <div class="duck-obj" data-duck="piedra">
-            <div class="duck-emo">🪨</div>
-            <div class="duck-meta"><div class="duck-cls">Piedra</div><div class="duck-has"># sin métodos útiles</div></div>
-          </div>
-        </div>
-        <div class="duck-test">
-          <div class="duck-q">El código solo pregunta:<br><em>¿tienes <code style="font-family:'JetBrains Mono',monospace;font-size:.7em;color:#D4956A">.volar()</code>?</em></div>
-          <div class="duck-verdict" id="duck-verdict"></div>
-          <div class="duck-expl" id="duck-expl"></div>
-        </div>
+    <p class="marker">V · La ruta — seis actividades, en orden</p>
+    <p class="lead">Primero el árbol,<br>luego las <em>ramas.</em></p>
+    <p class="subtle">Las actividades del practicario forman la ruta de siempre: primero <strong>decides</strong> qué es común y qué específico, luego <strong>dibujas</strong> el diagrama de clases (la evidencia), y al final <strong>programas</strong>. Igual que en la Práctica 3: <strong>aquí no hay código completo para copiar</strong> — hay esqueletos con <code>TODO</code>, animaciones que muestran el patrón, y una salida esperada para medirte.</p>
+
+    <!-- PASO 1 -->
+    <div class="paso">
+      <div class="paso-num">1</div>
+      <div class="paso-body">
+        <div class="paso-t">Reparte: ¿común o <em>específico?</em></div>
+        <p class="paso-d">Antes de dibujar nada, decide <strong>dónde vive cada dato</strong>. La regla: si <em>todos</em> los vehículos lo tienen, va en la base — <em>una sola vez</em>; si es de un tipo, va en su subclase. Este reparto ES el diseño que la rúbrica califica:</p>
+        <table class="cmp">
+          <thead><tr><th>Dato o comportamiento</th><th>¿Dónde vive?</th></tr></thead>
+          <tbody>
+            <tr><td>marca, modelo, año, combustible</td><td><strong>Vehiculo</strong> — lo comparten todos</td></tr>
+            <tr><td>numPuertas</td><td><strong>Auto</strong> — solo los autos abren puertas</td></tr>
+            <tr><td>capacidadCarga</td><td><strong>Camion</strong> — solo los camiones cargan</td></tr>
+            <tr><td>cilindraje</td><td><strong>Motocicleta</strong> — solo las motos lo presumen</td></tr>
+            <tr><td><code>mostrarDetalles()</code></td><td><strong>Vehiculo</strong> imprime lo común; <strong>cada subclase</strong> lo extiende con lo suyo</td></tr>
+          </tbody>
+        </table>
+        <div class="paso-tip"><strong>Prueba del "es-un":</strong> antes de heredar pregunta si la frase suena natural. "Un camión <em>es un</em> vehículo" ✓. "Un vehículo <em>es un</em> camión" ✗ — la flecha solo apunta hacia arriba.</div>
       </div>
-      <div class="poc-note" style="margin-top:1.4rem">El <strong>Pajaro</strong>, el <strong>Avion</strong> y el <strong>Superheroe</strong> no comparten <em>ninguna</em> clase base — y aun así los tres vuelan en el mismo <span class="inlinecode">for</span>. En Java tendrías que obligarlos a implementar <span class="inlinecode">Volador</span>; en Python basta con que <em>hagan</em> lo que se espera. Poder y peligro a la vez: <strong>flexibilidad sin red</strong>.</div>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="paso">
+      <div class="paso-num">2</div>
+      <div class="paso-body">
+        <div class="paso-t">El diagrama de <em>clases</em> (evidencia 1)</div>
+        <p class="paso-d">Dibuja la jerarquía con formato UML: cajas de tres compartimentos (nombre / atributos / métodos), <strong>modificadores de acceso</strong> (− privado, + público) y la <strong>flecha de triángulo hueco</strong> de cada subclase hacia <code>Vehiculo</code>. El diagrama interactivo de la <strong>sección III</strong> es tu ejemplo de referencia — el tuyo debe poder responder lo mismo que él.</p>
+        <div class="paso-tip"><strong>Checklist de la rúbrica para este diagrama:</strong> ① lo general en la base y lo específico en las subclases, ② relaciones de herencia lógicas y coherentes (el triángulo apunta a la base), ③ encapsulación visible: atributos con − y métodos públicos con +.</div>
+      </div>
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="paso">
+      <div class="paso-num">3</div>
+      <div class="paso-body">
+        <div class="paso-t">Esqueletos en <em>Eclipse</em></div>
+        <p class="paso-d">Crea el proyecto <code>Practica4Herencia</code> (File → New → Java Project). En <code>src</code> van cinco clases: la base, las tres subclases y el registro. Aquí las firmas — <strong>la lógica es tuya</strong>:</p>
+        <div class="jcode">
+<span class="ln"><span class="cm">// src/Vehiculo.java — la clase base: esqueleto</span></span>
+<span class="ln"><span class="kw">public class</span> <span class="cls">Vehiculo</span> {</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">String</span> marca;</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">String</span> modelo;</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">int</span> anio;</span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">double</span> combustible;   <span class="cm">// capacidad en litros</span></span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="cls">Vehiculo</span>(<span class="ty">String</span> marca, <span class="ty">String</span> modelo, <span class="ty">int</span> anio, <span class="ty">double</span> combustible) {</span>
+<span class="ln">        <span class="cm">// TODO: inicializa los 4 atributos comunes (this.)</span></span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public void</span> mostrarDetalles() {</span>
+<span class="ln">        <span class="cm">// TODO: imprime marca, modelo, (año) y combustible</span></span>
+<span class="ln">    }</span>
+<span class="ln">}</span>
+        </div>
+        <div class="jcode" style="margin-top:1rem;">
+<span class="ln"><span class="cm">// src/Auto.java — una subclase: esqueleto</span></span>
+<span class="ln"><span class="kw">public class</span> <span class="cls">Auto</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {   <span class="cm">// 5.1 · herencia simple</span></span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">int</span> numPuertas;</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="cls">Auto</span>(<span class="ty">String</span> marca, <span class="ty">String</span> modelo, <span class="ty">int</span> anio,</span>
+<span class="ln">                <span class="ty">double</span> combustible, <span class="ty">int</span> numPuertas) {</span>
+<span class="ln">        <span class="cm">// TODO: super(...) PRIMERO (mira el paso 4) y después lo propio</span></span>
+<span class="ln">    }</span>
+<span class="ln"> </span>
+<span class="ln">    @Override</span>
+<span class="ln">    <span class="kw">public void</span> mostrarDetalles() {</span>
+<span class="ln">        <span class="cm">// TODO: super.mostrarDetalles() + lo propio (mira el paso 5)</span></span>
+<span class="ln">    }</span>
+<span class="ln">}</span>
+<span class="ln"> </span>
+<span class="ln"><span class="cm">// TODO: replica el patrón en Camion.java (capacidadCarga: double)</span></span>
+<span class="ln"><span class="cm">//       y Motocicleta.java (cilindraje: int)</span></span>
+        </div>
+        <div class="paso-tip"><strong>Tip Eclipse:</strong> al escribir <code>extends Vehiculo</code>, Eclipse subraya el constructor en rojo — te está <em>exigiendo</em> el <code>super(...)</code> del paso 4. Ese error es tu amigo: es la diferencia entre Python (que confía) y Java (que verifica).</div>
+      </div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div class="paso">
+      <div class="paso-num">4</div>
+      <div class="paso-body">
+        <div class="paso-t">Constructores con <em>super(...)</em> (5.2)</div>
+        <p class="paso-d">Un camión no puede existir sin su mitad vehículo. Por eso el constructor de la subclase llama <strong>primero</strong> al de la base con <code>super(...)</code> — y en Java debe ser <strong>la primera línea</strong>, obligatoriamente. Mira la cadena completa de <code>new Camion(...)</code>, paso a paso (puedes pausar):</p>
+        <div class="widget" data-tag="La cadena del constructor · animada">
+          <div class="sup-stage">
+            <div class="sup-stack">
+              <div class="sup-frame" data-f="0"><span class="who">Main</span> <span class="call">new Camion("Volvo", "FH", 2022, 300, 18.5)</span></div>
+              <div class="sup-frame" data-f="1"><span class="who">Camion(...)</span> <span class="call">1ª línea: super(marca, modelo, anio, combustible)</span></div>
+              <div class="sup-frame" data-f="2"><span class="who">Vehiculo(...)</span> <span class="call">this.marca = ... — inicializa TODO lo común</span></div>
+              <div class="sup-frame" data-f="3"><span class="who">Camion(...)</span> <span class="call">this.capacidadCarga = 18.5 — ahora sí, lo propio</span></div>
+            </div>
+            <div class="sup-side">
+              <div class="sup-out" id="sup-out"><span class="pl">consola — pulsa Reproducir o Siguiente…</span></div>
+              <div class="sup-narr" id="sup-narr">La subclase no repite el código de la base: lo <strong>invoca</strong> con <code>super(...)</code>. Esa es la reutilización que pide la rúbrica.</div>
+            </div>
+          </div>
+          <div class="w-controls">
+            <button class="btn" id="sup-reset">⟲ Reset</button>
+            <button class="btn on" id="sup-next">Siguiente ▶</button>
+            <button class="btn" id="sup-play">▶ Reproducir</button>
+          </div>
+        </div>
+        <div class="paso-tip"><strong>Con esto ya puedes resolver</strong> los <code>TODO</code> de los constructores: en <code>Auto</code>, <code>Camion</code> y <code>Motocicleta</code>, primera línea <code>super(marca, modelo, anio, combustible)</code>, segunda línea lo propio. Si lo omites, no compila — Vehiculo no tiene constructor vacío.</div>
+      </div>
+    </div>
+
+    <!-- PASO 5 -->
+    <div class="paso">
+      <div class="paso-num">5</div>
+      <div class="paso-body">
+        <div class="paso-t">Sobrescribir <em>y extender</em>: super.mostrarDetalles()</div>
+        <p class="paso-d">El requerimiento 03 pide mostrar <strong>lo general y lo específico</strong>. La jugada elegante: cada subclase <strong>sobrescribe</strong> <code>mostrarDetalles()</code> pero arranca llamando a <code>super.mostrarDetalles()</code> — imprime lo común la base, y la subclase solo agrega su línea. Recorre la ejecución con el ejemplo de <code>Camion</code>:</p>
+        <div class="widget" data-tag="super.metodo() en ejecución">
+          <div class="det-stage">
+            <div class="jcode" id="det-code"></div>
+            <div class="det-side">
+              <div class="det-out" id="det-out"><span class="pl">consola — pulsa ▶ Recorrer…</span></div>
+              <div class="det-desc" id="det-desc">Sin <code>super.</code>, llamar <code>mostrarDetalles()</code> adentro de sí mismo sería <strong>recursión infinita</strong>. El prefijo dice: "la versión de mi clase base, por favor".</div>
+            </div>
+          </div>
+          <div class="w-controls">
+            <button class="btn on" id="det-play">▶ Recorrer</button>
+            <button class="btn" id="det-reset">⟲ Reset</button>
+          </div>
+        </div>
+        <div class="paso-tip"><strong>¿Para qué se ocupa <code>@Override</code>?</strong> Es un seguro contra errores silenciosos. Sin la anotación, si escribes mal el nombre — <code>mostrardetalles()</code>, con minúscula — Java no protesta: crea un método <em>nuevo</em> que nadie llama, y tu camión imprime solo lo genérico de la base, sin que sepas por qué. Con <code>@Override</code>, ese mismo error <strong>no compila</strong>: el compilador verifica que de verdad exista un método igual en la clase base. No es obligatoria, pero úsala <em>siempre</em> que sobrescribas — es la diferencia entre un bug invisible y un aviso inmediato.</div>
+        <div class="paso-tip"><strong>Tu turno:</strong> resuelve el <code>TODO</code> de <code>mostrarDetalles()</code> en las tres subclases con este patrón — Auto imprime sus puertas, la moto su cilindraje. <code>@Override</code> arriba, una línea de super + una línea propia. Eso es sobrescribir <em>sin perder</em> lo heredado.</div>
+      </div>
+    </div>
+
+    <!-- PASO 6 -->
+    <div class="paso">
+      <div class="paso-num">6</div>
+      <div class="paso-body">
+        <div class="paso-t">El registro de la <em>flota</em> y el Main</div>
+        <p class="paso-d">¿Y el inventario? Ya lo sabes hacer: es tu <code>RegistroPersonal</code> de la <strong>Práctica 3</strong>, con un detalle nuevo y poderoso — el array es <strong>del tipo de la clase base</strong>, así que cada casilla puede guardar un Auto, un Camión <em>o</em> una Moto. Arma un <code>Main</code> que registre un vehículo de cada tipo y muestre la flota completa:</p>
+        <div class="jcode">
+<span class="ln"><span class="cm">// src/RegistroFlota.java — ¿te suena? Práctica 3 con tipo nuevo</span></span>
+<span class="ln"><span class="kw">public class</span> <span class="cls">RegistroFlota</span> {</span>
+<span class="ln">    <span class="kw">private</span> <span class="cls">Vehiculo</span>[] flota;   <span class="cm">// ← array de la clase BASE</span></span>
+<span class="ln">    <span class="kw">private</span> <span class="ty">int</span> contador;</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public</span> <span class="cls">RegistroFlota</span>(<span class="ty">int</span> capacidad) { <span class="cm">/* TODO: práctica 3 */</span> }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public void</span> registrar(<span class="cls">Vehiculo</span> v) { <span class="cm">/* TODO: práctica 3 */</span> }</span>
+<span class="ln"> </span>
+<span class="ln">    <span class="kw">public void</span> mostrarFlota() {</span>
+<span class="ln">        <span class="cm">// TODO: recorre hasta contador y llama flota[i].mostrarDetalles()</span></span>
+<span class="ln">        <span class="cm">// — cada vehículo imprime lo suyo, sin ifs (mira el cierre)</span></span>
+<span class="ln">    }</span>
+<span class="ln">}</span>
+        </div>
+        <div class="jcode" style="margin-top:1.2rem;">
+<span class="ln"><span class="cm">// Salida esperada del Main (un vehículo por tipo):</span></span>
+<span class="ln"><span class="out">── Flota registrada: 3 de 10 ──</span></span>
+<span class="ln"><span class="out">[0] Toyota Corolla (2023) · Combustible: 50.0 L</span></span>
+<span class="ln"><span class="out">    Puertas: 4</span></span>
+<span class="ln"><span class="out">[1] Volvo FH (2022) · Combustible: 300.0 L</span></span>
+<span class="ln"><span class="out">    Carga máx: 18.5 t</span></span>
+<span class="ln"><span class="out">[2] Yamaha MT-07 (2024) · Combustible: 14.0 L</span></span>
+<span class="ln"><span class="out">    Cilindraje: 689 cc</span></span>
+        </div>
+        <div class="paso-tip"><strong>Prueba las fronteras de siempre</strong> (llenar la flota, mostrarla vacía) y una nueva: crea un <code>Vehiculo</code> "a secas" y regístralo. ¿Funciona? ¿Debería? — anótalo para tus conclusiones: es la puerta a las clases abstractas.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- V: isinstance / instanceof -->
+<!-- VI: la flota viva -->
 <section>
   <div class="wrap">
-    <p class="marker">V · isinstance / instanceof — el bisturí</p>
-    <p class="lead">A veces preguntar el tipo es <em>necesario.</em><br>Casi siempre es señal de <em>mal diseño.</em></p>
-    <p class="subtle">Python tiene <span class="inlinecode">isinstance(obj, Clase)</span> y Java tiene <span class="inlinecode">obj instanceof Clase</span>: ambos preguntan "¿este objeto es de este tipo?". Son útiles — pero si tu código se llena de <span class="inlinecode">if isinstance(...)</span> para decidir qué hacer, casi siempre estás <strong>reinventando el polimorfismo a mano</strong>. Revisa cada caso y descubre cuándo está bien y cuándo huele mal:</p>
-    <div class="widget" data-tag="Bisturí o muleta · tú decides">
-      <div class="iso-stage">
-        <div class="iso-cases" id="iso-cases">
-          <div class="iso-case sel" data-iso="validar">
-            <div class="iso-snip"><span class="kw">if not</span> isinstance(monto, (int, float)):</div>
-            <div class="iso-tag good">✓ caso legítimo · validar entrada</div>
-          </div>
-          <div class="iso-case" data-iso="frontera">
-            <div class="iso-snip"><span class="kw">if</span> isinstance(dato, dict): ... <span class="kw">else</span>: ...</div>
-            <div class="iso-tag good">✓ caso legítimo · frontera de datos</div>
-          </div>
-          <div class="iso-case" data-iso="despacho">
-            <div class="iso-snip"><span class="kw">if</span> isinstance(fig, Circulo): area = ...</div>
-            <div class="iso-tag bad">✗ olor · despacho manual</div>
-          </div>
-          <div class="iso-case" data-iso="cadena">
-            <div class="iso-snip"><span class="kw">if</span> isinstance(a, Perro): ... <span class="kw">elif</span> isinstance(a, Gato): ...</div>
-            <div class="iso-tag bad">✗ olor · cadena de tipos</div>
+    <p class="marker">VI · Pruébalo — la flota viva</p>
+    <p class="lead">Regístralos y míralos<br><em>construirse</em> por capas.</p>
+    <p class="subtle">Así se comporta el sistema terminado — con <span class="inlinecode">new Vehiculo[6]</span> de capacidad. Cada registro muestra en consola la <strong>cadena del constructor</strong> (lo heredado primero, lo propio después), y cada tarjeta separa lo <strong>común</strong> de lo <strong>específico</strong>. Llena la flota y pide los detalles:</p>
+    <div class="widget" data-tag="RegistroFlota en ejecución">
+      <div class="flo-stage">
+        <div class="flo-left">
+          <div class="flo-shelf" id="flo-shelf"></div>
+          <div class="flo-meta" id="flo-meta"></div>
+          <div class="w-controls" style="margin-top:auto;">
+            <button class="btn" id="flo-auto">▶ registrar Auto</button>
+            <button class="btn" id="flo-cam">▶ registrar Camión</button>
+            <button class="btn" id="flo-moto">▶ registrar Moto</button>
+            <button class="btn" id="flo-mos">▶ mostrarFlota()</button>
+            <button class="btn" id="flo-reset">⟲ Reset</button>
           </div>
         </div>
-        <div class="iso-panel">
-          <div class="iso-verdict" id="iso-verdict"></div>
-          <div class="iso-desc" id="iso-desc"></div>
-          <div class="iso-fix" id="iso-fix"></div>
-        </div>
-      </div>
-      <div class="ia-rules">
-        <div class="ia-rules-tag">Regla práctica de diseño</div>
-        <div class="ia-rule"><span class="ok">✓</span><span>Usa <em>isinstance</em> en la <strong>frontera</strong> del programa: validar lo que entra, lo que llega de un archivo o de la red.</span></div>
-        <div class="ia-rule"><span class="ok">✓</span><span>Úsalo cuando un objeto puede tener <strong>tipos verdaderamente distintos</strong> que no comparten contrato (ej. <em>str</em> vs <em>list</em>).</span></div>
-        <div class="ia-rule"><span class="no">✗</span><span>Si lo usas para elegir <em>qué método llamar</em> según la clase — borra el <em>if</em> y deja que <strong>cada objeto responda</strong>. Eso es el polimorfismo trabajando por ti.</span></div>
+        <div class="flo-con" id="flo-con"><span class="sys">consola — registra tu primer vehículo…</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VI: experiencia de aprendizaje -->
+<!-- VII: entrega -->
 <section>
   <div class="wrap">
-    <p class="marker">VI · El ejercicio de hoy — el zoológico</p>
-    <p class="lead">Una lista de animales.<br>Un <code style="font-size:.55em">.sonido()</code>. Cada quien, su voz.</p>
-    <p class="subtle">Antes del Sprint Review, construyes juntos el caso clásico — pero <strong>en tu propio dominio</strong>. La idea es idéntica a las figuras: una colección heterogénea, un mismo mensaje, respuestas distintas. Tú eliges el dominio (animales, instrumentos, medios de transporte, notificaciones). Esta es la pauta:</p>
-    <div class="con-grid">
-      <div class="con-card">
-        <div class="con-t">1 · El contrato</div>
-        <div class="con-d">Una base <code>Animal</code> (clase abstracta o <code>Protocol</code>) que promete <code>sonido()</code>. Repasa lo de la sesión 17.</div>
+    <p class="marker">VII · La entrega — Blackboard, formato institucional</p>
+    <p class="lead">Un solo envío,<br>dos <em>piezas.</em></p>
+    <p class="subtle">La práctica se entrega <strong>por Blackboard</strong> al final del laboratorio (o en la fecha indicada en la plataforma). El envío lleva <strong>un documento con formato institucional</strong> y, <strong>anexo, el proyecto completo de Eclipse</strong> comprimido en <span class="inlinecode">.zip</span>. Estructura del documento:</p>
+    <div class="doc-grid">
+      <div class="doc-card">
+        <div class="doc-n">Sección 1</div>
+        <div class="doc-t">Portada</div>
+        <div class="doc-d">Datos institucionales, materia, práctica, tu nombre, docente y fecha.</div>
       </div>
-      <div class="con-card">
-        <div class="con-t">2 · Las formas</div>
-        <div class="con-d">Tres o cuatro subclases — <code>Perro</code>, <code>Gato</code>, <code>Vaca</code> — que <strong>sobrescriben</strong> <code>sonido()</code> cada una.</div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 2</div>
+        <div class="doc-t">Introducción</div>
+        <div class="doc-d">Qué problema resuelve el sistema y por qué la herencia es la solución.</div>
       </div>
-      <div class="con-card">
-        <div class="con-t">3 · El polimorfismo</div>
-        <div class="con-d">Una lista <code>[Perro(), Gato(), Vaca()]</code> y un <code>for a in animales: a.sonido()</code>. Cero <code>if</code> de tipo.</div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 3</div>
+        <div class="doc-t">Desarrollo</div>
+        <div class="doc-d">Diagrama de clases, código de la base y las subclases, y capturas de la ejecución.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 4</div>
+        <div class="doc-t">Conclusión</div>
+        <div class="doc-d">Responde las 5 preguntas del practicario (abajo) con tus palabras.</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-n">Sección 5</div>
+        <div class="doc-t">Referencias</div>
+        <div class="doc-d">Bibliografía en <strong>formato APA</strong> (7ª ed.). Incluye toda fuente que hayas consultado.</div>
       </div>
     </div>
-    <div class="poc-note" style="margin-top:2rem">Reto extra para quien quiera empujar: agrega un <strong>Pato</strong> que además <em>nade</em>, y muestra cómo el <span class="inlinecode">for</span> de sonidos lo trata igual que a los demás <em>sin tocar una sola línea existente</em>. Eso es lo que demuestra que tu diseño es polimórfico de verdad: <strong>extensible sin modificar</strong>.</div>
+    <div class="tarea">
+      <div class="tarea-tag">Evidencias que pide el practicario</div>
+      <ul>
+        <li><strong>Diagrama de clases</strong> con los atributos y métodos necesarios para la clase base y las subclases — con modificadores de acceso.</li>
+        <li><strong>Proyecto en Eclipse IDE</strong> con los códigos fuente en Java de la clase base y sus subclases (<code>Vehiculo.java</code>, <code>Auto.java</code>, <code>Camion.java</code>, <code>Motocicleta.java</code>, más tu registro y <code>Main.java</code>) — anexo como <code>.zip</code>.</li>
+        <li><strong>Capturas de la ejecución</strong> (recomendado): la flota mostrada con al menos un vehículo de cada tipo, con sus datos generales y específicos.</li>
+      </ul>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Para tu conclusión — las 5 preguntas del practicario</div>
+      <ol>
+        <li>¿Cuáles son las principales <strong>ventajas</strong> de usar herencia en un programa orientado a objetos?</li>
+        <li>¿Cómo la referencia <strong>super</strong> facilita la reutilización del código en las subclases?</li>
+        <li>¿Cómo se <strong>relacionan las clases</strong> en la jerarquía creada? ¿Qué justifica su organización?</li>
+        <li>¿Qué atributos o métodos pudiste <strong>reutilizar</strong> en las subclases gracias a la herencia?</li>
+        <li>¿Qué <strong>inconvenientes</strong> encontraste al trabajar con herencia en comparación con la <strong>composición</strong> de objetos?</li>
+      </ol>
+    </div>
+    <div class="ia-rules">
+      <div class="ia-rules-tag">Reglas de la IA en esta práctica</div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que te <em>explique</em>: "¿por qué <code>super(...)</code> tiene que ser la primera línea del constructor?"</span></div>
+      <div class="ia-rule"><span class="ok">✓</span><span>Pídele que <em>revise</em>: "este es mi diagrama de clases y estas mis clases en Java, ¿cuentan la misma historia?"</span></div>
+      <div class="ia-rule"><span class="no">✗</span><span>Pedirle la jerarquía o el documento completos — <em>en las conclusiones defiendes cada decisión de diseño, y eso no se delega.</em></span></div>
+    </div>
   </div>
 </section>
 
-<!-- VII: Sprint 2 Review + Tarea 3 -->
+<!-- VIII: criterios -->
 <section>
   <div class="wrap">
-    <p class="marker">VII · Sprint 2 Review — qué demuestras hoy</p>
-    <p class="lead">Hoy no entregas una promesa.<br><em>Demuestras</em> que tu proyecto camina.</p>
-    <p class="subtle">El Sprint 2 cierra el Bloque II de POO: tu proyecto integrador ya debe tener <strong>herencia</strong>, <strong>interfaces</strong> y, desde hoy, <strong>polimorfismo</strong>. En la review presentas el avance <em>en vivo</em> — código corriendo, no diapositivas. Marca lo que ya tienes listo para defender:</p>
-    <div class="widget" data-tag="Checklist · marca lo que ya demuestras">
-      <div class="chk-progress">Listo para la review: <span id="chk-count">0</span> de 11 elementos
-        <div class="chk-bar"><div class="chk-fill" id="chk-fill"></div></div>
+    <p class="marker">VIII · Cómo se evalúa — la rúbrica</p>
+    <p class="lead">Dos frentes.<br>El mismo <em>estándar.</em></p>
+    <div class="crit-grid">
+      <div class="crit-card">
+        <div class="req-num">Frente 01</div>
+        <div class="crit-t">Diseño del sistema</div>
+        <ul>
+          <li>Clases y subclases organizadas de forma <strong>lógica y coherente</strong> con las relaciones de herencia establecidas.</li>
+          <li>La jerarquía refleja los conceptos de herencia: <strong>lo general en la base, lo específico en las subclases</strong>.</li>
+          <li>Aplicación correcta de la <strong>encapsulación</strong> mediante modificadores de acceso.</li>
+        </ul>
       </div>
-      <div class="chk-group">
-        <div class="chk-group-t">La jerarquía (herencia + interfaces)</div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Clase base</strong> o interfaz que define el contrato común del dominio</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Al menos <strong>tres subclases</strong> que heredan y especializan</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>super()</strong> usado correctamente en al menos un constructor de subclase</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Una <strong>interfaz / ABC / Protocol</strong> que algún tipo implementa (sesión 17)</div></div>
-      </div>
-      <div class="chk-group">
-        <div class="chk-group-t">El polimorfismo (lo de hoy)</div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Una <strong>colección heterogénea</strong> con objetos de distintas subclases</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Un <strong>método sobrescrito</strong> y recorrido con un solo <code>for</code> — mismo mensaje, respuestas distintas</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt"><strong>Cero</strong> cadenas de <code>if isinstance(...)</code> para despachar comportamiento</div></div>
-      </div>
-      <div class="chk-group">
-        <div class="chk-group-t">La presentación de la review</div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">El proyecto <strong>compila / corre</strong> sin tocar nada en vivo</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Puedes <strong>explicar cualquier línea</strong> que el profe señale</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Diagrama de clases <strong>actualizado</strong> con la jerarquía real (sesión 8)</div></div>
-        <div class="chk-item"><div class="chk-box"></div><div class="chk-txt">Todo <strong>subido a GitHub</strong> con commits que cuentan la historia del sprint</div></div>
+      <div class="crit-card">
+        <div class="req-num">Frente 02</div>
+        <div class="crit-t">Implementación del código</div>
+        <ul>
+          <li>Las clases incluyen los <strong>atributos necesarios</strong> para representar cada vehículo.</li>
+          <li>Constructores correctos, con <strong><code style="font-family:'JetBrains Mono',monospace">super</code> inicializando los atributos heredados</strong>.</li>
+          <li>Los métodos cumplen los objetivos: <strong>registrar vehículos y mostrar sus detalles</strong>.</li>
+          <li>Uso adecuado de <strong>super para invocar métodos de la base</strong> desde las subclases.</li>
+        </ul>
       </div>
     </div>
+    <p class="subtle" style="margin-top:1.8rem">La regla de oro no cambia: <strong>diagrama y código deben contar la misma historia</strong>. Si tu UML dice que <span class="inlinecode">combustible</span> vive en <span class="inlinecode">Vehiculo</span> y tu <span class="inlinecode">Camion</span> lo declara de nuevo, no estás heredando — estás <em>duplicando</em>, que es exactamente lo que la herencia vino a eliminar.</p>
   </div>
 </section>
 
 <!-- CIERRE -->
 <section class="cierre">
   <div class="wrap-n">
-    <p class="marker">VIII · Para la próxima clase</p>
-    <p class="lead">Un buen diseño polimórfico se nota<br>en lo que <em>no</em> tienes que reescribir.</p>
-    <p class="subtle">La <strong>Tarea 3</strong> consolida todo el Bloque II en tu proyecto integrador: jerarquía completa con herencia, interfaces y polimorfismo, viviendo en tu repositorio. Vale <strong>1 punto</strong> y se entrega el <strong>25/07/26</strong>.</p>
+    <p class="marker">IX · Cierre — bibliografía y siguiente parada</p>
+    <p class="lead">Un array de la base,<br>tres tipos <em>adentro.</em></p>
+    <p class="subtle">Detente un segundo en lo que hiciste en el paso 6: <span class="inlinecode">flota[i].mostrarDetalles()</span> — la misma llamada — imprime puertas para el auto, carga para el camión y cilindraje para la moto. <strong>Sin un solo if.</strong> Eso tiene nombre: <em>polimorfismo</em>, y lo retomaremos pronto. Y el caso te dejó tarea mental: cuando lleguen los <strong>vehículos eléctricos</strong>, ¿dónde entran en tu jerarquía? Tráelo pensado. La próxima sesión: <strong>excepciones</strong> — qué hacer cuando el programa se rompe.</p>
     <div class="tarea">
-      <div class="tarea-tag">Sprint 2 Review · Tarea 3 (1 pt · entrega 25/07/26)</div>
+      <div class="tarea-tag">Bibliografía de la práctica · formato APA</div>
+      <div class="biblio">
+        <div class="biblio-item">Joyanes Aguilar, L. (2023). <em>Java: Desarrollo de aplicaciones empresariales</em> (3ª ed.). McGraw-Hill.</div>
+        <div class="biblio-item">Sierra, K., &amp; Bates, B. (2022). <em>Java a fondo: Aprende programación orientada a objetos con Java</em> (3ª ed.). O'Reilly Media.</div>
+      </div>
+    </div>
+    <div class="tarea">
+      <div class="tarea-tag">Checklist antes de subir a Blackboard</div>
       <ol>
-        <li><strong>Presenta tu Sprint 2 hoy en clase:</strong> proyecto corriendo, con la colección polimórfica funcionando en vivo.</li>
-        <li><strong>Completa la jerarquía</strong> en código: base/interfaz + subclases que sobrescriben el método del contrato.</li>
-        <li><strong>Agrega la colección heterogénea</strong> y recórrela con un único <code>for</code> — sin <code>if</code> de tipo para despachar.</li>
-        <li><strong>Limpia los olores:</strong> si quedó alguna cadena de <code>isinstance</code> decidiendo comportamiento, conviértela en sobrescritura.</li>
-        <li><strong>Actualiza el diagrama de clases</strong> con la jerarquía real y súbelo junto al código.</li>
-        <li><strong>Sube todo a GitHub</strong> con un README que explique cómo el polimorfismo hace tu proyecto extensible. La IA puede <em>revisar</em> tu diseño y <em>explicarte</em> un error — pero el código que defiendes el 25/07 es tuyo.</li>
+        <li>Documento institucional completo: <strong>portada, introducción, desarrollo, conclusión y referencias APA</strong>.</li>
+        <li><strong>Diagrama de clases</strong> en el desarrollo, con modificadores de acceso y las flechas de herencia hacia <code>Vehiculo</code>.</li>
+        <li>Código Java con la <strong>base + 3 subclases</strong> usando <code>super(...)</code> en constructores y <code>super.mostrarDetalles()</code> en los métodos.</li>
+        <li><strong>Capturas de la consola</strong> con un vehículo de cada tipo mostrando lo general y lo específico.</li>
+        <li>Proyecto <strong>Eclipse anexo en .zip</strong> — un solo envío en <strong>Blackboard · Práctica 4</strong>.</li>
       </ol>
     </div>
   </div>
@@ -479,261 +747,269 @@ window.addEventListener('scroll',()=>{const h=document.documentElement;document.
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('section>.wrap,section>.wrap-n').forEach(el=>{el.classList.add('reveal');obs.observe(el);});
 const $=id=>document.getElementById(id);
-const L=html=>'<span class="pj-line">'+html+'</span>';
-const LH=(html,hl)=>'<span class="pj-line'+(hl?' hl':'')+'">'+html+'</span>';
+const L=html=>'<span class="pj-line">'+(html||' ')+'</span>';
 
-// ─── W1: colección polimórfica animada ──────────────────────
-const pocOrder=['circulo','cuadrado','triangulo','rectangulo'];
-const pocData={
-  circulo:{call:'figura.area()  # Circulo',out:'28.27',expl:'π·r² = π·3²'},
-  cuadrado:{call:'figura.area()  # Cuadrado',out:'16.00',expl:'l·l = 4·4'},
-  triangulo:{call:'figura.area()  # Triangulo',out:'6.00',expl:'b·h/2 = 6·2/2'},
-  rectangulo:{call:'figura.area()  # Rectangulo',out:'10.00',expl:'b·h = 5·2'},
+// ─── W1: jerarquía UML interactiva ──────────────────────────
+const uhNotes={
+  veh:'<strong>Vehiculo — la clase base.</strong> Lo común vive aquí <em>una sola vez</em>: marca, modelo, año y combustible, con su constructor y <code>mostrarDetalles()</code>. Atributos privados (−), métodos públicos (+): la encapsulación también puntúa en la rúbrica.',
+  auto:'<strong>Auto extends Vehiculo.</strong> Por herencia ya ES un vehículo: recibe los 4 atributos comunes y <code>mostrarDetalles()</code> sin escribirlos. Solo agrega <code>numPuertas</code> — y sobrescribe <code>mostrarDetalles()</code> para sumar lo suyo.',
+  cam:'<strong>Camion extends Vehiculo.</strong> Hereda todo lo común y agrega <code>capacidadCarga</code>. Fíjate en la flecha: el triángulo hueco apunta <em>siempre</em> a la base — se lee "Camion <strong>es un</strong> Vehiculo".',
+  moto:'<strong>Motocicleta extends Vehiculo.</strong> Tercera hija, mismo contrato: hereda lo general, aporta <code>cilindraje</code>. Tres subclases, <strong>cero código repetido</strong> — la ventaja que defenderás en tus conclusiones.'
 };
-let pocStep=-1,pocTimer=null;
-function pocClear(){
-  pocOrder.forEach(k=>{
-    document.querySelector('[data-poc="'+k+'"]').classList.remove('firing');
-    $('out-'+k).textContent='';
+function uhSelect(k){
+  ['veh','auto','cam','moto'].forEach(x=>$('uh-'+x).classList.toggle('on',x===k));
+  document.querySelectorAll('[data-uh]').forEach(b=>b.classList.toggle('on',b.dataset.uh===k));
+  $('uh-note').innerHTML=uhNotes[k];
+}
+['veh','auto','cam','moto'].forEach(k=>$('uh-'+k).addEventListener('click',()=>uhSelect(k)));
+document.querySelectorAll('[data-uh]').forEach(b=>b.addEventListener('click',()=>uhSelect(b.dataset.uh)));
+uhSelect('veh');
+
+// ─── W2: cadena de super (constructores) ────────────────────
+const supSteps=[
+  {out:['> new Camion("Volvo", "FH", 2022, 300, 18.5)'],
+   narr:'<strong>Main pide un camión.</strong> Java entra al constructor de <code>Camion</code> — pero un camión ES un vehículo: antes de lo propio hay que construir lo heredado.'},
+  {out:['> new Camion("Volvo", "FH", 2022, 300, 18.5)','  Camion: 1ª línea → super(...)'],
+   narr:'<strong><code>super(...)</code> llama al constructor de la base</strong> — y en Java debe ser la <strong>primera línea</strong>. Si la omites y Vehiculo no tiene constructor vacío, <em>no compila</em>.'},
+  {out:['> new Camion("Volvo", "FH", 2022, 300, 18.5)','  Camion: 1ª línea → super(...)','  Vehiculo: marca, modelo, año, combustible ✓'],
+   narr:'El constructor de <strong>Vehiculo</strong> inicializa los 4 atributos comunes. Las subclases no repiten ese código: lo <strong>invocan</strong>. Esa es la reutilización que pide la rúbrica.'},
+  {out:['> new Camion("Volvo", "FH", 2022, 300, 18.5)','  Camion: 1ª línea → super(...)','  Vehiculo: marca, modelo, año, combustible ✓','  Camion: capacidadCarga = 18.5 ✓','  objeto completo: común + propio'],
+   narr:'<strong>De vuelta en Camion:</strong> con lo común listo, se asigna lo propio. Un objeto, dos capas — la heredada y la específica — construidas en orden. Repite mentalmente la cadena para Auto y Motocicleta.'}
+];
+let supIdx=-1,supTimer=null;
+function supRender(){
+  document.querySelectorAll('.sup-frame').forEach((f,i)=>{
+    f.classList.remove('active','done');
+    if(i<supIdx) f.classList.add('done');
+    if(i===supIdx) f.classList.add('active');
   });
-}
-function pocConsole(upTo,running){
-  let html='<span class="ln"><span class="cm"># figuras = [Circulo(3), Cuadrado(4), Triangulo(6,2), Rectangulo(5,2)]</span></span>';
-  html+='<span class="ln"><span class="prompt">&gt;&gt;&gt;</span> for figura in figuras:</span>';
-  html+='<span class="ln">...     print(figura.area())</span>';
-  for(let i=0;i<=upTo;i++){
-    const d=pocData[pocOrder[i]];
-    html+='<span class="ln"><span class="out">'+d.out+'</span>   <span class="cm"># '+d.expl+'</span></span>';
+  if(supIdx<0){
+    $('sup-out').innerHTML='<span class="pl">consola — pulsa Reproducir o Siguiente…</span>';
+    $('sup-narr').innerHTML='La subclase no repite el código de la base: lo <strong>invoca</strong> con <code>super(...)</code>. Esa es la reutilización que pide la rúbrica.';
+  }else{
+    const s=supSteps[supIdx];
+    $('sup-out').innerHTML=s.out.join('<br>');
+    $('sup-narr').innerHTML=s.narr;
   }
-  if(upTo>=pocOrder.length-1 && !running){
-    html+='<span class="ln"><span class="cm"># un mismo for · cuatro áreas distintas · cero ifs</span></span>';
-  }
-  $('poc-console').innerHTML=html;
 }
-function pocFire(i){
-  pocClear();
-  const k=pocOrder[i];
-  const card=document.querySelector('[data-poc="'+k+'"]');
-  card.classList.add('firing');
-  $('out-'+k).textContent='→ '+pocData[k].out;
-  pocConsole(i,true);
-}
-function pocStopTimer(){if(pocTimer){clearInterval(pocTimer);pocTimer=null;}}
-$('poc-run').addEventListener('click',()=>{
-  pocStopTimer();pocStep=-1;pocClear();$('poc-console').innerHTML='';
-  pocTimer=setInterval(()=>{
-    pocStep++;
-    if(pocStep<pocOrder.length){pocFire(pocStep);}
-    else{pocStopTimer();pocClear();pocConsole(pocOrder.length-1,false);}
-  },650);
+function supStop(){if(supTimer){clearInterval(supTimer);supTimer=null;$('sup-play').textContent='▶ Reproducir';}}
+$('sup-next').addEventListener('click',()=>{supStop();if(supIdx<supSteps.length-1){supIdx++;supRender();}});
+$('sup-reset').addEventListener('click',()=>{supStop();supIdx=-1;supRender();});
+$('sup-play').addEventListener('click',()=>{
+  if(supTimer){supStop();return;}                      // corriendo → pausa
+  if(supIdx>=supSteps.length-1){supIdx=-1;supRender();} // terminado → reinicia
+  $('sup-play').textContent='❚❚ Pausa';
+  supTimer=setInterval(()=>{
+    if(supIdx<supSteps.length-1){supIdx++;supRender();}
+    else supStop();
+  },1700);
 });
-$('poc-step').addEventListener('click',()=>{
-  pocStopTimer();
-  if(pocStep>=pocOrder.length-1){pocStep=-1;pocClear();$('poc-console').innerHTML='';return;}
-  pocStep++;pocFire(pocStep);
-  if(pocStep===pocOrder.length-1){setTimeout(()=>{if(pocStep===pocOrder.length-1){pocClear();pocConsole(pocOrder.length-1,false);}},700);}
-});
-$('poc-reset').addEventListener('click',()=>{pocStopTimer();pocStep=-1;pocClear();$('poc-console').innerHTML='';});
-pocConsole(-1,false);
+supRender();
 
-// ─── W2: sobrescritura Python ↔ Java ────────────────────────
-const ovData={
-  base:{
+// ─── W3: Python ↔ Java ──────────────────────────────────────
+const eqData={
+  declara:{
     py:[
-      ['<span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod',0],
-      ['',0],
-      ['<span class="kw">class</span> <span class="cls">Figura</span>(ABC):',1],
-      ['    <span class="dec">@abstractmethod</span>',0],
-      ['    <span class="kw">def</span> area(<span class="self">self</span>) -> <span class="ty">float</span>:',0],
-      ['        ...  <span class="cm"># el contrato, sin cuerpo</span>',0],
+      '<span class="kw">class</span> <span class="cls">Vehiculo</span>:',
+      '    ...',
+      '',
+      '<span class="kw">class</span> <span class="cls">Camion</span>(<span class="cls">Vehiculo</span>):',
+      '    <span class="cm"># hereda con paréntesis</span>',
+      '    ...',
     ],
     java:[
-      ['<span class="kw">abstract class</span> <span class="cls">Figura</span> {',1],
-      ['    <span class="cm">// el contrato que toda figura promete</span>',0],
-      ['    <span class="kw">abstract</span> <span class="ty">double</span> area();',0],
-      ['}',0],
+      '<span class="kw">public class</span> <span class="cls">Vehiculo</span> { ... }',
+      '',
+      '<span class="kw">public class</span> <span class="cls">Camion</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span> {',
+      '    <span class="cm">// hereda con la palabra extends</span>',
+      '}',
     ],
-    note:'La <strong>base</strong> define el método pero no lo implementa — es el contrato. <code>@abstractmethod</code> en Python y <code>abstract</code> en Java obligan a las hijas a darle cuerpo. Esto lo viste en la <strong>sesión 17</strong>.'
+    note:'Misma idea, distinta sintaxis: Python hereda con <strong>paréntesis</strong>, Java con la palabra <strong><code>extends</code></strong>. En ambos, la subclase recibe todo lo de la base sin reescribirlo.'
   },
-  hija:{
+  ctor:{
     py:[
-      ['<span class="kw">class</span> <span class="cls">Circulo</span>(Figura):',0],
-      ['    <span class="kw">def</span> __init__(<span class="self">self</span>, r): <span class="self">self</span>.r = r',0],
-      ['',0],
-      ['    <span class="kw">def</span> area(<span class="self">self</span>) -> <span class="ty">float</span>:',1],
-      ['        <span class="kw">return</span> 3.1416 * <span class="self">self</span>.r ** 2',1],
+      '<span class="kw">class</span> <span class="cls">Camion</span>(<span class="cls">Vehiculo</span>):',
+      '    <span class="kw">def</span> __init__(<span class="cls">self</span>, marca, modelo, anio, comb, carga):',
+      '        <span class="kw">super</span>().__init__(marca, modelo, anio, comb)',
+      '        <span class="cls">self</span>.carga = carga',
+      '',
+      '<span class="cm"># super() con paréntesis y __init__</span>',
     ],
     java:[
-      ['<span class="kw">class</span> <span class="cls">Circulo</span> <span class="kw">extends</span> <span class="ty">Figura</span> {',0],
-      ['    <span class="kw">private</span> <span class="ty">double</span> r;',0],
-      ['',0],
-      ['    <span class="dec">@Override</span>',1],
-      ['    <span class="ty">double</span> area() {',1],
-      ['        <span class="kw">return</span> 3.1416 * r * r;',1],
-      ['    }',0],
-      ['}',0],
+      '<span class="kw">public</span> <span class="cls">Camion</span>(<span class="ty">String</span> marca, <span class="ty">String</span> modelo, <span class="ty">int</span> anio,',
+      '              <span class="ty">double</span> comb, <span class="ty">double</span> carga) {',
+      '    <span class="kw">super</span>(marca, modelo, anio, comb);  <span class="cm">// 1ª línea, OBLIGATORIO</span>',
+      '    <span class="kw">this</span>.capacidadCarga = carga;',
+      '}',
     ],
-    note:'Cada hija <strong>sobrescribe</strong> (override) el método con su propia fórmula. En Python redefines el método y listo. En Java, <code>@Override</code> le dice al compilador "esto pisa al de la base" — si te equivocas en el nombre, <strong>te avisa</strong>. Por eso Java tiene polimorfismo <em>formal</em>.'
+    note:'En Python <em>puedes</em> olvidar el <code>super().__init__()</code> y truena hasta ejecutar. En Java, <code>super(...)</code> debe ser la <strong>primera línea del constructor</strong> — y si falta, <em>ni siquiera compila</em>. Python confía; Java verifica.'
   },
-  super:{
+  metodo:{
     py:[
-      ['<span class="kw">class</span> <span class="cls">Cuadrado</span>(Figura):',0],
-      ['    <span class="kw">def</span> describir(<span class="self">self</span>):',0],
-      ['        base = <span class="kw">super</span>().describir()',1],
-      ['        <span class="kw">return</span> base + <span class="str">" (lado="</span> + ...',0],
+      '<span class="kw">class</span> <span class="cls">Camion</span>(<span class="cls">Vehiculo</span>):',
+      '    <span class="kw">def</span> mostrar_detalles(<span class="cls">self</span>):',
+      '        <span class="kw">super</span>().mostrar_detalles()',
+      '        <span class="kw">print</span>(<span class="str">f"Carga: {self.carga} t"</span>)',
     ],
     java:[
-      ['<span class="kw">class</span> <span class="cls">Cuadrado</span> <span class="kw">extends</span> <span class="ty">Figura</span> {',0],
-      ['    <span class="ty">String</span> describir() {',0],
-      ['        <span class="kw">return super</span>.describir()',1],
-      ['             + <span class="str">" (lado="</span> + lado + <span class="str">")"</span>;',0],
-      ['    }',0],
-      ['}',0],
+      '@Override',
+      '<span class="kw">public void</span> mostrarDetalles() {',
+      '    <span class="kw">super</span>.mostrarDetalles();  <span class="cm">// con punto, sin paréntesis en super</span>',
+      '    <span class="ty">System</span>.out.println(<span class="str">"Carga: "</span> + capacidadCarga + <span class="str">" t"</span>);',
+      '}',
     ],
-    note:'Sobrescribir no siempre es <em>reemplazar</em>: a veces quieres <strong>extender</strong>. Con <code>super()</code> (Python) o <code>super.</code> (Java) llamas a la versión del padre y le agregas lo tuyo. Esto lo trabajaste en la <strong>sesión 16</strong>.'
+    note:'Sobrescribir <strong>y extender</strong>: ambos lenguajes llaman primero la versión de la base y luego agregan lo propio. Detalle Java: <code>super.metodo()</code> lleva <strong>punto</strong> (no <code>super().</code>), y <code>@Override</code> le pide al compilador que verifique que de verdad estás sobrescribiendo.'
   },
-  lista:{
+  multi:{
     py:[
-      ['figuras = [',1],
-      ['    Circulo(3),',1],
-      ['    Cuadrado(4),',1],
-      ['    Triangulo(6, 2),',1],
-      [']',0],
-      ['<span class="cm"># tipos distintos · misma lista</span>',0],
+      '<span class="kw">class</span> <span class="cls">Hijo</span>(<span class="cls">Padre</span>, <span class="cls">Madre</span>):  <span class="cm"># ✓ válido</span>',
+      '    ...',
+      '',
+      '<span class="cm"># Python resuelve el diamante con el MRO</span>',
+      '<span class="cm"># (sesión 16: C3, super() cooperativo)</span>',
     ],
     java:[
-      ['<span class="ty">List</span>&lt;<span class="ty">Figura</span>&gt; figuras = <span class="ty">List</span>.of(',1],
-      ['    <span class="kw">new</span> Circulo(3),',1],
-      ['    <span class="kw">new</span> Cuadrado(4),',1],
-      ['    <span class="kw">new</span> Triangulo(6, 2)',1],
-      [');',0],
+      '<span class="err">class Hijo extends Padre, Madre { }  // ✗ NO compila</span>',
+      '',
+      '<span class="cm">// Java: UN solo extends por clase.</span>',
+      '<span class="cm">// ¿"ser varias cosas"? → interfaces:</span>',
+      '<span class="kw">class</span> <span class="cls">Hijo</span> <span class="kw">extends</span> <span class="cls">Padre</span> <span class="kw">implements</span> <span class="cls">Rol1</span>, <span class="cls">Rol2</span> { }',
     ],
-    note:'La <strong>colección heterogénea</strong>: en Python la lista acepta cualquier cosa. En Java la declaras como <code>List&lt;Figura&gt;</code> — solo entran figuras, pero <em>de cualquier subclase</em>. Java te da seguridad de tipos; Python te da libertad.'
-  },
-  recorre:{
-    py:[
-      ['<span class="kw">for</span> figura <span class="kw">in</span> figuras:',1],
-      ['    print(figura.area())',1],
-      ['',0],
-      ['<span class="cm"># el for no sabe ni le importa</span>',0],
-      ['<span class="cm"># de qué tipo es cada figura</span>',0],
-    ],
-    java:[
-      ['<span class="kw">for</span> (<span class="ty">Figura</span> figura : figuras) {',1],
-      ['    System.out.println(figura.area());',1],
-      ['}',0],
-      ['',0],
-      ['<span class="cm">// la variable es Figura;</span>',0],
-      ['<span class="cm">// el objeto real, otra cosa</span>',0],
-    ],
-    note:'<strong>Un solo mensaje para todos:</strong> <code>figura.area()</code>. El bucle es idéntico en ambos lenguajes y no tiene <em>ni un</em> if. Agregar una figura nueva mañana <strong>no toca esta línea</strong>. Eso es lo que hace al polimorfismo tan valioso.'
-  },
-  salida:{
-    py:[
-      ['<span class="cm"># salida:</span>',0],
-      ['28.2744',1],
-      ['16.0',1],
-      ['6.0',1],
-    ],
-    java:[
-      ['<span class="cm">// salida:</span>',0],
-      ['28.2744',1],
-      ['16.0',1],
-      ['6.0',1],
-    ],
-    note:'El <strong>despacho dinámico</strong>: en tiempo de ejecución, cada objeto ejecuta <em>su</em> versión de <code>area()</code> aunque la variable se llame <code>figura</code>. La decisión la toma el <strong>objeto real</strong>, no el tipo de la variable. Ese es el mecanismo que hace todo posible.'
-  },
+    note:'El tema 5.1.3 en una línea: Python permite <strong>herencia múltiple</strong> y la ordena con el MRO; Java la <strong>prohíbe</strong> para eliminar el diamante, y ofrece interfaces a cambio. En esta práctica basta la herencia <strong>simple</strong>: cada vehículo es <em>un</em> tipo, y punto.'
+  }
 };
-function ovRender(key){
-  const d=ovData[key];
-  $('py-body').innerHTML=d.py.map(([h,hl])=>LH(h,hl)).join('');
-  $('java-body').innerHTML=d.java.map(([h,hl])=>LH(h,hl)).join('');
+function eqRender(key){
+  const d=eqData[key];
+  $('py-body').innerHTML=d.py.map(L).join('');
+  $('java-body').innerHTML=d.java.map(L).join('');
   $('pj-note').innerHTML=d.note;
 }
-document.querySelectorAll('[data-ov]').forEach(b=>{
+document.querySelectorAll('[data-eq]').forEach(b=>{
   b.addEventListener('click',()=>{
-    document.querySelectorAll('[data-ov]').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('[data-eq]').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');
-    ovRender(b.dataset.ov);
+    eqRender(b.dataset.eq);
   });
 });
-ovRender('base');
+eqRender('declara');
 
-// ─── W3: duck typing ────────────────────────────────────────
-const duckData={
-  pajaro:{flies:true,expl:'El <strong>Pajaro</strong> tiene <code>.volar()</code>, así que vuela. Lo obvio — pero fíjate: el código nunca preguntó "¿eres un Pajaro?". Solo le importó el <strong>método</strong>.'},
-  avion:{flies:true,expl:'El <strong>Avion</strong> no es un ave ni hereda de Pajaro. Pero tiene <code>.volar()</code> — y eso es todo lo que Python exige. <strong>Mismo for, sin parentesco.</strong>'},
-  superman:{flies:true,expl:'El <strong>Superheroe</strong> tampoco comparte clase base con los otros dos. En Java necesitarías obligarlo a implementar <code>Volador</code>; en Python, <em>basta con que vuele</em>.'},
-  pinguino:{flies:false,expl:'El <strong>Pinguino</strong> tiene <code>.nadar()</code>, no <code>.volar()</code>. Si el código llama <code>.volar()</code>, Python lanza <code>AttributeError</code>. El pato debe sonar como pato: <strong>aquí no suena.</strong>'},
-  piedra:{flies:false,expl:'La <strong>Piedra</strong> no tiene los métodos esperados. Duck typing es flexible, pero <em>no es magia</em>: si el objeto no cumple, revienta en ejecución. Ese es el precio de no tener contrato formal.'},
+// ─── W5: trace de super.mostrarDetalles() ───────────────────
+const detLines=[
+  '<span class="cm">// Camion.java — sobrescribir Y extender</span>',
+  '@Override',
+  '<span class="kw">public void</span> mostrarDetalles() {',
+  '    <span class="kw">super</span>.mostrarDetalles();   <span class="cm">// 1º lo común (la base)</span>',
+  '    <span class="ty">System</span>.out.println(<span class="str">"Carga máx: "</span> + capacidadCarga + <span class="str">" t"</span>);',
+  '}',
+  '',
+  '<span class="cm">// Vehiculo.java — la versión base</span>',
+  '<span class="kw">public void</span> mostrarDetalles() {',
+  '    <span class="ty">System</span>.out.println(marca + <span class="str">" "</span> + modelo + <span class="str">" ("</span> + anio + <span class="str">")"</span>);',
+  '    <span class="ty">System</span>.out.println(<span class="str">"Combustible: "</span> + combustible + <span class="str">" L"</span>);',
+  '}',
+];
+const detTrace=[
+  {l:1,out:[],d:'Antes de ejecutar nada: <code>@Override</code> es una <strong>promesa al compilador</strong> — "este método sobrescribe uno de la base, verifícalo". Si el nombre o la firma no coinciden con los de Vehiculo, el error salta aquí, en compilación.'},
+  {l:2,out:[],d:'Llamas <code>c.mostrarDetalles()</code> sobre un Camión: Java entra a la versión <strong>de la subclase</strong>.'},
+  {l:3,out:[],d:'<code>super.mostrarDetalles()</code> — invoca la versión de la <strong>clase base</strong>. El control salta a Vehiculo.'},
+  {l:9,out:['Volvo FH (2022)'],d:'La base imprime la primera línea de lo común: marca, modelo y año.'},
+  {l:10,out:['Volvo FH (2022)','Combustible: 300.0 L'],d:'Segunda línea común. La base termina y <strong>devuelve el control</strong> a Camion.'},
+  {l:4,out:['Volvo FH (2022)','Combustible: 300.0 L','Carga máx: 18.5 t'],d:'<strong>De vuelta en Camion:</strong> agrega su línea específica. Sobrescribiste <em>sin perder</em> lo heredado — eso pide el requerimiento 03.'},
+];
+let detTimer=null;
+function detRender(){
+  $('det-code').innerHTML=detLines.map((h,i)=>'<span class="ln" id="det-l'+i+'">'+(h||' ')+'</span>').join('');
+  $('det-out').innerHTML='<span class="pl">consola — pulsa ▶ Recorrer…</span>';
+  $('det-desc').innerHTML='Sin <code>super.</code>, llamar <code>mostrarDetalles()</code> adentro de sí mismo sería <strong>recursión infinita</strong>. El prefijo dice: "la versión de mi clase base, por favor".';
+}
+function detStop(){if(detTimer){clearInterval(detTimer);detTimer=null;}}
+$('det-play').addEventListener('click',()=>{
+  detStop();detRender();
+  let i=-1;
+  detTimer=setInterval(()=>{
+    i++;
+    if(i>=detTrace.length){detStop();return;}
+    detLines.forEach((_,j)=>$('det-l'+j).classList.remove('hl'));
+    $('det-l'+detTrace[i].l).classList.add('hl');
+    $('det-out').innerHTML=detTrace[i].out.length?detTrace[i].out.join('<br>'):'<span class="pl">consola — (aún sin salida)</span>';
+    $('det-desc').innerHTML='<strong>Paso '+(i+1)+':</strong> '+detTrace[i].d;
+  },1500);
+});
+$('det-reset').addEventListener('click',()=>{detStop();detRender();});
+detRender();
+
+// ─── W6: la flota viva ──────────────────────────────────────
+const floQueues={
+  auto:{cls:'Auto',tipo:'Auto',items:[{ma:'Toyota',mo:'Corolla',a:2023,c:50,e:'4 puertas',ec:'numPuertas = 4'},{ma:'Nissan',mo:'Versa',a:2021,c:41,e:'4 puertas',ec:'numPuertas = 4'}]},
+  cam:{cls:'Camion',tipo:'Camión',items:[{ma:'Volvo',mo:'FH',a:2022,c:300,e:'18.5 t de carga',ec:'capacidadCarga = 18.5'},{ma:'Kenworth',mo:'T680',a:2020,c:380,e:'22.0 t de carga',ec:'capacidadCarga = 22.0'}]},
+  moto:{cls:'Motocicleta',tipo:'Moto',items:[{ma:'Yamaha',mo:'MT-07',a:2024,c:14,e:'689 cc',ec:'cilindraje = 689'},{ma:'Italika',mo:'250Z',a:2023,c:12,e:'249 cc',ec:'cilindraje = 249'}]}
 };
-function duckRender(k){
-  const d=duckData[k];
-  const v=$('duck-verdict');
-  if(d.flies){v.className='duck-verdict ok';v.textContent='✓ vuela →  vuela()  ejecuta';}
-  else{v.className='duck-verdict no';v.textContent='✗ no vuela →  AttributeError';}
-  $('duck-expl').innerHTML=d.expl;
+let floArr,floCont,floIdx,floScan=null,floEmpty;
+function floInit(){
+  floArr=[null,null,null,null,null,null];floCont=0;floEmpty=true;
+  floIdx={auto:0,cam:0,moto:0};
+  if(floScan){clearInterval(floScan);floScan=null;}
+  $('flo-con').innerHTML='<span class="sys">consola — registra tu primer vehículo…</span>';
+  floPaint();
 }
-document.querySelectorAll('[data-duck]').forEach(o=>{
-  o.addEventListener('click',()=>{
-    document.querySelectorAll('[data-duck]').forEach(x=>x.classList.remove('sel'));
-    o.classList.add('sel');
-    duckRender(o.dataset.duck);
-  });
-});
-duckRender('pajaro');
-
-// ─── W4: isinstance / instanceof ────────────────────────────
-const isoData={
-  validar:{
-    good:true,verdict:'Uso legítimo.',
-    desc:'Validar lo que <strong>entra</strong> a una función. Antes de operar con un número, confirmas que sea número. Esto es defensa en la frontera, no despacho de comportamiento.',
-    fix:'<span class="cm"># adelante: protege tu función</span>\n<span class="kw">if not</span> isinstance(monto, (int, float)):\n    <span class="kw">raise</span> TypeError(...)'
-  },
-  frontera:{
-    good:true,verdict:'Uso legítimo.',
-    desc:'Datos que llegan de afuera (un JSON, un archivo) pueden venir como <strong>tipos genuinamente distintos</strong> que no comparten contrato. Aquí <em>str</em> vs <em>list</em> vs <em>dict</em> son cosas diferentes, no formas de un mismo todo.',
-    fix:'<span class="cm"># normalizar datos externos: ok</span>\n<span class="kw">if</span> isinstance(dato, dict):\n    items = dato.values()\n<span class="kw">else</span>:\n    items = dato'
-  },
-  despacho:{
-    good:false,verdict:'Olor a código.',
-    desc:'Aquí preguntas el tipo solo para <strong>elegir qué cálculo hacer</strong>. Eso es <em>despacho manual</em>: estás reimplementando el polimorfismo con <code>if</code>. Cada figura nueva te obliga a tocar este código.',
-    fix:'<span class="cm"># mejor: que cada figura sepa su área</span>\n<span class="kw">class</span> Circulo(Figura):\n    <span class="kw">def</span> area(self): <span class="kw">return</span> ...\n<span class="cm"># y luego: fig.area()  ← sin ifs</span>'
-  },
-  cadena:{
-    good:false,verdict:'Olor a código.',
-    desc:'Una <strong>cadena de isinstance</strong> es la señal más clara de polimorfismo perdido. Cada vez que agregues un animal, vuelves a este <code>if/elif</code>. El compilador no te protege; el diseño se pudre.',
-    fix:'<span class="cm"># borra el if/elif entero:</span>\n<span class="kw">for</span> a <span class="kw">in</span> animales:\n    a.sonido()  <span class="cm"># cada uno responde solo</span>'
-  },
-};
-function isoRender(k){
-  const d=isoData[k];
-  const v=$('iso-verdict');
-  v.className='iso-verdict '+(d.good?'good':'bad');
-  v.textContent=d.verdict;
-  $('iso-desc').innerHTML=d.desc;
-  $('iso-fix').innerHTML=d.fix.replace(/\n/g,'<br>');
+function floPaint(scanIdx){
+  $('flo-shelf').innerHTML=floArr.map((v,i)=>{
+    if(!v)return '<div class="flo-card null"><span class="idx">['+i+']</span><span class="nul">null</span></div>';
+    const cls=i===scanIdx?' scan':(v.flash?' flash':'');
+    return '<div class="flo-card'+cls+'"><span class="idx">['+i+']</span><span class="tipo">'+v.tipo+'</span><span class="nm">'+v.ma+' '+v.mo+'</span><span class="comun">'+v.a+' · '+v.c.toFixed(1)+' L</span><span class="esp">'+v.e+'</span></div>';
+  }).join('');
+  $('flo-meta').innerHTML='contador = <strong>'+floCont+'</strong> &nbsp;·&nbsp; flota.length = <strong>6</strong> (fijo — práctica 3)';
 }
-document.querySelectorAll('[data-iso]').forEach(c=>{
-  c.addEventListener('click',()=>{
-    document.querySelectorAll('[data-iso]').forEach(x=>x.classList.remove('sel'));
-    c.classList.add('sel');
-    isoRender(c.dataset.iso);
-  });
-});
-isoRender('validar');
-
-// ─── W5: checklist sprint 2 ─────────────────────────────────
-const chkItems=document.querySelectorAll('.chk-item');
-function chkUpdate(){
-  const done=document.querySelectorAll('.chk-item.done').length;
-  $('chk-count').textContent=done;
-  $('chk-fill').style.width=(done/chkItems.length*100)+'%';
+function floLog(html,cls){
+  const con=$('flo-con');
+  if(floEmpty){con.innerHTML='';floEmpty=false;}
+  con.innerHTML+='<div class="'+(cls||'')+'">'+html+'</div>';
+  con.scrollTop=con.scrollHeight;
 }
-chkItems.forEach(it=>{
-  it.addEventListener('click',()=>{it.classList.toggle('done');chkUpdate();});
+function floReg(key){
+  if(floScan)return;
+  const q=floQueues[key];
+  const it=q.items[floIdx[key]%q.items.length];
+  if(floCont>=floArr.length){
+    floLog('&gt; new '+q.cls+'("'+it.ma+'", …)');
+    floLog('⚠ Flota llena: flota.length = 6 y el array no crece (práctica 3).','err');
+    return;
+  }
+  floIdx[key]++;
+  floArr.forEach(v=>{if(v)v.flash=false;});
+  floArr[floCont]={tipo:q.tipo,ma:it.ma,mo:it.mo,a:it.a,c:it.c,e:it.e,flash:true};
+  floLog('&gt; new '+q.cls+'("'+it.ma+'", "'+it.mo+'", '+it.a+', '+it.c+', …)');
+  floLog('&nbsp;&nbsp;<span class="her">→ super(marca, modelo, anio, comb)</span> — común listo <span class="ok">✓</span>');
+  floLog('&nbsp;&nbsp;→ '+it.ec+' — propio <span class="ok">✓</span>');
+  floLog('&nbsp;&nbsp;flota['+floCont+'] <span class="ok">✓</span>');
+  floCont++;
+  floPaint();
+}
+$('flo-auto').addEventListener('click',()=>floReg('auto'));
+$('flo-cam').addEventListener('click',()=>floReg('cam'));
+$('flo-moto').addEventListener('click',()=>floReg('moto'));
+$('flo-mos').addEventListener('click',()=>{
+  if(floScan)return;
+  floLog('&gt; mostrarFlota()');
+  if(floCont===0){
+    floLog('&nbsp;&nbsp;── Flota: 0 de 6 ──','sys');
+    floLog('&nbsp;&nbsp;(el array existe, todas las casillas en null)','sys');
+    return;
+  }
+  floLog('&nbsp;&nbsp;── Flota: '+floCont+' de 6 ──','sys');
+  let i=-1;
+  floScan=setInterval(()=>{
+    i++;
+    if(i>=floCont){clearInterval(floScan);floScan=null;floPaint();
+      floLog('&nbsp;&nbsp;una sola llamada, tres respuestas distintas — sin ifs','sys');return;}
+    floPaint(i);
+    const v=floArr[i];
+    floLog('&nbsp;&nbsp;['+i+'] '+v.ma+' '+v.mo+' ('+v.a+') · '+v.c.toFixed(1)+' L');
+    floLog('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="her">'+v.e+'</span>');
+  },700);
 });
-chkUpdate();
+$('flo-reset').addEventListener('click',floInit);
+floInit();
 </script>
 </body>
 </html>

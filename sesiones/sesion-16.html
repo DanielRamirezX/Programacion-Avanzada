@@ -512,7 +512,7 @@ footer{padding:3rem 2rem;border-top:1px solid var(--line);text-align:center;}
         <li><strong>Diseña la jerarquía de tu proyecto</strong>: identifica qué clases comparten comportamiento y modélalo con herencia (múltiple solo donde de verdad aporte — el Administrador es buen candidato, no fuerces diamantes).</li>
         <li><strong>Cadena de super() correcta</strong>: cada <code>__init__</code> que herede debe llamar a <code>super().__init__(...)</code>. Verifica que cada clase se inicializa una sola vez.</li>
         <li><strong>Imprime y comenta el MRO</strong>: agrega una línea que muestre <code>TuClase.__mro__</code> y un comentario que explique por qué ese orden.</li>
-        <li><strong>Prepara el terreno para ABC</strong>: marca qué clases serán <em>base</em> (no instanciables directamente) — la próxima sesión las volveremos abstractas con <code>abc</code> e interfaces.</li>
+        <li><strong>Prepara el terreno para ABC</strong>: marca qué clases serán <em>base</em> (no instanciables directamente) — más adelante en el bloque las volveremos abstractas con <code>abc</code> e interfaces.</li>
         <li><strong>Reto opcional — un mixin en tu proyecto</strong>: identifica una habilidad transversal (auditable, exportable a JSON, notificable…) y modélala como mixin, como el <code>SacudibleMixin</code> de la práctica guiada. Recuerda: el mixin va primero en la lista de bases.</li>
         <li><strong>Sube el commit a GitHub</strong> con la jerarquía y el MRO documentado. <em>Es tu participación de la sesión</em> — ese commit es la evidencia.</li>
       </ol>
